@@ -303,8 +303,9 @@ public class HVMInstructionSet {
 	 * Returns the single instance of the instruction set.
 	 */
 	public static HVMInstructionSet getInstance() {
-		if (instance == null)
+		if (instance == null) {
 			new HVMInstructionSet();
+		}
 		return instance;
 	}
 

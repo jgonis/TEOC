@@ -58,14 +58,16 @@ public abstract class InteractiveComputerPart extends ComputerPart implements Er
 	public void clearErrorListeners() {
 		ComputerPartErrorEvent event = new ComputerPartErrorEvent(this, null);
 
-		for (int i = 0; i < errorListeners.size(); i++)
+		for (int i = 0; i < errorListeners.size(); i++) {
 			((ComputerPartErrorEventListener) errorListeners.elementAt(i)).computerPartErrorOccured(event);
+		}
 	}
 
 	/**
 	 * Called when an error occured in the GUI. The event contains the source
 	 * object and the error message.
 	 */
+	@Override
 	public void errorOccured(ErrorEvent event) {
 		notifyErrorListeners(event.getErrorMessage());
 	}
@@ -79,8 +81,9 @@ public abstract class InteractiveComputerPart extends ComputerPart implements Er
 	public void notifyErrorListeners(String errorMessage) {
 		ComputerPartErrorEvent event = new ComputerPartErrorEvent(this, errorMessage);
 
-		for (int i = 0; i < errorListeners.size(); i++)
+		for (int i = 0; i < errorListeners.size(); i++) {
 			((ComputerPartErrorEventListener) errorListeners.elementAt(i)).computerPartErrorOccured(event);
+		}
 	}
 
 	/**

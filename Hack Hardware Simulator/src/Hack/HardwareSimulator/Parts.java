@@ -42,13 +42,16 @@ public class Parts extends ComputerPart {
 		refreshGUI();
 	}
 
+	@Override
 	public ComputerPartGUI getGUI() {
 		return gui;
 	}
 
+	@Override
 	public void refreshGUI() {
-		if (displayChanges)
+		if (displayChanges) {
 			gui.setContents(parts);
+		}
 	}
 
 	/**

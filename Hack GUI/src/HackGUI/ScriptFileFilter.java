@@ -34,7 +34,7 @@ public class ScriptFileFilter extends FileFilter {
 		String s = f.getName();
 		int i = s.lastIndexOf('.');
 
-		if (i > 0 && i < s.length() - 1) {
+		if ((i > 0) && (i < (s.length() - 1))) {
 			ext = s.substring(i + 1).toLowerCase();
 		}
 		return ext;
@@ -43,6 +43,7 @@ public class ScriptFileFilter extends FileFilter {
 	/**
 	 * Determines which files this filter should accept.
 	 */
+	@Override
 	public boolean accept(File f) {
 		if (f.isDirectory()) {
 			return true;
@@ -50,9 +51,9 @@ public class ScriptFileFilter extends FileFilter {
 
 		String extension = getExtension(f);
 		if (extension != null) {
-			if (extension.equals("tst"))
+			if (extension.equals("tst")) {
 				return true;
-			else {
+			} else {
 				return false;
 			}
 		}
@@ -61,6 +62,7 @@ public class ScriptFileFilter extends FileFilter {
 	}
 
 	// The description of this filter
+	@Override
 	public String getDescription() {
 		return "Script Files";
 	}

@@ -69,9 +69,10 @@ public class ScriptCondition {
 	 */
 	public ScriptCondition(ScriptTokenizer input) throws ScriptException, ControllerException {
 		// check arg0
-		if (input.getTokenType() != ScriptTokenizer.TYPE_IDENTIFIER
-				&& input.getTokenType() != ScriptTokenizer.TYPE_INT_CONST)
+		if ((input.getTokenType() != ScriptTokenizer.TYPE_IDENTIFIER)
+				&& (input.getTokenType() != ScriptTokenizer.TYPE_INT_CONST)) {
 			throw new ScriptException("A condition expected");
+		}
 
 		arg0 = input.getToken();
 
@@ -86,27 +87,30 @@ public class ScriptCondition {
 				input.advance();
 			}
 
-			if (op.equals("="))
+			if (op.equals("=")) {
 				comparisonOperator = EQUAL;
-			else if (op.equals(">"))
+			} else if (op.equals(">")) {
 				comparisonOperator = GREATER;
-			else if (op.equals(">="))
+			} else if (op.equals(">=")) {
 				comparisonOperator = GREATER_EQUAL;
-			else if (op.equals("<"))
+			} else if (op.equals("<")) {
 				comparisonOperator = LESS;
-			else if (op.equals("<="))
+			} else if (op.equals("<=")) {
 				comparisonOperator = LESS_EQUAL;
-			else if (op.equals("<>"))
+			} else if (op.equals("<>")) {
 				comparisonOperator = NOT_EQUAL;
-			else
+			} else {
 				throw new ScriptException("Illegal comparison operator: " + op);
-		} else
+			}
+		} else {
 			throw new ScriptException("Comparison operator expected");
+		}
 
 		// check arg1
-		if (input.getTokenType() != ScriptTokenizer.TYPE_IDENTIFIER
-				&& input.getTokenType() != ScriptTokenizer.TYPE_INT_CONST)
+		if ((input.getTokenType() != ScriptTokenizer.TYPE_IDENTIFIER)
+				&& (input.getTokenType() != ScriptTokenizer.TYPE_INT_CONST)) {
 			throw new ScriptException("A variable name or constant expected");
+		}
 
 		arg1 = input.getToken();
 		input.advance();
@@ -184,8 +188,9 @@ public class ScriptCondition {
 			default:
 				throw new ControllerException("Only = and <> can be used to compare strings");
 			}
-		} else
+		} else {
 			throw new ControllerException("Cannot compare an integer with a string");
+		}
 		return result;
 	}
 }

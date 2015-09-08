@@ -39,6 +39,7 @@ public class NodePinsAdapter extends Node {
 		this.index = index;
 	}
 
+	@Override
 	public void set(short value) {
 		pins.updateGUI(index, value);
 	}

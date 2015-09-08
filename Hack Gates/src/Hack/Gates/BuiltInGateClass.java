@@ -36,8 +36,9 @@ public class BuiltInGateClass extends GateClass {
 
 		// read java class name
 		input.advance();
-		if (input.getTokenType() != HDLTokenizer.TYPE_IDENTIFIER)
+		if (input.getTokenType() != HDLTokenizer.TYPE_IDENTIFIER) {
 			input.HDLError("Missing java class name");
+		}
 
 		String classFileName = input.getIdentifier();
 		String fullName = GatesManager.getInstance().getBuiltInDir() + "." + classFileName;
@@ -56,13 +57,15 @@ public class BuiltInGateClass extends GateClass {
 			found = currentClass.getName().equals("Hack.Gates.BuiltInGate");
 		} while (!found && !currentClass.getName().equals("java.lang.Object"));
 
-		if (!found)
+		if (!found) {
 			input.HDLError(classFileName + " is not a subclass of BuiltInGate");
+		}
 
 		// read ';' symbol
 		input.advance();
-		if (!(input.getTokenType() == HDLTokenizer.TYPE_SYMBOL && input.getSymbol() == ';'))
+		if (!((input.getTokenType() == HDLTokenizer.TYPE_SYMBOL) && (input.getSymbol() == ';'))) {
 			input.HDLError("Missing ';'");
+		}
 
 		isInputClocked = new boolean[inputPinsInfo.length];
 		isOutputClocked = new boolean[outputPinsInfo.length];
@@ -71,29 +74,30 @@ public class BuiltInGateClass extends GateClass {
 
 		// check if clocked keyword exists
 		if (input.getTokenType() == HDLTokenizer.TYPE_KEYWORD) {
-			if (input.getKeywordType() != HDLTokenizer.KW_CLOCKED)
+			if (input.getKeywordType() != HDLTokenizer.KW_CLOCKED) {
 				input.HDLError("Unexpected keyword");
+			}
 
 			isClocked = true;
 
 			// read clocked input pins list
 			String[] clockedNames = readPinNames(input);
 
-			for (int i = 0; i < clockedNames.length; i++) {
+			for (String clockedName : clockedNames) {
 				boolean inputFound = false;
 				boolean outputFound = false;
 				// check if clocked name is an input pin
-				for (int j = 0; j < isInputClocked.length && !inputFound; j++) {
+				for (int j = 0; (j < isInputClocked.length) && !inputFound; j++) {
 					if (!isInputClocked[j]) {
-						inputFound = inputPinsInfo[j].name.equals(clockedNames[i]);
+						inputFound = inputPinsInfo[j].name.equals(clockedName);
 						isInputClocked[j] = inputFound;
 					}
 				}
 				if (!inputFound) {
 					// check if clocked name is an output pin
-					for (int j = 0; j < isOutputClocked.length && !outputFound; j++) {
+					for (int j = 0; (j < isOutputClocked.length) && !outputFound; j++) {
 						if (!isOutputClocked[j]) {
-							outputFound = outputPinsInfo[j].name.equals(clockedNames[i]);
+							outputFound = outputPinsInfo[j].name.equals(clockedName);
 							isOutputClocked[j] = outputFound;
 						}
 					}
@@ -103,24 +107,28 @@ public class BuiltInGateClass extends GateClass {
 			input.advance();
 		}
 
-		if (!(input.getTokenType() == HDLTokenizer.TYPE_SYMBOL && input.getSymbol() == '}'))
+		if (!((input.getTokenType() == HDLTokenizer.TYPE_SYMBOL) && (input.getSymbol() == '}'))) {
 			input.HDLError("Missing '}'");
+		}
 	}
 
 	/**
 	 * Creates and returns a new instance of BuiltInGate.
 	 */
+	@Override
 	public Gate newInstance() throws InstantiationException {
 		BuiltInGate result;
 
 		Node[] inputNodes = new Node[inputPinsInfo.length];
 		Node[] outputNodes = new Node[outputPinsInfo.length];
 
-		for (int i = 0; i < inputNodes.length; i++)
+		for (int i = 0; i < inputNodes.length; i++) {
 			inputNodes[i] = new Node();
+		}
 
-		for (int i = 0; i < outputNodes.length; i++)
+		for (int i = 0; i < outputNodes.length; i++) {
 			outputNodes[i] = new Node();
+		}
 
 		try {
 			result = (BuiltInGate) javaGateClass.newInstance();
@@ -132,16 +140,19 @@ public class BuiltInGateClass extends GateClass {
 
 		// if the gate has a gui component, add the gate to the gate manager
 		// and set it to be its own parent for eval notifications
-		if (result instanceof BuiltInGateWithGUI)
+		if (result instanceof BuiltInGateWithGUI) {
 			GatesManager.getInstance().addChip((BuiltInGateWithGUI) result);
+		}
 
 		// Add a DirtyGateAdapter as a listener to all the non-clocked inputs,
 		// so the gate will become dirty when one of its non-clocked input
 		// changes.
 		Node adapter = new DirtyGateAdapter(result);
-		for (int i = 0; i < isInputClocked.length; i++)
-			if (!isInputClocked[i])
+		for (int i = 0; i < isInputClocked.length; i++) {
+			if (!isInputClocked[i]) {
 				inputNodes[i].addListener(adapter);
+			}
+		}
 
 		return result;
 	}

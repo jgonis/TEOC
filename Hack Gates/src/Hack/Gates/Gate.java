@@ -58,8 +58,9 @@ public abstract class Gate {
 	 * Adds the given listener as a listener to the isDirty property.
 	 */
 	public void addDirtyGateListener(DirtyGateListener listener) {
-		if (dirtyGateListeners == null)
+		if (dirtyGateListeners == null) {
 			dirtyGateListeners = new Vector(1, 1);
+		}
 
 		dirtyGateListeners.add(listener);
 	}
@@ -83,9 +84,11 @@ public abstract class Gate {
 			isDirty = false;
 
 			// notify listeners
-			if (dirtyGateListeners != null)
-				for (int i = 0; i < dirtyGateListeners.size(); i++)
+			if (dirtyGateListeners != null) {
+				for (int i = 0; i < dirtyGateListeners.size(); i++) {
 					((DirtyGateListener) dirtyGateListeners.elementAt(i)).gotClean();
+				}
+			}
 		}
 
 		reCompute();
@@ -96,8 +99,9 @@ public abstract class Gate {
 	 * computation.
 	 */
 	public void eval() {
-		if (isDirty)
+		if (isDirty) {
 			doEval();
+		}
 	}
 
 	/**
@@ -152,8 +156,9 @@ public abstract class Gate {
 	 * Removes the given listener from being a listener to the isDirty property.
 	 */
 	public void removeDirtyGateListener(DirtyGateListener listener) {
-		if (dirtyGateListeners != null)
+		if (dirtyGateListeners != null) {
 			dirtyGateListeners.remove(listener);
+		}
 	}
 
 	/**
@@ -163,9 +168,11 @@ public abstract class Gate {
 		isDirty = true;
 
 		// notify listeners
-		if (dirtyGateListeners != null)
-			for (int i = 0; i < dirtyGateListeners.size(); i++)
+		if (dirtyGateListeners != null) {
+			for (int i = 0; i < dirtyGateListeners.size(); i++) {
 				((DirtyGateListener) dirtyGateListeners.elementAt(i)).gotDirty();
+			}
+		}
 	}
 
 	/**

@@ -45,6 +45,7 @@ public class Register extends InteractiveValueComputerPart implements ComputerPa
 		init(gui);
 	}
 
+	@Override
 	public void doSetValueAt(int index, short value) {
 		this.value = value;
 	}
@@ -56,10 +57,12 @@ public class Register extends InteractiveValueComputerPart implements ComputerPa
 		return getValueAt(0);
 	}
 
+	@Override
 	public ComputerPartGUI getGUI() {
 		return gui;
 	}
 
+	@Override
 	public short getValueAt(int index) {
 		return value;
 	}
@@ -74,13 +77,16 @@ public class Register extends InteractiveValueComputerPart implements ComputerPa
 		}
 	}
 
+	@Override
 	public void refreshGUI() {
 		super.refreshGUI();
 
-		if (displayChanges)
+		if (displayChanges) {
 			quietUpdateGUI(0, value);
+		}
 	}
 
+	@Override
 	public void reset() {
 		super.reset();
 		value = nullValue;

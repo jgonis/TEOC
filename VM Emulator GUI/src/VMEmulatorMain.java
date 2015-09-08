@@ -34,9 +34,9 @@ public class VMEmulatorMain {
 	 * The command line VM Emulator program.
 	 */
 	public static void main(String[] args) {
-		if (args.length > 1)
+		if (args.length > 1) {
 			System.err.println("Usage: java CPUEmulatorMain [script name]");
-		else if (args.length == 0) {
+		} else if (args.length == 0) {
 			try {
 				UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 			} catch (Exception e) {
@@ -44,9 +44,10 @@ public class VMEmulatorMain {
 
 			VMEmulatorGUI simulatorGUI = new VMEmulatorComponent();
 			ControllerGUI controllerGUI = new ControllerComponent();
-			VMEmulatorApplication application = new VMEmulatorApplication(controllerGUI, simulatorGUI,
-					"bin/scripts/defaultVM.txt", "bin/help/vmUsage.html", "bin/help/vmAbout.html");
-		} else
+			new VMEmulatorApplication(controllerGUI, simulatorGUI, "bin/scripts/defaultVM.txt", "bin/help/vmUsage.html",
+					"bin/help/vmAbout.html");
+		} else {
 			new HackController(new VMEmulator(), args[0]);
+		}
 	}
 }

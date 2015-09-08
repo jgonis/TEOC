@@ -45,8 +45,9 @@ public class Node {
 	 * Adds the given node as a listener.
 	 */
 	public void addListener(Node node) {
-		if (listeners == null)
+		if (listeners == null) {
 			listeners = new NodeSet();
+		}
 
 		listeners.add(node);
 	}
@@ -62,8 +63,9 @@ public class Node {
 	 * Removes the given node from being a listener.
 	 */
 	public void removeListener(Node node) {
-		if (listeners != null)
+		if (listeners != null) {
 			listeners.remove(node);
+		}
 	}
 
 	/**
@@ -74,9 +76,11 @@ public class Node {
 		if (this.value != value) {
 			this.value = value;
 
-			if (listeners != null)
-				for (int i = 0; i < listeners.size(); i++)
+			if (listeners != null) {
+				for (int i = 0; i < listeners.size(); i++) {
 					listeners.getNodeAt(i).set(get());
+				}
+			}
 		}
 	}
 }

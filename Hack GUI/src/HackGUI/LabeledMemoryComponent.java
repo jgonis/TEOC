@@ -38,6 +38,7 @@ public class LabeledMemoryComponent extends PointedMemoryComponent implements La
 		/**
 		 * Returns the number of columns.
 		 */
+		@Override
 		public int getColumnCount() {
 			return 3;
 		}
@@ -45,23 +46,27 @@ public class LabeledMemoryComponent extends PointedMemoryComponent implements La
 		/**
 		 * Returns the value at a specific row and column.
 		 */
+		@Override
 		public Object getValueAt(int row, int col) {
 			String result = "";
-			if (col == 0)
+			if (col == 0) {
 				result = labels[row];
-			else
+			} else {
 				result = (String) super.getValueAt(row, col - 1);
+			}
 			return result;
 		}
 
 		/**
 		 * Returns true of this table cells are editable, false - otherwise.
 		 */
+		@Override
 		public boolean isCellEditable(int row, int col) {
-			if (col == 0)
+			if (col == 0) {
 				return false;
-			else
+			} else {
 				return super.isCellEditable(row, col - 1);
+			}
 		}
 
 	}
@@ -70,6 +75,7 @@ public class LabeledMemoryComponent extends PointedMemoryComponent implements La
 	// VMMemoryComponent.
 	public class LabeledPointedMemoryTableCellRenderer extends PointedMemoryTableCellRenderer {
 
+		@Override
 		public void setRenderer(int row, int column) {
 			super.setRenderer(row, column - 1);
 
@@ -77,8 +83,9 @@ public class LabeledMemoryComponent extends PointedMemoryComponent implements La
 				setHorizontalAlignment(SwingConstants.RIGHT);
 				setFont(Utilities.boldValueFont);
 				setBackground(Color.lightGray);
-				if (row == labelFlashIndex)
+				if (row == labelFlashIndex) {
 					setBackground(Color.orange);
+				}
 			}
 		}
 	}
@@ -102,16 +109,20 @@ public class LabeledMemoryComponent extends PointedMemoryComponent implements La
 	/**
 	 * Clears all cell names.
 	 */
+	@Override
 	public void clearLabels() {
-		for (int i = 0; i < labels.length; i++)
-			if (labels[i] != null)
+		for (int i = 0; i < labels.length; i++) {
+			if (labels[i] != null) {
 				labels[i] = null;
+			}
+		}
 		repaint();
 	}
 
 	/**
 	 * Determines the width of each column in the table.
 	 */
+	@Override
 	protected void determineColumnWidth() {
 		TableColumn column = null;
 		for (int i = 0; i < 2; i++) {
@@ -129,6 +140,7 @@ public class LabeledMemoryComponent extends PointedMemoryComponent implements La
 	/**
 	 * Returns the cell renderer for this component.
 	 */
+	@Override
 	protected DefaultTableCellRenderer getCellRenderer() {
 		return new LabeledPointedMemoryTableCellRenderer();
 	}
@@ -136,6 +148,7 @@ public class LabeledMemoryComponent extends PointedMemoryComponent implements La
 	/**
 	 * Returns the table model of this component.
 	 */
+	@Override
 	protected TableModel getTableModel() {
 		return new LabeledMemoryTableModel();
 	}
@@ -143,6 +156,7 @@ public class LabeledMemoryComponent extends PointedMemoryComponent implements La
 	/**
 	 * Returns the width of the table.
 	 */
+	@Override
 	public int getTableWidth() {
 		return 233;
 	}
@@ -150,6 +164,7 @@ public class LabeledMemoryComponent extends PointedMemoryComponent implements La
 	/**
 	 * Returns the index of the values column.
 	 */
+	@Override
 	protected int getValueColumnIndex() {
 		return 2;
 	}
@@ -157,6 +172,7 @@ public class LabeledMemoryComponent extends PointedMemoryComponent implements La
 	/**
 	 * hides all existing falsh label.
 	 */
+	@Override
 	public void hideLabelFlash() {
 		labelFlashIndex = -1;
 		repaint();
@@ -165,6 +181,7 @@ public class LabeledMemoryComponent extends PointedMemoryComponent implements La
 	/**
 	 * flashes the label at the given index.
 	 */
+	@Override
 	public void labelFlash(int index) {
 		labelFlashIndex = index;
 		repaint();
@@ -174,6 +191,7 @@ public class LabeledMemoryComponent extends PointedMemoryComponent implements La
 	 * Sets the memory contents with the given values array. (assumes that the
 	 * length of the given array equals to the gui's size)
 	 */
+	@Override
 	public void setContents(short[] newValues) {
 		String[] oldLabels = labels;
 		labels = new String[newValues.length];
@@ -184,6 +202,7 @@ public class LabeledMemoryComponent extends PointedMemoryComponent implements La
 	/**
 	 * Sets a name for the memory cell that matches the given address
 	 */
+	@Override
 	public void setLabel(int address, String name) {
 		labels[address] = name + ":";
 		repaint();

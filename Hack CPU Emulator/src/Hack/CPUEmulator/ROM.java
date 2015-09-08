@@ -42,6 +42,7 @@ public class ROM extends PointedMemory implements ProgramEventListener {
 			this.programName = programName;
 		}
 
+		@Override
 		public void run() {
 			clearErrorListeners();
 			try {
@@ -84,7 +85,7 @@ public class ROM extends PointedMemory implements ProgramEventListener {
 		listeners = new Vector();
 
 		if (hasGUI) {
-			gui.addProgramListener((ProgramEventListener) this);
+			gui.addProgramListener(this);
 			gui.setNumericFormat(ASM_FORMAT); // enable assembler
 			// gui.setNumericFormat(BINARY_FORMAT); // disable assembler
 		}
@@ -103,8 +104,9 @@ public class ROM extends PointedMemory implements ProgramEventListener {
 	public synchronized void loadProgram(String fileName) throws ProgramException {
 		short[] program = null;
 
-		if (displayChanges)
+		if (displayChanges) {
 			((ROMGUI) gui).showMessage("Loading...");
+		}
 
 		try {
 			program = HackAssemblerTranslator.loadProgram(fileName, Definitions.ROM_SIZE, HackAssemblerTranslator.NOP);
@@ -123,8 +125,9 @@ public class ROM extends PointedMemory implements ProgramEventListener {
 			notifyProgramListeners(ProgramEvent.LOAD, fileName);
 
 		} catch (AssemblerException ae) {
-			if (displayChanges)
+			if (displayChanges) {
 				((ROMGUI) gui).hideMessage();
+			}
 			throw new ProgramException(ae.getMessage());
 		}
 
@@ -148,6 +151,7 @@ public class ROM extends PointedMemory implements ProgramEventListener {
 	 * Called when the ROM's current program is changed. The event contains the
 	 * source object, event type and the new program's file name (if any).
 	 */
+	@Override
 	public void programChanged(ProgramEvent event) {
 		switch (event.getType()) {
 		case ProgramEvent.LOAD:
@@ -172,6 +176,7 @@ public class ROM extends PointedMemory implements ProgramEventListener {
 	 * Called when the contents of the memory are changed through the memory
 	 * gui.
 	 */
+	@Override
 	public void valueChanged(ComputerPartEvent event) {
 		short newValue = event.getValue();
 		int newAddress = event.getIndex();

@@ -187,6 +187,7 @@ public class Calculator extends ValueComputerPart {
 		setValueAt(2, result, true);
 	}
 
+	@Override
 	public void doSetValueAt(int index, short value) {
 		switch (index) {
 		case 0:
@@ -201,10 +202,12 @@ public class Calculator extends ValueComputerPart {
 		}
 	}
 
+	@Override
 	public ComputerPartGUI getGUI() {
 		return gui;
 	}
 
+	@Override
 	public short getValueAt(int index) {
 		short result = 0;
 
@@ -227,16 +230,19 @@ public class Calculator extends ValueComputerPart {
 	 * Hides the calculator GUI.
 	 */
 	public void hideCalculator() {
-		if (animate)
+		if (animate) {
 			gui.hideCalculator();
+		}
 	}
 
+	@Override
 	public void refreshGUI() {
 		quietUpdateGUI(0, input0);
 		quietUpdateGUI(1, input1);
 		quietUpdateGUI(2, output);
 	}
 
+	@Override
 	public void reset() {
 		super.reset();
 		input0 = nullValue;
@@ -249,10 +255,11 @@ public class Calculator extends ValueComputerPart {
 	 */
 	public void showCalculator(int operator, int numOfInputs) {
 		if (animate) {
-			if (numOfInputs == 2)
+			if (numOfInputs == 2) {
 				gui.showLeftInput();
-			else
+			} else {
 				gui.hideLeftInput();
+			}
 
 			gui.reset();
 			gui.setOperator(operators[operator]);

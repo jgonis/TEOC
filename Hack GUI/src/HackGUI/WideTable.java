@@ -39,22 +39,26 @@ public class WideTable extends JTable {
 		this.width = width;
 	}
 
+	@Override
 	public Rectangle getBounds() {
 		Rectangle rect = super.getBounds();
 		rect.width = width;
 		return rect;
 	}
 
+	@Override
 	public Dimension getPreferredSize() {
 		Dimension dimension = super.getPreferredSize();
 		dimension.width = width;
 		return dimension;
 	}
 
+	@Override
 	public Dimension getSize() {
 		return new Dimension(width, super.getHeight());
 	}
 
+	@Override
 	public int getWidth() {
 		return width;
 	}

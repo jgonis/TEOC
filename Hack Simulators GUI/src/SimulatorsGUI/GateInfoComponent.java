@@ -61,11 +61,13 @@ public class GateInfoComponent extends JPanel implements GateInfoGUI {
 		jbInit();
 	}
 
+	@Override
 	public void disableTime() {
 		timeLbl.setEnabled(false);
 		timeTxt.setEnabled(false);
 	}
 
+	@Override
 	public void enableTime() {
 		timeLbl.setEnabled(true);
 		timeTxt.setEnabled(true);
@@ -101,33 +103,41 @@ public class GateInfoComponent extends JPanel implements GateInfoGUI {
 		setBorder(BorderFactory.createEtchedBorder());
 	}
 
+	@Override
 	public void reset() {
 		chipNameTxt.setText("");
 		timeTxt.setText("0");
 	}
 
+	@Override
 	public void setChip(String chipName) {
 		this.chipName = chipName;
 		chipNameTxt.setText(chipName);
 	}
 
+	@Override
 	public void setClock(boolean up) {
 		clockUp = up;
-		if (up)
+		if (up) {
 			timeTxt.setText(timeTxt.getText() + "+");
+		}
 	}
 
+	@Override
 	public void setClocked(boolean clocked) {
-		if (clocked)
+		if (clocked) {
 			chipNameTxt.setText(chipName + " (Clocked) ");
-		else
+		} else {
 			chipNameTxt.setText(chipName);
+		}
 	}
 
+	@Override
 	public void setTime(int time) {
-		if (clockUp)
+		if (clockUp) {
 			timeTxt.setText(String.valueOf(time) + "+");
-		else
+		} else {
 			timeTxt.setText(String.valueOf(time));
+		}
 	}
 }

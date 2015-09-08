@@ -62,15 +62,17 @@ public class PartPins extends ValueComputerPart {
 
 	// Adds the given pin to list
 	public void addPin(String partPinName, String gatePinName) {
-		if (gate != null && partGateClass != null) {
+		if ((gate != null) && (partGateClass != null)) {
 			String cleanPartPinName = partPinName;
 			String cleanGatePinName = gatePinName;
 
 			// find names without sub bus specifications
-			if (partPinName.indexOf("[") >= 0)
+			if (partPinName.indexOf("[") >= 0) {
 				cleanPartPinName = partPinName.substring(0, partPinName.indexOf("["));
-			if (gatePinName.indexOf("[") >= 0)
+			}
+			if (gatePinName.indexOf("[") >= 0) {
 				cleanGatePinName = gatePinName.substring(0, gatePinName.indexOf("["));
+			}
 
 			// prepare part pin info
 			PinInfo partInfo = partGateClass.getPinInfo(cleanPartPinName);
@@ -101,9 +103,9 @@ public class PartPins extends ValueComputerPart {
 				info.gatePinName = gateInfo.name;
 			}
 
-			if (selfFittingWidth)
+			if (selfFittingWidth) {
 				info.gatePinSubBus = new byte[] { 0, (byte) (partInfo.width - 1) };
-			else {
+			} else {
 				try {
 					info.gatePinSubBus = CompositeGateClass.getSubBus(gatePinName);
 				} catch (Exception e) {
@@ -112,11 +114,12 @@ public class PartPins extends ValueComputerPart {
 
 			// create node adapter for notifying gui on value changes
 			Node nodeAdapter = null;
-			if (info.gatePinSubBus == null)
+			if (info.gatePinSubBus == null) {
 				nodeAdapter = new NodePartPinsAdapter(this, partPins.size());
-			else
+			} else {
 				nodeAdapter = new SubNodePartPinsAdapter(info.gatePinSubBus[0], info.gatePinSubBus[1], this,
 						partPins.size());
+			}
 			node.addListener(nodeAdapter);
 			nodes.put(node, nodeAdapter);
 			partPins.addElement(info);
@@ -148,20 +151,25 @@ public class PartPins extends ValueComputerPart {
 		refreshGUI();
 	}
 
+	@Override
 	public void doSetValueAt(int index, short value) {
 	}
 
+	@Override
 	public ComputerPartGUI getGUI() {
 		return gui;
 	}
 
+	@Override
 	public short getValueAt(int index) {
 		return ((PartPinInfo) partPins.elementAt(index)).value;
 	}
 
+	@Override
 	public void refreshGUI() {
-		if (displayChanges)
+		if (displayChanges) {
 			gui.setContents(partPins);
+		}
 	}
 
 	// Sets the current gate.
@@ -175,12 +183,15 @@ public class PartPins extends ValueComputerPart {
 		clearPart();
 		this.partGateClass = partGateClass;
 
-		if (hasGUI)
+		if (hasGUI) {
 			gui.setPartName(partName);
+		}
 	}
 
+	@Override
 	public void setValueAt(int index, short value, boolean quiet) {
-		if (getValueAt(index) != value)
+		if (getValueAt(index) != value) {
 			super.setValueAt(index, value, quiet);
+		}
 	}
 }

@@ -26,6 +26,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Line2D;
+import java.awt.geom.Path2D;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
@@ -113,6 +114,7 @@ public class ALUComponent extends JPanel implements ALUGUI {
 	/**
 	 * Starts the alu's flashing.
 	 */
+	@Override
 	public void bodyFlash() {
 		aluColor = Color.red;
 		commandLbl.setBackground(Color.red);
@@ -122,6 +124,7 @@ public class ALUComponent extends JPanel implements ALUGUI {
 	/**
 	 * Flashes the ALU command.
 	 */
+	@Override
 	public void commandFlash() {
 		commandLbl.setBackground(Color.red);
 		repaint();
@@ -140,6 +143,7 @@ public class ALUComponent extends JPanel implements ALUGUI {
 	/**
 	 * flashes the value at the given index.
 	 */
+	@Override
 	public void flash(int index) {
 		switch (index) {
 		case 0:
@@ -158,6 +162,7 @@ public class ALUComponent extends JPanel implements ALUGUI {
 	 * Returns the coordinates of the top left corner of the value at the given
 	 * index.
 	 */
+	@Override
 	public Point getCoordinates(int index) {
 		Point location = getLocation();
 		switch (index) {
@@ -178,6 +183,7 @@ public class ALUComponent extends JPanel implements ALUGUI {
 	/**
 	 * Returns the value at the given index in its string representation.
 	 */
+	@Override
 	public String getValueAsString(int index) {
 
 		switch (index) {
@@ -195,6 +201,7 @@ public class ALUComponent extends JPanel implements ALUGUI {
 	/**
 	 * Stops the alu's flashing.
 	 */
+	@Override
 	public void hideBodyFlash() {
 		aluColor = new Color(107, 194, 46);
 		commandLbl.setBackground(new Color(107, 194, 46));
@@ -204,6 +211,7 @@ public class ALUComponent extends JPanel implements ALUGUI {
 	/**
 	 * Hides the ALU's command flash.
 	 */
+	@Override
 	public void hideCommandFlash() {
 		commandLbl.setBackground(new Color(107, 194, 46));
 		repaint();
@@ -212,6 +220,7 @@ public class ALUComponent extends JPanel implements ALUGUI {
 	/**
 	 * hides the existing flash.
 	 */
+	@Override
 	public void hideFlash() {
 		location0.setBackground(null);
 		location1.setBackground(null);
@@ -221,6 +230,7 @@ public class ALUComponent extends JPanel implements ALUGUI {
 	/**
 	 * Hides all highlightes.
 	 */
+	@Override
 	public void hideHighlight() {
 		location0.setDisabledTextColor(Color.black);
 		location1.setDisabledTextColor(Color.black);
@@ -231,6 +241,7 @@ public class ALUComponent extends JPanel implements ALUGUI {
 	/**
 	 * Highlights the value at the given index.
 	 */
+	@Override
 	public void highlight(int index) {
 
 		switch (index) {
@@ -319,6 +330,7 @@ public class ALUComponent extends JPanel implements ALUGUI {
 	/**
 	 * Paint this ALUComponent.
 	 */
+	@Override
 	public void paintComponent(Graphics g) {
 
 		Graphics2D g2 = (Graphics2D) g;
@@ -328,7 +340,7 @@ public class ALUComponent extends JPanel implements ALUGUI {
 		int x4Points[] = { START_ALU_X, FINISH_ALU_X, FINISH_ALU_X, START_ALU_X };
 		int y4Points[] = { 23, 56, 83, 116 };
 
-		GeneralPath filledPolygon = new GeneralPath(GeneralPath.WIND_EVEN_ODD, x4Points.length);
+		GeneralPath filledPolygon = new GeneralPath(Path2D.WIND_EVEN_ODD, x4Points.length);
 		filledPolygon.moveTo(x4Points[0], y4Points[0]);
 
 		for (int index = 1; index < x4Points.length; index++) {
@@ -357,6 +369,7 @@ public class ALUComponent extends JPanel implements ALUGUI {
 	/**
 	 * Resets the contents of this ALUComponent.
 	 */
+	@Override
 	public void reset() {
 		location0.setText(Format.translateValueToString(nullValue, dataFormat));
 		location1.setText(Format.translateValueToString(nullValue, dataFormat));
@@ -369,6 +382,7 @@ public class ALUComponent extends JPanel implements ALUGUI {
 	/**
 	 * Sets the command with the given one.
 	 */
+	@Override
 	public void setCommand(String command) {
 		commandLbl.setText(command);
 	}
@@ -376,6 +390,7 @@ public class ALUComponent extends JPanel implements ALUGUI {
 	/**
 	 * Sets the null value.
 	 */
+	@Override
 	public void setNullValue(short value, boolean hideNullValue) {
 		nullValue = value;
 		this.hideNullValue = hideNullValue;
@@ -385,6 +400,7 @@ public class ALUComponent extends JPanel implements ALUGUI {
 	 * Sets the numeric format with the given code (out of the format constants
 	 * in HackController).
 	 */
+	@Override
 	public void setNumericFormat(int formatCode) {
 		dataFormat = formatCode;
 		location0.setText(Format.translateValueToString(location0Value, formatCode));
@@ -395,6 +411,7 @@ public class ALUComponent extends JPanel implements ALUGUI {
 	/**
 	 * Sets the element at the given index with the given value.
 	 */
+	@Override
 	public void setValueAt(int index, short value) {
 
 		String data = Format.translateValueToString(value, dataFormat);
@@ -419,12 +436,14 @@ public class ALUComponent extends JPanel implements ALUGUI {
 	 */
 	protected String translateValueToString(short value) {
 		if (hideNullValue) {
-			if (value == nullValue)
+			if (value == nullValue) {
 				return "";
-			else
+			} else {
 				return Format.translateValueToString(value, dataFormat);
-		} else
+			}
+		} else {
 			return Format.translateValueToString(value, dataFormat);
+		}
 
 	}
 }

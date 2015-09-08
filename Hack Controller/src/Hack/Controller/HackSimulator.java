@@ -72,10 +72,11 @@ public abstract class HackSimulator implements ProgramEventListener, ComputerPar
 	 * Displays the given message, according to the given type.
 	 */
 	protected void displayMessage(String message, boolean error) {
-		if (error)
+		if (error) {
 			notifyListeners(ControllerEvent.DISPLAY_ERROR_MESSAGE, message);
-		else
+		} else {
 			notifyListeners(ControllerEvent.DISPLAY_MESSAGE, message);
+		}
 	}
 
 	/**
@@ -143,8 +144,9 @@ public abstract class HackSimulator implements ProgramEventListener, ComputerPar
 	public void notifyListeners(byte action, Object data) {
 		ControllerEvent event = new ControllerEvent(this, action, data);
 
-		for (int i = 0; i < listeners.size(); i++)
+		for (int i = 0; i < listeners.size(); i++) {
 			((ControllerEventListener) listeners.elementAt(i)).actionPerformed(event);
+		}
 	}
 
 	/**
@@ -171,6 +173,7 @@ public abstract class HackSimulator implements ProgramEventListener, ComputerPar
 	 */
 	public abstract void prepareGUI();
 
+	@Override
 	public void programChanged(ProgramEvent event) {
 		notifyProgramListeners(event.getType(), event.getProgramFileName());
 	}
@@ -233,7 +236,8 @@ public abstract class HackSimulator implements ProgramEventListener, ComputerPar
 		workingDir = file.isDirectory() ? file : parent;
 
 		HackSimulatorGUI gui = getGUI();
-		if (gui != null)
+		if (gui != null) {
 			getGUI().setWorkingDir(parent);
+		}
 	}
 }

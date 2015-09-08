@@ -19,7 +19,6 @@ package SimulatorsGUI;
 
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.Vector;
 
@@ -87,17 +86,9 @@ public class ChipLoaderFileChooser extends JFrame {
 		okButton.setToolTipText("OK");
 		okButton.setIcon(okIcon);
 		okButton.setBounds(new Rectangle(90, 95, 63, 44));
-		okButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				okButton_actionPerformed(e);
-			}
-		});
+		okButton.addActionListener(e -> okButton_actionPerformed(e));
 		cancelButton.setBounds(new Rectangle(265, 95, 63, 44));
-		cancelButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				cancelButton_actionPerformed(e);
-			}
-		});
+		cancelButton.addActionListener(e -> cancelButton_actionPerformed(e));
 		cancelButton.setToolTipText("CANCEL");
 		cancelButton.setIcon(cancelIcon);
 		this.getContentPane().add(workingDir, null);
@@ -143,7 +134,7 @@ public class ChipLoaderFileChooser extends JFrame {
 			builtInDir.showCurrentFileName();
 		}
 
-		if (!(working == null && builtIn == null)) {
+		if (!((working == null) && (builtIn == null))) {
 			notifyListeners(working, builtIn);
 		}
 		setVisible(false);

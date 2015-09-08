@@ -31,11 +31,13 @@ public class PointedMemorySegmentComponent extends MemorySegmentComponent implem
 	// the feature of coloring the background of a specific cell.
 	public class PointedMemorySegmentTableCellRenderer extends MemorySegmentTableCellRenderer {
 
+		@Override
 		public void setRenderer(int row, int column) {
-			if (row == pointerAddress - startAddress)
+			if (row == (pointerAddress - startAddress)) {
 				setBackground(Color.yellow);
-			else
+			} else {
 				setBackground(null);
+			}
 
 			super.setRenderer(row, column);
 		}
@@ -54,6 +56,7 @@ public class PointedMemorySegmentComponent extends MemorySegmentComponent implem
 		super();
 	}
 
+	@Override
 	protected DefaultTableCellRenderer getCellRenderer() {
 		return new PointedMemorySegmentTableCellRenderer();
 	}
@@ -62,13 +65,15 @@ public class PointedMemorySegmentComponent extends MemorySegmentComponent implem
 	 * Scrolls the table to the pointer location.
 	 */
 	protected void scrollToPointer() {
-		if (pointerAddress >= 0)
+		if (pointerAddress >= 0) {
 			Utilities.tableCenterScroll(this, segmentTable, pointerAddress);
+		}
 	}
 
 	/**
 	 * Implementing the action of the table gaining the focus.
 	 */
+	@Override
 	public void segmentTable_focusGained(FocusEvent e) {
 		super.segmentTable_focusGained(e);
 		hasFocus = true;
@@ -78,6 +83,7 @@ public class PointedMemorySegmentComponent extends MemorySegmentComponent implem
 	/**
 	 * Implementing the action of the table loosing the focus.
 	 */
+	@Override
 	public void segmentTable_focusLost(FocusEvent e) {
 		super.segmentTable_focusLost(e);
 		hasFocus = false;
@@ -86,6 +92,7 @@ public class PointedMemorySegmentComponent extends MemorySegmentComponent implem
 	/**
 	 * Sets the pointer with the given pointer address (absolute address).
 	 */
+	@Override
 	public void setPointer(int pointerAddress) {
 		this.pointerAddress = (short) pointerAddress;
 		scrollToPointer();
@@ -94,6 +101,7 @@ public class PointedMemorySegmentComponent extends MemorySegmentComponent implem
 	/**
 	 * Sets the start address.
 	 */
+	@Override
 	public void setStartAddress(int address) {
 		super.setStartAddress(address);
 		scrollToPointer();

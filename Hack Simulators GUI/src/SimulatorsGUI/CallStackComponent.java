@@ -49,6 +49,7 @@ public class CallStackComponent extends JPanel implements CallStackGUI {
 		/**
 		 * Returns the cell renderer component.
 		 */
+		@Override
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean selected, boolean focused,
 				int row, int column) {
 			setForeground(null);
@@ -64,8 +65,9 @@ public class CallStackComponent extends JPanel implements CallStackGUI {
 		 * Sets a new cell renderer.
 		 */
 		public void setRenderer(int row, int column) {
-			if (row == (methodNames.size() - 1))
+			if (row == (methodNames.size() - 1)) {
 				setForeground(Color.blue);
+			}
 		}
 	}
 
@@ -75,6 +77,7 @@ public class CallStackComponent extends JPanel implements CallStackGUI {
 		/**
 		 * Returns the number of columns.
 		 */
+		@Override
 		public int getColumnCount() {
 			return 1;
 		}
@@ -82,6 +85,7 @@ public class CallStackComponent extends JPanel implements CallStackGUI {
 		/**
 		 * Returns the names of the columns.
 		 */
+		@Override
 		public String getColumnName(int col) {
 			return "";
 		}
@@ -89,6 +93,7 @@ public class CallStackComponent extends JPanel implements CallStackGUI {
 		/**
 		 * Returns the number of rows.
 		 */
+		@Override
 		public int getRowCount() {
 			return methodNames.size();
 		}
@@ -96,6 +101,7 @@ public class CallStackComponent extends JPanel implements CallStackGUI {
 		/**
 		 * Returns the value at a specific row and column.
 		 */
+		@Override
 		public Object getValueAt(int row, int col) {
 			return methodNames.elementAt(row);
 		}
@@ -103,6 +109,7 @@ public class CallStackComponent extends JPanel implements CallStackGUI {
 		/**
 		 * Returns true of this table cells are editable, false - otherwise.
 		 */
+		@Override
 		public boolean isCellEditable(int row, int col) {
 			return false;
 		}
@@ -167,10 +174,12 @@ public class CallStackComponent extends JPanel implements CallStackGUI {
 	// Initializing this component.
 	private void jbInit() {
 		callStackTable.addFocusListener(new FocusListener() {
+			@Override
 			public void focusGained(FocusEvent e) {
 				callStackTable_focusGained(e);
 			}
 
+			@Override
 			public void focusLost(FocusEvent e) {
 				callStackTable_focusLost(e);
 			}
@@ -192,6 +201,7 @@ public class CallStackComponent extends JPanel implements CallStackGUI {
 	/**
 	 * Resets the contents of this CallStackComponent.
 	 */
+	@Override
 	public void reset() {
 		methodNames.removeAllElements();
 		callStackTable.revalidate();
@@ -202,6 +212,7 @@ public class CallStackComponent extends JPanel implements CallStackGUI {
 	/**
 	 * Sets the call stack with the given vector of method names.
 	 */
+	@Override
 	public void setContents(Vector newMethodNames) {
 		methodNames = (Vector) newMethodNames.clone();
 		callStackTable.revalidate();

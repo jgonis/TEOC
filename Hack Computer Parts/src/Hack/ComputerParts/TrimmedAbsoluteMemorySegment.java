@@ -41,9 +41,11 @@ public class TrimmedAbsoluteMemorySegment extends AbsolutePointedMemorySegment {
 		super(mainMemory, gui, minValue, maxValue);
 	}
 
+	@Override
 	public void setValueAt(int index, short value, boolean quiet) {
-		if (displayChanges)
+		if (displayChanges) {
 			((PointedMemorySegmentGUI) gui).setPointer(index + 1);
+		}
 
 		super.setValueAt(index, value, quiet);
 	}

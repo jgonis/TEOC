@@ -19,7 +19,6 @@ package HackGUI;
 
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -80,25 +79,13 @@ public class SearchMemoryWindow extends JFrame {
 		instructionLbl.setBounds(new Rectangle(9, 22, 132, 23));
 		this.getContentPane().setLayout(null);
 		rowNumber.setBounds(new Rectangle(102, 25, 158, 18));
-		rowNumber.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				rowNumber_actionPerformed(e);
-			}
-		});
+		rowNumber.addActionListener(e -> rowNumber_actionPerformed(e));
 		okButton.setToolTipText("Ok");
 		okButton.setIcon(okIcon);
 		okButton.setBounds(new Rectangle(49, 60, 63, 44));
-		okButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				okButton_actionPerformed(e);
-			}
-		});
+		okButton.addActionListener(e -> okButton_actionPerformed(e));
 		cancelButton.setBounds(new Rectangle(176, 60, 63, 44));
-		cancelButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				cancelButton_actionPerformed(e);
-			}
-		});
+		cancelButton.addActionListener(e -> cancelButton_actionPerformed(e));
 		cancelButton.setToolTipText("Cancel");
 		cancelButton.setIcon(cancelIcon);
 		this.getContentPane().add(instructionLbl, null);

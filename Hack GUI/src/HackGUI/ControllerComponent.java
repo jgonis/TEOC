@@ -23,7 +23,6 @@ import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.Hashtable;
@@ -43,9 +42,9 @@ import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JSlider;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
+import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 import Hack.Controller.ControllerEvent;
 import Hack.Controller.ControllerEventListener;
@@ -167,13 +166,15 @@ public class ControllerComponent extends JFrame
 	 * Called when the about window menu item was selected.
 	 */
 	public void aboutMenuItem_actionPerformed(ActionEvent e) {
-		if (aboutWindow != null)
+		if (aboutWindow != null) {
 			aboutWindow.setVisible(true);
+		}
 	}
 
 	/**
 	 * Registers the given ControllerEventListener as a listener to this GUI.
 	 */
+	@Override
 	public void addControllerListener(ControllerEventListener listener) {
 		listeners.addElement(listener);
 	}
@@ -185,23 +186,27 @@ public class ControllerComponent extends JFrame
 		int selectedIndex = additionalDisplayCombo.getSelectedIndex();
 		switch (selectedIndex) {
 		case HackController.SCRIPT_ADDITIONAL_DISPLAY:
-			if (!scriptMenuItem.isSelected())
+			if (!scriptMenuItem.isSelected()) {
 				scriptMenuItem.setSelected(true);
+			}
 			break;
 
 		case HackController.OUTPUT_ADDITIONAL_DISPLAY:
-			if (!outputMenuItem.isSelected())
+			if (!outputMenuItem.isSelected()) {
 				outputMenuItem.setSelected(true);
+			}
 			break;
 
 		case HackController.COMPARISON_ADDITIONAL_DISPLAY:
-			if (!compareMenuItem.isSelected())
+			if (!compareMenuItem.isSelected()) {
 				compareMenuItem.setSelected(true);
+			}
 			break;
 
 		case HackController.NO_ADDITIONAL_DISPLAY:
-			if (!noAdditionalDisplayMenuItem.isSelected())
+			if (!noAdditionalDisplayMenuItem.isSelected()) {
 				noAdditionalDisplayMenuItem.setSelected(true);
+			}
 			break;
 		}
 
@@ -215,18 +220,21 @@ public class ControllerComponent extends JFrame
 		int selectedIndex = animationCombo.getSelectedIndex();
 		switch (selectedIndex) {
 		case HackController.DISPLAY_CHANGES:
-			if (!partAnimMenuItem.isSelected())
+			if (!partAnimMenuItem.isSelected()) {
 				partAnimMenuItem.setSelected(true);
+			}
 			break;
 
 		case HackController.ANIMATION:
-			if (!fullAnimMenuItem.isSelected())
+			if (!fullAnimMenuItem.isSelected()) {
 				fullAnimMenuItem.setSelected(true);
+			}
 			break;
 
 		case HackController.NO_DISPLAY_CHANGES:
-			if (!noAnimMenuItem.isSelected())
+			if (!noAnimMenuItem.isSelected()) {
 				noAnimMenuItem.setSelected(true);
+			}
 			break;
 		}
 
@@ -257,29 +265,17 @@ public class ControllerComponent extends JFrame
 		menuBar.add(helpMenu);
 
 		programMenuItem = new JMenuItem("Load Program", KeyEvent.VK_O);
-		programMenuItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				programMenuItem_actionPerformed(e);
-			}
-		});
+		programMenuItem.addActionListener(e -> programMenuItem_actionPerformed(e));
 		fileMenu.add(programMenuItem);
 
 		scriptMenuItem = new JMenuItem("Load Script", KeyEvent.VK_P);
-		scriptMenuItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				scriptMenuItem_actionPerformed(e);
-			}
-		});
+		scriptMenuItem.addActionListener(e -> scriptMenuItem_actionPerformed(e));
 		fileMenu.add(scriptMenuItem);
 		fileMenu.addSeparator();
 
 		exitMenuItem = new JMenuItem("Exit", KeyEvent.VK_X);
 		exitMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, ActionEvent.ALT_MASK));
-		exitMenuItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				exitMenuItem_actionPerformed(e);
-			}
-		});
+		exitMenuItem.addActionListener(e -> exitMenuItem_actionPerformed(e));
 		fileMenu.add(exitMenuItem);
 
 		viewMenu.addSeparator();
@@ -293,31 +289,19 @@ public class ControllerComponent extends JFrame
 		partAnimMenuItem = new JRadioButtonMenuItem("Program flow");
 		partAnimMenuItem.setMnemonic(KeyEvent.VK_P);
 		partAnimMenuItem.setSelected(true);
-		partAnimMenuItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				partAnimMenuItem_actionPerformed(e);
-			}
-		});
+		partAnimMenuItem.addActionListener(e -> partAnimMenuItem_actionPerformed(e));
 		animationRadioButtons.add(partAnimMenuItem);
 		animationSubMenu.add(partAnimMenuItem);
 
 		fullAnimMenuItem = new JRadioButtonMenuItem("Program & data flow");
 		fullAnimMenuItem.setMnemonic(KeyEvent.VK_D);
-		fullAnimMenuItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				fullAnimMenuItem_actionPerformed(e);
-			}
-		});
+		fullAnimMenuItem.addActionListener(e -> fullAnimMenuItem_actionPerformed(e));
 		animationRadioButtons.add(fullAnimMenuItem);
 		animationSubMenu.add(fullAnimMenuItem);
 
 		noAnimMenuItem = new JRadioButtonMenuItem("No Animation");
 		noAnimMenuItem.setMnemonic(KeyEvent.VK_N);
-		noAnimMenuItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				noAnimMenuItem_actionPerformed(e);
-			}
-		});
+		noAnimMenuItem.addActionListener(e -> noAnimMenuItem_actionPerformed(e));
 		animationRadioButtons.add(noAnimMenuItem);
 		animationSubMenu.add(noAnimMenuItem);
 
@@ -330,41 +314,25 @@ public class ControllerComponent extends JFrame
 		scriptDisplayMenuItem = new JRadioButtonMenuItem("Script");
 		scriptDisplayMenuItem.setMnemonic(KeyEvent.VK_S);
 		scriptDisplayMenuItem.setSelected(true);
-		scriptDisplayMenuItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				scriptDisplayMenuItem_actionPerformed(e);
-			}
-		});
+		scriptDisplayMenuItem.addActionListener(e -> scriptDisplayMenuItem_actionPerformed(e));
 		additionalDisplayRadioButtons.add(scriptDisplayMenuItem);
 		additionalDisplaySubMenu.add(scriptDisplayMenuItem);
 
 		outputMenuItem = new JRadioButtonMenuItem("Output");
 		outputMenuItem.setMnemonic(KeyEvent.VK_O);
-		outputMenuItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				outputMenuItem_actionPerformed(e);
-			}
-		});
+		outputMenuItem.addActionListener(e -> outputMenuItem_actionPerformed(e));
 		additionalDisplayRadioButtons.add(outputMenuItem);
 		additionalDisplaySubMenu.add(outputMenuItem);
 
 		compareMenuItem = new JRadioButtonMenuItem("Compare");
 		compareMenuItem.setMnemonic(KeyEvent.VK_C);
-		compareMenuItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				compareMenuItem_actionPerformed(e);
-			}
-		});
+		compareMenuItem.addActionListener(e -> compareMenuItem_actionPerformed(e));
 		additionalDisplayRadioButtons.add(compareMenuItem);
 		additionalDisplaySubMenu.add(compareMenuItem);
 
 		noAdditionalDisplayMenuItem = new JRadioButtonMenuItem("Screen");
 		noAdditionalDisplayMenuItem.setMnemonic(KeyEvent.VK_N);
-		noAdditionalDisplayMenuItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				noAdditionalDisplayMenuItem_actionPerformed(e);
-			}
-		});
+		noAdditionalDisplayMenuItem.addActionListener(e -> noAdditionalDisplayMenuItem_actionPerformed(e));
 		additionalDisplayRadioButtons.add(noAdditionalDisplayMenuItem);
 		additionalDisplaySubMenu.add(noAdditionalDisplayMenuItem);
 
@@ -377,31 +345,19 @@ public class ControllerComponent extends JFrame
 		decMenuItem = new JRadioButtonMenuItem("Decimal");
 		decMenuItem.setMnemonic(KeyEvent.VK_D);
 		decMenuItem.setSelected(true);
-		decMenuItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				decMenuItem_actionPerformed(e);
-			}
-		});
+		decMenuItem.addActionListener(e -> decMenuItem_actionPerformed(e));
 		formatRadioButtons.add(decMenuItem);
 		numericFormatSubMenu.add(decMenuItem);
 
 		hexaMenuItem = new JRadioButtonMenuItem("Hexadecimal");
 		hexaMenuItem.setMnemonic(KeyEvent.VK_H);
-		hexaMenuItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				hexaMenuItem_actionPerformed(e);
-			}
-		});
+		hexaMenuItem.addActionListener(e -> hexaMenuItem_actionPerformed(e));
 		formatRadioButtons.add(hexaMenuItem);
 		numericFormatSubMenu.add(hexaMenuItem);
 
 		binMenuItem = new JRadioButtonMenuItem("Binary");
 		binMenuItem.setMnemonic(KeyEvent.VK_B);
-		binMenuItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				binMenuItem_actionPerformed(e);
-			}
-		});
+		binMenuItem.addActionListener(e -> binMenuItem_actionPerformed(e));
 		formatRadioButtons.add(binMenuItem);
 		numericFormatSubMenu.add(binMenuItem);
 
@@ -409,64 +365,36 @@ public class ControllerComponent extends JFrame
 
 		singleStepMenuItem = new JMenuItem("Single Step", KeyEvent.VK_S);
 		singleStepMenuItem.setAccelerator(KeyStroke.getKeyStroke("F11"));
-		singleStepMenuItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				singleStepMenuItem_actionPerformed(e);
-			}
-		});
+		singleStepMenuItem.addActionListener(e -> singleStepMenuItem_actionPerformed(e));
 		runMenu.add(singleStepMenuItem);
 
 		ffwdMenuItem = new JMenuItem("Run", KeyEvent.VK_F);
 		ffwdMenuItem.setAccelerator(KeyStroke.getKeyStroke("F5"));
-		ffwdMenuItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				ffwdMenuItem_actionPerformed(e);
-			}
-		});
+		ffwdMenuItem.addActionListener(e -> ffwdMenuItem_actionPerformed(e));
 		runMenu.add(ffwdMenuItem);
 
 		stopMenuItem = new JMenuItem("Stop", KeyEvent.VK_T);
 		stopMenuItem.setAccelerator(KeyStroke.getKeyStroke("shift F5"));
-		stopMenuItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				stopMenuItem_actionPerformed(e);
-			}
-		});
+		stopMenuItem.addActionListener(e -> stopMenuItem_actionPerformed(e));
 		runMenu.add(stopMenuItem);
 
 		rewindMenuItem = new JMenuItem("Reset", KeyEvent.VK_R);
-		rewindMenuItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				rewindMenuItem_actionPerformed(e);
-			}
-		});
+		rewindMenuItem.addActionListener(e -> rewindMenuItem_actionPerformed(e));
 		runMenu.add(rewindMenuItem);
 
 		runMenu.addSeparator();
 
 		breakpointsMenuItem = new JMenuItem("Breakpoints", KeyEvent.VK_B);
-		breakpointsMenuItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				breakpointsMenuItem_actionPerformed(e);
-			}
-		});
+		breakpointsMenuItem.addActionListener(e -> breakpointsMenuItem_actionPerformed(e));
 		runMenu.add(breakpointsMenuItem);
 
 		usageMenuItem = new JMenuItem("Usage", KeyEvent.VK_U);
 		usageMenuItem.setAccelerator(KeyStroke.getKeyStroke("F1"));
-		usageMenuItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				usageMenuItem_actionPerformed(e);
-			}
-		});
+		usageMenuItem.addActionListener(e -> usageMenuItem_actionPerformed(e));
 		helpMenu.add(usageMenuItem);
 
 		aboutMenuItem = new JMenuItem("About ...", KeyEvent.VK_A);
-		aboutMenuItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				aboutMenuItem_actionPerformed(e);
-			}
-		});
+		aboutMenuItem.addActionListener(e -> aboutMenuItem_actionPerformed(e));
 		helpMenu.add(aboutMenuItem);
 
 	}
@@ -495,8 +423,9 @@ public class ControllerComponent extends JFrame
 	 * Called when the numeric format's "binary" menu item was selected.
 	 */
 	public void binMenuItem_actionPerformed(ActionEvent e) {
-		if (!formatCombo.isSelectedIndex(HackController.BINARY_FORMAT))
+		if (!formatCombo.isSelectedIndex(HackController.BINARY_FORMAT)) {
 			formatCombo.setSelectedIndex(HackController.BINARY_FORMAT);
+		}
 	}
 
 	/**
@@ -510,6 +439,7 @@ public class ControllerComponent extends JFrame
 	 * Called when there was a change in the breakpoints vector. The event
 	 * contains the vector of breakpoints.
 	 */
+	@Override
 	public void breakpointsChanged(BreakpointsChangedEvent event) {
 		notifyControllerListeners(ControllerEvent.BREAKPOINTS_CHANGE, event.getBreakpoints());
 	}
@@ -525,21 +455,24 @@ public class ControllerComponent extends JFrame
 	 * Called when the additonal display's "comparison" menu item was selected.
 	 */
 	public void compareMenuItem_actionPerformed(ActionEvent e) {
-		if (!additionalDisplayCombo.isSelectedIndex(HackController.COMPARISON_ADDITIONAL_DISPLAY))
+		if (!additionalDisplayCombo.isSelectedIndex(HackController.COMPARISON_ADDITIONAL_DISPLAY)) {
 			additionalDisplayCombo.setSelectedIndex(HackController.COMPARISON_ADDITIONAL_DISPLAY);
+		}
 	}
 
 	/**
 	 * Called when the numeric format's "decimal" menu item was selected.
 	 */
 	public void decMenuItem_actionPerformed(ActionEvent e) {
-		if (!formatCombo.isSelectedIndex(HackController.DECIMAL_FORMAT))
+		if (!formatCombo.isSelectedIndex(HackController.DECIMAL_FORMAT)) {
 			formatCombo.setSelectedIndex(HackController.DECIMAL_FORMAT);
+		}
 	}
 
 	/**
 	 * Disables the animation mode buttons.
 	 */
+	@Override
 	public void disableAnimationModes() {
 		animationCombo.setEnabled(false);
 		partAnimMenuItem.setEnabled(false);
@@ -550,6 +483,7 @@ public class ControllerComponent extends JFrame
 	/**
 	 * Disables the fast forward action.
 	 */
+	@Override
 	public void disableFastForward() {
 		ffwdButton.setEnabled(false);
 		ffwdMenuItem.setEnabled(false);
@@ -558,6 +492,7 @@ public class ControllerComponent extends JFrame
 	/**
 	 * Disables the load program action.
 	 */
+	@Override
 	public void disableLoadProgram() {
 		loadProgramButton.setEnabled(false);
 	}
@@ -565,6 +500,7 @@ public class ControllerComponent extends JFrame
 	/**
 	 * Disables the rewind action.
 	 */
+	@Override
 	public void disableRewind() {
 		rewindButton.setEnabled(false);
 		rewindMenuItem.setEnabled(false);
@@ -573,6 +509,7 @@ public class ControllerComponent extends JFrame
 	/**
 	 * Disables the eject action.
 	 */
+	@Override
 	public void disableScript() {
 		scriptButton.setEnabled(false);
 		scriptMenuItem.setEnabled(false);
@@ -581,6 +518,7 @@ public class ControllerComponent extends JFrame
 	/**
 	 * Disables the single step action.
 	 */
+	@Override
 	public void disableSingleStep() {
 		singleStepButton.setEnabled(false);
 		singleStepMenuItem.setEnabled(false);
@@ -589,6 +527,7 @@ public class ControllerComponent extends JFrame
 	/**
 	 * Disables the speed slider.
 	 */
+	@Override
 	public void disableSpeedSlider() {
 		speedSlider.setEnabled(false);
 	}
@@ -596,16 +535,19 @@ public class ControllerComponent extends JFrame
 	/**
 	 * Disables the stop action.
 	 */
+	@Override
 	public void disableStop() {
 		stopButton.setEnabled(false);
 		stopMenuItem.setEnabled(false);
 	}
 
+	@Override
 	public void displayMessage(String message, boolean error) {
-		if (error)
+		if (error) {
 			messageLbl.setForeground(Color.red);
-		else
+		} else {
 			messageLbl.setForeground(UIManager.getColor("Label.foreground"));
+		}
 		messageLbl.setText(message);
 		messageLbl.setToolTipText(message);
 	}
@@ -613,6 +555,7 @@ public class ControllerComponent extends JFrame
 	/**
 	 * Enables the animation mode buttons.
 	 */
+	@Override
 	public void enableAnimationModes() {
 		animationCombo.setEnabled(true);
 		partAnimMenuItem.setEnabled(true);
@@ -623,6 +566,7 @@ public class ControllerComponent extends JFrame
 	/**
 	 * Enables the fast forward action.
 	 */
+	@Override
 	public void enableFastForward() {
 		ffwdButton.setEnabled(true);
 		ffwdMenuItem.setEnabled(true);
@@ -631,6 +575,7 @@ public class ControllerComponent extends JFrame
 	/**
 	 * Enables the load program action.
 	 */
+	@Override
 	public void enableLoadProgram() {
 		loadProgramButton.setEnabled(true);
 	}
@@ -638,6 +583,7 @@ public class ControllerComponent extends JFrame
 	/**
 	 * Enables the rewind action.
 	 */
+	@Override
 	public void enableRewind() {
 		rewindButton.setEnabled(true);
 		rewindMenuItem.setEnabled(true);
@@ -646,6 +592,7 @@ public class ControllerComponent extends JFrame
 	/**
 	 * Enables the eject action.
 	 */
+	@Override
 	public void enableScript() {
 		scriptButton.setEnabled(true);
 		scriptMenuItem.setEnabled(true);
@@ -654,6 +601,7 @@ public class ControllerComponent extends JFrame
 	/**
 	 * Enables the single step action.
 	 */
+	@Override
 	public void enableSingleStep() {
 		singleStepButton.setEnabled(true);
 		singleStepMenuItem.setEnabled(true);
@@ -662,6 +610,7 @@ public class ControllerComponent extends JFrame
 	/**
 	 * Enables the speed slider.
 	 */
+	@Override
 	public void enableSpeedSlider() {
 		speedSlider.setEnabled(true);
 	}
@@ -669,6 +618,7 @@ public class ControllerComponent extends JFrame
 	/**
 	 * Enables the stop action.
 	 */
+	@Override
 	public void enableStop() {
 		stopButton.setEnabled(true);
 		stopMenuItem.setEnabled(true);
@@ -699,6 +649,7 @@ public class ControllerComponent extends JFrame
 	 * Called when the names of the files were changed. The event contains the
 	 * three strings representing the names of the files.
 	 */
+	@Override
 	public void filesNamesChanged(FilesTypeEvent event) {
 		if (event.getFirstFile() != null) {
 			scriptComponent.setContents(event.getFirstFile());
@@ -719,18 +670,21 @@ public class ControllerComponent extends JFrame
 		int selectedIndex = formatCombo.getSelectedIndex();
 		switch (selectedIndex) {
 		case HackController.DECIMAL_FORMAT:
-			if (!decMenuItem.isSelected())
+			if (!decMenuItem.isSelected()) {
 				decMenuItem.setSelected(true);
+			}
 			break;
 
 		case HackController.HEXA_FORMAT:
-			if (!hexaMenuItem.isSelected())
+			if (!hexaMenuItem.isSelected()) {
 				hexaMenuItem.setSelected(true);
+			}
 			break;
 
 		case HackController.BINARY_FORMAT:
-			if (!binMenuItem.isSelected())
+			if (!binMenuItem.isSelected()) {
 				binMenuItem.setSelected(true);
+			}
 			break;
 		}
 
@@ -741,18 +695,22 @@ public class ControllerComponent extends JFrame
 	 * Called when the animation's "animate" menu item was selected.
 	 */
 	public void fullAnimMenuItem_actionPerformed(ActionEvent e) {
-		if (!animationCombo.isSelectedIndex(HackController.ANIMATION))
+		if (!animationCombo.isSelectedIndex(HackController.ANIMATION)) {
 			animationCombo.setSelectedIndex(HackController.ANIMATION);
+		}
 	}
 
+	@Override
 	public JComponent getComparisonComponent() {
 		return comparisonComponent;
 	}
 
+	@Override
 	public JComponent getOutputComponent() {
 		return outputComponent;
 	}
 
+	@Override
 	public JComponent getScriptComponent() {
 		return scriptComponent;
 	}
@@ -761,8 +719,9 @@ public class ControllerComponent extends JFrame
 	 * Called when the numeric format's "hexa" menu item was selected.
 	 */
 	public void hexaMenuItem_actionPerformed(ActionEvent e) {
-		if (!formatCombo.isSelectedIndex(HackController.HEXA_FORMAT))
+		if (!formatCombo.isSelectedIndex(HackController.HEXA_FORMAT)) {
 			formatCombo.setSelectedIndex(HackController.HEXA_FORMAT);
+		}
 	}
 
 	/**
@@ -774,7 +733,7 @@ public class ControllerComponent extends JFrame
 
 	// Initializes the buttons and speed slider
 	protected void init() {
-		speedSlider = new JSlider(JSlider.HORIZONTAL, 1, HackController.NUMBER_OF_SPEED_UNITS, 1);
+		speedSlider = new JSlider(SwingConstants.HORIZONTAL, 1, HackController.NUMBER_OF_SPEED_UNITS, 1);
 		loadProgramButton = new MouseOverJButton();
 		ffwdButton = new MouseOverJButton();
 		stopButton = new MouseOverJButton();
@@ -798,11 +757,7 @@ public class ControllerComponent extends JFrame
 		labelTable.put(new Integer(1), slowLabel);
 		labelTable.put(new Integer(5), fastLabel);
 
-		speedSlider.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
-				SpeedSlider_stateChanged(e);
-			}
-		});
+		speedSlider.addChangeListener(e -> SpeedSlider_stateChanged(e));
 		speedSlider.setLabelTable(labelTable);
 		speedSlider.setMajorTickSpacing(1);
 		speedSlider.setPaintTicks(true);
@@ -813,11 +768,7 @@ public class ControllerComponent extends JFrame
 		speedSlider.setToolTipText("Speed");
 		speedSlider.setMaximumSize(new Dimension(95, 50));
 
-		loadProgramButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				loadProgramButton_actionPerformed(e);
-			}
-		});
+		loadProgramButton.addActionListener(e -> loadProgramButton_actionPerformed(e));
 		loadProgramButton.setMaximumSize(new Dimension(39, 39));
 		loadProgramButton.setMinimumSize(new Dimension(39, 39));
 		loadProgramButton.setPreferredSize(new Dimension(39, 39));
@@ -830,17 +781,9 @@ public class ControllerComponent extends JFrame
 		ffwdButton.setPreferredSize(new Dimension(39, 39));
 		ffwdButton.setToolTipText("Run");
 		ffwdButton.setIcon(ffwdIcon);
-		ffwdButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				ffwdButton_actionPerformed(e);
-			}
-		});
+		ffwdButton.addActionListener(e -> ffwdButton_actionPerformed(e));
 
-		stopButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				stopButton_actionPerformed(e);
-			}
-		});
+		stopButton.addActionListener(e -> stopButton_actionPerformed(e));
 		stopButton.setMaximumSize(new Dimension(39, 39));
 		stopButton.setMinimumSize(new Dimension(39, 39));
 		stopButton.setPreferredSize(new Dimension(39, 39));
@@ -852,28 +795,16 @@ public class ControllerComponent extends JFrame
 		rewindButton.setPreferredSize(new Dimension(39, 39));
 		rewindButton.setToolTipText("Reset");
 		rewindButton.setIcon(rewindIcon);
-		rewindButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				rewindButton_actionPerformed(e);
-			}
-		});
+		rewindButton.addActionListener(e -> rewindButton_actionPerformed(e));
 
 		scriptButton.setMaximumSize(new Dimension(39, 39));
 		scriptButton.setMinimumSize(new Dimension(39, 39));
 		scriptButton.setPreferredSize(new Dimension(39, 39));
 		scriptButton.setToolTipText("Load Script");
 		scriptButton.setIcon(scriptIcon);
-		scriptButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				scriptButton_actionPerformed(e);
-			}
-		});
+		scriptButton.addActionListener(e -> scriptButton_actionPerformed(e));
 
-		breakButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				breakButton_actionPerformed(e);
-			}
-		});
+		breakButton.addActionListener(e -> breakButton_actionPerformed(e));
 		breakButton.setMaximumSize(new Dimension(39, 39));
 		breakButton.setMinimumSize(new Dimension(39, 39));
 		breakButton.setPreferredSize(new Dimension(39, 39));
@@ -882,11 +813,7 @@ public class ControllerComponent extends JFrame
 
 		breakpointWindow.addBreakpointListener(this);
 
-		singleStepButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				singleStepButton_actionPerformed(e);
-			}
-		});
+		singleStepButton.addActionListener(e -> singleStepButton_actionPerformed(e));
 		singleStepButton.setMaximumSize(new Dimension(39, 39));
 		singleStepButton.setMinimumSize(new Dimension(39, 39));
 		singleStepButton.setPreferredSize(new Dimension(39, 39));
@@ -894,23 +821,11 @@ public class ControllerComponent extends JFrame
 		singleStepButton.setToolTipText("Single Step");
 		singleStepButton.setIcon(singleStepIcon);
 
-		animationCombo.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				animationCombo_actionPerformed(e);
-			}
-		});
+		animationCombo.addActionListener(e -> animationCombo_actionPerformed(e));
 
-		formatCombo.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				formatCombo_actionPerformed(e);
-			}
-		});
+		formatCombo.addActionListener(e -> formatCombo_actionPerformed(e));
 
-		additionalDisplayCombo.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				additionalDisplayCombo_actionPerformed(e);
-			}
-		});
+		additionalDisplayCombo.addActionListener(e -> additionalDisplayCombo_actionPerformed(e));
 
 		messageLbl.setFont(Utilities.statusLineFont);
 		messageLbl.setBorder(BorderFactory.createLoweredBevelBorder());
@@ -954,16 +869,18 @@ public class ControllerComponent extends JFrame
 	 * Called when the additonal display's "no display" menu item was selected.
 	 */
 	public void noAdditionalDisplayMenuItem_actionPerformed(ActionEvent e) {
-		if (!additionalDisplayCombo.isSelectedIndex(HackController.NO_ADDITIONAL_DISPLAY))
+		if (!additionalDisplayCombo.isSelectedIndex(HackController.NO_ADDITIONAL_DISPLAY)) {
 			additionalDisplayCombo.setSelectedIndex(HackController.NO_ADDITIONAL_DISPLAY);
+		}
 	}
 
 	/**
 	 * Called when the animation's "no animation" menu item was selected.
 	 */
 	public void noAnimMenuItem_actionPerformed(ActionEvent e) {
-		if (!animationCombo.isSelectedIndex(HackController.NO_DISPLAY_CHANGES))
+		if (!animationCombo.isSelectedIndex(HackController.NO_DISPLAY_CHANGES)) {
 			animationCombo.setSelectedIndex(HackController.NO_DISPLAY_CHANGES);
+		}
 	}
 
 	/**
@@ -971,15 +888,18 @@ public class ControllerComponent extends JFrame
 	 * creating a ControllerEvent (with the action and supplied data) and
 	 * sending it using the actionPerformed method to all the listeners.
 	 */
+	@Override
 	public void notifyControllerListeners(byte action, Object data) {
 		ControllerEvent event = new ControllerEvent(this, action, data);
-		for (int i = 0; i < listeners.size(); i++)
+		for (int i = 0; i < listeners.size(); i++) {
 			((ControllerEventListener) listeners.elementAt(i)).actionPerformed(event);
+		}
 	}
 
 	/**
 	 * Called when the output file is updated.
 	 */
+	@Override
 	public void outputFileUpdated() {
 		outputComponent.refresh();
 	}
@@ -988,16 +908,18 @@ public class ControllerComponent extends JFrame
 	 * Called when the additonal display's "output" menu item was selected.
 	 */
 	public void outputMenuItem_actionPerformed(ActionEvent e) {
-		if (!additionalDisplayCombo.isSelectedIndex(HackController.OUTPUT_ADDITIONAL_DISPLAY))
+		if (!additionalDisplayCombo.isSelectedIndex(HackController.OUTPUT_ADDITIONAL_DISPLAY)) {
 			additionalDisplayCombo.setSelectedIndex(HackController.OUTPUT_ADDITIONAL_DISPLAY);
+		}
 	}
 
 	/**
 	 * Called when the animation's "display changes" menu item was selected.
 	 */
 	public void partAnimMenuItem_actionPerformed(ActionEvent e) {
-		if (!animationCombo.isSelectedIndex(HackController.DISPLAY_CHANGES))
+		if (!animationCombo.isSelectedIndex(HackController.DISPLAY_CHANGES)) {
 			animationCombo.setSelectedIndex(HackController.DISPLAY_CHANGES);
+		}
 	}
 
 	/**
@@ -1011,6 +933,7 @@ public class ControllerComponent extends JFrame
 	 * Un-registers the given ControllerEventListener from being a listener to
 	 * this GUI.
 	 */
+	@Override
 	public void removeControllerListener(ControllerEventListener listener) {
 		listeners.removeElement(listener);
 	}
@@ -1040,8 +963,9 @@ public class ControllerComponent extends JFrame
 	 * Called when the additonal display's "script" menu item was selected.
 	 */
 	public void scriptDisplayMenuItem_actionPerformed(ActionEvent e) {
-		if (!additionalDisplayCombo.isSelectedIndex(HackController.SCRIPT_ADDITIONAL_DISPLAY))
+		if (!additionalDisplayCombo.isSelectedIndex(HackController.SCRIPT_ADDITIONAL_DISPLAY)) {
 			additionalDisplayCombo.setSelectedIndex(HackController.SCRIPT_ADDITIONAL_DISPLAY);
+		}
 	}
 
 	/**
@@ -1060,23 +984,28 @@ public class ControllerComponent extends JFrame
 		}
 	}
 
+	@Override
 	public void setAdditionalDisplay(int display) {
-		if (!additionalDisplayCombo.isSelectedIndex(display))
+		if (!additionalDisplayCombo.isSelectedIndex(display)) {
 			additionalDisplayCombo.setSelectedIndex(display);
+		}
 	}
 
 	/**
 	 * Sets the animation mode (int code, out of the possible animation
 	 * constants in HackController)
 	 */
+	@Override
 	public void setAnimationMode(int mode) {
-		if (!animationCombo.isSelectedIndex(mode))
+		if (!animationCombo.isSelectedIndex(mode)) {
 			animationCombo.setSelectedIndex(mode);
+		}
 	}
 
 	/**
 	 * Sets the breakpoints list with the given one.
 	 */
+	@Override
 	public void setBreakpoints(Vector breakpoints) {
 		// sending the given Vector to the breakpoint panel.
 		breakpointWindow.setBreakpoints(breakpoints);
@@ -1085,6 +1014,7 @@ public class ControllerComponent extends JFrame
 	/**
 	 * Sets the comparison file name with the given one.
 	 */
+	@Override
 	public void setComparisonFile(String fileName) {
 		comparisonComponent.setContents(fileName);
 	}
@@ -1099,6 +1029,7 @@ public class ControllerComponent extends JFrame
 	/**
 	 * Sets the current comparison line.
 	 */
+	@Override
 	public void setCurrentComparisonLine(int line) {
 		comparisonComponent.setSelectedRow(line);
 	}
@@ -1106,6 +1037,7 @@ public class ControllerComponent extends JFrame
 	/**
 	 * Sets the current output line.
 	 */
+	@Override
 	public void setCurrentOutputLine(int line) {
 		outputComponent.setSelectedRow(line);
 	}
@@ -1113,6 +1045,7 @@ public class ControllerComponent extends JFrame
 	/**
 	 * Sets the current script line.
 	 */
+	@Override
 	public void setCurrentScriptLine(int line) {
 		scriptComponent.setSelectedRow(line);
 
@@ -1122,14 +1055,17 @@ public class ControllerComponent extends JFrame
 	 * Sets the numeric format with the given code (out of the format constants
 	 * in HackController).
 	 */
+	@Override
 	public void setNumericFormat(int formatCode) {
-		if (!formatCombo.isSelectedIndex(formatCode))
+		if (!formatCombo.isSelectedIndex(formatCode)) {
 			formatCombo.setSelectedIndex(formatCode);
+		}
 	}
 
 	/**
 	 * Sets the output file name with the given one.
 	 */
+	@Override
 	public void setOutputFile(String fileName) {
 		outputComponent.setContents(fileName);
 	}
@@ -1137,10 +1073,12 @@ public class ControllerComponent extends JFrame
 	/**
 	 * Sets the script file name with the given one.
 	 */
+	@Override
 	public void setScriptFile(String fileName) {
 		scriptComponent.setContents(fileName);
 	}
 
+	@Override
 	public void setSimulator(HackSimulatorGUI simulator) {
 		((JComponent) simulator).setLocation(0, TOOLBAR_HEIGHT);
 		this.getContentPane().add((JComponent) simulator, null);
@@ -1161,6 +1099,7 @@ public class ControllerComponent extends JFrame
 	/**
 	 * Sets the speed (int code, between 1 and NUMBER_OF_SPEED_UNTIS)
 	 */
+	@Override
 	public void setSpeed(int speed) {
 		speedSlider.setValue(speed);
 		repaint();
@@ -1169,10 +1108,12 @@ public class ControllerComponent extends JFrame
 	/**
 	 * Sets the list of recognized variables with the given one.
 	 */
+	@Override
 	public void setVariables(String[] newVars) {
 		breakpointWindow.setVariables(newVars);
 	}
 
+	@Override
 	public void setWorkingDir(File file) {
 		fileChooser.setCurrentDirectory(file);
 	}
@@ -1180,11 +1121,13 @@ public class ControllerComponent extends JFrame
 	/**
 	 * Shows the breakpoint panel.
 	 */
+	@Override
 	public void showBreakpoints() {
 		breakpointWindow.getTable().clearSelection();
 		breakpointWindow.setVisible(true);
-		if (breakpointWindow.getState() == Frame.ICONIFIED)
+		if (breakpointWindow.getState() == Frame.ICONIFIED) {
 			breakpointWindow.setState(Frame.NORMAL);
+		}
 	}
 
 	/**
@@ -1214,7 +1157,7 @@ public class ControllerComponent extends JFrame
 	public void SpeedSlider_stateChanged(ChangeEvent e) {
 		JSlider source = (JSlider) e.getSource();
 		if (!source.getValueIsAdjusting()) {
-			int speed = (int) source.getValue();
+			int speed = source.getValue();
 			notifyControllerListeners(ControllerEvent.SPEED_CHANGE, new Integer(speed));
 		}
 	}
@@ -1237,7 +1180,8 @@ public class ControllerComponent extends JFrame
 	 * Called when the usage window menu item was selected.
 	 */
 	public void usageMenuItem_actionPerformed(ActionEvent e) {
-		if (usageWindow != null)
+		if (usageWindow != null) {
 			usageWindow.setVisible(true);
+		}
 	}
 }

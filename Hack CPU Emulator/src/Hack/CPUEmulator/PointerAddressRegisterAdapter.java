@@ -44,17 +44,21 @@ public class PointerAddressRegisterAdapter extends Register {
 		updatePointer = true;
 	}
 
+	@Override
 	public void refreshGUI() {
 		quietUpdateGUI(0, value);
-		if (updatePointer)
+		if (updatePointer) {
 			memory.setPointerAddress(value);
+		}
 	}
 
+	@Override
 	public void reset() {
 		super.reset();
 
-		if (updatePointer)
+		if (updatePointer) {
 			memory.setPointerAddress(0);
+		}
 	}
 
 	/**
@@ -64,22 +68,27 @@ public class PointerAddressRegisterAdapter extends Register {
 	 */
 	public void setUpdatePointer(boolean updatePointer) {
 		this.updatePointer = updatePointer;
-		if (updatePointer)
+		if (updatePointer) {
 			memory.setPointerAddress(value);
+		}
 	}
 
+	@Override
 	public void setValueAt(int index, short value, boolean quiet) {
 		super.setValueAt(0, value, quiet);
-		if (updatePointer)
+		if (updatePointer) {
 			memory.setPointerAddress(value);
+		}
 	}
 
 	/**
 	 * Called when the value of a register is changed.
 	 */
+	@Override
 	public void valueChanged(ComputerPartEvent event) {
 		super.valueChanged(event);
-		if (updatePointer)
+		if (updatePointer) {
 			memory.setPointerAddress(event.getValue());
+		}
 	}
 }

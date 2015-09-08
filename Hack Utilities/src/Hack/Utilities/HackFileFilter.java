@@ -39,6 +39,7 @@ public class HackFileFilter implements FilenameFilter {
 		this.extension = extension;
 	}
 
+	@Override
 	public boolean accept(File directory, String name) {
 		return name.endsWith(extension);
 	}

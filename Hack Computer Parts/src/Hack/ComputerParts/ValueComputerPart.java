@@ -51,8 +51,9 @@ public abstract class ValueComputerPart extends ComputerPart {
 	 * Hides all highlightes.
 	 */
 	public void hideHighlight() {
-		if (displayChanges)
+		if (displayChanges) {
 			((ValueComputerPartGUI) getGUI()).hideHighlight();
+		}
 	}
 
 	/**
@@ -60,8 +61,9 @@ public abstract class ValueComputerPart extends ComputerPart {
 	 * given value quietly - no flashing will be done
 	 */
 	public void quietUpdateGUI(int index, short value) {
-		if (displayChanges)
+		if (displayChanges) {
 			((ValueComputerPartGUI) getGUI()).setValueAt(index, value);
+		}
 	}
 
 	/**
@@ -83,8 +85,9 @@ public abstract class ValueComputerPart extends ComputerPart {
 	 * in HackController).
 	 */
 	public void setNumericFormat(int formatCode) {
-		if (displayChanges)
+		if (displayChanges) {
 			((ValueComputerPartGUI) getGUI()).setNumericFormat(formatCode);
+		}
 	}
 
 	/**
@@ -94,10 +97,11 @@ public abstract class ValueComputerPart extends ComputerPart {
 	public void setValueAt(int index, short value, boolean quiet) {
 		doSetValueAt(index, value);
 		if (displayChanges) {
-			if (quiet)
+			if (quiet) {
 				quietUpdateGUI(index, value);
-			else
+			} else {
 				updateGUI(index, value);
+			}
 		}
 	}
 

@@ -65,6 +65,7 @@ public class HTMLViewFrame extends JFrame {
 // Implements the HTML link properties.
 class Hyperactive implements HyperlinkListener {
 
+	@Override
 	public void hyperlinkUpdate(HyperlinkEvent e) {
 		if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
 			JEditorPane pane = (JEditorPane) e.getSource();

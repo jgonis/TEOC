@@ -34,8 +34,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 
@@ -51,6 +50,7 @@ public class TextFileComponent extends JPanel implements TextFileGUI {
 	// An inner class representing the cell renderer of the table.
 	public class TextFileCellRenderer extends DefaultTableCellRenderer {
 
+		@Override
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean selected, boolean focused,
 				int row, int column) {
 			setForeground(null);
@@ -63,23 +63,27 @@ public class TextFileComponent extends JPanel implements TextFileGUI {
 		}
 
 		public void setRenderer(int row, int column) {
-			if (highlightedLines.contains(new Integer(row)))
+			if (highlightedLines.contains(new Integer(row))) {
 				setBackground(Color.yellow);
-			else
+			} else {
 				setBackground(null);
+			}
 
-			if (emphasizedLines.contains(new Integer(row)))
+			if (emphasizedLines.contains(new Integer(row))) {
 				setForeground(Color.red);
-			else
+			} else {
 				setForeground(null);
+			}
 		}
 	}
+
 	// An inner class representing the model of the breakpoint table.
 	class TextFileTableModel extends AbstractTableModel {
 
 		/**
 		 * Returns the number of columns.
 		 */
+		@Override
 		public int getColumnCount() {
 			return 1;
 		}
@@ -87,6 +91,7 @@ public class TextFileComponent extends JPanel implements TextFileGUI {
 		/**
 		 * Returns the names of the columns.
 		 */
+		@Override
 		public String getColumnName(int col) {
 			return "";
 		}
@@ -94,6 +99,7 @@ public class TextFileComponent extends JPanel implements TextFileGUI {
 		/**
 		 * Returns the number of rows.
 		 */
+		@Override
 		public int getRowCount() {
 			// return rows.length;
 			return rowsVector.size();
@@ -102,6 +108,7 @@ public class TextFileComponent extends JPanel implements TextFileGUI {
 		/**
 		 * Returns the value at a specific row and column.
 		 */
+		@Override
 		public Object getValueAt(int row, int col) {
 			// return rows[row];
 			return rowsVector.elementAt(row);
@@ -110,6 +117,7 @@ public class TextFileComponent extends JPanel implements TextFileGUI {
 		/**
 		 * Returns true of this table cells are editable, false - otherwise.
 		 */
+		@Override
 		public boolean isCellEditable(int row, int col) {
 			return false;
 		}
@@ -156,20 +164,24 @@ public class TextFileComponent extends JPanel implements TextFileGUI {
 		jbInit();
 	}
 
+	@Override
 	public void addEmphasis(int index) {
 		emphasizedLines.add(new Integer(index));
 		repaint();
 	}
 
+	@Override
 	public void addHighlight(int index, boolean clear) {
-		if (clear)
+		if (clear) {
 			highlightedLines.clear();
+		}
 
 		highlightedLines.add(new Integer(index));
 		Utilities.tableCenterScroll(this, textFileTable, index);
 		repaint();
 	}
 
+	@Override
 	public void addLine(String line) {
 		rowsVector.addElement(line);
 		textFileTable.revalidate();
@@ -177,10 +189,12 @@ public class TextFileComponent extends JPanel implements TextFileGUI {
 		addHighlight(rowsVector.size() - 1, false);
 	}
 
+	@Override
 	public void addTextFileListener(TextFileEventListener listener) {
 		listeners.addElement(listener);
 	}
 
+	@Override
 	public void clearHighlights() {
 		highlightedLines.clear();
 		repaint();
@@ -209,10 +223,12 @@ public class TextFileComponent extends JPanel implements TextFileGUI {
 		return new TextFileCellRenderer();
 	}
 
+	@Override
 	public String getLineAt(int index) {
 		return (String) rowsVector.elementAt(index);
 	}
 
+	@Override
 	public int getNumberOfLines() {
 		return rowsVector.size();
 	}
@@ -224,6 +240,7 @@ public class TextFileComponent extends JPanel implements TextFileGUI {
 		return 241;
 	}
 
+	@Override
 	public void hideSelect() {
 		textFileTable.clearSelection();
 	}
@@ -233,22 +250,21 @@ public class TextFileComponent extends JPanel implements TextFileGUI {
 
 		textFileTable.setShowHorizontalLines(false);
 		ListSelectionModel rowSM = textFileTable.getSelectionModel();
-		rowSM.addListSelectionListener(new ListSelectionListener() {
-			public void valueChanged(ListSelectionEvent e) {
-				if (!isEnabled || e.getValueIsAdjusting())
-					return;
-				ListSelectionModel lsm = (ListSelectionModel) e.getSource();
-				if (!lsm.isSelectionEmpty()) {
-					int selectedRow = lsm.getMinSelectionIndex();
-					notifyTextFileListeners((String) rowsVector.elementAt(selectedRow), selectedRow);
-				}
+		rowSM.addListSelectionListener(e -> {
+			if (!isEnabled || e.getValueIsAdjusting()) {
+				return;
+			}
+			ListSelectionModel lsm = (ListSelectionModel) e.getSource();
+			if (!lsm.isSelectionEmpty()) {
+				int selectedRow = lsm.getMinSelectionIndex();
+				notifyTextFileListeners((String) rowsVector.elementAt(selectedRow), selectedRow);
 			}
 		});
 		this.setLayout(null);
 
 		scrollPane = new JScrollPane(textFileTable);
 		scrollPane.setLocation(0, 27);
-		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		scrollPane.getHorizontalScrollBar().setUnitIncrement(scrollPane.getHorizontalScrollBar().getBlockIncrement());
 
 		nameLbl.setBounds(new Rectangle(3, 3, 102, 21));
@@ -261,6 +277,7 @@ public class TextFileComponent extends JPanel implements TextFileGUI {
 
 	}
 
+	@Override
 	public void notifyTextFileListeners(String row, int rowNum) {
 		TextFileEvent event = new TextFileEvent(this, row, rowNum);
 		for (int i = 0; i < listeners.size(); i++) {
@@ -268,11 +285,13 @@ public class TextFileComponent extends JPanel implements TextFileGUI {
 		}
 	}
 
+	@Override
 	public void removeEmphasis(int index) {
 		emphasizedLines.remove(new Integer(index));
 		repaint();
 	}
 
+	@Override
 	public void removeTextFileListener(TextFileEventListener listener) {
 		listeners.removeElement(listener);
 	}
@@ -280,6 +299,7 @@ public class TextFileComponent extends JPanel implements TextFileGUI {
 	/**
 	 * Resets the content of this component.
 	 */
+	@Override
 	public void reset() {
 		highlightedLines.clear();
 		rowsVector.removeAllElements();
@@ -288,11 +308,13 @@ public class TextFileComponent extends JPanel implements TextFileGUI {
 		repaint();
 	}
 
+	@Override
 	public void select(int from, int to) {
 		textFileTable.setRowSelectionInterval(from, to);
 		Utilities.tableCenterScroll(this, textFileTable, from);
 	}
 
+	@Override
 	public void setContents(String fileName) {
 		BufferedReader reader;
 		rowsVector.removeAllElements();
@@ -310,20 +332,23 @@ public class TextFileComponent extends JPanel implements TextFileGUI {
 		repaint();
 	}
 
+	@Override
 	public void setContents(String[] lines) {
 		rowsVector.removeAllElements();
-		for (int i = 0; i < lines.length; i++) {
-			rowsVector.addElement(lines[i]);
+		for (String line : lines) {
+			rowsVector.addElement(line);
 		}
 		textFileTable.revalidate();
 		repaint();
 	}
 
+	@Override
 	public void setLineAt(int index, String line) {
 		rowsVector.setElementAt(line, index);
 		addHighlight(index, false);
 	}
 
+	@Override
 	public void setName(String name) {
 		nameLbl.setText(name);
 	}

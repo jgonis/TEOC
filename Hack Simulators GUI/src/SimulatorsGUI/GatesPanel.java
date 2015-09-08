@@ -50,6 +50,7 @@ public class GatesPanel implements GatesPanelGUI {
 	/**
 	 * Adds the given gate component to the gates panel.
 	 */
+	@Override
 	public void addGateComponent(Component gateComponent) {
 		flowLayoutGatesPanel.add(gateComponent);
 		if (flowLayout) {
@@ -57,15 +58,15 @@ public class GatesPanel implements GatesPanelGUI {
 			flowLayoutGatesPanel.repaint();
 		} else {
 			Component[] components = nullLayoutGatesPanel.getComponents();
-			for (int i = 0; i < components.length; i++) {
-				Rectangle componentBounds = components[i].getBounds();
+			for (Component component : components) {
+				Rectangle componentBounds = component.getBounds();
 				int x1 = (int) componentBounds.getX();
 				int y1 = (int) componentBounds.getY();
-				int x2 = (int) (componentBounds.getX() + componentBounds.getWidth() - 1);
-				int y2 = (int) (componentBounds.getY() + componentBounds.getHeight() - 1);
-				if (!(gateComponent.getY() > y2 || gateComponent.getX() > x2
-						|| gateComponent.getY() + gateComponent.getHeight() - 1 < y1
-						|| gateComponent.getX() + gateComponent.getWidth() - 1 < x1)) {
+				int x2 = (int) ((componentBounds.getX() + componentBounds.getWidth()) - 1);
+				int y2 = (int) ((componentBounds.getY() + componentBounds.getHeight()) - 1);
+				if (!((gateComponent.getY() > y2) || (gateComponent.getX() > x2)
+						|| (((gateComponent.getY() + gateComponent.getHeight()) - 1) < y1)
+						|| (((gateComponent.getX() + gateComponent.getWidth()) - 1) < x1))) {
 
 					flowLayout = true;
 					break;
@@ -83,15 +84,17 @@ public class GatesPanel implements GatesPanelGUI {
 	 * Returns the gate panel.
 	 */
 	public JPanel getGatesPanel() {
-		if (flowLayout)
+		if (flowLayout) {
 			return flowLayoutGatesPanel;
-		else
+		} else {
 			return nullLayoutGatesPanel;
+		}
 	}
 
 	/**
 	 * Removes all the gate components from the gates panel.
 	 */
+	@Override
 	public void removeAllGateComponents() {
 		flowLayout = false;
 		nullLayoutGatesPanel.removeAll();
@@ -106,6 +109,7 @@ public class GatesPanel implements GatesPanelGUI {
 	/**
 	 * Removes the given gate component from the gates panel.
 	 */
+	@Override
 	public void removeGateComponent(Component gateComponent) {
 		nullLayoutGatesPanel.remove(gateComponent);
 		flowLayoutGatesPanel.remove(gateComponent);

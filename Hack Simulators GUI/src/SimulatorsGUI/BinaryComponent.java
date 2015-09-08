@@ -21,7 +21,6 @@ import java.awt.Color;
 import java.awt.Event;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -241,19 +240,11 @@ public class BinaryComponent extends JPanel implements MouseListener, KeyListene
 		okButton.setHorizontalTextPosition(SwingConstants.CENTER);
 		okButton.setIcon(okIcon);
 		okButton.setBounds(new Rectangle(97, 29, 23, 20));
-		okButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				okButton_actionPerformed(e);
-			}
-		});
+		okButton.addActionListener(e -> okButton_actionPerformed(e));
 		cancelButton.setHorizontalTextPosition(SwingConstants.CENTER);
 		cancelButton.setIcon(cancelIcon);
 		cancelButton.setBounds(new Rectangle(125, 29, 23, 20));
-		cancelButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				cancelButton_actionPerformed(e);
-			}
-		});
+		cancelButton.addActionListener(e -> cancelButton_actionPerformed(e));
 		this.setBorder(binaryBorder);
 		this.add(bit15, null);
 		this.add(bit14, null);
@@ -293,9 +284,11 @@ public class BinaryComponent extends JPanel implements MouseListener, KeyListene
 
 	}
 
+	@Override
 	public void keyPressed(KeyEvent e) {
 	}
 
+	@Override
 	public void keyReleased(KeyEvent e) {
 	}
 
@@ -303,9 +296,10 @@ public class BinaryComponent extends JPanel implements MouseListener, KeyListene
 	 * Implementing the action of inserting a letter into the text field, or
 	 * pressing enter / escape.
 	 */
+	@Override
 	public void keyTyped(KeyEvent e) {
 		JTextField t = (JTextField) e.getSource();
-		if (e.getKeyChar() == '0' || e.getKeyChar() == '1') {
+		if ((e.getKeyChar() == '0') || (e.getKeyChar() == '1')) {
 			t.transferFocus();
 			t.selectAll();
 		} else if (e.getKeyChar() == Event.ENTER) {
@@ -322,26 +316,32 @@ public class BinaryComponent extends JPanel implements MouseListener, KeyListene
 	 * Implementing the action of double-clicking the mouse on the text field.
 	 * "0" --> "1" "1" --> "0"
 	 */
+	@Override
 	public void mouseClicked(MouseEvent e) {
 		if (e.getClickCount() == 2) {
 			JTextField t = (JTextField) e.getSource();
-			if (t.getText().equals("0"))
+			if (t.getText().equals("0")) {
 				t.setText("1");
-			else if (t.getText().equals("1"))
+			} else if (t.getText().equals("1")) {
 				t.setText("0");
+			}
 		}
 	}
 
+	@Override
 	public void mouseEntered(MouseEvent e) {
 	}
 
 	// Empty implementations
+	@Override
 	public void mouseExited(MouseEvent e) {
 	}
 
+	@Override
 	public void mousePressed(MouseEvent e) {
 	}
 
+	@Override
 	public void mouseReleased(MouseEvent e) {
 	}
 
@@ -378,7 +378,7 @@ public class BinaryComponent extends JPanel implements MouseListener, KeyListene
 	public void setNumOfBits(int num) {
 		numberOfBits = num;
 		for (int i = 0; i < bits.length; i++) {
-			if (i < bits.length - num) {
+			if (i < (bits.length - num)) {
 				bits[i].setText("");
 				bits[i].setBackground(Color.darkGray);
 				bits[i].setEnabled(false);
@@ -411,11 +411,12 @@ public class BinaryComponent extends JPanel implements MouseListener, KeyListene
 	private void updateValue() {
 		valueStr = new StringBuffer(16);
 		char currentChar;
-		for (int i = 0; i < bits.length; i++) {
-			if (bits[i].getText().equals(""))
+		for (JTextField bit : bits) {
+			if (bit.getText().equals("")) {
 				currentChar = '0';
-			else
-				currentChar = bits[i].getText().charAt(0);
+			} else {
+				currentChar = bit.getText().charAt(0);
+			}
 			valueStr.append(currentChar);
 		}
 	}

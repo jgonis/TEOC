@@ -76,8 +76,9 @@ public class Graph {
 			while (edgeIter.hasNext() && !pathFound) {
 				Object currentNode = edgeIter.next();
 				pathFound = currentNode.equals(destination);
-				if (!pathFound && !marked.contains(currentNode))
+				if (!pathFound && !marked.contains(currentNode)) {
 					pathFound = doPathExists(currentNode, destination, marked);
+				}
 			}
 		}
 
@@ -97,11 +98,13 @@ public class Graph {
 				Object currentNode = edgeIter.next();
 
 				// check circle
-				if (processed.contains(currentNode))
+				if (processed.contains(currentNode)) {
 					hasCircle = true;
+				}
 
-				if (!marked.contains(currentNode))
+				if (!marked.contains(currentNode)) {
 					doTopologicalSort(currentNode, nodes, marked, processed);
+				}
 			}
 		}
 		processed.remove(node);
@@ -145,8 +148,9 @@ public class Graph {
 
 		// reverse the order received from the DFS algorithm
 		Object[] result = new Object[nodes.size()];
-		for (int i = 0; i < result.length; i++)
+		for (int i = 0; i < result.length; i++) {
 			result[i] = nodes.elementAt(result.length - i - 1);
+		}
 
 		return result;
 	}

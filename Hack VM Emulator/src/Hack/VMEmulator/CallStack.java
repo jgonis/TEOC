@@ -45,6 +45,7 @@ public class CallStack extends ComputerPart {
 	/**
 	 * Returns the GUI of the computer part.
 	 */
+	@Override
 	public ComputerPartGUI getGUI() {
 		return gui;
 	}
@@ -62,8 +63,9 @@ public class CallStack extends ComputerPart {
 	public void popFunction() {
 		if (names.size() > 0) {
 			names.removeElementAt(names.size() - 1);
-			if (displayChanges)
+			if (displayChanges) {
 				gui.setContents(names);
+			}
 		}
 	}
 
@@ -72,18 +74,22 @@ public class CallStack extends ComputerPart {
 	 */
 	public void pushFunction(String functionName) {
 		names.addElement(functionName);
-		if (displayChanges)
+		if (displayChanges) {
 			gui.setContents(names);
+		}
 	}
 
+	@Override
 	public void refreshGUI() {
-		if (displayChanges)
+		if (displayChanges) {
 			gui.setContents(names);
+		}
 	}
 
 	/**
 	 * Resets the contents of the computer part.
 	 */
+	@Override
 	public void reset() {
 		super.reset();
 		names.removeAllElements();

@@ -42,8 +42,9 @@ public class LineTokenizer extends StreamTokenizer {
 	public void advance(boolean expectToken) throws IOException, HackTranslatorException {
 		nextToken();
 
-		if (expectToken && ttype == TT_EOF)
+		if (expectToken && (ttype == TT_EOF)) {
 			throw new HackTranslatorException("Unexpected end of line", lineno());
+		}
 	}
 
 	/**
@@ -72,8 +73,9 @@ public class LineTokenizer extends StreamTokenizer {
 	public void ensureEnd() throws HackTranslatorException, IOException {
 		advance(false);
 
-		if (!isEnd())
+		if (!isEnd()) {
 			throw new HackTranslatorException("end of line expected, '" + token() + "' is found");
+		}
 	}
 
 	/**
@@ -116,20 +118,22 @@ public class LineTokenizer extends StreamTokenizer {
 	 * returns 0.
 	 */
 	public int number() {
-		if (ttype == TT_NUMBER)
+		if (ttype == TT_NUMBER) {
 			return (int) nval;
-		else
+		} else {
 			return 0;
+		}
 	}
 
 	/**
 	 * If the current token is a symbol, returns it. Otherwise returns 0.
 	 */
 	public char symbol() {
-		if (ttype > 0)
+		if (ttype > 0) {
 			return (char) ttype;
-		else
+		} else {
 			return 0;
+		}
 	}
 
 	/**

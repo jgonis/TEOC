@@ -44,13 +44,15 @@ public class Keyboard extends ComputerPart implements KeyListener {
 		this.ram = ram;
 		this.gui = gui;
 
-		if (hasGUI)
+		if (hasGUI) {
 			gui.getKeyEventHandler().addKeyListener(this);
+		}
 	}
 
 	/**
 	 * Returns the GUI of the computer part.
 	 */
+	@Override
 	public ComputerPartGUI getGUI() {
 		return gui;
 	}
@@ -58,18 +60,21 @@ public class Keyboard extends ComputerPart implements KeyListener {
 	/**
 	 * Activated when a key is pressed.
 	 */
+	@Override
 	public void keyPressed(KeyEvent e) {
 		short key = Definitions.getInstance().getKeyCode(e);
 		if (key > 0) {
 			ram.setValueAt(Definitions.KEYBOARD_ADDRESS, key, true);
-			if (hasGUI)
+			if (hasGUI) {
 				gui.setKey(Definitions.getInstance().getKeyName(e));
+			}
 		}
 	}
 
 	/**
 	 * Activated when a key is released.
 	 */
+	@Override
 	public void keyReleased(KeyEvent e) {
 		ram.setValueAt(Definitions.KEYBOARD_ADDRESS, (short) 0, true);
 		gui.clearKey();
@@ -78,14 +83,17 @@ public class Keyboard extends ComputerPart implements KeyListener {
 	/**
 	 * Activated when a key is typed.
 	 */
+	@Override
 	public void keyTyped(KeyEvent e) {
 	}
 
+	@Override
 	public void refreshGUI() {
 	}
 
 	public void requestFocus() {
-		if (hasGUI)
+		if (hasGUI) {
 			gui.getKeyEventHandler().requestFocus();
+		}
 	}
 }

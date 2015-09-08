@@ -43,10 +43,11 @@ public class Conversions {
 
 		for (int i = value.length() - 1, mask = 1; i >= 0; i--, mask = mask << 1) {
 			char bit = value.charAt(i);
-			if (bit == '1')
+			if (bit == '1') {
 				result = (short) (result | mask);
-			else if (bit != '0')
+			} else if (bit != '0') {
 				throw new NumberFormatException();
+			}
 		}
 
 		return result;
@@ -60,8 +61,9 @@ public class Conversions {
 	public static String decimalToBinary(int value, int numOfDigits) {
 		value = value & (powersOf2[numOfDigits] - 1);
 		String result = Integer.toBinaryString(value);
-		if (result.length() < numOfDigits)
+		if (result.length() < numOfDigits) {
 			result = ZEROS.substring(0, numOfDigits - result.length()) + result;
+		}
 		return result;
 	}
 
@@ -73,8 +75,9 @@ public class Conversions {
 	public static String decimalToHex(int value, int numOfDigits) {
 		value = value & (powersOf16[numOfDigits] - 1);
 		String result = Integer.toHexString(value);
-		if (result.length() < numOfDigits)
+		if (result.length() < numOfDigits) {
 			result = ZEROS.substring(0, numOfDigits - result.length()) + result;
+		}
 		return result;
 	}
 
@@ -87,8 +90,9 @@ public class Conversions {
 	public static int hex4ToInt(String value) throws NumberFormatException {
 		int result = hexToInt(value);
 
-		if (result > 32767)
+		if (result > 32767) {
 			result -= 65536;
+		}
 
 		return result;
 
@@ -105,14 +109,15 @@ public class Conversions {
 
 		for (int i = value.length() - 1; i >= 0; i--, multiplier *= 16) {
 			char digit = value.charAt(i);
-			if (digit >= '0' && digit <= '9')
+			if ((digit >= '0') && (digit <= '9')) {
 				result += (digit - '0') * multiplier;
-			else if (digit >= 'a' && digit <= 'f')
-				result += (digit - 'a' + 10) * multiplier;
-			else if (digit >= 'A' && digit <= 'F')
-				result += (digit - 'A' + 10) * multiplier;
-			else
+			} else if ((digit >= 'a') && (digit <= 'f')) {
+				result += ((digit - 'a') + 10) * multiplier;
+			} else if ((digit >= 'A') && (digit <= 'F')) {
+				result += ((digit - 'A') + 10) * multiplier;
+			} else {
 				throw new NumberFormatException();
+			}
 		}
 
 		return result;
@@ -124,16 +129,17 @@ public class Conversions {
 	 * a normal decimal form. Otherwise, return the given string as is.
 	 */
 	public static String toDecimalForm(String value) {
-		if (value.startsWith("%B"))
+		if (value.startsWith("%B")) {
 			value = String.valueOf(binaryToInt(value.substring(2)));
-		else if (value.startsWith("%X")) {
-			if (value.length() == 6)
+		} else if (value.startsWith("%X")) {
+			if (value.length() == 6) {
 				value = String.valueOf(hex4ToInt(value.substring(2)));
-			else
+			} else {
 				value = String.valueOf(hexToInt(value.substring(2)));
-		} else if (value.startsWith("%D"))
+			}
+		} else if (value.startsWith("%D")) {
 			value = value.substring(2);
-		else {
+		} else {
 			try {
 				int intValue = Integer.parseInt(value);
 				value = String.valueOf(intValue);

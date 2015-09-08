@@ -90,12 +90,13 @@ public class CompositeGateClass extends GateClass {
 		}
 
 		if (result != null) {
-			if (result[0] < 0 || result[1] < 0)
+			if ((result[0] < 0) || (result[1] < 0)) {
 				input.HDLError(pinName + ": negative bit numbers are illegal");
-			else if (result[0] > result[1])
+			} else if (result[0] > result[1]) {
 				input.HDLError(pinName + ": left bit number should be lower than the right one");
-			else if (result[1] >= busWidth)
+			} else if (result[1] >= busWidth) {
 				input.HDLError(pinName + ": the specified sub bus is not in the bus range");
+			}
 		}
 
 		return result;
@@ -137,32 +138,36 @@ public class CompositeGateClass extends GateClass {
 		// which connects to all the parts. This will also check for circles.
 		Object[] topologicalOrder = graph.topologicalSort(partsList);
 
-		if (graph.hasCircle())
+		if (graph.hasCircle()) {
 			throw new HDLException("This chip has a circle in its parts connections");
+		}
 
 		// create the partsOrder array, by taking from the topologicalOrder
 		// only the Integer objects, which represent the parts.
 		partsOrder = new int[partsList.size()];
 		int counter = 0;
-		for (int i = 0; i < topologicalOrder.length; i++) {
-			if (topologicalOrder[i] instanceof Integer)
-				partsOrder[counter++] = ((Integer) topologicalOrder[i]).intValue();
+		for (Object element : topologicalOrder) {
+			if (element instanceof Integer) {
+				partsOrder[counter++] = ((Integer) element).intValue();
+			}
 		}
 
 		// for each input pin, check if there is a path in the graph to an
 		// output pin
 		// (actually to the "master output", which all outputs connect to).
 		// If there is, the input is not clocked. Otherwise, it is.
-		for (int i = 0; i < inputPinsInfo.length; i++)
+		for (int i = 0; i < inputPinsInfo.length; i++) {
 			isInputClocked[i] = !graph.pathExists(inputPinsInfo[i], outputPinsInfo);
+		}
 
 		// for each output pin, check if there is a path in the graph from any
 		// input pin
 		// (actually from the "master input", which connects to all inputs) to
 		// this output pin.
 		// If there is, the output is not clocked. Otherwise, it is.
-		for (int i = 0; i < outputPinsInfo.length; i++)
+		for (int i = 0; i < outputPinsInfo.length; i++) {
 			isOutputClocked[i] = !graph.pathExists(inputPinsInfo, outputPinsInfo[i]);
+		}
 	}
 
 	// Adds a connection between the two given pin names, where fullLeftName is
@@ -182,12 +187,13 @@ public class CompositeGateClass extends GateClass {
 
 		// find left pin info. If doesn't exist - error.
 		byte leftType = partGateClass.getPinType(leftName);
-		if (leftType == UNKNOWN_PIN_TYPE)
+		if (leftType == UNKNOWN_PIN_TYPE) {
 			input.HDLError(leftName + " is not a pin in " + partName);
+		}
 		int leftNumber = partGateClass.getPinNumber(leftName);
 		PinInfo leftPinInfo = partGateClass.getPinInfo(leftType, leftNumber);
 		byte[] leftSubBus = getSubBusAndCheck(input, fullLeftName, leftPinInfo.width);
-		byte leftWidth = (leftSubBus == null ? leftPinInfo.width : (byte) (leftSubBus[1] - leftSubBus[0] + 1));
+		byte leftWidth = (leftSubBus == null ? leftPinInfo.width : (byte) ((leftSubBus[1] - leftSubBus[0]) + 1));
 
 		// find right pin name (without sub bus specification)
 		bracketsPos = fullRightName.indexOf("[");
@@ -213,8 +219,10 @@ public class CompositeGateClass extends GateClass {
 			rightType = getPinType(rightName);
 
 			// check that not sub bus of intenral
-			if ((rightType == UNKNOWN_PIN_TYPE || rightType == INTERNAL_PIN_TYPE) && !fullRightName.equals(rightName))
+			if (((rightType == UNKNOWN_PIN_TYPE) || (rightType == INTERNAL_PIN_TYPE))
+					&& !fullRightName.equals(rightName)) {
 				input.HDLError(fullRightName + ": sub bus of an internal node may not be used");
+			}
 
 			// find right pin's info. If doesn't exist, create it as an internal
 			// pin.
@@ -236,36 +244,40 @@ public class CompositeGateClass extends GateClass {
 		int rightWidth;
 
 		if (selfFittingWidth) {
-			if (!rightName.equals(fullRightName))
+			if (!rightName.equals(fullRightName)) {
 				input.HDLError(rightName + " may not be subscripted");
+			}
 
 			rightWidth = leftWidth;
 			rightSubBus = new byte[] { 0, (byte) (rightWidth - 1) };
 		} else {
 			rightSubBus = getSubBusAndCheck(input, fullRightName, rightPinInfo.width);
-			rightWidth = (rightSubBus == null ? rightPinInfo.width : rightSubBus[1] - rightSubBus[0] + 1);
+			rightWidth = (rightSubBus == null ? rightPinInfo.width : (rightSubBus[1] - rightSubBus[0]) + 1);
 		}
 
 		// check that right & left has the same width
-		if (leftWidth != rightWidth)
+		if (leftWidth != rightWidth) {
 			input.HDLError(leftName + "(" + leftWidth + ") and " + rightName + "(" + rightWidth
 					+ ") have different bus widths");
+		}
 
 		// make sure that an internal pin is only fed once by a part's output
 		// pin
 		if ((rightType == INTERNAL_PIN_TYPE) && (leftType == OUTPUT_PIN_TYPE)) {
-			if (rightPinInfo.isInitialized(rightSubBus))
+			if (rightPinInfo.isInitialized(rightSubBus)) {
 				input.HDLError("An internal pin may only be fed once by a part's output pin");
-			else
+			} else {
 				rightPinInfo.initialize(rightSubBus);
+			}
 		}
 
 		// make sure that an output pin is only fed once by a part's output pin
 		if ((rightType == OUTPUT_PIN_TYPE) && (leftType == OUTPUT_PIN_TYPE)) {
-			if (rightPinInfo.isInitialized(rightSubBus))
+			if (rightPinInfo.isInitialized(rightSubBus)) {
 				input.HDLError("An output pin may only be fed once by a part's output pin");
-			else
+			} else {
 				rightPinInfo.initialize(rightSubBus);
+			}
 		}
 
 		// find connection type
@@ -307,12 +319,13 @@ public class CompositeGateClass extends GateClass {
 	private void connectGateToPart(Node sourceNode, byte[] sourceSubBus, Node targetNode, byte[] targetSubBus) {
 		Node source = sourceNode;
 		Node target = targetNode;
-		if (targetSubBus != null)
+		if (targetSubBus != null) {
 			target = new SubBusListeningAdapter(target, targetSubBus[0], targetSubBus[1]);
+		}
 
-		if (sourceSubBus == null)
+		if (sourceSubBus == null) {
 			source.addListener(target);
-		else {
+		} else {
 			Node subNode = new SubNode(sourceSubBus[0], sourceSubBus[1]);
 			source.addListener(subNode);
 			subNode.addListener(target);
@@ -342,53 +355,63 @@ public class CompositeGateClass extends GateClass {
 
 			switch (connection.getType()) {
 			case Connection.TO_INTERNAL:
-				if (isLegalFromPartEdge(connection, part))
+				if (isLegalFromPartEdge(connection, part)) {
 					graph.addEdge(part, getPinInfo(INTERNAL_PIN_TYPE, gatePinNumber));
+				}
 				break;
 
 			case Connection.FROM_INTERNAL:
-				if (isLegalToPartEdge(connection, part))
+				if (isLegalToPartEdge(connection, part)) {
 					graph.addEdge(getPinInfo(INTERNAL_PIN_TYPE, gatePinNumber), part);
+				}
 				break;
 
 			case Connection.TO_OUTPUT:
-				if (isLegalFromPartEdge(connection, part))
+				if (isLegalFromPartEdge(connection, part)) {
 					graph.addEdge(part, getPinInfo(OUTPUT_PIN_TYPE, gatePinNumber));
+				}
 				break;
 
 			case Connection.FROM_INPUT:
-				if (isLegalToPartEdge(connection, part))
+				if (isLegalToPartEdge(connection, part)) {
 					graph.addEdge(getPinInfo(INPUT_PIN_TYPE, gatePinNumber), part);
+				}
 				break;
 
 			case Connection.FROM_TRUE:
-				if (isLegalToPartEdge(connection, part))
+				if (isLegalToPartEdge(connection, part)) {
 					graph.addEdge(TRUE_NODE_INFO, part);
+				}
 				break;
 
 			case Connection.FROM_FALSE:
-				if (isLegalToPartEdge(connection, part))
+				if (isLegalToPartEdge(connection, part)) {
 					graph.addEdge(FALSE_NODE_INFO, part);
+				}
 				break;
 
 			case Connection.FROM_CLOCK:
-				if (isLegalToPartEdge(connection, part))
+				if (isLegalToPartEdge(connection, part)) {
 					graph.addEdge(CLOCK_NODE_INFO, part);
+				}
 				break;
 			}
 		}
 
 		// connect the "master part" node to all the parts.
-		for (int i = 0; i < partsList.size(); i++)
+		for (int i = 0; i < partsList.size(); i++) {
 			graph.addEdge(partsList, new Integer(i));
+		}
 
 		// connect all output pins to the "master output" node
-		for (int i = 0; i < outputPinsInfo.length; i++)
-			graph.addEdge(outputPinsInfo[i], outputPinsInfo);
+		for (PinInfo element : outputPinsInfo) {
+			graph.addEdge(element, outputPinsInfo);
+		}
 
 		// connect the "master input" node to all input pins
-		for (int i = 0; i < inputPinsInfo.length; i++)
-			graph.addEdge(inputPinsInfo, inputPinsInfo[i]);
+		for (PinInfo element : inputPinsInfo) {
+			graph.addEdge(inputPinsInfo, element);
+		}
 
 		return graph;
 	}
@@ -397,14 +420,17 @@ public class CompositeGateClass extends GateClass {
 	 * Returns the PinInfo according to the given pin type and number. If
 	 * doesn't exist, return null.
 	 */
+	@Override
 	public PinInfo getPinInfo(byte type, int number) {
 		PinInfo result = null;
 
 		if (type == INTERNAL_PIN_TYPE) {
-			if (number < internalPinsInfo.size())
+			if (number < internalPinsInfo.size()) {
 				return (PinInfo) internalPinsInfo.elementAt(number);
-		} else
+			}
+		} else {
 			result = super.getPinInfo(type, number);
+		}
 
 		return result;
 	}
@@ -430,6 +456,7 @@ public class CompositeGateClass extends GateClass {
 	/**
 	 * Creates and returns a new instance of CompositeGate.
 	 */
+	@Override
 	public Gate newInstance() throws InstantiationException {
 		Node[] inputNodes = new Node[inputPinsInfo.length];
 		Node[] outputNodes = new Node[outputPinsInfo.length];
@@ -443,30 +470,36 @@ public class CompositeGateClass extends GateClass {
 		Gate[] parts = new Gate[partsList.size()];
 		for (int i = 0; i < parts.length; i++) {
 			parts[i] = ((GateClass) partsList.elementAt(i)).newInstance();
-			if (parts[i] instanceof BuiltInGateWithGUI) // save the parent of
-														// gates with gui
+			if (parts[i] instanceof BuiltInGateWithGUI) {
+				// gates with gui
 				((BuiltInGateWithGUI) parts[i]).setParent(result);
+			}
 		}
 
 		// Creates another parts array in which the parts are sorted in
 		// topological order.
 		Gate[] sortedParts = new Gate[parts.length];
-		for (int i = 0; i < parts.length; i++)
+		for (int i = 0; i < parts.length; i++) {
 			sortedParts[i] = parts[partsOrder[i]];
+		}
 
-		for (int i = 0; i < inputNodes.length; i++)
+		for (int i = 0; i < inputNodes.length; i++) {
 			inputNodes[i] = new Node();
+		}
 
-		for (int i = 0; i < outputNodes.length; i++)
+		for (int i = 0; i < outputNodes.length; i++) {
 			outputNodes[i] = new Node();
+		}
 
 		// Add a DirtyGateAdapter as a listener to all the non-clocked inputs,
 		// so the gate will become dirty when one of its non-clocked input
 		// changes.
 		Node adapter = new DirtyGateAdapter(result);
-		for (int i = 0; i < isInputClocked.length; i++)
-			if (!isInputClocked[i])
+		for (int i = 0; i < isInputClocked.length; i++) {
+			if (!isInputClocked[i]) {
 				inputNodes[i].addListener(adapter);
+			}
+		}
 
 		// First scan: creates internal Nodes (or SubNodes) and their
 		// connections to
@@ -495,10 +528,11 @@ public class CompositeGateClass extends GateClass {
 
 			case Connection.TO_INTERNAL:
 				target = null;
-				if (partSubBus == null)
+				if (partSubBus == null) {
 					target = new Node();
-				else
+				} else {
 					target = new SubNode(partSubBus[0], partSubBus[1]);
+				}
 				partNode.addListener(target);
 				internalNodes[connection.getGatePinNumber()] = target;
 				break;
@@ -528,9 +562,9 @@ public class CompositeGateClass extends GateClass {
 			switch (connection.getType()) {
 			case Connection.FROM_INTERNAL:
 				source = internalNodes[connection.getGatePinNumber()];
-				if (partSubBus == null)
+				if (partSubBus == null) {
 					source.addListener(partNode);
-				else {
+				} else {
 					Node node = new SubBusListeningAdapter(partNode, partSubBus[0], partSubBus[1]);
 					source.addListener(node);
 				}
@@ -539,9 +573,9 @@ public class CompositeGateClass extends GateClass {
 				SubNode subNode = new SubNode(gateSubBus[0], gateSubBus[1]);
 				subNode.set(Gate.TRUE_NODE.get());
 
-				if (partSubBus == null)
+				if (partSubBus == null) {
 					partNode.set(subNode.get());
-				else {
+				} else {
 					Node node = new SubBusListeningAdapter(partNode, partSubBus[0], partSubBus[1]);
 					node.set(subNode.get());
 				}
@@ -551,9 +585,9 @@ public class CompositeGateClass extends GateClass {
 				subNode = new SubNode(gateSubBus[0], gateSubBus[1]);
 				subNode.set(Gate.FALSE_NODE.get());
 
-				if (partSubBus == null)
+				if (partSubBus == null) {
 					partNode.set(subNode.get());
-				else {
+				} else {
 					Node node = new SubBusListeningAdapter(partNode, partSubBus[0], partSubBus[1]);
 					node.set(subNode.get());
 				}
@@ -570,8 +604,9 @@ public class CompositeGateClass extends GateClass {
 		// If the clock special node appears in this gate, Add a dirty gate
 		// adapter
 		// such that changes in clock state will cause this gate to recompute.
-		if (isClockParticipating)
+		if (isClockParticipating) {
 			Gate.CLOCK_NODE.addListener(new DirtyGateAdapter(result));
+		}
 
 		result.init(inputNodes, outputNodes, internalNodes, sortedParts, this);
 
@@ -587,12 +622,13 @@ public class CompositeGateClass extends GateClass {
 			input.advance();
 
 			// check if end of hdl
-			if (input.getTokenType() == HDLTokenizer.TYPE_SYMBOL && input.getSymbol() == '}')
+			if ((input.getTokenType() == HDLTokenizer.TYPE_SYMBOL) && (input.getSymbol() == '}')) {
 				endOfParts = true;
-			else {
+			} else {
 				// check if part name
-				if (!(input.getTokenType() == HDLTokenizer.TYPE_IDENTIFIER))
+				if (!(input.getTokenType() == HDLTokenizer.TYPE_IDENTIFIER)) {
 					input.HDLError("A GateClass name is expected");
+				}
 
 				String partName = input.getIdentifier();
 				GateClass gateClass = getGateClass(partName, false);
@@ -602,15 +638,17 @@ public class CompositeGateClass extends GateClass {
 
 				// check '('
 				input.advance();
-				if (!(input.getTokenType() == HDLTokenizer.TYPE_SYMBOL && input.getSymbol() == '('))
+				if (!((input.getTokenType() == HDLTokenizer.TYPE_SYMBOL) && (input.getSymbol() == '('))) {
 					input.HDLError("Missing '('");
+				}
 
 				readPinNames(input, partNumber, partName);
 
 				// check ';'
 				input.advance();
-				if (!(input.getTokenType() == HDLTokenizer.TYPE_SYMBOL && input.getSymbol() == ';'))
+				if (!((input.getTokenType() == HDLTokenizer.TYPE_SYMBOL) && (input.getSymbol() == ';'))) {
 					input.HDLError("Missing ';'");
+				}
 
 			}
 		}
@@ -626,12 +664,15 @@ public class CompositeGateClass extends GateClass {
 		Iterator connectionIter = connections.iterator();
 		while (connectionIter.hasNext()) {
 			Connection connection = (Connection) connectionIter.next();
-			if (connection.getType() == Connection.TO_INTERNAL)
+			if (connection.getType() == Connection.TO_INTERNAL) {
 				hasSource[connection.getGatePinNumber()] = true;
+			}
 		}
-		for (int i = 0; i < hasSource.length; i++)
-			if (!hasSource[i])
+		for (int i = 0; i < hasSource.length; i++) {
+			if (!hasSource[i]) {
 				input.HDLError(((PinInfo) internalPinsInfo.elementAt(i)).name + " has no source pin");
+			}
+		}
 	}
 
 	// Reads the pin names list from the HDL input. Returns the input after the
@@ -643,30 +684,34 @@ public class CompositeGateClass extends GateClass {
 		while (!endOfPins) {
 			// read left pin name
 			input.advance();
-			if (!(input.getTokenType() == HDLTokenizer.TYPE_IDENTIFIER))
+			if (!(input.getTokenType() == HDLTokenizer.TYPE_IDENTIFIER)) {
 				input.HDLError("A pin name is expected");
+			}
 
 			String leftName = input.getIdentifier();
 
 			// check '='
 			input.advance();
-			if (!(input.getTokenType() == HDLTokenizer.TYPE_SYMBOL && input.getSymbol() == '='))
+			if (!((input.getTokenType() == HDLTokenizer.TYPE_SYMBOL) && (input.getSymbol() == '='))) {
 				input.HDLError("Missing '='");
+			}
 
 			// read right pin name
 			input.advance();
-			if (!(input.getTokenType() == HDLTokenizer.TYPE_IDENTIFIER))
+			if (!(input.getTokenType() == HDLTokenizer.TYPE_IDENTIFIER)) {
 				input.HDLError("A pin name is expected");
+			}
 
 			String rightName = input.getIdentifier();
 			addConnection(input, partNumber, partName, leftName, rightName);
 
 			// check ',' or ')'
 			input.advance();
-			if (input.getTokenType() == HDLTokenizer.TYPE_SYMBOL && input.getSymbol() == ')')
+			if ((input.getTokenType() == HDLTokenizer.TYPE_SYMBOL) && (input.getSymbol() == ')')) {
 				endOfPins = true;
-			else if (!(input.getTokenType() == HDLTokenizer.TYPE_SYMBOL && input.getSymbol() == ','))
+			} else if (!((input.getTokenType() == HDLTokenizer.TYPE_SYMBOL) && (input.getSymbol() == ','))) {
 				input.HDLError("',' or ')' are expected");
+			}
 		}
 	}
 }

@@ -29,6 +29,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 
@@ -40,6 +41,7 @@ public class FileDisplayComponent extends JPanel {
 	// A cell renderer for the displayed table.
 	class FileDisplayTableCellRenderer extends DefaultTableCellRenderer {
 
+		@Override
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean selected, boolean focused,
 				int row, int column) {
 
@@ -54,10 +56,11 @@ public class FileDisplayComponent extends JPanel {
 
 		public void setRenderer(int row, int column) {
 
-			if (row == selectedRow)
+			if (row == selectedRow) {
 				setBackground(Color.yellow);
-			else
+			} else {
 				setBackground(null);
+			}
 		}
 	}
 
@@ -67,6 +70,7 @@ public class FileDisplayComponent extends JPanel {
 		/**
 		 * Returns the number of columns.
 		 */
+		@Override
 		public int getColumnCount() {
 			return 1;
 		}
@@ -74,6 +78,7 @@ public class FileDisplayComponent extends JPanel {
 		/**
 		 * Returns the names of the columns.
 		 */
+		@Override
 		public String getColumnName(int col) {
 			return "";
 		}
@@ -81,6 +86,7 @@ public class FileDisplayComponent extends JPanel {
 		/**
 		 * Returns the number of rows.
 		 */
+		@Override
 		public int getRowCount() {
 			return rows.length;
 		}
@@ -88,6 +94,7 @@ public class FileDisplayComponent extends JPanel {
 		/**
 		 * Returns the value at a specific row and column.
 		 */
+		@Override
 		public Object getValueAt(int row, int col) {
 			return rows[row];
 		}
@@ -95,6 +102,7 @@ public class FileDisplayComponent extends JPanel {
 		/**
 		 * Returns true of this table cells are editable, false - otherwise.
 		 */
+		@Override
 		public boolean isCellEditable(int row, int col) {
 			return false;
 		}
@@ -147,7 +155,7 @@ public class FileDisplayComponent extends JPanel {
 		fileDisplayTable.setFont(Utilities.valueFont);
 		setBorder(BorderFactory.createEtchedBorder());
 
-		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		scrollPane.getHorizontalScrollBar().setUnitIncrement(scrollPane.getHorizontalScrollBar().getBlockIncrement());
 		scrollPane.setLocation(0, 0);
 		scrollPane.setPreferredSize(new Dimension(516, 260));
@@ -197,8 +205,9 @@ public class FileDisplayComponent extends JPanel {
 	 */
 	public void setSelectedRow(int row) {
 		selectedRow = row;
-		if (selectedRow >= 0)
+		if (selectedRow >= 0) {
 			Utilities.tableCenterScroll(this, fileDisplayTable, selectedRow);
+		}
 		repaint();
 	}
 

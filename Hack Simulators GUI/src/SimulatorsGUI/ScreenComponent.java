@@ -77,7 +77,7 @@ public class ScreenComponent extends JPanel implements ScreenGUI, ActionListener
 		for (int i = 1; i < Definitions.SCREEN_SIZE; i++) {
 			x[i] = x[i - 1] + Definitions.BITS_PER_WORD;
 			y[i] = y[i - 1];
-			if (x[i] == Definitions.SCREEN_WIDTH + borderInsets.left) {
+			if (x[i] == (Definitions.SCREEN_WIDTH + borderInsets.left)) {
 				x[i] = borderInsets.left;
 				y[i]++;
 			}
@@ -90,6 +90,7 @@ public class ScreenComponent extends JPanel implements ScreenGUI, ActionListener
 	/**
 	 * Called at constant intervals
 	 */
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (redraw) {
 			repaint();
@@ -100,21 +101,23 @@ public class ScreenComponent extends JPanel implements ScreenGUI, ActionListener
 	/**
 	 * Called when the screen needs to be painted.
 	 */
+	@Override
 	public void paintComponent(Graphics g) {
 
 		super.paintComponent(g);
 
 		for (int i = 0; i < Definitions.SCREEN_SIZE; i++) {
 			if (data[i] != 0) {
-				if (data[i] == 0xffff) // draw a full line
+				if (data[i] == 0xffff) {
 					g.drawLine(x[i], y[i], x[i] + 15, y[i]);
-				else {
+				} else {
 					short value = data[i];
 					for (int j = 0; j < 16; j++) {
-						if ((value & 0x1) == 1)
+						if ((value & 0x1) == 1) {
 							// since there's no drawPixel, uses drawLine to draw
 							// one pixel
 							g.drawLine(x[i] + j, y[i], x[i] + j, y[i]);
+						}
 
 						value = (short) (value >> 1);
 					}
@@ -126,6 +129,7 @@ public class ScreenComponent extends JPanel implements ScreenGUI, ActionListener
 	/**
 	 * Refreshes this component.
 	 */
+	@Override
 	public void refresh() {
 		if (redraw) {
 			repaint();
@@ -136,9 +140,11 @@ public class ScreenComponent extends JPanel implements ScreenGUI, ActionListener
 	/**
 	 * Resets the content of this component.
 	 */
+	@Override
 	public void reset() {
-		for (int i = 0; i < data.length; i++)
+		for (int i = 0; i < data.length; i++) {
 			data[i] = 0;
+		}
 
 		redraw = true;
 	}
@@ -147,6 +153,7 @@ public class ScreenComponent extends JPanel implements ScreenGUI, ActionListener
 	 * Updates the screen's contents with the given values array. (Assumes that
 	 * the length of the values array equals the screen memory size.
 	 */
+	@Override
 	public void setContents(short[] values) {
 		data = values;
 		redraw = true;
@@ -156,6 +163,7 @@ public class ScreenComponent extends JPanel implements ScreenGUI, ActionListener
 	 * Updates the screen at the given index with the given value (Assumes legal
 	 * index)
 	 */
+	@Override
 	public void setValueAt(int index, short value) {
 		data[index] = value;
 		redraw = true;
@@ -164,6 +172,7 @@ public class ScreenComponent extends JPanel implements ScreenGUI, ActionListener
 	/**
 	 * Starts the animation.
 	 */
+	@Override
 	public void startAnimation() {
 		timer.setDelay(ANIMATION_CLOCK_INTERVALS);
 	}
@@ -171,6 +180,7 @@ public class ScreenComponent extends JPanel implements ScreenGUI, ActionListener
 	/**
 	 * Stops the animation.
 	 */
+	@Override
 	public void stopAnimation() {
 		timer.setDelay(STATIC_CLOCK_INTERVALS);
 	}

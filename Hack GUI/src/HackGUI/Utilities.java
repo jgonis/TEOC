@@ -103,7 +103,7 @@ public class Utilities {
 	public static Point getTopLevelLocation(Component top, Component bottom) {
 		Point point = new Point();
 		Component c = bottom;
-		while (c.getParent() != null && c != top) {
+		while ((c.getParent() != null) && (c != top)) {
 			point.x += c.getLocation().getX();
 			point.y += c.getLocation().getY();
 			c = c.getParent();
@@ -130,13 +130,13 @@ public class Utilities {
 		// The scroller moved down
 		if (afterScrollValue > beforeScrollValue) {
 			Rectangle newRectangle = table
-					.getCellRect((int) (Math.min(row + visibleRowsCount / 2, table.getRowCount() - 1)), 0, true);
+					.getCellRect((int) (Math.min(row + (visibleRowsCount / 2), table.getRowCount() - 1)), 0, true);
 			table.scrollRectToVisible(newRectangle);
 			panel.repaint();
 		}
 		// The scroller moved up.
 		else if (afterScrollValue < beforeScrollValue) {
-			Rectangle newRectangle = table.getCellRect((int) (Math.max(row - visibleRowsCount / 2, 0)), 0, true);
+			Rectangle newRectangle = table.getCellRect((int) (Math.max(row - (visibleRowsCount / 2), 0)), 0, true);
 			table.scrollRectToVisible(newRectangle);
 			panel.repaint();
 		}

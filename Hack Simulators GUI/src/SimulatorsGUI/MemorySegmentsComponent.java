@@ -102,11 +102,11 @@ public class MemorySegmentsComponent extends JPanel {
 		segmentsSplitPane3.setBorder(null);
 		segmentsSplitPane2.setBorder(null);
 
-		segmentsSplitPane1.setDividerLocation(30 + staticSegment.getTable().getRowHeight() * 5);
-		segmentsSplitPane2.setDividerLocation(30 + localSegment.getTable().getRowHeight() * 5);
-		segmentsSplitPane3.setDividerLocation(30 + argSegment.getTable().getRowHeight() * 5);
-		segmentsSplitPane4.setDividerLocation(30 + thisSegment.getTable().getRowHeight() * 5);
-		segmentsSplitPane5.setDividerLocation(30 + thatSegment.getTable().getRowHeight() * 2);
+		segmentsSplitPane1.setDividerLocation(30 + (staticSegment.getTable().getRowHeight() * 5));
+		segmentsSplitPane2.setDividerLocation(30 + (localSegment.getTable().getRowHeight() * 5));
+		segmentsSplitPane3.setDividerLocation(30 + (argSegment.getTable().getRowHeight() * 5));
+		segmentsSplitPane4.setDividerLocation(30 + (thisSegment.getTable().getRowHeight() * 5));
+		segmentsSplitPane5.setDividerLocation(30 + (thatSegment.getTable().getRowHeight() * 2));
 
 		segmentsSplitPane1.setSize(new Dimension(195, 587));
 		segmentsSplitPane1.setPreferredSize(new Dimension(195, 587));

@@ -74,7 +74,6 @@ public class Script {
 		boolean whileOpen = false;
 		boolean justOpened = false;
 		boolean outputListPrepared = false;
-		int currentCommandIndex = 0;
 		Command command = null;
 		int lineNumber = 0;
 
@@ -82,7 +81,7 @@ public class Script {
 			lineNumber = input.getLineNumber() - 1;
 			input.advance();
 
-			if (justOpened && input.getTokenType() == ScriptTokenizer.TYPE_SYMBOL && input.getSymbol() == '}') {
+			if (justOpened && (input.getTokenType() == ScriptTokenizer.TYPE_SYMBOL) && (input.getSymbol() == '}')) {
 				scriptError("An empty " + (repeatOpen ? "Repeat" : "While") + " block is not allowed");
 			}
 			justOpened = false;
@@ -90,23 +89,24 @@ public class Script {
 			case ScriptTokenizer.TYPE_KEYWORD:
 				command = createControllerCommand();
 				if (command.getCode() == Command.REPEAT_COMMAND) {
-					if (repeatOpen || whileOpen)
+					if (repeatOpen || whileOpen) {
 						scriptError("Nested Repeat and While are not allowed");
-					else {
+					} else {
 						repeatOpen = true;
 						justOpened = true;
 					}
 				} else if (command.getCode() == Command.WHILE_COMMAND) {
-					if (repeatOpen || whileOpen)
+					if (repeatOpen || whileOpen) {
 						scriptError("Nested Repeat and While are not allowed");
-					else {
+					} else {
 						whileOpen = true;
 						justOpened = true;
 					}
-				} else if (command.getCode() == Command.OUTPUT_LIST_COMMAND)
+				} else if (command.getCode() == Command.OUTPUT_LIST_COMMAND) {
 					outputListPrepared = true;
-				else if (command.getCode() == Command.OUTPUT_COMMAND && !outputListPrepared)
+				} else if ((command.getCode() == Command.OUTPUT_COMMAND) && !outputListPrepared) {
 					scriptError("No output list created");
+				}
 				break;
 
 			case ScriptTokenizer.TYPE_IDENTIFIER:
@@ -118,9 +118,9 @@ public class Script {
 
 			case ScriptTokenizer.TYPE_SYMBOL:
 				if (input.getSymbol() == '}') {
-					if (!repeatOpen && !whileOpen)
+					if (!repeatOpen && !whileOpen) {
 						scriptError("a '}' without a Repeat or While");
-					else {
+					} else {
 						if (repeatOpen) {
 							command = new Command(Command.END_REPEAT_COMMAND);
 							repeatOpen = false;
@@ -129,8 +129,9 @@ public class Script {
 							whileOpen = false;
 						}
 					}
-				} else
+				} else {
 					scriptError("A command cannot begin with '" + input.getSymbol() + "'");
+				}
 			}
 
 			// sets the terminator of the command
@@ -150,8 +151,9 @@ public class Script {
 			lineNumbers.addElement(new Integer(lineNumber));
 		}
 
-		if (repeatOpen || whileOpen)
+		if (repeatOpen || whileOpen) {
 			scriptError("Repeat or While not closed");
+		}
 
 		command = new Command(Command.END_SCRIPT_COMMAND);
 		commands.addElement(command);
@@ -162,12 +164,14 @@ public class Script {
 	// exception is thrown.
 	private void checkTerminator() throws ScriptException {
 		if (input.getTokenType() != ScriptTokenizer.TYPE_SYMBOL) {
-			if (input.hasMoreTokens())
+			if (input.hasMoreTokens()) {
 				scriptError("too many arguments");
-			else
+			} else {
 				scriptError("Script ends without a terminator");
-		} else if (input.getSymbol() != ',' && input.getSymbol() != ';' && input.getSymbol() != '!')
+			}
+		} else if ((input.getSymbol() != ',') && (input.getSymbol() != ';') && (input.getSymbol() != '!')) {
 			scriptError("Illegal terminator: '" + input.getSymbol() + "'");
+		}
 	}
 
 	// creates and returns a controller breakpoint command.
@@ -178,17 +182,20 @@ public class Script {
 
 		// count args
 		int count;
-		for (count = 0; count < args.length && args[count] != null; count++)
+		for (count = 0; (count < args.length) && (args[count] != null); count++) {
 			;
+		}
 
-		if (count < 2)
+		if (count < 2) {
 			scriptError("Not enough arguments");
+		}
 
 		String value = args[1];
-		if (value.startsWith("%S"))
+		if (value.startsWith("%S")) {
 			value = value.substring(2);
-		else if (args[1].startsWith("%"))
+		} else if (args[1].startsWith("%")) {
 			value = Conversions.toDecimalForm(value);
+		}
 
 		Breakpoint breakpoint = new Breakpoint(args[0], value);
 
@@ -293,8 +300,9 @@ public class Script {
 
 		// count args
 		int count;
-		for (count = 0; count < args.length && args[count] != null; count++)
+		for (count = 0; (count < args.length) && (args[count] != null); count++) {
 			;
+		}
 
 		VariableFormat[] vars = new VariableFormat[count];
 
@@ -310,35 +318,40 @@ public class Script {
 
 			// find format
 			char format = args[i].charAt(procentPos + 1);
-			if (format != VariableFormat.BINARY_FORMAT && format != VariableFormat.DECIMAL_FORMAT
-					&& format != VariableFormat.HEX_FORMAT && format != VariableFormat.STRING_FORMAT)
+			if ((format != VariableFormat.BINARY_FORMAT) && (format != VariableFormat.DECIMAL_FORMAT)
+					&& (format != VariableFormat.HEX_FORMAT) && (format != VariableFormat.STRING_FORMAT)) {
 				scriptError("%" + format + " is not a legal format");
+			}
 
 			// find padL
 			int padL = 0;
 			int dotPos1 = args[i].indexOf('.', procentPos);
-			if (dotPos1 == -1)
+			if (dotPos1 == -1) {
 				scriptError("Missing '.'");
+			}
 			try {
 				padL = Integer.parseInt(args[i].substring(procentPos + 2, dotPos1));
 			} catch (NumberFormatException nfe) {
 				scriptError("padL must be a number");
 			}
-			if (padL < 0)
+			if (padL < 0) {
 				scriptError("padL must be positive");
+			}
 
 			// find len
 			int len = 0;
 			int dotPos2 = args[i].indexOf('.', dotPos1 + 1);
-			if (dotPos2 == -1)
+			if (dotPos2 == -1) {
 				scriptError("Missing '.'");
+			}
 			try {
 				len = Integer.parseInt(args[i].substring(dotPos1 + 1, dotPos2));
 			} catch (NumberFormatException nfe) {
 				scriptError("len must be a number");
 			}
-			if (len < 1)
+			if (len < 1) {
 				scriptError("len must be greater than 0");
+			}
 
 			// find padR
 			int padR = 0;
@@ -347,8 +360,9 @@ public class Script {
 			} catch (NumberFormatException nfe) {
 				scriptError("padR must be a number");
 			}
-			if (padR < 0)
+			if (padR < 0) {
 				scriptError("padR must be positive");
+			}
 
 			vars[i] = new VariableFormat(varName, format, padL, padR, len);
 		}
@@ -364,13 +378,15 @@ public class Script {
 
 		if (input.getTokenType() == ScriptTokenizer.TYPE_INT_CONST) {
 			repeatNum = input.getIntValue();
-			if (repeatNum < 1)
+			if (repeatNum < 1) {
 				scriptError("Illegal repeat quantity");
+			}
 			input.advance();
 		}
 
-		if (!(input.getTokenType() == ScriptTokenizer.TYPE_SYMBOL && input.getSymbol() == '{'))
+		if (!((input.getTokenType() == ScriptTokenizer.TYPE_SYMBOL) && (input.getSymbol() == '{'))) {
 			scriptError("Missing '{' in repeat command");
+		}
 
 		return new Command(Command.REPEAT_COMMAND, new Integer(repeatNum));
 	}
@@ -383,8 +399,9 @@ public class Script {
 
 		// count args
 		int count;
-		for (count = 0; count < args.length && args[count] != null; count++)
+		for (count = 0; (count < args.length) && (args[count] != null); count++) {
 			;
+		}
 
 		String[] trimmedArgs = new String[count];
 		System.arraycopy(args, 0, trimmedArgs, 0, count);
@@ -403,8 +420,9 @@ public class Script {
 			scriptError(se.getMessage());
 		}
 
-		if (!(input.getTokenType() == ScriptTokenizer.TYPE_SYMBOL && input.getSymbol() == '{'))
+		if (!((input.getTokenType() == ScriptTokenizer.TYPE_SYMBOL) && (input.getSymbol() == '{'))) {
 			scriptError("Missing '{' in while command");
+		}
 
 		return new Command(Command.WHILE_COMMAND, condition);
 	}
@@ -439,15 +457,16 @@ public class Script {
 
 		// fill the temp args holder with the following tokens
 		int i = 0;
-		while (input.hasMoreTokens() && input.getTokenType() != ScriptTokenizer.TYPE_SYMBOL && i < maxArgs) {
+		while (input.hasMoreTokens() && (input.getTokenType() != ScriptTokenizer.TYPE_SYMBOL) && (i < maxArgs)) {
 			args[i++] = input.getToken();
 			input.advance();
 		}
 
 		checkTerminator();
 
-		if (i == 0)
+		if (i == 0) {
 			scriptError("Missing arguments");
+		}
 
 		return args;
 	}

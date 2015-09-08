@@ -47,6 +47,7 @@ public class SubBusListeningAdapter extends Node {
 	 * Sets the node's value with the given value. Notifies the listeners on the
 	 * change by calling their set() method.
 	 */
+	@Override
 	public void set(short value) {
 		short masked1 = (short) (targetNode.get() & (~mask));
 		short masked2 = (short) ((short) (value << shiftLeft) & mask);

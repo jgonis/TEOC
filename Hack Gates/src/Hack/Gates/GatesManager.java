@@ -32,8 +32,9 @@ public class GatesManager {
 	 * Returns the single instance of GatesManager.
 	 */
 	public static GatesManager getInstance() {
-		if (singleton == null)
+		if (singleton == null) {
 			singleton = new GatesManager();
+		}
 
 		return singleton;
 	}
@@ -74,8 +75,9 @@ public class GatesManager {
 		chip.setParent(chip); // set the chip to be its own parent for Eval
 								// notifications.
 
-		if (gatesPanel != null)
+		if (gatesPanel != null) {
 			gatesPanel.addGateComponent(chip.getGUIComponent());
+		}
 	}
 
 	/**
@@ -119,12 +121,13 @@ public class GatesManager {
 		String name = gateName + ".hdl";
 
 		File file = new File(workingDir, name);
-		if (file.exists())
+		if (file.exists()) {
 			result = file.getAbsolutePath();
-		else {
+		} else {
 			file = new File(builtInDir, name);
-			if (file.exists())
+			if (file.exists()) {
 				result = file.getAbsolutePath();
+			}
 		}
 
 		return result;
@@ -149,13 +152,15 @@ public class GatesManager {
 	 * Remove all the chips from the list and from the gates panel.
 	 */
 	public void removeAllChips() {
-		for (int i = 0; i < chips.size(); i++)
+		for (int i = 0; i < chips.size(); i++) {
 			((BuiltInGateWithGUI) chips.elementAt(i)).removeErrorListener(errorHandler);
+		}
 
 		chips.removeAllElements();
 
-		if (gatesPanel != null)
+		if (gatesPanel != null) {
 			gatesPanel.removeAllGateComponents();
+		}
 	}
 
 	/**
@@ -166,8 +171,9 @@ public class GatesManager {
 		chips.remove(chip);
 		chip.removeErrorListener(errorHandler);
 
-		if (gatesPanel != null)
+		if (gatesPanel != null) {
 			gatesPanel.removeGateComponent(chip.getGUIComponent());
+		}
 	}
 
 	/**

@@ -58,8 +58,9 @@ public abstract class BuiltInGateWithGUI extends BuiltInGate implements ErrorEve
 	public void clearErrorListeners() {
 		GateErrorEvent event = new GateErrorEvent(this, null);
 
-		for (int i = 0; i < errorListeners.size(); i++)
+		for (int i = 0; i < errorListeners.size(); i++) {
 			((GateErrorEventListener) errorListeners.elementAt(i)).gateErrorOccured(event);
+		}
 	}
 
 	/**
@@ -74,6 +75,7 @@ public abstract class BuiltInGateWithGUI extends BuiltInGate implements ErrorEve
 	 * Called when an error occured in the GUI. The event contains the source
 	 * object and the error message.
 	 */
+	@Override
 	public void errorOccured(ErrorEvent event) {
 		notifyErrorListeners(event.getErrorMessage());
 	}
@@ -106,8 +108,9 @@ public abstract class BuiltInGateWithGUI extends BuiltInGate implements ErrorEve
 	public void notifyErrorListeners(String errorMessage) {
 		GateErrorEvent event = new GateErrorEvent(this, errorMessage);
 
-		for (int i = 0; i < errorListeners.size(); i++)
+		for (int i = 0; i < errorListeners.size(); i++) {
 			((GateErrorEventListener) errorListeners.elementAt(i)).gateErrorOccured(event);
+		}
 	}
 
 	/**

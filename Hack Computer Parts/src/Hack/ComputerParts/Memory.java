@@ -51,10 +51,12 @@ public class Memory extends InteractiveValueComputerPart implements ClearEventLi
 		init(size, gui);
 	}
 
+	@Override
 	public void clearRequested(ClearEvent event) {
 		reset();
 	}
 
+	@Override
 	public void doSetValueAt(int address, short value) {
 		mem[address] = value;
 	}
@@ -66,6 +68,7 @@ public class Memory extends InteractiveValueComputerPart implements ClearEventLi
 		return mem;
 	}
 
+	@Override
 	public ComputerPartGUI getGUI() {
 		return gui;
 	}
@@ -77,6 +80,7 @@ public class Memory extends InteractiveValueComputerPart implements ClearEventLi
 		return size;
 	}
 
+	@Override
 	public short getValueAt(int address) {
 		return mem[address];
 	}
@@ -85,8 +89,9 @@ public class Memory extends InteractiveValueComputerPart implements ClearEventLi
 	 * Hides all selections.
 	 */
 	public void hideSelect() {
-		if (displayChanges)
+		if (displayChanges) {
 			gui.hideSelect();
+		}
 	}
 
 	// Initializes the memory
@@ -103,20 +108,24 @@ public class Memory extends InteractiveValueComputerPart implements ClearEventLi
 		}
 	}
 
+	@Override
 	public void refreshGUI() {
 		super.refreshGUI();
 
-		if (displayChanges)
+		if (displayChanges) {
 			gui.setContents(mem);
+		}
 	}
 
 	/**
 	 * Resets the contents of the computer part.
 	 */
+	@Override
 	public void reset() {
 		super.reset();
-		for (int i = 0; i < size; i++)
+		for (int i = 0; i < size; i++) {
 			mem[i] = nullValue;
+		}
 	}
 
 	/**
@@ -124,16 +133,18 @@ public class Memory extends InteractiveValueComputerPart implements ClearEventLi
 	 * legal address).
 	 */
 	public void scrollTo(int address) {
-		if (displayChanges)
+		if (displayChanges) {
 			gui.scrollTo(address);
+		}
 	}
 
 	/**
 	 * Selects the commands in the range fromIndex..toIndex
 	 */
 	public void select(int fromIndex, int toIndex) {
-		if (displayChanges)
+		if (displayChanges) {
 			gui.select(fromIndex, toIndex);
+		}
 	}
 
 	/**

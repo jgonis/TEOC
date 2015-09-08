@@ -35,7 +35,7 @@ public class VMFileFilter extends FileFilter {
 		String s = f.getName();
 		int i = s.lastIndexOf('.');
 
-		if (i > 0 && i < s.length() - 1) {
+		if ((i > 0) && (i < (s.length() - 1))) {
 			ext = s.substring(i + 1).toLowerCase();
 		}
 		return ext;
@@ -44,6 +44,7 @@ public class VMFileFilter extends FileFilter {
 	/**
 	 * Determines which files this filter should accept.
 	 */
+	@Override
 	public boolean accept(File f) {
 		if (f.isDirectory()) {
 			return true;
@@ -56,6 +57,7 @@ public class VMFileFilter extends FileFilter {
 	/**
 	 * The description of this filter
 	 */
+	@Override
 	public String getDescription() {
 		return "VM Files / Dirs";
 	}

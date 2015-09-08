@@ -81,30 +81,34 @@ public abstract class InteractiveValueComputerPart extends ValueComputerPart
 	public void clearErrorListeners() {
 		ComputerPartErrorEvent event = new ComputerPartErrorEvent(this, null);
 
-		for (int i = 0; i < errorListeners.size(); i++)
+		for (int i = 0; i < errorListeners.size(); i++) {
 			((ComputerPartErrorEventListener) errorListeners.elementAt(i)).computerPartErrorOccured(event);
+		}
 	}
 
 	/**
 	 * Disables user input into the computer part.
 	 */
 	public void disableUserInput() {
-		if (hasGUI)
+		if (hasGUI) {
 			((InteractiveValueComputerPartGUI) getGUI()).disableUserInput();
+		}
 	}
 
 	/**
 	 * Enables user input into the computer part.
 	 */
 	public void enableUserInput() {
-		if (hasGUI)
+		if (hasGUI) {
 			((InteractiveValueComputerPartGUI) getGUI()).enableUserInput();
+		}
 	}
 
 	/**
 	 * Called when an error occured in the GUI. The event contains the source
 	 * object and the error message.
 	 */
+	@Override
 	public void errorOccured(ErrorEvent event) {
 		notifyErrorListeners(event.getErrorMessage());
 	}
@@ -116,6 +120,7 @@ public abstract class InteractiveValueComputerPart extends ValueComputerPart
 		return new int[] { startEnabledRange, endEnabledRange };
 	}
 
+	@Override
 	public void guiGainedFocus() {
 	}
 
@@ -128,12 +133,14 @@ public abstract class InteractiveValueComputerPart extends ValueComputerPart
 	public void notifyErrorListeners(String errorMessage) {
 		ComputerPartErrorEvent event = new ComputerPartErrorEvent(this, errorMessage);
 
-		for (int i = 0; i < errorListeners.size(); i++)
+		for (int i = 0; i < errorListeners.size(); i++) {
 			((ComputerPartErrorEventListener) errorListeners.elementAt(i)).computerPartErrorOccured(event);
+		}
 	}
 
+	@Override
 	public void refreshGUI() {
-		if (displayChanges && startEnabledRange != -1 && endEnabledRange != -1) {
+		if (displayChanges && (startEnabledRange != -1) && (endEnabledRange != -1)) {
 			((InteractiveValueComputerPartGUI) getGUI()).setEnabledRange(startEnabledRange, endEnabledRange,
 					grayDisabledRange);
 		}
@@ -157,22 +164,25 @@ public abstract class InteractiveValueComputerPart extends ValueComputerPart
 		endEnabledRange = end;
 		grayDisabledRange = gray;
 
-		if (displayChanges)
+		if (displayChanges) {
 			((InteractiveValueComputerPartGUI) getGUI()).setEnabledRange(start, end, gray);
+		}
 	}
 
 	/**
 	 * Called when the contents of the memory are changed through the memory
 	 * gui.
 	 */
+	@Override
 	public void valueChanged(ComputerPartEvent event) {
 		short newValue = event.getValue();
 		int newIndex = event.getIndex();
 		clearErrorListeners();
-		if ((newValue < minValue || newValue > maxValue) && newValue != nullValue) {
+		if (((newValue < minValue) || (newValue > maxValue)) && (newValue != nullValue)) {
 			notifyErrorListeners("Value must be in the range " + minValue + ".." + maxValue);
 			quietUpdateGUI(newIndex, getValueAt(newIndex));
-		} else
+		} else {
 			setValueAt(newIndex, newValue, true);
+		}
 	}
 }

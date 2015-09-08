@@ -56,10 +56,12 @@ public class PinInfo {
 		initialized = new boolean[width];
 	}
 
+	@Override
 	public boolean equals(Object other) {
 		return (other instanceof PinInfo) && name.equals(((PinInfo) other).name);
 	}
 
+	@Override
 	public int hashCode() {
 		return name.hashCode();
 	}
@@ -79,8 +81,9 @@ public class PinInfo {
 			to = (byte) (width - 1);
 		}
 
-		for (byte i = from; i <= to; i++)
+		for (byte i = from; i <= to; i++) {
 			initialized[i] = true;
+		}
 	}
 
 	/**
@@ -99,8 +102,9 @@ public class PinInfo {
 			to = (byte) (width - 1);
 		}
 
-		for (byte i = from; i <= to && !found; i++)
+		for (byte i = from; (i <= to) && !found; i++) {
 			found = initialized[i];
+		}
 
 		return found;
 	}

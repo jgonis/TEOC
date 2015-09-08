@@ -89,8 +89,9 @@ public class HVMInstruction {
 		result[2] = "";
 
 		result[0] = instructionSet.instructionCodeToString(opCode);
-		if (result[0] == null)
+		if (result[0] == null) {
 			result[0] = "";
+		}
 
 		switch (opCode) {
 		case HVMInstructionSet.PUSH_CODE:
@@ -153,6 +154,7 @@ public class HVMInstruction {
 		stringArg = arg;
 	}
 
+	@Override
 	public String toString() {
 		String[] formatted = getFormattedStrings();
 		StringBuffer result = new StringBuffer();

@@ -80,6 +80,7 @@ public class StackCalculator extends JPanel implements CalculatorGUI {
 	/**
 	 * flashes the value at the given index.
 	 */
+	@Override
 	public void flash(int index) {
 		switch (index) {
 		case 0:
@@ -98,6 +99,7 @@ public class StackCalculator extends JPanel implements CalculatorGUI {
 	 * Returns the coordinates of the top left corner of the value at the given
 	 * index.
 	 */
+	@Override
 	public Point getCoordinates(int index) {
 		Point location = getLocation();
 		switch (index) {
@@ -121,6 +123,7 @@ public class StackCalculator extends JPanel implements CalculatorGUI {
 	/**
 	 * Returns the value at the given index in its string representation.
 	 */
+	@Override
 	public String getValueAsString(int index) {
 		switch (index) {
 		case 0:
@@ -137,6 +140,7 @@ public class StackCalculator extends JPanel implements CalculatorGUI {
 	/**
 	 * Hides the calculator GUI.
 	 */
+	@Override
 	public void hideCalculator() {
 		setVisible(false);
 	}
@@ -144,6 +148,7 @@ public class StackCalculator extends JPanel implements CalculatorGUI {
 	/**
 	 * hides the existing flash.
 	 */
+	@Override
 	public void hideFlash() {
 		firstInput.setBackground(UIManager.getColor("Button.background"));
 		secondInput.setBackground(UIManager.getColor("Button.background"));
@@ -153,6 +158,7 @@ public class StackCalculator extends JPanel implements CalculatorGUI {
 	/**
 	 * Hides all highlightes.
 	 */
+	@Override
 	public void hideHighlight() {
 		firstInput.setForeground(Color.black);
 		secondInput.setForeground(Color.black);
@@ -162,6 +168,7 @@ public class StackCalculator extends JPanel implements CalculatorGUI {
 	/**
 	 * Hides the left input.
 	 */
+	@Override
 	public void hideLeftInput() {
 		firstInput.setVisible(false);
 	}
@@ -169,6 +176,7 @@ public class StackCalculator extends JPanel implements CalculatorGUI {
 	/**
 	 * Highlights the value at the given index.
 	 */
+	@Override
 	public void highlight(int index) {
 		switch (index) {
 		case 0:
@@ -212,6 +220,7 @@ public class StackCalculator extends JPanel implements CalculatorGUI {
 	/**
 	 * Paints the line of this component.
 	 */
+	@Override
 	public void paintComponent(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setPaint(Color.black);
@@ -223,6 +232,7 @@ public class StackCalculator extends JPanel implements CalculatorGUI {
 	/**
 	 * Resets the contents of this component.
 	 */
+	@Override
 	public void reset() {
 		firstInput.setText(translateValueToString(nullValue));
 		secondInput.setText(translateValueToString(nullValue));
@@ -234,6 +244,7 @@ public class StackCalculator extends JPanel implements CalculatorGUI {
 	/**
 	 * Sets the null value of this component.
 	 */
+	@Override
 	public void setNullValue(short value, boolean hideNullValue) {
 		nullValue = value;
 		this.hideNullValue = hideNullValue;
@@ -243,12 +254,14 @@ public class StackCalculator extends JPanel implements CalculatorGUI {
 	 * Sets the numeric format with the given code (out of the format constants
 	 * in HackController).
 	 */
+	@Override
 	public void setNumericFormat(int formatCode) {
 	}
 
 	/**
 	 * Sets the operator of the calculator with the given operator.
 	 */
+	@Override
 	public void setOperator(char operator) {
 		command.setText(String.valueOf(operator));
 	}
@@ -256,6 +269,7 @@ public class StackCalculator extends JPanel implements CalculatorGUI {
 	/**
 	 * Sets the element at the given index with the given value.
 	 */
+	@Override
 	public void setValueAt(int index, short value) {
 		String data = translateValueToString(value);
 		switch (index) {
@@ -274,6 +288,7 @@ public class StackCalculator extends JPanel implements CalculatorGUI {
 	/**
 	 * Displays the calculator GUI.
 	 */
+	@Override
 	public void showCalculator() {
 		setVisible(true);
 	}
@@ -281,6 +296,7 @@ public class StackCalculator extends JPanel implements CalculatorGUI {
 	/**
 	 * Displays the left input.
 	 */
+	@Override
 	public void showLeftInput() {
 		firstInput.setVisible(true);
 	}
@@ -290,12 +306,14 @@ public class StackCalculator extends JPanel implements CalculatorGUI {
 	 */
 	protected String translateValueToString(short value) {
 		if (hideNullValue) {
-			if (value == nullValue)
+			if (value == nullValue) {
 				return "";
-			else
+			} else {
 				return Format.translateValueToString(value, Format.DEC_FORMAT);
-		} else
+			}
+		} else {
 			return Format.translateValueToString(value, Format.DEC_FORMAT);
+		}
 
 	}
 }

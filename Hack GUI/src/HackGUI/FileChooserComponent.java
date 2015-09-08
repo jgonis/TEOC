@@ -20,7 +20,6 @@ package HackGUI;
 import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.Vector;
 
@@ -134,19 +133,11 @@ public class FileChooserComponent extends JPanel {
 		this.setLayout(null);
 		fileName.setDisabledTextColor(Color.black);
 		fileName.setBounds(new Rectangle(118, 13, 221, 22));
-		fileName.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				fileName_actionPerformed(e);
-			}
-		});
+		fileName.addActionListener(e -> fileName_actionPerformed(e));
 		browseButton.setToolTipText("Load File");
 		browseButton.setIcon(load);
 		browseButton.setBounds(new Rectangle(351, 12, 46, 24));
-		browseButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				browseButton_actionPerformed(e);
-			}
-		});
+		browseButton.addActionListener(e -> browseButton_actionPerformed(e));
 		currentFileName = "";
 
 		this.add(fileTypeName, null);
@@ -188,6 +179,7 @@ public class FileChooserComponent extends JPanel {
 	/**
 	 * Sets the name of the file chooser.
 	 */
+	@Override
 	public void setName(String name) {
 		fileTypeName.setText(name);
 	}

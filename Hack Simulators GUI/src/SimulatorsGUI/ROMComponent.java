@@ -22,7 +22,6 @@ import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.Vector;
 
@@ -57,11 +56,13 @@ public class ROMComponent extends PointedMemoryComponent implements ROMGUI {
 	 */
 	public class ROMTableCellRenderer extends PointedMemoryTableCellRenderer {
 
+		@Override
 		public void setRenderer(int row, int column) {
 			super.setRenderer(row, column);
 
-			if (dataFormat == ASM_FORMAT && column == 1)
+			if ((dataFormat == ASM_FORMAT) && (column == 1)) {
 				setHorizontalAlignment(SwingConstants.LEFT);
+			}
 		}
 	}
 
@@ -95,9 +96,6 @@ public class ROMComponent extends PointedMemoryComponent implements ROMGUI {
 	// The combo box for choosing the numeric format.
 	protected JComboBox romFormat = new JComboBox(format);
 
-	// The name of the current program.
-	private String programFileName;
-
 	/**
 	 * Constructs a new ROMComponent.
 	 */
@@ -113,10 +111,12 @@ public class ROMComponent extends PointedMemoryComponent implements ROMGUI {
 	/**
 	 * Registers the given ProgramEventListener as a listener to this GUI.
 	 */
+	@Override
 	public void addProgramListener(ProgramEventListener listener) {
 		programEventListeners.addElement(listener);
 	}
 
+	@Override
 	protected DefaultTableCellRenderer getCellRenderer() {
 		return new ROMTableCellRenderer();
 	}
@@ -124,16 +124,19 @@ public class ROMComponent extends PointedMemoryComponent implements ROMGUI {
 	/**
 	 * Returns the value at the given index in its string representation.
 	 */
+	@Override
 	public String getValueAsString(int index) {
-		if (dataFormat != ASM_FORMAT)
+		if (dataFormat != ASM_FORMAT) {
 			return super.getValueAsString(index);
-		else
+		} else {
 			return Format.translateValueToString(values[index], Format.DEC_FORMAT);
+		}
 	}
 
 	/**
 	 * Hides the displayed message.
 	 */
+	@Override
 	public void hideMessage() {
 		messageTxt.setText("");
 		messageTxt.setVisible(false);
@@ -147,11 +150,7 @@ public class ROMComponent extends PointedMemoryComponent implements ROMGUI {
 		loadButton.setIcon(loadIcon);
 		loadButton.setBounds(new Rectangle(97, 2, 31, 25));
 		loadButton.setToolTipText("Load Program");
-		loadButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				loadButton_actionPerformed(e);
-			}
-		});
+		loadButton.addActionListener(e -> loadButton_actionPerformed(e));
 		messageTxt.setBackground(SystemColor.info);
 		messageTxt.setEnabled(false);
 		messageTxt.setFont(Utilities.labelsFont);
@@ -165,11 +164,7 @@ public class ROMComponent extends PointedMemoryComponent implements ROMGUI {
 		romFormat.setBounds(new Rectangle(39, 3, 56, 23));
 		romFormat.setFont(Utilities.thinLabelsFont);
 		romFormat.setToolTipText("Display Format");
-		romFormat.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				romFormat_actionPerformed(e);
-			}
-		});
+		romFormat.addActionListener(e -> romFormat_actionPerformed(e));
 		this.add(messageTxt, null);
 		this.add(loadButton);
 		this.add(romFormat, null);
@@ -195,6 +190,7 @@ public class ROMComponent extends PointedMemoryComponent implements ROMGUI {
 	/**
 	 * Overrides to add the program clear functionality.
 	 */
+	@Override
 	public void notifyClearListeners() {
 		super.notifyClearListeners();
 		notifyProgramListeners(ProgramEvent.CLEAR, null);
@@ -206,16 +202,19 @@ public class ROMComponent extends PointedMemoryComponent implements ROMGUI {
 	 * name) and sending it using the programChanged method to all the
 	 * listeners.
 	 */
+	@Override
 	public void notifyProgramListeners(byte eventType, String programFileName) {
 		ProgramEvent event = new ProgramEvent(this, eventType, programFileName);
-		for (int i = 0; i < programEventListeners.size(); i++)
+		for (int i = 0; i < programEventListeners.size(); i++) {
 			((ProgramEventListener) programEventListeners.elementAt(i)).programChanged(event);
+		}
 	}
 
 	/**
 	 * Un-registers the given ProgramEventListener from being a listener to this
 	 * GUI.
 	 */
+	@Override
 	public void removeProgramListener(ProgramEventListener listener) {
 		programEventListeners.removeElement(listener);
 	}
@@ -236,6 +235,7 @@ public class ROMComponent extends PointedMemoryComponent implements ROMGUI {
 		}
 	}
 
+	@Override
 	public void setNumericFormat(int formatCode) {
 		super.setNumericFormat(formatCode);
 		switch (formatCode) {
@@ -257,8 +257,8 @@ public class ROMComponent extends PointedMemoryComponent implements ROMGUI {
 	/**
 	 * Sets the current program file name with the given name.
 	 */
+	@Override
 	public void setProgram(String programFileName) {
-		this.programFileName = programFileName;
 	}
 
 	/**
@@ -271,6 +271,7 @@ public class ROMComponent extends PointedMemoryComponent implements ROMGUI {
 	/**
 	 * Displays the given message.
 	 */
+	@Override
 	public void showMessage(String message) {
 		messageTxt.setText(message);
 		loadButton.setVisible(false);
@@ -282,11 +283,12 @@ public class ROMComponent extends PointedMemoryComponent implements ROMGUI {
 	/**
 	 * Translates a given string to a short according to the current format.
 	 */
+	@Override
 	protected short translateValueToShort(String data) throws TranslationException {
 		short result = 0;
-		if (dataFormat != ASM_FORMAT)
+		if (dataFormat != ASM_FORMAT) {
 			result = super.translateValueToShort(data);
-		else {
+		} else {
 			try {
 				result = translator.textToCode(data);
 			} catch (AssemblerException ae) {
@@ -299,11 +301,12 @@ public class ROMComponent extends PointedMemoryComponent implements ROMGUI {
 	/**
 	 * Translates a given short to a string according to the current format.
 	 */
+	@Override
 	protected String translateValueToString(short value) {
 		String result = null;
-		if (dataFormat != ASM_FORMAT)
+		if (dataFormat != ASM_FORMAT) {
 			result = super.translateValueToString(value);
-		else {
+		} else {
 			try {
 				result = translator.codeToText(value);
 			} catch (AssemblerException ae) {

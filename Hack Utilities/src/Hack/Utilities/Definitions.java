@@ -400,20 +400,26 @@ public class Definitions {
 			boolean negate1, boolean ADDorAND, boolean negateOutput) {
 		short result;
 
-		if (zero0)
+		if (zero0) {
 			input0 = 0;
-		if (zero1)
+		}
+		if (zero1) {
 			input1 = 0;
-		if (negate0)
+		}
+		if (negate0) {
 			input0 = (short) (~input0);
-		if (negate1)
+		}
+		if (negate1) {
 			input1 = (short) (~input1);
-		if (ADDorAND)
+		}
+		if (ADDorAND) {
 			result = (short) (input0 + input1);
-		else
+		} else {
 			result = (short) (input0 & input1);
-		if (negateOutput)
+		}
+		if (negateOutput) {
 			result = (short) (~result);
+		}
 
 		return result;
 	}
@@ -422,8 +428,9 @@ public class Definitions {
 	 * Returns the single instance of the definitions object.
 	 */
 	public static Definitions getInstance() {
-		if (instance == null)
+		if (instance == null) {
 			instance = new Definitions();
+		}
 		return instance;
 	}
 
@@ -451,24 +458,25 @@ public class Definitions {
 	 */
 	public short getKeyCode(KeyEvent e) {
 		short key = 0;
-		int letter = (int) e.getKeyChar();
+		int letter = e.getKeyChar();
 		short code = (short) e.getKeyCode();
 
-		if (letter == KeyEvent.CHAR_UNDEFINED)
+		if (letter == KeyEvent.CHAR_UNDEFINED) {
 			key = actionKeyCodes[code];
-		else {
-			if (code >= 65 && code <= 90)
+		} else {
+			if ((code >= 65) && (code <= 90)) {
 				key = code;
-			else if (letter == 8)
+			} else if (letter == 8) {
 				key = BACKSPACE_KEY;
-			else if (letter == 10)
+			} else if (letter == 10) {
 				key = NEWLINE_KEY;
-			else if (letter == 27)
+			} else if (letter == 27) {
 				key = ESC_KEY;
-			else if (letter == 127)
+			} else if (letter == 127) {
 				key = DELETE_KEY;
-			else
+			} else {
 				key = (short) letter;
+			}
 		}
 
 		return key;
@@ -478,8 +486,8 @@ public class Definitions {
 	 * Returns the key name from the given key event.
 	 */
 	public String getKeyName(KeyEvent e) {
-		String modifiers = e.getKeyModifiersText(e.getModifiers());
-		String result = modifiers + (modifiers.length() > 0 ? "+" : "") + e.getKeyText(e.getKeyCode());
+		String modifiers = KeyEvent.getKeyModifiersText(e.getModifiers());
+		String result = modifiers + (modifiers.length() > 0 ? "+" : "") + KeyEvent.getKeyText(e.getKeyCode());
 
 		return result;
 	}

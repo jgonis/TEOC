@@ -114,6 +114,7 @@ public class HardwareSimulatorComponent extends HackSimulatorComponent implement
 	/**
 	 * Adds the given gate component to the gates panel.
 	 */
+	@Override
 	public void addGateComponent(Component gateComponent) {
 		if (flowLayout) {
 			flowLayoutGatesPanel.add(gateComponent);
@@ -125,11 +126,11 @@ public class HardwareSimulatorComponent extends HackSimulatorComponent implement
 				Rectangle componentBounds = components[i].getBounds();
 				int x1 = (int) componentBounds.getX();
 				int y1 = (int) componentBounds.getY();
-				int x2 = (int) (componentBounds.getX() + componentBounds.getWidth() - 1);
-				int y2 = (int) (componentBounds.getY() + componentBounds.getHeight() - 1);
-				if (!(gateComponent.getY() > y2 || gateComponent.getX() > x2
-						|| gateComponent.getY() + gateComponent.getHeight() - 1 < y1
-						|| gateComponent.getX() + gateComponent.getWidth() - 1 < x1)) {
+				int x2 = (int) ((componentBounds.getX() + componentBounds.getWidth()) - 1);
+				int y2 = (int) ((componentBounds.getY() + componentBounds.getHeight()) - 1);
+				if (!((gateComponent.getY() > y2) || (gateComponent.getX() > x2)
+						|| (((gateComponent.getY() + gateComponent.getHeight()) - 1) < y1)
+						|| (((gateComponent.getX() + gateComponent.getWidth()) - 1) < x1))) {
 
 					flowLayout = true;
 					if (currentAdditionalDisplay == null) {
@@ -137,8 +138,9 @@ public class HardwareSimulatorComponent extends HackSimulatorComponent implement
 						flowLayoutGatesPanel.setVisible(true);
 					}
 
-					for (i = 0; i < components.length; i++)
+					for (i = 0; i < components.length; i++) {
 						flowLayoutGatesPanel.add(components[i]);
+					}
 
 					flowLayoutGatesPanel.add(gateComponent);
 
@@ -158,17 +160,20 @@ public class HardwareSimulatorComponent extends HackSimulatorComponent implement
 	 * 'error' parameter.
 	 */
 	public void displayMessage(String message, boolean error) {
-		if (error)
+		if (error) {
 			messageLbl.setForeground(Color.red);
-		else
+		} else {
 			messageLbl.setForeground(UIManager.getColor("Label.foreground"));
+		}
 		messageLbl.setText(message);
 	}
 
+	@Override
 	public Point getAdditionalDisplayLocation() {
 		return new Point(496, 13);
 	}
 
+	@Override
 	public GateInfoGUI getGateInfo() {
 		return gateInfo;
 	}
@@ -176,6 +181,7 @@ public class HardwareSimulatorComponent extends HackSimulatorComponent implement
 	/**
 	 * Returns the Gates panel.
 	 */
+	@Override
 	public GatesPanelGUI getGatesPanel() {
 		return this;
 	}
@@ -183,6 +189,7 @@ public class HardwareSimulatorComponent extends HackSimulatorComponent implement
 	/**
 	 * Returns the HDLView.
 	 */
+	@Override
 	public TextFileGUI getHDLView() {
 		return hdlView;
 	}
@@ -190,6 +197,7 @@ public class HardwareSimulatorComponent extends HackSimulatorComponent implement
 	/**
 	 * Returns the input pins table.
 	 */
+	@Override
 	public PinsGUI getInputPins() {
 		return inputPins;
 	}
@@ -197,6 +205,7 @@ public class HardwareSimulatorComponent extends HackSimulatorComponent implement
 	/**
 	 * Returns the internal pins table.
 	 */
+	@Override
 	public PinsGUI getInternalPins() {
 		return internalPins;
 	}
@@ -204,6 +213,7 @@ public class HardwareSimulatorComponent extends HackSimulatorComponent implement
 	/**
 	 * Returns the output pins table.
 	 */
+	@Override
 	public PinsGUI getOutputPins() {
 		return outputPins;
 	}
@@ -211,6 +221,7 @@ public class HardwareSimulatorComponent extends HackSimulatorComponent implement
 	/**
 	 * Returns the part pins table.
 	 */
+	@Override
 	public PartPinsGUI getPartPins() {
 		return partPins;
 	}
@@ -218,6 +229,7 @@ public class HardwareSimulatorComponent extends HackSimulatorComponent implement
 	/**
 	 * Returns the parts table.
 	 */
+	@Override
 	public PartsGUI getParts() {
 		return parts;
 	}
@@ -225,6 +237,7 @@ public class HardwareSimulatorComponent extends HackSimulatorComponent implement
 	/**
 	 * Hides the Internal pins table.
 	 */
+	@Override
 	public void hideInternalPins() {
 		internalPins.setVisible(false);
 	}
@@ -232,6 +245,7 @@ public class HardwareSimulatorComponent extends HackSimulatorComponent implement
 	/**
 	 * Hides the Part pins table.
 	 */
+	@Override
 	public void hidePartPins() {
 		partPins.setVisible(false);
 	}
@@ -239,6 +253,7 @@ public class HardwareSimulatorComponent extends HackSimulatorComponent implement
 	/**
 	 * Hides the Parts table.
 	 */
+	@Override
 	public void hideParts() {
 		parts.setVisible(false);
 	}
@@ -293,12 +308,14 @@ public class HardwareSimulatorComponent extends HackSimulatorComponent implement
 		setSize(WIDTH, HEIGHT);
 	}
 
+	@Override
 	public void loadProgram() {
 	}
 
 	/**
 	 * Removes all the gate components from the gates panel.
 	 */
+	@Override
 	public void removeAllGateComponents() {
 		nullLayoutGatesPanel.removeAll();
 		flowLayoutGatesPanel.removeAll();
@@ -317,6 +334,7 @@ public class HardwareSimulatorComponent extends HackSimulatorComponent implement
 	/**
 	 * Removes the given gate component from the gates panel.
 	 */
+	@Override
 	public void removeGateComponent(Component gateComponent) {
 		nullLayoutGatesPanel.remove(gateComponent);
 		flowLayoutGatesPanel.remove(gateComponent);
@@ -326,28 +344,33 @@ public class HardwareSimulatorComponent extends HackSimulatorComponent implement
 		flowLayoutGatesPanel.repaint();
 	}
 
+	@Override
 	public void setAdditionalDisplay(JComponent additionalComponent) {
-		if (currentAdditionalDisplay == null && additionalComponent != null) {
-			if (flowLayout)
+		if ((currentAdditionalDisplay == null) && (additionalComponent != null)) {
+			if (flowLayout) {
 				flowLayoutGatesPanel.setVisible(false);
-			else
+			} else {
 				nullLayoutGatesPanel.setVisible(false);
-		} else if (currentAdditionalDisplay != null && additionalComponent == null) {
-			if (flowLayout)
+			}
+		} else if ((currentAdditionalDisplay != null) && (additionalComponent == null)) {
+			if (flowLayout) {
 				flowLayoutGatesPanel.setVisible(true);
-			else
+			} else {
 				nullLayoutGatesPanel.setVisible(true);
+			}
 		}
 
 		super.setAdditionalDisplay(additionalComponent);
 	}
 
+	@Override
 	public void setWorkingDir(File file) {
 	}
 
 	/**
 	 * Displays the Internal pins table.
 	 */
+	@Override
 	public void showInternalPins() {
 		internalPins.setVisible(true);
 	}
@@ -355,6 +378,7 @@ public class HardwareSimulatorComponent extends HackSimulatorComponent implement
 	/**
 	 * Displays the Part pins table.
 	 */
+	@Override
 	public void showPartPins() {
 		partPins.setVisible(true);
 	}
@@ -362,6 +386,7 @@ public class HardwareSimulatorComponent extends HackSimulatorComponent implement
 	/**
 	 * Displays the Parts table.
 	 */
+	@Override
 	public void showParts() {
 		parts.setVisible(true);
 	}

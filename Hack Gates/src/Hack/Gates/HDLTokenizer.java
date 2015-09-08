@@ -104,8 +104,9 @@ public class HDLTokenizer {
 	 * exception.
 	 */
 	public void advance() throws HDLException {
-		if (!hasMoreTokens())
+		if (!hasMoreTokens()) {
 			HDLError("Unexpected end of file");
+		}
 
 		try {
 			switch (parser.ttype) {
@@ -202,7 +203,7 @@ public class HDLTokenizer {
 	 * Returns if there are more tokens in the stream
 	 */
 	public boolean hasMoreTokens() {
-		return (parser.ttype != parser.TT_EOF);
+		return (parser.ttype != StreamTokenizer.TT_EOF);
 	}
 
 	/**

@@ -32,6 +32,7 @@ public class ValuesOnlyPointedMemoryComponent extends PointedMemoryComponent {
 		/**
 		 * Returns the number of columns.
 		 */
+		@Override
 		public int getColumnCount() {
 			return 1;
 		}
@@ -39,6 +40,7 @@ public class ValuesOnlyPointedMemoryComponent extends PointedMemoryComponent {
 		/**
 		 * Returns the value at a specific row and column.
 		 */
+		@Override
 		public Object getValueAt(int row, int col) {
 			return super.getValueAt(row, col + 1);
 		}
@@ -46,6 +48,7 @@ public class ValuesOnlyPointedMemoryComponent extends PointedMemoryComponent {
 		/**
 		 * Returns true of this table cells are editable, false - otherwise.
 		 */
+		@Override
 		public boolean isCellEditable(int row, int col) {
 			return super.isCellEditable(row, col + 1);
 		}
@@ -54,15 +57,18 @@ public class ValuesOnlyPointedMemoryComponent extends PointedMemoryComponent {
 
 	public class ValuesOnlyPointedTableCellRenderer extends PointedMemoryTableCellRenderer {
 
+		@Override
 		public void setRenderer(int row, int column) {
 			super.setRenderer(row, column + 1);
 		}
 	}
 
 	// Determines the width of each column in the table.
+	@Override
 	protected void determineColumnWidth() {
 	}
 
+	@Override
 	protected DefaultTableCellRenderer getCellRenderer() {
 		return new ValuesOnlyPointedTableCellRenderer();
 	}
@@ -70,6 +76,7 @@ public class ValuesOnlyPointedMemoryComponent extends PointedMemoryComponent {
 	/**
 	 * Returns the table model of this component.
 	 */
+	@Override
 	protected TableModel getTableModel() {
 		return new ValuesOnlyPointedMemoryTableModel();
 	}
@@ -77,6 +84,7 @@ public class ValuesOnlyPointedMemoryComponent extends PointedMemoryComponent {
 	/**
 	 * Returns the index of the values column.
 	 */
+	@Override
 	protected int getValueColumnIndex() {
 		return 0;
 	}

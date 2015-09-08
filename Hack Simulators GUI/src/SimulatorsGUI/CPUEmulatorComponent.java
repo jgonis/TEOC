@@ -91,10 +91,12 @@ public class CPUEmulatorComponent extends HackSimulatorComponent implements CPUE
 	/**
 	 * Returns the screen GUI component.
 	 */
+	@Override
 	public RegisterGUI getA() {
 		return a;
 	}
 
+	@Override
 	public Point getAdditionalDisplayLocation() {
 		return new Point(476, 25);
 	}
@@ -102,6 +104,7 @@ public class CPUEmulatorComponent extends HackSimulatorComponent implements CPUE
 	/**
 	 * Returns the alu GUI component.
 	 */
+	@Override
 	public ALUGUI getALU() {
 		return alu;
 	}
@@ -109,6 +112,7 @@ public class CPUEmulatorComponent extends HackSimulatorComponent implements CPUE
 	/**
 	 * Returns the bus GUI component.
 	 */
+	@Override
 	public BusGUI getBus() {
 		return bus;
 	}
@@ -116,6 +120,7 @@ public class CPUEmulatorComponent extends HackSimulatorComponent implements CPUE
 	/**
 	 * Returns the screen GUI component.
 	 */
+	@Override
 	public RegisterGUI getD() {
 		return d;
 	}
@@ -123,6 +128,7 @@ public class CPUEmulatorComponent extends HackSimulatorComponent implements CPUE
 	/**
 	 * Returns the keyboard GUI component.
 	 */
+	@Override
 	public KeyboardGUI getKeyboard() {
 		return keyboard;
 	}
@@ -130,6 +136,7 @@ public class CPUEmulatorComponent extends HackSimulatorComponent implements CPUE
 	/**
 	 * Returns the screen GUI component.
 	 */
+	@Override
 	public RegisterGUI getPC() {
 		return pc;
 	}
@@ -137,6 +144,7 @@ public class CPUEmulatorComponent extends HackSimulatorComponent implements CPUE
 	/**
 	 * Returns the RAM GUI component.
 	 */
+	@Override
 	public PointedMemoryGUI getRAM() {
 		return ram;
 	}
@@ -144,6 +152,7 @@ public class CPUEmulatorComponent extends HackSimulatorComponent implements CPUE
 	/**
 	 * Returns the ROM GUI component.
 	 */
+	@Override
 	public ROMGUI getROM() {
 		return rom;
 	}
@@ -151,6 +160,7 @@ public class CPUEmulatorComponent extends HackSimulatorComponent implements CPUE
 	/**
 	 * Returns the screen GUI component.
 	 */
+	@Override
 	public ScreenGUI getScreen() {
 		return screen;
 	}
@@ -184,6 +194,7 @@ public class CPUEmulatorComponent extends HackSimulatorComponent implements CPUE
 		setSize(EMULATOR_WIDTH, EMULATOR_HEIGHT);
 	}
 
+	@Override
 	public void loadProgram() {
 		rom.loadProgram();
 	}
@@ -195,6 +206,7 @@ public class CPUEmulatorComponent extends HackSimulatorComponent implements CPUE
 		pc.setName("PC");
 	}
 
+	@Override
 	public void setWorkingDir(File file) {
 		rom.setWorkingDir(file);
 	}

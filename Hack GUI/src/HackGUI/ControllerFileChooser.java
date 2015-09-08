@@ -19,7 +19,6 @@ package HackGUI;
 
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
@@ -90,17 +89,9 @@ public class ControllerFileChooser extends JFrame {
 		okButton.setToolTipText("OK");
 		okButton.setIcon(okIcon);
 		okButton.setBounds(new Rectangle(123, 134, 63, 44));
-		okButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				okButton_actionPerformed(e);
-			}
-		});
+		okButton.addActionListener(e -> okButton_actionPerformed(e));
 		cancelButton.setBounds(new Rectangle(283, 134, 63, 44));
-		cancelButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				cancelButton_actionPerformed(e);
-			}
-		});
+		cancelButton.addActionListener(e -> cancelButton_actionPerformed(e));
 		cancelButton.setToolTipText("CANCEL");
 		cancelButton.setIcon(cancelIcon);
 		this.getContentPane().add(scriptFileChooser, null);
@@ -151,7 +142,7 @@ public class ControllerFileChooser extends JFrame {
 			comparisonFileChooser.setCurrentFileName(comparison);
 			comparisonFileChooser.showCurrentFileName();
 		}
-		if (!(script == null && output == null && comparison == null)) {
+		if (!((script == null) && (output == null) && (comparison == null))) {
 			notifyListeners(script, output, comparison);
 		}
 		setVisible(false);

@@ -23,8 +23,9 @@ package Hack.Controller;
 public class CommandException extends Exception {
 	private static String commandString(String[] command) {
 		StringBuffer message = new StringBuffer();
-		for (int i = 0; i < command.length; i++)
-			message.append(command[i] + " ");
+		for (String element : command) {
+			message.append(element + " ");
+		}
 
 		return message.toString();
 	}

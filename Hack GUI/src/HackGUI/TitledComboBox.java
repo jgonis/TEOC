@@ -65,11 +65,7 @@ public class TitledComboBox extends JPanel {
 		add(title, BorderLayout.NORTH);
 		add(combo, BorderLayout.SOUTH);
 
-		combo.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				notifyListeners(e);
-			}
-		});
+		combo.addActionListener(e -> notifyListeners(e));
 
 		title.setFont(Utilities.thinLabelsFont);
 
@@ -110,10 +106,12 @@ public class TitledComboBox extends JPanel {
 	// Notifies the registered listeners on an action in the combo box.
 	private void notifyListeners(ActionEvent e) {
 		Iterator iter = listeners.iterator();
-		while (iter.hasNext())
+		while (iter.hasNext()) {
 			((ActionListener) iter.next()).actionPerformed(e);
+		}
 	}
 
+	@Override
 	public void setEnabled(boolean value) {
 		combo.setEnabled(value);
 		title.setEnabled(value);

@@ -56,6 +56,7 @@ public class SubNode extends Node {
 	/**
 	 * Returns the value of this sub-node.
 	 */
+	@Override
 	public short get() {
 		return Shifter.unsignedShiftRight((short) (value & mask), shiftRight);
 	}

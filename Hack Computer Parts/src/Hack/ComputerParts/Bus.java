@@ -33,10 +33,12 @@ public class Bus extends ComputerPart {
 		this.gui = gui;
 	}
 
+	@Override
 	public ComputerPartGUI getGUI() {
 		return gui;
 	}
 
+	@Override
 	public void refreshGUI() {
 	}
 
@@ -66,7 +68,8 @@ public class Bus extends ComputerPart {
 	 * 1..HackController.NUMBER_OF_SPEED_UNITS)
 	 */
 	public void setAnimationSpeed(int speed) {
-		if (hasGUI)
+		if (hasGUI) {
 			gui.setSpeed(speed);
+		}
 	}
 }

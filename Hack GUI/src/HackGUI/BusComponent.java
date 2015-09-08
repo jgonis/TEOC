@@ -91,8 +91,8 @@ public class BusComponent extends JPanel implements ActionListener, BusGUI {
 		stepLengths = new double[range];
 		delays = new int[range];
 		for (int i = 0; i < range; i++) {
-			stepLengths[i] = function[i] * (double) (MAX_STEP_LENGTH - MIN_STEP_LENGTH) + MIN_STEP_LENGTH;
-			delays[i] = (int) (MAX_MS - function[i] * (double) (MAX_MS - MIN_MS));
+			stepLengths[i] = (function[i] * (MAX_STEP_LENGTH - MIN_STEP_LENGTH)) + MIN_STEP_LENGTH;
+			delays[i] = (int) (MAX_MS - (function[i] * (double) (MAX_MS - MIN_MS)));
 		}
 
 		setSpeed(3);
@@ -104,6 +104,7 @@ public class BusComponent extends JPanel implements ActionListener, BusGUI {
 	/**
 	 * The action to be performed every clock interval.
 	 */
+	@Override
 	public synchronized void actionPerformed(ActionEvent e) {
 		x = x + dx;
 		y = y + dy;
@@ -137,6 +138,7 @@ public class BusComponent extends JPanel implements ActionListener, BusGUI {
 	 * Moves the given value from the source coordinates to the target
 	 * coordinates.
 	 */
+	@Override
 	public synchronized void move(Point p1, Point p2, String value) {
 		txtField.setText(value);
 		x = p1.getX() - 2;
@@ -150,13 +152,15 @@ public class BusComponent extends JPanel implements ActionListener, BusGUI {
 		int absX = Math.abs(totalX);
 		int absY = Math.abs(totalY);
 
-		dy = (double) (currentStepLength * absY) / (double) (absX + absY);
+		dy = currentStepLength * absY / (absX + absY);
 		dx = currentStepLength - dy;
-		counter = (int) ((double) absX / dx);
-		if (totalX < 0)
+		counter = (int) (absX / dx);
+		if (totalX < 0) {
 			dx = -dx;
-		if (totalY < 0)
+		}
+		if (totalY < 0) {
 			dy = -dy;
+		}
 
 		timer.start();
 		try {
@@ -168,6 +172,7 @@ public class BusComponent extends JPanel implements ActionListener, BusGUI {
 	/**
 	 * Resets the content of this BusComponent.
 	 */
+	@Override
 	public void reset() {
 	}
 
@@ -189,6 +194,7 @@ public class BusComponent extends JPanel implements ActionListener, BusGUI {
 	 * Sets the sending speed (in the range
 	 * 1..HackController.NUMBER_OF_SPEED_UNITS).
 	 */
+	@Override
 	public void setSpeed(int speedUnit) {
 		timer.setDelay(delays[speedUnit - 1]);
 		currentStepLength = stepLengths[speedUnit - 1];

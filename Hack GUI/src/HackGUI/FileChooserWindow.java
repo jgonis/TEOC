@@ -19,7 +19,6 @@ package HackGUI;
 
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
@@ -77,12 +76,14 @@ public class FileChooserWindow extends JFrame implements EnterPressedListener {
 	/**
 	 * Called when the user pressed the enter button.
 	 */
+	@Override
 	public void enterPressed() {
 		String file = null;
 		file = fileChooser.getFileName();
 		fileChooser.setCurrentFileName(file);
-		if (!(file == null))
+		if (!(file == null)) {
 			notifyListeners(file);
+		}
 		setVisible(false);
 	}
 
@@ -103,17 +104,9 @@ public class FileChooserWindow extends JFrame implements EnterPressedListener {
 		okButton.setToolTipText("OK");
 		okButton.setIcon(okIcon);
 		okButton.setBounds(new Rectangle(124, 64, 63, 44));
-		okButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				okButton_actionPerformed(e);
-			}
-		});
+		okButton.addActionListener(e -> okButton_actionPerformed(e));
 		cancelButton.setBounds(new Rectangle(282, 63, 63, 44));
-		cancelButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				cancelButton_actionPerformed(e);
-			}
-		});
+		cancelButton.addActionListener(e -> cancelButton_actionPerformed(e));
 		cancelButton.setToolTipText("CANCEL");
 		cancelButton.setIcon(cancelIcon);
 		this.getContentPane().add(fileChooser, null);
@@ -169,6 +162,7 @@ public class FileChooserWindow extends JFrame implements EnterPressedListener {
 	/**
 	 * Sets the name of the file chooser.
 	 */
+	@Override
 	public void setName(String name) {
 		fileChooser.setName(name);
 	}

@@ -37,12 +37,14 @@ public class BuiltInFunctionsRunner implements Runnable {
 		short[] params;
 		short returnValue;
 	}
+
 	private class ProgramToBuiltInRequest {
 		int request;
 		Method functionObject;
 		Object[] params;
 		short returnValue;
 	}
+
 	// Message types between threads
 	private static final int CALL_REQUEST = 0;
 	private static final int RETURN_REQUEST = 1;
@@ -239,8 +241,8 @@ public class BuiltInFunctionsRunner implements Runnable {
 					+ (params.length == 1 ? "" : "s") + ".");
 		}
 		Class returnType = functionObject.getReturnType();
-		if (returnType != short.class && returnType != void.class && returnType != char.class
-				&& returnType != boolean.class) {
+		if ((returnType != short.class) && (returnType != void.class) && (returnType != char.class)
+				&& (returnType != boolean.class)) {
 			throw new ProgramException("Can't find " + className + ".vm and the built-in implementation for "
 					+ functionName + " taking " + params.length + " arguments doesn't return short/char/void/boolean.");
 		}
@@ -260,9 +262,9 @@ public class BuiltInFunctionsRunner implements Runnable {
 	 * TerminateVMProgramThrowable.
 	 */
 	private void checkMemoryAddress(short address) throws TerminateVMProgramThrowable {
-		if (!((address >= Definitions.HEAP_START_ADDRESS && address <= Definitions.HEAP_END_ADDRESS)
-				|| (address >= Definitions.SCREEN_START_ADDRESS && address <= Definitions.SCREEN_END_ADDRESS)
-				|| address == 0)) {
+		if (!(((address >= Definitions.HEAP_START_ADDRESS) && (address <= Definitions.HEAP_END_ADDRESS))
+				|| ((address >= Definitions.SCREEN_START_ADDRESS) && (address <= Definitions.SCREEN_END_ADDRESS))
+				|| (address == 0))) {
 			builtInToProgram.request = THROW_PROGRAM_EXCEPTION_REQUEST;
 			builtInToProgram.details = "A built-in function tried to access memory outside the Heap or Screen range";
 			continueOtherThread();
@@ -311,6 +313,7 @@ public class BuiltInFunctionsRunner implements Runnable {
 	/**
 	 * Runs the built-in code runner thread
 	 */
+	@Override
 	public void run() {
 		// Nothing on this thread should work while
 		// the main program isn't waiting

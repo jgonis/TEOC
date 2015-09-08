@@ -35,6 +35,7 @@ public abstract class HackSimulatorComponent extends JPanel implements HackSimul
 	// The names of the help files
 	protected String usageFileName, aboutFileName;
 
+	@Override
 	public String getAboutFileName() {
 		return aboutFileName;
 	}
@@ -44,19 +45,21 @@ public abstract class HackSimulatorComponent extends JPanel implements HackSimul
 	 */
 	protected abstract Point getAdditionalDisplayLocation();
 
+	@Override
 	public String getUsageFileName() {
 		return usageFileName;
 	}
 
+	@Override
 	public void setAboutFileName(String fileName) {
 		aboutFileName = fileName;
 	}
 
+	@Override
 	public void setAdditionalDisplay(JComponent additionalComponent) {
 		if (currentAdditionalDisplay != null) {
 			remove(currentAdditionalDisplay);
 		}
-		JComponent c = additionalComponent;
 		currentAdditionalDisplay = additionalComponent;
 
 		if (additionalComponent != null) {
@@ -69,6 +72,7 @@ public abstract class HackSimulatorComponent extends JPanel implements HackSimul
 		repaint();
 	}
 
+	@Override
 	public void setUsageFileName(String fileName) {
 		usageFileName = fileName;
 	}

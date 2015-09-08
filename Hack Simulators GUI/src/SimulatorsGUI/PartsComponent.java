@@ -49,6 +49,7 @@ public class PartsComponent extends JPanel implements PartsGUI {
 		/**
 		 * Returns the the class of a specific column.
 		 */
+		@Override
 		public Class getColumnClass(int c) {
 			return getValueAt(0, c).getClass();
 		}
@@ -56,6 +57,7 @@ public class PartsComponent extends JPanel implements PartsGUI {
 		/**
 		 * Returns the number of columns.
 		 */
+		@Override
 		public int getColumnCount() {
 			return columnNames.length;
 		}
@@ -63,6 +65,7 @@ public class PartsComponent extends JPanel implements PartsGUI {
 		/**
 		 * Returns the names of the columns.
 		 */
+		@Override
 		public String getColumnName(int col) {
 			return columnNames[col];
 		}
@@ -70,6 +73,7 @@ public class PartsComponent extends JPanel implements PartsGUI {
 		/**
 		 * Returns the number of rows.
 		 */
+		@Override
 		public int getRowCount() {
 			return parts.length;
 		}
@@ -77,27 +81,32 @@ public class PartsComponent extends JPanel implements PartsGUI {
 		/**
 		 * Returns the value at a specific row and column.
 		 */
+		@Override
 		public Object getValueAt(int row, int col) {
 			Object result = null;
-			if (col == 0)
+			if (col == 0) {
 				result = parts[row].getGateClass().getName();
-			else if (col == 1) {
-				if (parts[row] instanceof CompositeGate)
+			} else if (col == 1) {
+				if (parts[row] instanceof CompositeGate) {
 					result = COMPOSITE_GATE;
-				else if (parts[row] instanceof BuiltInGate)
+				} else if (parts[row] instanceof BuiltInGate) {
 					result = BUILTIN_GATE;
-			} else if (col == 2)
+				}
+			} else if (col == 2) {
 				result = new Boolean(parts[row].getGateClass().isClocked());
+			}
 			return result;
 		}
 
 		/**
 		 * Returns true of this table cells are editable, false - otherwise.
 		 */
+		@Override
 		public boolean isCellEditable(int row, int col) {
 			return false;
 		}
 	}
+
 	// The strings representing a composite and BuiltIn gates.
 	private final static String BUILTIN_GATE = "BuiltIn";
 
@@ -133,12 +142,13 @@ public class PartsComponent extends JPanel implements PartsGUI {
 		TableColumn column = null;
 		for (int i = 0; i < 3; i++) {
 			column = partsTable.getColumnModel().getColumn(i);
-			if (i == 0)
+			if (i == 0) {
 				column.setPreferredWidth(110);
-			else if (i == 1)
+			} else if (i == 1) {
 				column.setPreferredWidth(72);
-			else if (i == 2)
+			} else if (i == 2) {
 				column.setPreferredWidth(55);
+			}
 		}
 	}
 
@@ -157,10 +167,12 @@ public class PartsComponent extends JPanel implements PartsGUI {
 		partsTable.getTableHeader().setResizingAllowed(false);
 
 		partsTable.addFocusListener(new FocusListener() {
+			@Override
 			public void focusGained(FocusEvent e) {
 				partsTable_focusGained(e);
 			}
 
+			@Override
 			public void focusLost(FocusEvent e) {
 				partsTable_focusLost(e);
 			}
@@ -191,6 +203,7 @@ public class PartsComponent extends JPanel implements PartsGUI {
 	/**
 	 * Resets the contents of this parts compoennt.
 	 */
+	@Override
 	public void reset() {
 		partsTable.clearSelection();
 		repaint();
@@ -199,6 +212,7 @@ public class PartsComponent extends JPanel implements PartsGUI {
 	/**
 	 * Sets the contents with the given parts (gates) array.
 	 */
+	@Override
 	public void setContents(Gate[] newParts) {
 		parts = new Gate[newParts.length];
 		System.arraycopy(newParts, 0, parts, 0, newParts.length);
@@ -209,6 +223,7 @@ public class PartsComponent extends JPanel implements PartsGUI {
 	/**
 	 * Sets the name of this component.
 	 */
+	@Override
 	public void setName(String name) {
 		nameLbl.setText(name);
 	}

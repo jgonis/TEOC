@@ -19,7 +19,6 @@ package HackGUI;
 
 import java.awt.Rectangle;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.io.File;
 
 import javax.swing.JCheckBox;
@@ -66,11 +65,7 @@ public class ViewableFileChooserComponent extends FileChooserComponent {
 		viewCheckBox.setText("View File");
 		viewCheckBox.setFont(Utilities.thinLabelsFont);
 		viewCheckBox.setBounds(new Rectangle(407, 12, 76, 23));
-		viewCheckBox.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent e) {
-				viewCheckBox_itemStateChanged(e);
-			}
-		});
+		viewCheckBox.addItemListener(e -> viewCheckBox_itemStateChanged(e));
 
 		this.add(viewCheckBox, null);
 	}
@@ -99,6 +94,7 @@ public class ViewableFileChooserComponent extends FileChooserComponent {
 		window.setLocation(x, y);
 	}
 
+	@Override
 	public void showCurrentFileName() {
 		fileName.setText(currentFileName);
 		if (viewCheckBox.isSelected()) {
@@ -120,7 +116,8 @@ public class ViewableFileChooserComponent extends FileChooserComponent {
 			window.setTitle("Loading...");
 			window.setVisible(true);
 			setFileContent();
-		} else if (e.getStateChange() == ItemEvent.DESELECTED)
+		} else if (e.getStateChange() == ItemEvent.DESELECTED) {
 			window.setVisible(false);
+		}
 	}
 }

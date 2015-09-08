@@ -34,11 +34,13 @@ public class PointedMemoryComponent extends MemoryComponent implements PointedMe
 	// the feature of coloring the background of a specific cell.
 	public class PointedMemoryTableCellRenderer extends MemoryTableCellRenderer {
 
+		@Override
 		public void setRenderer(int row, int column) {
-			if (row == pointerAddress)
+			if (row == pointerAddress) {
 				setBackground(Color.yellow);
-			else
+			} else {
 				setBackground(null);
+			}
 
 			super.setRenderer(row, column);
 		}
@@ -50,6 +52,7 @@ public class PointedMemoryComponent extends MemoryComponent implements PointedMe
 	// Indicates whether this component has the focus
 	protected boolean hasFocus = false;
 
+	@Override
 	protected DefaultTableCellRenderer getCellRenderer() {
 		return new PointedMemoryTableCellRenderer();
 	}
@@ -57,6 +60,7 @@ public class PointedMemoryComponent extends MemoryComponent implements PointedMe
 	/**
 	 * Implementing the action of the table gaining the focus.
 	 */
+	@Override
 	public void memoryTable_focusGained(FocusEvent e) {
 		super.memoryTable_focusGained(e);
 		hasFocus = true;
@@ -65,6 +69,7 @@ public class PointedMemoryComponent extends MemoryComponent implements PointedMe
 	/**
 	 * Implementing the action of the table loosing the focus.
 	 */
+	@Override
 	public void memoryTable_focusLost(FocusEvent e) {
 		super.memoryTable_focusLost(e);
 		hasFocus = false;
@@ -73,10 +78,12 @@ public class PointedMemoryComponent extends MemoryComponent implements PointedMe
 	/**
 	 * Sets the pointer with the given pointer address.
 	 */
+	@Override
 	public void setPointer(int pointerAddress) {
 		this.pointerAddress = pointerAddress;
 
-		if (pointerAddress >= 0)
+		if (pointerAddress >= 0) {
 			Utilities.tableCenterScroll(this, memoryTable, pointerAddress);
+		}
 	}
 }

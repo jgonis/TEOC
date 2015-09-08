@@ -80,13 +80,15 @@ public class VMEmulator extends HackSimulator implements ComputerPartErrorEventL
 	// value of i, which is an address in the RAM.
 	// Throws VariableException if i is not a legal address in the RAM.
 	private static short getRamIndex(String varName) throws VariableException {
-		if (varName.indexOf("]") == -1)
+		if (varName.indexOf("]") == -1) {
 			throw new VariableException("Missing ']'", varName);
+		}
 
 		String indexStr = varName.substring(varName.indexOf("[") + 1, varName.indexOf("]"));
 		int index = Integer.parseInt(indexStr);
-		if (index < 0 || index >= Definitions.RAM_SIZE)
+		if ((index < 0) || (index >= Definitions.RAM_SIZE)) {
 			throw new VariableException("Illegal variable index", varName);
+		}
 
 		return (short) index;
 	}
@@ -284,20 +286,23 @@ public class VMEmulator extends HackSimulator implements ComputerPartErrorEventL
 
 	// Checks that the given value is a legal 16-bit address
 	private void check_address(String varName, int value) throws VariableException {
-		if (value < 0 || value >= Definitions.RAM_SIZE)
+		if ((value < 0) || (value >= Definitions.RAM_SIZE)) {
 			throw new VariableException(value + " is an illegal value for", varName);
+		}
 	}
 
 	// Checks that the given value is a legal 16-bit value
 	private void check_value(String varName, int value) throws VariableException {
-		if (value < -32768 || value >= 32768)
+		if ((value < -32768) || (value >= 32768)) {
 			throw new VariableException(value + " is an illegal value for variable", varName);
+		}
 	}
 
 	/**
 	 * Called when an error occured in a computer part. The event contains the
 	 * source object and the error message.
 	 */
+	@Override
 	public void computerPartErrorOccured(ComputerPartErrorEvent event) {
 		displayMessage(event.getErrorMessage(), true);
 	}
@@ -307,48 +312,59 @@ public class VMEmulator extends HackSimulator implements ComputerPartErrorEventL
 	 * CommandException if the command is not legal. Throws ProgramException if
 	 * an error occurs in the program.
 	 */
+	@Override
 	public void doCommand(String[] command) throws CommandException, ProgramException, VariableException {
-		if (command.length == 0)
+		if (command.length == 0) {
 			throw new CommandException("Empty command", command);
+		}
 
 		// hide gui highlights
-		if (animationMode != HackController.NO_DISPLAY_CHANGES)
+		if (animationMode != HackController.NO_DISPLAY_CHANGES) {
 			hideHighlightes();
+		}
 
 		// execute the appropriate command
 		if (command[0].equals(COMMAND_VMSTEP)) {
-			if (command.length != 1)
+			if (command.length != 1) {
 				throw new CommandException("Illegal number of arguments to command", command);
+			}
 
 			cpu.executeInstruction();
 		} else if (command[0].equals(COMMAND_SETVAR)) {
-			if (command.length != 3)
+			if (command.length != 3) {
 				throw new CommandException("Illegal number of arguments to command", command);
+			}
 			setValue(command[1], command[2]);
 		} else if (command[0].equals(COMMAND_ROMLOAD)) {
-			if (command.length != 1 && command.length != 2)
+			if ((command.length != 1) && (command.length != 2)) {
 				throw new CommandException("Illegal number of arguments to command", command);
+			}
 
 			String fileName = workingDir + (command.length == 1 ? "" : "/" + command[1]);
 
 			cpu.getProgram().loadProgram(fileName);
 			cpu.boot();
-		} else
+		} else {
 			throw new CommandException("Unknown simulator command", command);
+		}
 	}
 
+	@Override
 	protected HackSimulatorGUI getGUI() {
 		return gui;
 	}
 
+	@Override
 	public int getInitialAnimationMode() {
 		return HackController.DISPLAY_CHANGES;
 	}
 
+	@Override
 	public int getInitialNumericFormat() {
 		return HackController.DECIMAL_FORMAT;
 	}
 
+	@Override
 	public String getName() {
 		return "Virtual Machine Emulator";
 	}
@@ -357,23 +373,24 @@ public class VMEmulator extends HackSimulator implements ComputerPartErrorEventL
 	 * Returns the value of the given variable. Throws VariableException if the
 	 * variable is not legal.
 	 */
+	@Override
 	public String getValue(String varName) throws VariableException {
-		if (varName.equals(VAR_LOCAL))
+		if (varName.equals(VAR_LOCAL)) {
 			return String.valueOf(cpu.getRAM().getValueAt(Definitions.LOCAL_POINTER_ADDRESS));
-		else if (varName.equals(VAR_ARGUMENT))
+		} else if (varName.equals(VAR_ARGUMENT)) {
 			return String.valueOf(cpu.getRAM().getValueAt(Definitions.ARG_POINTER_ADDRESS));
-		else if (varName.equals(VAR_THIS))
+		} else if (varName.equals(VAR_THIS)) {
 			return String.valueOf(cpu.getRAM().getValueAt(Definitions.THIS_POINTER_ADDRESS));
-		else if (varName.equals(VAR_THAT))
+		} else if (varName.equals(VAR_THAT)) {
 			return String.valueOf(cpu.getRAM().getValueAt(Definitions.THAT_POINTER_ADDRESS));
-		else if (varName.equals(VAR_SP))
+		} else if (varName.equals(VAR_SP)) {
 			return String.valueOf(cpu.getSP());
-		else if (varName.equals(VAR_CURRENT_FUNCTION))
+		} else if (varName.equals(VAR_CURRENT_FUNCTION)) {
 			return cpu.getCallStack().getTopFunction();
-		else if (varName.equals(VAR_LINE))
+		} else if (varName.equals(VAR_LINE)) {
 			return String.valueOf(
 					cpu.getCallStack().getTopFunction() + "." + cpu.getCurrentInstruction().getIndexInFunction());
-		else if (varName.startsWith(VAR_LOCAL + "[")) {
+		} else if (varName.startsWith(VAR_LOCAL + "[")) {
 			short index = getRamIndex(varName);
 			return String.valueOf(cpu.getSegmentAt(HVMInstructionSet.LOCAL_SEGMENT_CODE, index));
 		} else if (varName.startsWith(VAR_ARGUMENT + "[")) {
@@ -391,10 +408,12 @@ public class VMEmulator extends HackSimulator implements ComputerPartErrorEventL
 		} else if (varName.startsWith(VAR_RAM + "[")) {
 			short index = getRamIndex(varName);
 			return String.valueOf(cpu.getRAM().getValueAt(index));
-		} else
+		} else {
 			throw new VariableException("Unknown variable", varName);
+		}
 	}
 
+	@Override
 	public String[] getVariables() {
 		return vars;
 	}
@@ -408,8 +427,9 @@ public class VMEmulator extends HackSimulator implements ComputerPartErrorEventL
 		cpu.getStaticSegment().hideHighlight();
 
 		MemorySegment[] segments = cpu.getMemorySegments();
-		for (int i = 0; i < segments.length; i++)
-			segments[i].hideHighlight();
+		for (MemorySegment segment : segments) {
+			segment.hideHighlight();
+		}
 	}
 
 	// Initializes the emulator.
@@ -419,14 +439,17 @@ public class VMEmulator extends HackSimulator implements ComputerPartErrorEventL
 				VAR_TEMP + "[]", VAR_RAM + "[]" };
 	}
 
+	@Override
 	public void prepareFastForward() {
 		gui.requestFocus();
 		keyboard.requestFocus();
 	}
 
+	@Override
 	public void prepareGUI() {
 	}
 
+	@Override
 	public void programChanged(ProgramEvent event) {
 		super.programChanged(event);
 
@@ -442,6 +465,7 @@ public class VMEmulator extends HackSimulator implements ComputerPartErrorEventL
 		}
 	}
 
+	@Override
 	public void refresh() {
 		cpu.getRAM().refreshGUI();
 		cpu.getCallStack().refreshGUI();
@@ -452,13 +476,15 @@ public class VMEmulator extends HackSimulator implements ComputerPartErrorEventL
 		cpu.getStaticSegment().refreshGUI();
 
 		MemorySegment[] segments = cpu.getMemorySegments();
-		for (int i = 0; i < segments.length; i++)
-			segments[i].refreshGUI();
+		for (MemorySegment segment : segments) {
+			segment.refreshGUI();
+		}
 	}
 
 	/**
 	 * Restarts the VMEmulator - program will be restarted.
 	 */
+	@Override
 	public void restart() {
 		cpu.getRAM().reset();
 		cpu.getCallStack().reset();
@@ -470,47 +496,53 @@ public class VMEmulator extends HackSimulator implements ComputerPartErrorEventL
 		cpu.getStaticSegment().reset();
 
 		MemorySegment[] segments = cpu.getMemorySegments();
-		for (int i = 0; i < segments.length; i++)
-			segments[i].reset();
+		for (MemorySegment segment : segments) {
+			segment.reset();
+		}
 
 		cpu.boot();
 	}
 
+	@Override
 	public void setAnimationMode(int newAnimationMode) {
 
 		if (gui != null) {
 			// enter NO_DISPLAY_CHANGES
-			if (newAnimationMode == HackController.NO_DISPLAY_CHANGES
-					&& animationMode != HackController.NO_DISPLAY_CHANGES) {
+			if ((newAnimationMode == HackController.NO_DISPLAY_CHANGES)
+					&& (animationMode != HackController.NO_DISPLAY_CHANGES)) {
 				cpu.getRAM().disableUserInput();
 				cpu.getStack().disableUserInput();
 				cpu.getWorkingStack().disableUserInput();
 				cpu.getStaticSegment().disableUserInput();
 
 				MemorySegment[] segments = cpu.getMemorySegments();
-				for (int i = 0; i < segments.length; i++)
-					segments[i].disableUserInput();
+				for (MemorySegment segment : segments) {
+					segment.disableUserInput();
+				}
 
 				ScreenGUI screen = gui.getScreen();
-				if (screen != null)
+				if (screen != null) {
 					screen.startAnimation();
+				}
 			}
 
 			// exit NO_DISPLAY_CHANGES
-			if (newAnimationMode != HackController.NO_DISPLAY_CHANGES
-					&& animationMode == HackController.NO_DISPLAY_CHANGES) {
+			if ((newAnimationMode != HackController.NO_DISPLAY_CHANGES)
+					&& (animationMode == HackController.NO_DISPLAY_CHANGES)) {
 				cpu.getRAM().enableUserInput();
 				cpu.getStack().enableUserInput();
 				cpu.getWorkingStack().enableUserInput();
 				cpu.getStaticSegment().enableUserInput();
 
 				MemorySegment[] segments = cpu.getMemorySegments();
-				for (int i = 0; i < segments.length; i++)
-					segments[i].enableUserInput();
+				for (MemorySegment segment : segments) {
+					segment.enableUserInput();
+				}
 
 				ScreenGUI screen = gui.getScreen();
-				if (screen != null)
+				if (screen != null) {
 					screen.stopAnimation();
+				}
 			}
 		}
 
@@ -536,16 +568,18 @@ public class VMEmulator extends HackSimulator implements ComputerPartErrorEventL
 		cpu.getStaticSegment().setDisplayChanges(displayChanges);
 
 		MemorySegment[] segments = cpu.getMemorySegments();
-		for (int i = 0; i < segments.length; i++) {
-			segments[i].setDisplayChanges(displayChanges);
-			segments[i].setAnimate(animate);
+		for (MemorySegment segment : segments) {
+			segment.setDisplayChanges(displayChanges);
+			segment.setAnimate(animate);
 		}
 	}
 
+	@Override
 	public void setAnimationSpeed(int speedUnit) {
 		cpu.getBus().setAnimationSpeed(speedUnit);
 	}
 
+	@Override
 	public void setNumericFormat(int formatCode) {
 		cpu.getRAM().setNumericFormat(formatCode);
 		cpu.getStack().setNumericFormat(formatCode);
@@ -557,6 +591,7 @@ public class VMEmulator extends HackSimulator implements ComputerPartErrorEventL
 	 * Sets the given variable with the given value. Throws VariableException if
 	 * the variable name or value are not legal.
 	 */
+	@Override
 	public void setValue(String varName, String value) throws VariableException {
 		int numValue;
 
@@ -566,36 +601,41 @@ public class VMEmulator extends HackSimulator implements ComputerPartErrorEventL
 				numValue = Integer.parseInt(value);
 				check_address(varName, numValue);
 				cpu.getRAM().setValueAt(Definitions.LOCAL_POINTER_ADDRESS, (short) numValue, false);
-				if (gui != null)
+				if (gui != null) {
 					gui.getLocalSegment().setEnabledRange(numValue, Definitions.STACK_END_ADDRESS, true);
+				}
 			} else if (varName.equals(VAR_ARGUMENT)) {
 				numValue = Integer.parseInt(value);
 				check_address(varName, numValue);
 				cpu.getRAM().setValueAt(Definitions.ARG_POINTER_ADDRESS, (short) numValue, false);
-				if (gui != null)
+				if (gui != null) {
 					gui.getArgSegment().setEnabledRange(numValue, Definitions.STACK_END_ADDRESS, true);
+				}
 			} else if (varName.equals(VAR_THIS)) {
 				numValue = Integer.parseInt(value);
 				check_address(varName, numValue);
 				cpu.getRAM().setValueAt(Definitions.THIS_POINTER_ADDRESS, (short) numValue, false);
-				if (gui != null)
+				if (gui != null) {
 					gui.getThisSegment().setEnabledRange(numValue, Definitions.HEAP_END_ADDRESS, true);
+				}
 			} else if (varName.equals(VAR_THAT)) {
 				numValue = Integer.parseInt(value);
 				check_address(varName, numValue);
 				cpu.getRAM().setValueAt(Definitions.THAT_POINTER_ADDRESS, (short) numValue, false);
-				if (gui != null)
+				if (gui != null) {
 					gui.getThatSegment().setEnabledRange(numValue, Definitions.SCREEN_END_ADDRESS, true);
+				}
 			} else if (varName.equals(VAR_SP)) {
 				numValue = Integer.parseInt(value);
 				check_address(varName, numValue);
 				cpu.setSP((short) numValue);
-			} else if (varName.equals(VAR_CURRENT_FUNCTION))
+			} else if (varName.equals(VAR_CURRENT_FUNCTION)) {
 				throw new VariableException("Read Only variable", varName);
-			else if (varName.equals(VAR_LINE)) {
+			} else if (varName.equals(VAR_LINE)) {
 				numValue = Integer.parseInt(value);
-				if (numValue >= cpu.getProgram().getSize())
+				if (numValue >= cpu.getProgram().getSize()) {
 					throw new VariableException("Line " + value + "is not within the program range", varName);
+				}
 				cpu.getProgram().setPC((short) numValue);
 			} else if (varName.startsWith(VAR_LOCAL + "[")) {
 				short index = getRamIndex(varName);
@@ -627,8 +667,9 @@ public class VMEmulator extends HackSimulator implements ComputerPartErrorEventL
 				numValue = Integer.parseInt(value);
 				check_address(varName, index);
 				cpu.getRAM().setValueAt(index, (short) numValue, false);
-			} else
+			} else {
 				throw new VariableException("Unknown variable", varName);
+			}
 		} catch (NumberFormatException nfe) {
 			throw new VariableException("'" + value + "' is not a legal value for variable", varName);
 		}

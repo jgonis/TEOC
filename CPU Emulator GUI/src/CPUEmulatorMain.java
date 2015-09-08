@@ -34,9 +34,9 @@ public class CPUEmulatorMain {
 	 * The command line CPU Emulator program.
 	 */
 	public static void main(String[] args) {
-		if (args.length > 1)
+		if (args.length > 1) {
 			System.err.println("Usage: java CPUEmulatorMain [script name]");
-		else if (args.length == 0) {
+		} else if (args.length == 0) {
 			try {
 				UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 			} catch (Exception e) {
@@ -45,9 +45,10 @@ public class CPUEmulatorMain {
 			CPUEmulatorGUI simulatorGUI = new CPUEmulatorComponent();
 
 			ControllerGUI controllerGUI = new ControllerComponent();
-			CPUEmulatorApplication application = new CPUEmulatorApplication(controllerGUI, simulatorGUI,
-					"bin/scripts/defaultCPU.txt", "bin/help/cpuUsage.html", "bin/help/cpuAbout.html");
-		} else
+			new CPUEmulatorApplication(controllerGUI, simulatorGUI, "bin/scripts/defaultCPU.txt",
+					"bin/help/cpuUsage.html", "bin/help/cpuAbout.html");
+		} else {
 			new HackController(new CPUEmulator(), args[0]);
+		}
 	}
 }

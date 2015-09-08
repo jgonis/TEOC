@@ -110,6 +110,7 @@ public class VMEmulatorComponent extends HackSimulatorComponent implements VMEmu
 		workingStack.setTopLevelLocation(this);
 	}
 
+	@Override
 	public Point getAdditionalDisplayLocation() {
 		return new Point(492, 10);
 	}
@@ -117,6 +118,7 @@ public class VMEmulatorComponent extends HackSimulatorComponent implements VMEmu
 	/**
 	 * Returns the arg memory segment component.
 	 */
+	@Override
 	public MemorySegmentGUI getArgSegment() {
 		return segments.getArgSegment();
 	}
@@ -124,6 +126,7 @@ public class VMEmulatorComponent extends HackSimulatorComponent implements VMEmu
 	/**
 	 * Returns the bus GUI component.
 	 */
+	@Override
 	public BusGUI getBus() {
 		return bus;
 	}
@@ -131,6 +134,7 @@ public class VMEmulatorComponent extends HackSimulatorComponent implements VMEmu
 	/**
 	 * Returns the calculator GUI component.
 	 */
+	@Override
 	public CalculatorGUI getCalculator() {
 		return calculator;
 	}
@@ -138,6 +142,7 @@ public class VMEmulatorComponent extends HackSimulatorComponent implements VMEmu
 	/**
 	 * Returns the call stack GUI component.
 	 */
+	@Override
 	public CallStackGUI getCallStack() {
 		return callStack;
 	}
@@ -145,6 +150,7 @@ public class VMEmulatorComponent extends HackSimulatorComponent implements VMEmu
 	/**
 	 * Returns the keyboard GUI component.
 	 */
+	@Override
 	public KeyboardGUI getKeyboard() {
 		return keyboard;
 	}
@@ -152,6 +158,7 @@ public class VMEmulatorComponent extends HackSimulatorComponent implements VMEmu
 	/**
 	 * Returns the local memory segment component.
 	 */
+	@Override
 	public MemorySegmentGUI getLocalSegment() {
 		return segments.getLocalSegment();
 	}
@@ -159,6 +166,7 @@ public class VMEmulatorComponent extends HackSimulatorComponent implements VMEmu
 	/**
 	 * Returns the Program GUI component.
 	 */
+	@Override
 	public VMProgramGUI getProgram() {
 		return program;
 	}
@@ -166,6 +174,7 @@ public class VMEmulatorComponent extends HackSimulatorComponent implements VMEmu
 	/**
 	 * Returns the RAM GUI component.
 	 */
+	@Override
 	public LabeledPointedMemoryGUI getRAM() {
 		return ram;
 	}
@@ -173,6 +182,7 @@ public class VMEmulatorComponent extends HackSimulatorComponent implements VMEmu
 	/**
 	 * Returns the screen GUI component.
 	 */
+	@Override
 	public ScreenGUI getScreen() {
 		return screen;
 	}
@@ -180,6 +190,7 @@ public class VMEmulatorComponent extends HackSimulatorComponent implements VMEmu
 	/**
 	 * Returns the Stack GUI component.
 	 */
+	@Override
 	public PointedMemorySegmentGUI getStack() {
 		return stack;
 	}
@@ -187,6 +198,7 @@ public class VMEmulatorComponent extends HackSimulatorComponent implements VMEmu
 	/**
 	 * Returns the static memory segment component.
 	 */
+	@Override
 	public MemorySegmentGUI getStaticSegment() {
 		return segments.getStaticSegment();
 	}
@@ -194,6 +206,7 @@ public class VMEmulatorComponent extends HackSimulatorComponent implements VMEmu
 	/**
 	 * Returns the temp memory segment component.
 	 */
+	@Override
 	public MemorySegmentGUI getTempSegment() {
 		return segments.getTempSegment();
 	}
@@ -201,6 +214,7 @@ public class VMEmulatorComponent extends HackSimulatorComponent implements VMEmu
 	/**
 	 * Returns the that memory segment component.
 	 */
+	@Override
 	public MemorySegmentGUI getThatSegment() {
 		return segments.getThatSegment();
 	}
@@ -208,6 +222,7 @@ public class VMEmulatorComponent extends HackSimulatorComponent implements VMEmu
 	/**
 	 * Returns the this memory segment component.
 	 */
+	@Override
 	public MemorySegmentGUI getThisSegment() {
 		return segments.getThisSegment();
 	}
@@ -215,6 +230,7 @@ public class VMEmulatorComponent extends HackSimulatorComponent implements VMEmu
 	/**
 	 * Returns the working stack.
 	 */
+	@Override
 	public PointedMemorySegmentGUI getWorkingStack() {
 		return workingStack;
 	}
@@ -259,6 +275,7 @@ public class VMEmulatorComponent extends HackSimulatorComponent implements VMEmu
 		setSize(WIDTH, HEIGHT);
 	}
 
+	@Override
 	public void loadProgram() {
 		program.loadProgram();
 	}
@@ -290,6 +307,7 @@ public class VMEmulatorComponent extends HackSimulatorComponent implements VMEmu
 		stack.setSegmentName("Global Stack");
 	}
 
+	@Override
 	public void setWorkingDir(File file) {
 		program.setWorkingDir(file);
 	}

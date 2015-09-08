@@ -19,7 +19,6 @@ package SimulatorsGUI;
 
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.StringTokenizer;
 
 import javax.swing.ImageIcon;
@@ -142,25 +141,13 @@ public class SearchProgramWindow extends JFrame {
 		instructionLbl.setBounds(new Rectangle(9, 22, 79, 23));
 		this.getContentPane().setLayout(null);
 		instruction.setBounds(new Rectangle(82, 25, 220, 18));
-		instruction.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				instruction_actionPerformed(e);
-			}
-		});
+		instruction.addActionListener(e -> instruction_actionPerformed(e));
 		okButton.setToolTipText("OK");
 		okButton.setIcon(okIcon);
 		okButton.setBounds(new Rectangle(66, 68, 63, 44));
-		okButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				okButton_actionPerformed(e);
-			}
-		});
+		okButton.addActionListener(e -> okButton_actionPerformed(e));
 		cancelButton.setBounds(new Rectangle(190, 68, 63, 44));
-		cancelButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				cancelButton_actionPerformed(e);
-			}
-		});
+		cancelButton.addActionListener(e -> cancelButton_actionPerformed(e));
 		cancelButton.setToolTipText("CANCEL");
 		cancelButton.setIcon(cancelIcon);
 		this.getContentPane().add(instruction, null);

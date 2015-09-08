@@ -37,6 +37,7 @@ public class DirtyGateAdapter extends Node {
 	 * Sets the node's value with the given value. Notifies the listeners on the
 	 * change by calling their set() method.
 	 */
+	@Override
 	public void set(short value) {
 		super.set(value);
 		affectedGate.setDirty();

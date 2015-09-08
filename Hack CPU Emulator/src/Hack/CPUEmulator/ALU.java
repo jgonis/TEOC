@@ -37,9 +37,6 @@ public class ALU extends ValueComputerPart {
 	// The output of the ALU
 	private short output;
 
-	// The dscription of the command
-	private String commandDescription;
-
 	// The gui of the ALU
 	private ALUGUI gui;
 
@@ -89,6 +86,7 @@ public class ALU extends ValueComputerPart {
 		setValueAt(2, result, false);
 	}
 
+	@Override
 	public void doSetValueAt(int index, short value) {
 		switch (index) {
 		case 0:
@@ -103,6 +101,7 @@ public class ALU extends ValueComputerPart {
 		}
 	}
 
+	@Override
 	public ComputerPartGUI getGUI() {
 		return gui;
 	}
@@ -114,6 +113,7 @@ public class ALU extends ValueComputerPart {
 		return getValueAt(2);
 	}
 
+	@Override
 	public short getValueAt(int index) {
 		short result = 0;
 
@@ -132,12 +132,14 @@ public class ALU extends ValueComputerPart {
 		return result;
 	}
 
+	@Override
 	public void refreshGUI() {
 		quietUpdateGUI(0, input0);
 		quietUpdateGUI(1, input1);
 		quietUpdateGUI(2, output);
 	}
 
+	@Override
 	public void reset() {
 		super.reset();
 		input0 = nullValue;
@@ -155,7 +157,6 @@ public class ALU extends ValueComputerPart {
 	 */
 	public synchronized void setCommand(String description, boolean zero0, boolean negate0, boolean zero1,
 			boolean negate1, boolean ADDorAND, boolean negateOutput) {
-		commandDescription = description;
 		this.zero0 = zero0;
 		this.negate0 = negate0;
 		this.zero1 = zero1;
@@ -163,8 +164,9 @@ public class ALU extends ValueComputerPart {
 		this.ADDorAND = ADDorAND;
 		this.negateOutput = negateOutput;
 
-		if (displayChanges)
+		if (displayChanges) {
 			gui.setCommand(description);
+		}
 
 		if (animate) {
 			gui.commandFlash();

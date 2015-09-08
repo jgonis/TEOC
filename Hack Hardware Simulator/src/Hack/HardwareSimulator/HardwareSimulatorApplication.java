@@ -40,9 +40,10 @@ public class HardwareSimulatorApplication extends HackApplication {
 				contentsFileName, aboutFileName);
 	}
 
+	@Override
 	protected void createController(HackSimulator simulator, ControllerGUI controllerComponent, String defaultScript)
 			throws ScriptException, ControllerException {
-		HardwareSimulatorController c = new HardwareSimulatorController(
-				(HardwareSimulatorControllerGUI) controllerComponent, (HardwareSimulator) simulator, defaultScript);
+		new HardwareSimulatorController((HardwareSimulatorControllerGUI) controllerComponent,
+				(HardwareSimulator) simulator, defaultScript);
 	}
 }

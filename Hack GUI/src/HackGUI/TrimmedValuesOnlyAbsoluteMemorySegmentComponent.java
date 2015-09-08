@@ -36,6 +36,7 @@ public class TrimmedValuesOnlyAbsoluteMemorySegmentComponent extends AbsolutePoi
 		/**
 		 * Returns the number of columns.
 		 */
+		@Override
 		public int getColumnCount() {
 			return 1;
 		}
@@ -43,6 +44,7 @@ public class TrimmedValuesOnlyAbsoluteMemorySegmentComponent extends AbsolutePoi
 		/**
 		 * Returns the number of rows.
 		 */
+		@Override
 		public int getRowCount() {
 			return Math.max(pointerAddress - startAddress, 0);
 		}
@@ -50,6 +52,7 @@ public class TrimmedValuesOnlyAbsoluteMemorySegmentComponent extends AbsolutePoi
 		/**
 		 * Returns the value at a specific row and column.
 		 */
+		@Override
 		public Object getValueAt(int row, int col) {
 			return super.getValueAt(row, col + 1);
 		}
@@ -57,6 +60,7 @@ public class TrimmedValuesOnlyAbsoluteMemorySegmentComponent extends AbsolutePoi
 		/**
 		 * Returns true of this table cells are editable, false - otherwise.
 		 */
+		@Override
 		public boolean isCellEditable(int row, int col) {
 			return super.isCellEditable(row, col + 1);
 		}
@@ -66,11 +70,13 @@ public class TrimmedValuesOnlyAbsoluteMemorySegmentComponent extends AbsolutePoi
 	// the feature of aligning the text in the cells.
 	class TrimmedValuesOnlyTableCellRenderer extends PointedMemorySegmentTableCellRenderer {
 
+		@Override
 		public void setRenderer(int row, int column) {
 			super.setRenderer(row, column + 1);
 		}
 	}
 
+	@Override
 	protected DefaultTableCellRenderer getCellRenderer() {
 		return new TrimmedValuesOnlyTableCellRenderer();
 	}
@@ -78,6 +84,7 @@ public class TrimmedValuesOnlyAbsoluteMemorySegmentComponent extends AbsolutePoi
 	/**
 	 * Returns the index of the values column.
 	 */
+	@Override
 	protected int getColumnValue() {
 		return 0;
 	}
@@ -86,8 +93,9 @@ public class TrimmedValuesOnlyAbsoluteMemorySegmentComponent extends AbsolutePoi
 	 * Returns the coordinates of the top left corner of the value at the given
 	 * index.
 	 */
+	@Override
 	public Point getCoordinates(int index) {
-		JScrollBar bar = scrollPane.getVerticalScrollBar();
+		scrollPane.getVerticalScrollBar();
 		double visibleRowsCount = Utilities.computeVisibleRowsCount(segmentTable);
 		int location = (int) Math.max(Math.min(index - startAddress, visibleRowsCount - 1), 0);
 		Rectangle r = segmentTable.getCellRect(location, 0, true);
@@ -99,6 +107,7 @@ public class TrimmedValuesOnlyAbsoluteMemorySegmentComponent extends AbsolutePoi
 	/**
 	 * Returns the appropriate table model.
 	 */
+	@Override
 	protected TableModel getTableModel() {
 		return new TrimmedValuesOnlyAbsoluteTableModel();
 	}
@@ -106,6 +115,7 @@ public class TrimmedValuesOnlyAbsoluteMemorySegmentComponent extends AbsolutePoi
 	/**
 	 * Returns the width of the table.
 	 */
+	@Override
 	public int getTableWidth() {
 		return 124;
 	}
@@ -113,9 +123,10 @@ public class TrimmedValuesOnlyAbsoluteMemorySegmentComponent extends AbsolutePoi
 	/**
 	 * Scrolls the table to the pointer location.
 	 */
+	@Override
 	protected void scrollToPointer() {
 		JScrollBar bar = scrollPane.getVerticalScrollBar();
-		int beforeScrollValue = bar.getValue();
+		bar.getValue();
 		Rectangle r = segmentTable.getCellRect(pointerAddress - startAddress - 1, 0, true);
 		segmentTable.scrollRectToVisible(r);
 		repaint();
@@ -124,6 +135,7 @@ public class TrimmedValuesOnlyAbsoluteMemorySegmentComponent extends AbsolutePoi
 	/**
 	 * Sets the pointer with the given pointer address.
 	 */
+	@Override
 	public synchronized void setPointer(int pointerAddress) {
 		this.pointerAddress = (short) pointerAddress;
 		segmentTable.revalidate();

@@ -51,11 +51,14 @@ public class MemorySegment extends InteractiveValueComputerPart {
 		init(mainMemory, gui);
 	}
 
+	@Override
 	public void doSetValueAt(int index, short value) {
-		if (mainMemory.getValueAt(startAddress + index) != value)
+		if (mainMemory.getValueAt(startAddress + index) != value) {
 			mainMemory.setValueAt(startAddress + index, value, true);
+		}
 	}
 
+	@Override
 	public ComputerPartGUI getGUI() {
 		return gui;
 	}
@@ -67,6 +70,7 @@ public class MemorySegment extends InteractiveValueComputerPart {
 		return startAddress;
 	}
 
+	@Override
 	public short getValueAt(int index) {
 		return mainMemory.getValueAt(startAddress + index);
 	}
@@ -75,8 +79,9 @@ public class MemorySegment extends InteractiveValueComputerPart {
 	 * Hides all selections.
 	 */
 	public void hideSelect() {
-		if (displayChanges)
+		if (displayChanges) {
 			gui.hideSelect();
+		}
 	}
 
 	// Initializes the memory segment
@@ -90,11 +95,13 @@ public class MemorySegment extends InteractiveValueComputerPart {
 		}
 	}
 
+	@Override
 	public void refreshGUI() {
 		super.refreshGUI();
 
-		if (displayChanges)
+		if (displayChanges) {
 			gui.setStartAddress(startAddress);
+		}
 	}
 
 	/**
@@ -102,8 +109,9 @@ public class MemorySegment extends InteractiveValueComputerPart {
 	 * legal address).
 	 */
 	public void scrollTo(int address) {
-		if (displayChanges)
+		if (displayChanges) {
 			gui.scrollTo(startAddress + address);
+		}
 	}
 
 	/**
@@ -111,7 +119,8 @@ public class MemorySegment extends InteractiveValueComputerPart {
 	 */
 	public void setStartAddress(int startAddress) {
 		this.startAddress = startAddress;
-		if (displayChanges)
+		if (displayChanges) {
 			gui.setStartAddress(startAddress);
+		}
 	}
 }

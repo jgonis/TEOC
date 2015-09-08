@@ -60,6 +60,7 @@ public class KeyboardComponent extends JPanel implements KeyboardGUI {
 	/**
 	 * Clears the key display.
 	 */
+	@Override
 	public void clearKey() {
 		keyNameText.setText("");
 	}
@@ -67,6 +68,7 @@ public class KeyboardComponent extends JPanel implements KeyboardGUI {
 	/**
 	 * Returns the keyboard's button.
 	 */
+	@Override
 	public JComponent getKeyEventHandler() {
 		return keyButton;
 	}
@@ -84,10 +86,12 @@ public class KeyboardComponent extends JPanel implements KeyboardGUI {
 		keyButton.setIcon(keyboardIcon);
 		keyButton.setBounds(new Rectangle(0, 0, 258, 27));
 		keyButton.addFocusListener(new FocusListener() {
+			@Override
 			public void focusGained(FocusEvent e) {
 				keyButton_focusGained(e);
 			}
 
+			@Override
 			public void focusLost(FocusEvent e) {
 				keyButton_focusLost(e);
 			}
@@ -118,12 +122,14 @@ public class KeyboardComponent extends JPanel implements KeyboardGUI {
 	/**
 	 * Resets the contents of this KeyboardComponent.
 	 */
+	@Override
 	public void reset() {
 	}
 
 	/**
 	 * Displayes the given key name.
 	 */
+	@Override
 	public void setKey(String keyName) {
 		keyNameText.setText(keyName);
 	}

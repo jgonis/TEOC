@@ -43,6 +43,7 @@ public abstract class GateClass {
 
 	// a table that maps a gate name with its GateClass
 	protected static Hashtable GateClasses = new Hashtable();
+
 	/**
 	 * Clears the gate Cache
 	 */
@@ -71,13 +72,15 @@ public abstract class GateClass {
 		// find hdl file name according to the gate name.
 		if (!containsPath) {
 			fileName = GatesManager.getInstance().getHDLFileName(gateName);
-			if (fileName == null)
+			if (fileName == null) {
 				throw new HDLException("Chip " + gateName + " is not found in the working and built in folders");
+			}
 		} else {
 			fileName = gateName;
 			File file = new File(fileName);
-			if (!file.exists())
+			if (!file.exists()) {
 				throw new HDLException("Chip " + fileName + " doesn't exist");
+			}
 
 			gateName = file.getName().substring(0, file.getName().lastIndexOf("."));
 		}
@@ -126,51 +129,61 @@ public abstract class GateClass {
 
 		// read CHIP keyword
 		input.advance();
-		if (!(input.getTokenType() == HDLTokenizer.TYPE_KEYWORD && input.getKeywordType() == HDLTokenizer.KW_CHIP))
+		if (!((input.getTokenType() == HDLTokenizer.TYPE_KEYWORD)
+				&& (input.getKeywordType() == HDLTokenizer.KW_CHIP))) {
 			input.HDLError("Missing 'CHIP' keyword");
+		}
 
 		// read gate name
 		input.advance();
-		if (input.getTokenType() != HDLTokenizer.TYPE_IDENTIFIER)
+		if (input.getTokenType() != HDLTokenizer.TYPE_IDENTIFIER) {
 			input.HDLError("Missing chip name");
+		}
 		String foundGateName = input.getIdentifier();
-		if (!gateName.equals(foundGateName))
+		if (!gateName.equals(foundGateName)) {
 			input.HDLError("Chip name doesn't match the HDL name");
+		}
 
 		// read '{' symbol
 		input.advance();
-		if (!(input.getTokenType() == HDLTokenizer.TYPE_SYMBOL && input.getSymbol() == '{'))
+		if (!((input.getTokenType() == HDLTokenizer.TYPE_SYMBOL) && (input.getSymbol() == '{'))) {
 			input.HDLError("Missing '{'");
+		}
 
 		// read IN keyword
 		PinInfo[] inputPinsInfo, outputPinsInfo;
 		input.advance();
-		if (input.getTokenType() == HDLTokenizer.TYPE_KEYWORD && input.getKeywordType() == HDLTokenizer.KW_IN) {
+		if ((input.getTokenType() == HDLTokenizer.TYPE_KEYWORD) && (input.getKeywordType() == HDLTokenizer.KW_IN)) {
 			// read input pins list
 			inputPinsInfo = getPinsInfo(input, readPinNames(input));
 			input.advance();
-		} else
+		} else {
 			// no input pins
 			inputPinsInfo = new PinInfo[0];
+		}
 
 		// read OUT keyword
-		if (input.getTokenType() == HDLTokenizer.TYPE_KEYWORD && input.getKeywordType() == HDLTokenizer.KW_OUT) {
+		if ((input.getTokenType() == HDLTokenizer.TYPE_KEYWORD) && (input.getKeywordType() == HDLTokenizer.KW_OUT)) {
 			// read output pins list
 			outputPinsInfo = getPinsInfo(input, readPinNames(input));
 			input.advance();
-		} else
+		} else {
 			// no output pins
 			outputPinsInfo = new PinInfo[0];
+		}
 
 		GateClass result = null;
 
 		// read BuiltIn/Parts keyword
-		if (input.getTokenType() == HDLTokenizer.TYPE_KEYWORD && input.getKeywordType() == HDLTokenizer.KW_BUILTIN)
+		if ((input.getTokenType() == HDLTokenizer.TYPE_KEYWORD)
+				&& (input.getKeywordType() == HDLTokenizer.KW_BUILTIN)) {
 			result = new BuiltInGateClass(gateName, input, inputPinsInfo, outputPinsInfo);
-		else if (input.getTokenType() == HDLTokenizer.TYPE_KEYWORD && input.getKeywordType() == HDLTokenizer.KW_PARTS) {
+		} else if ((input.getTokenType() == HDLTokenizer.TYPE_KEYWORD)
+				&& (input.getKeywordType() == HDLTokenizer.KW_PARTS)) {
 			result = new CompositeGateClass(gateName, input, inputPinsInfo, outputPinsInfo);
-		} else
+		} else {
 			input.HDLError("Keyword expected");
+		}
 
 		return result;
 	}
@@ -184,23 +197,26 @@ public abstract class GateClass {
 
 		while (!exit) {
 			// check ';' symbol
-			if (input.getTokenType() == HDLTokenizer.TYPE_SYMBOL && input.getSymbol() == ';')
+			if ((input.getTokenType() == HDLTokenizer.TYPE_SYMBOL) && (input.getSymbol() == ';')) {
 				exit = true;
-			else {
+			} else {
 				// read pin name
-				if (input.getTokenType() != HDLTokenizer.TYPE_IDENTIFIER)
+				if (input.getTokenType() != HDLTokenizer.TYPE_IDENTIFIER) {
 					input.HDLError("Pin name expected");
+				}
 
 				String pinName = input.getIdentifier();
 				list.addElement(pinName);
 
 				// check seperator
 				input.advance();
-				if (!(input.getTokenType() == HDLTokenizer.TYPE_SYMBOL
-						&& (input.getSymbol() == ',' || input.getSymbol() == ';')))
+				if (!((input.getTokenType() == HDLTokenizer.TYPE_SYMBOL)
+						&& ((input.getSymbol() == ',') || (input.getSymbol() == ';')))) {
 					input.HDLError("',' or ';' expected");
-				if (input.getTokenType() == HDLTokenizer.TYPE_SYMBOL && input.getSymbol() == ',')
+				}
+				if ((input.getTokenType() == HDLTokenizer.TYPE_SYMBOL) && (input.getSymbol() == ',')) {
 					input.advance();
+				}
 			}
 		}
 
@@ -262,12 +278,14 @@ public abstract class GateClass {
 
 		switch (type) {
 		case INPUT_PIN_TYPE:
-			if (number < inputPinsInfo.length)
+			if (number < inputPinsInfo.length) {
 				result = inputPinsInfo[number];
+			}
 			break;
 		case OUTPUT_PIN_TYPE:
-			if (number < outputPinsInfo.length)
+			if (number < outputPinsInfo.length) {
 				result = outputPinsInfo[number];
+			}
 			break;
 		}
 

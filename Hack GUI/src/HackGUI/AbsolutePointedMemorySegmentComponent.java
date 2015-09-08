@@ -32,11 +32,13 @@ public class AbsolutePointedMemorySegmentComponent extends PointedMemorySegmentC
 		/**
 		 * Returns the value at a specific row and column.
 		 */
+		@Override
 		public Object getValueAt(int row, int col) {
-			if (col == 0)
+			if (col == 0) {
 				return String.valueOf(row + startAddress);
-			else
+			} else {
 				return super.getValueAt(row, col);
+			}
 		}
 	}
 
@@ -44,6 +46,7 @@ public class AbsolutePointedMemorySegmentComponent extends PointedMemorySegmentC
 	 * Returns the coordinates of the top left corner of the value at the given
 	 * index.
 	 */
+	@Override
 	public Point getCoordinates(int index) {
 		return super.getCoordinates(index - startAddress);
 	}
@@ -51,6 +54,7 @@ public class AbsolutePointedMemorySegmentComponent extends PointedMemorySegmentC
 	/**
 	 * Returns the appropriate table model.
 	 */
+	@Override
 	protected TableModel getTableModel() {
 		return new AbsoluteTableModel();
 	}
@@ -58,6 +62,7 @@ public class AbsolutePointedMemorySegmentComponent extends PointedMemorySegmentC
 	/**
 	 * Returns the value at the given index in its string representation.
 	 */
+	@Override
 	public String getValueAsString(int index) {
 		return super.getValueAsString(index - startAddress);
 	}
@@ -65,6 +70,7 @@ public class AbsolutePointedMemorySegmentComponent extends PointedMemorySegmentC
 	/**
 	 * Scrolls the table to the pointer location.
 	 */
+	@Override
 	protected void scrollToPointer() {
 		Utilities.tableCenterScroll(this, segmentTable, pointerAddress - startAddress);
 	}

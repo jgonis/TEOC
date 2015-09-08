@@ -22,7 +22,6 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Vector;
@@ -51,6 +50,7 @@ public class BreakpointWindow extends JFrame implements MouseListener, Breakpoin
 		/**
 		 * Returns the number of columns.
 		 */
+		@Override
 		public int getColumnCount() {
 			return columnNames.length;
 		}
@@ -58,6 +58,7 @@ public class BreakpointWindow extends JFrame implements MouseListener, Breakpoin
 		/**
 		 * Returns the names of the columns.
 		 */
+		@Override
 		public String getColumnName(int col) {
 			return columnNames[col];
 		}
@@ -65,6 +66,7 @@ public class BreakpointWindow extends JFrame implements MouseListener, Breakpoin
 		/**
 		 * Returns the number of rows.
 		 */
+		@Override
 		public int getRowCount() {
 			return breakpoints.size();
 		}
@@ -72,18 +74,21 @@ public class BreakpointWindow extends JFrame implements MouseListener, Breakpoin
 		/**
 		 * Returns the value at a specific row and column.
 		 */
+		@Override
 		public Object getValueAt(int row, int col) {
 			Breakpoint breakpoint = (Breakpoint) breakpoints.elementAt(row);
 
-			if (col == 0)
+			if (col == 0) {
 				return breakpoint.getVarName();
-			else
+			} else {
 				return breakpoint.getValue();
+			}
 		}
 
 		/**
 		 * Returns true of this table cells are editable, false - otherwise.
 		 */
+		@Override
 		public boolean isCellEditable(int row, int col) {
 			return false;
 		}
@@ -92,8 +97,9 @@ public class BreakpointWindow extends JFrame implements MouseListener, Breakpoin
 		 * Removes a row from this table.
 		 */
 		public void removeRow(int index) {
-			if (breakpoints.size() > 0)
+			if (breakpoints.size() > 0) {
 				breakpoints.removeElementAt(index);
+			}
 		}
 	}
 
@@ -102,13 +108,15 @@ public class BreakpointWindow extends JFrame implements MouseListener, Breakpoin
 	// the feature of coloring the background of a specific cell.
 	class ColoredTableCellRenderer extends DefaultTableCellRenderer {
 
+		@Override
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean selected, boolean focused,
 				int row, int column) {
-			setEnabled(table == null || table.isEnabled());
-			if (((Breakpoint) breakpoints.elementAt(row)).isReached())
+			setEnabled((table == null) || table.isEnabled());
+			if (((Breakpoint) breakpoints.elementAt(row)).isReached()) {
 				setBackground(Color.red);
-			else
+			} else {
 				setBackground(null);
+			}
 			setHorizontalAlignment(SwingConstants.CENTER);
 			super.getTableCellRendererComponent(table, value, selected, focused, row, column);
 			return this;
@@ -188,12 +196,14 @@ public class BreakpointWindow extends JFrame implements MouseListener, Breakpoin
 	 * Called when there was a change in one of the breakpoints. The event
 	 * contains the changed breakpoint.
 	 */
+	@Override
 	public void breakpointChanged(BreakpointChangedEvent event) {
 		Breakpoint p = event.getBreakpoint();
-		if (selectedRowIndex == -1)
+		if (selectedRowIndex == -1) {
 			breakpoints.addElement(p);
-		else
+		} else {
 			breakpoints.setElementAt(p, selectedRowIndex);
+		}
 		breakpointTable.revalidate();
 		repaint();
 		notifyListeners();
@@ -212,33 +222,21 @@ public class BreakpointWindow extends JFrame implements MouseListener, Breakpoin
 		this.getContentPane().setLayout(flowLayout);
 		breakpointTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		breakpointTable.addMouseListener(this);
-		ListSelectionModel rowSM = breakpointTable.getSelectionModel();
+		breakpointTable.getSelectionModel();
 		JScrollPane scrollPane = new JScrollPane(breakpointTable);
 		scrollPane.setPreferredSize(new Dimension(190, 330));
 		addButton.setPreferredSize(new Dimension(35, 25));
 		addButton.setToolTipText("Add breakpoint");
 		addButton.setIcon(addIcon);
-		addButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				addButton_actionPerformed(e);
-			}
-		});
+		addButton.addActionListener(e -> addButton_actionPerformed(e));
 		removeButton.setPreferredSize(new Dimension(35, 25));
 		removeButton.setToolTipText("Remove breakpoint");
 		removeButton.setIcon(removeIcon);
-		removeButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				removeButton_actionPerformed(e);
-			}
-		});
+		removeButton.addActionListener(e -> removeButton_actionPerformed(e));
 		okButton.setPreferredSize(new Dimension(35, 25));
 		okButton.setToolTipText("OK");
 		okButton.setIcon(okIcon);
-		okButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				okButton_actionPerformed(e);
-			}
-		});
+		okButton.addActionListener(e -> okButton_actionPerformed(e));
 		this.getContentPane().add(scrollPane, null);
 		this.getContentPane().add(addButton, null);
 		this.getContentPane().add(removeButton, null);
@@ -250,6 +248,7 @@ public class BreakpointWindow extends JFrame implements MouseListener, Breakpoin
 	/**
 	 * Implementing the action of double-clicking the mouse on the table.
 	 */
+	@Override
 	public void mouseClicked(MouseEvent e) {
 		if (e.getClickCount() == 2) {
 			int row = breakpointTable.getSelectedRow();
@@ -265,24 +264,28 @@ public class BreakpointWindow extends JFrame implements MouseListener, Breakpoin
 	/**
 	 * Empty implementation.
 	 */
+	@Override
 	public void mouseEntered(MouseEvent e) {
 	}
 
 	/**
 	 * Empty implementation.
 	 */
+	@Override
 	public void mouseExited(MouseEvent e) {
 	}
 
 	/**
 	 * Empty implementation.
 	 */
+	@Override
 	public void mousePressed(MouseEvent e) {
 	}
 
 	/**
 	 * Empty implementation.
 	 */
+	@Override
 	public void mouseReleased(MouseEvent e) {
 	}
 
@@ -318,7 +321,7 @@ public class BreakpointWindow extends JFrame implements MouseListener, Breakpoin
 	 */
 	public void removeButton_actionPerformed(ActionEvent e) {
 		int selectedRow = breakpointTable.getSelectedRow();
-		if (selectedRow >= 0 && selectedRow < breakpointTable.getRowCount()) {
+		if ((selectedRow >= 0) && (selectedRow < breakpointTable.getRowCount())) {
 			model.removeRow(breakpointTable.getSelectedRow());
 			breakpointTable.revalidate();
 			notifyListeners();

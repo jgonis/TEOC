@@ -19,7 +19,6 @@ package HackGUI;
 
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
@@ -97,25 +96,13 @@ public class BreakpointVariablesWindow extends JFrame {
 		nameTxt.setBounds(new Rectangle(53, 10, 115, 19));
 		valueTxt.setBounds(new Rectangle(53, 42, 115, 19));
 		nameCombo.setBounds(new Rectangle(180, 10, 124, 19));
-		nameCombo.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				nameCombo_actionPerformed(e);
-			}
-		});
+		nameCombo.addActionListener(e -> nameCombo_actionPerformed(e));
 		okButton.setToolTipText("Ok");
 		okButton.setIcon(okIcon);
 		okButton.setBounds(new Rectangle(61, 74, 63, 44));
-		okButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				okButton_actionPerformed(e);
-			}
-		});
+		okButton.addActionListener(e -> okButton_actionPerformed(e));
 		cancelButton.setBounds(new Rectangle(180, 74, 63, 44));
-		cancelButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				cancelButton_actionPerformed(e);
-			}
-		});
+		cancelButton.addActionListener(e -> cancelButton_actionPerformed(e));
 		cancelButton.setToolTipText("Cancel");
 		cancelButton.setIcon(cancelIcon);
 		this.getContentPane().add(nameLbl, null);
@@ -192,8 +179,8 @@ public class BreakpointVariablesWindow extends JFrame {
 	 * Sets the list of recognized variables with the given one.
 	 */
 	public void setVariables(String[] newVars) {
-		for (int i = 0; i < newVars.length; i++) {
-			nameCombo.addItem(newVars[i]);
+		for (String newVar : newVars) {
+			nameCombo.addItem(newVar);
 		}
 	}
 

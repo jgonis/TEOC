@@ -19,7 +19,6 @@ package SimulatorsGUI;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
 
@@ -70,6 +69,7 @@ public class HardwareSimulatorControllerComponent extends ControllerComponent
 	/**
 	 * Arranges the menu bar.
 	 */
+	@Override
 	protected void arrangeMenu() {
 
 		super.arrangeMenu();
@@ -77,11 +77,7 @@ public class HardwareSimulatorControllerComponent extends ControllerComponent
 		fileMenu.removeAll();
 
 		loadChipMenuItem = new JMenuItem("Load Chip", KeyEvent.VK_L);
-		loadChipMenuItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				loadChipMenuItem_actionPerformed(e);
-			}
-		});
+		loadChipMenuItem.addActionListener(e -> loadChipMenuItem_actionPerformed(e));
 		fileMenu.add(loadChipMenuItem);
 
 		fileMenu.add(scriptMenuItem);
@@ -97,19 +93,11 @@ public class HardwareSimulatorControllerComponent extends ControllerComponent
 		runMenu.addSeparator();
 
 		evalMenuItem = new JMenuItem("Eval", KeyEvent.VK_E);
-		evalMenuItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				evalMenuItem_actionPerformed(e);
-			}
-		});
+		evalMenuItem.addActionListener(e -> evalMenuItem_actionPerformed(e));
 		runMenu.add(evalMenuItem);
 
 		tickTockMenuItem = new JMenuItem("Tick Tock", KeyEvent.VK_C);
-		tickTockMenuItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				tickTockMenuItem_actionPerformed(e);
-			}
-		});
+		tickTockMenuItem.addActionListener(e -> tickTockMenuItem_actionPerformed(e));
 
 		runMenu.add(tickTockMenuItem);
 		runMenu.addSeparator();
@@ -119,6 +107,7 @@ public class HardwareSimulatorControllerComponent extends ControllerComponent
 	/**
 	 * Arranges the tool bar.
 	 */
+	@Override
 	protected void arrangeToolBar() {
 		toolBar.setSize(TOOLBAR_WIDTH, TOOLBAR_HEIGHT);
 		toolBar.add(loadChipButton);
@@ -141,21 +130,25 @@ public class HardwareSimulatorControllerComponent extends ControllerComponent
 		toolBar.add(additionalDisplayCombo);
 	}
 
+	@Override
 	public void disableEval() {
 		evalButton.setEnabled(false);
 		evalMenuItem.setEnabled(false);
 	}
 
+	@Override
 	public void disableTickTock() {
 		tickTockButton.setEnabled(false);
 		tickTockMenuItem.setEnabled(false);
 	}
 
+	@Override
 	public void enableEval() {
 		evalButton.setEnabled(true);
 		evalMenuItem.setEnabled(true);
 	}
 
+	@Override
 	public void enableTickTock() {
 		tickTockButton.setEnabled(true);
 		tickTockMenuItem.setEnabled(true);
@@ -178,6 +171,7 @@ public class HardwareSimulatorControllerComponent extends ControllerComponent
 	/**
 	 * Initializes this component.
 	 */
+	@Override
 	protected void init() {
 		super.init();
 
@@ -201,11 +195,7 @@ public class HardwareSimulatorControllerComponent extends ControllerComponent
 		evalButton.setPreferredSize(new Dimension(39, 39));
 		evalButton.setToolTipText("Eval");
 		evalButton.setIcon(evalIcon);
-		evalButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				evalButton_actionPerformed(e);
-			}
-		});
+		evalButton.addActionListener(e -> evalButton_actionPerformed(e));
 	}
 
 	// Initializing the load chip button.
@@ -217,11 +207,7 @@ public class HardwareSimulatorControllerComponent extends ControllerComponent
 		loadChipButton.setPreferredSize(new Dimension(39, 39));
 		loadChipButton.setToolTipText("Load Chip");
 		loadChipButton.setIcon(loadChipIcon);
-		loadChipButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				loadChipButton_actionPerformed(e);
-			}
-		});
+		loadChipButton.addActionListener(e -> loadChipButton_actionPerformed(e));
 	}
 
 	// Initializing the tick tock button.
@@ -233,11 +219,7 @@ public class HardwareSimulatorControllerComponent extends ControllerComponent
 		tickTockButton.setPreferredSize(new Dimension(39, 39));
 		tickTockButton.setToolTipText("Tick Tock");
 		tickTockButton.setIcon(tickTockIcon);
-		tickTockButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				tickTockButton_actionPerformed(e);
-			}
-		});
+		tickTockButton.addActionListener(e -> tickTockButton_actionPerformed(e));
 	}
 
 	/**
@@ -264,6 +246,7 @@ public class HardwareSimulatorControllerComponent extends ControllerComponent
 		}
 	}
 
+	@Override
 	public void setWorkingDir(File file) {
 		super.setWorkingDir(file);
 		chipFileChooser.setCurrentDirectory(file);

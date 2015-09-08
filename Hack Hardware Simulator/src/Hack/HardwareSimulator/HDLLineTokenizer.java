@@ -47,6 +47,7 @@ public class HDLLineTokenizer extends HDLTokenizer {
 	/**
 	 * Generates an HDLException with the given message.
 	 */
+	@Override
 	public void HDLError(String message) throws HDLException {
 		throw new HDLException(message);
 	}

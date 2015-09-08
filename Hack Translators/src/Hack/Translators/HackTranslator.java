@@ -41,6 +41,7 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
 
 	// The fast forward task
 	class FastForwardTask implements Runnable {
+		@Override
 		public void run() {
 			fastForward();
 		}
@@ -49,6 +50,7 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
 	// The full compilation task
 	class FullCompilationTask implements Runnable {
 
+		@Override
 		public void run() {
 			gui.displayMessage("Please wait...", false);
 
@@ -67,6 +69,7 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
 	class LoadSourceTask implements Runnable {
 		private String fileName;
 
+		@Override
 		public void run() {
 			try {
 				loadSource(fileName);
@@ -83,9 +86,11 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
 
 	// The single step task
 	class SingleStepTask implements Runnable {
+		@Override
 		public void run() {
-			if (!singleStepLocked)
+			if (!singleStepLocked) {
 				singleStep();
+			}
 		}
 	}
 
@@ -208,8 +213,9 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
 	 * source but with the destination extension.
 	 */
 	public HackTranslator(String fileName, int size, short nullValue, boolean save) throws HackTranslatorException {
-		if (fileName.indexOf(".") < 0)
+		if (fileName.indexOf(".") < 0) {
 			fileName = fileName + "." + getSourceExtension();
+		}
 
 		checkSourceFile(fileName);
 
@@ -219,19 +225,22 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
 		loadSource(fileName);
 		fullCompilation();
 
-		if (save)
+		if (save) {
 			save();
+		}
 	}
 
 	/**
 	 * Called by the timer in constant intervals (when in run mode).
 	 */
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (!singleStepLocked) {
 			singleStep();
 		}
 	}
 
+	@Override
 	public void actionPerformed(HackTranslatorEvent event) {
 		Thread t;
 
@@ -264,11 +273,11 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
 
 		case HackTranslatorEvent.SINGLE_STEP:
 			clearMessage();
-			if (sourceFileName == null)
+			if (sourceFileName == null) {
 				gui.displayMessage("No source file specified", true);
-			else if (destFileName == null)
+			} else if (destFileName == null) {
 				gui.displayMessage("No destination file specified", true);
-			else {
+			} else {
 				t = new Thread(singleStepTask);
 				t.start();
 			}
@@ -303,31 +312,36 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
 	 * HackTranslatorException if the program is too large
 	 */
 	protected void addCommand(short command) throws HackTranslatorException {
-		if (destPC >= program.length)
+		if (destPC >= program.length) {
 			throw new HackTranslatorException("Program too large");
+		}
 
 		program[destPC++] = command;
-		if (updateGUI)
+		if (updateGUI) {
 			gui.getDestination().addLine(getCodeString(command, destPC - 1, true));
+		}
 	}
 
 	// Checks the given destination file name and throws a
 	// HackTranslatorException
 	// if not legal.
 	private void checkDestinationFile(String fileName) throws HackTranslatorException {
-		if (!fileName.endsWith("." + getDestinationExtension()))
+		if (!fileName.endsWith("." + getDestinationExtension())) {
 			throw new HackTranslatorException(fileName + " is not a ." + getDestinationExtension() + " file");
+		}
 	}
 
 	// Checks the given source file name and throws a HackTranslatorException
 	// if not legal.
 	private void checkSourceFile(String fileName) throws HackTranslatorException {
-		if (!fileName.endsWith("." + getSourceExtension()))
+		if (!fileName.endsWith("." + getSourceExtension())) {
 			throw new HackTranslatorException(fileName + " is not a ." + getSourceExtension() + " file");
+		}
 
 		File file = new File(fileName);
-		if (!file.exists())
+		if (!file.exists()) {
 			throw new HackTranslatorException("file " + fileName + " does not exist");
+		}
 	}
 
 	// Clears the message display.
@@ -355,8 +369,9 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
 		compileLine(line);
 		int length = destPC - startPC;
 
-		if (length > 0)
+		if (length > 0) {
 			result = new int[] { startPC, destPC - 1 };
+		}
 
 		return result;
 	}
@@ -365,8 +380,9 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
 	 * Dumps the contents of the translated program into the destination file
 	 */
 	private void dumpToFile() {
-		for (short i = 0; i < programSize; i++)
+		for (short i = 0; i < programSize; i++) {
 			writer.println(getCodeString(program[i], i, false));
+		}
 		writer.close();
 	}
 
@@ -385,8 +401,9 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
 
 		inFastForward = false;
 
-		if (hidePointers)
+		if (hidePointers) {
 			hidePointers();
+		}
 	}
 
 	/**
@@ -512,8 +529,9 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
 	 */
 	protected void init(int size, short nullValue) {
 		program = new short[size];
-		for (int i = 0; i < size; i++)
+		for (int i = 0; i < size; i++) {
 			program[i] = nullValue;
+		}
 		programSize = 0;
 	}
 
@@ -558,8 +576,9 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
 			while ((line = sourceReader.readLine()) != null) {
 				formattedLines.addElement(line);
 
-				if (gui != null)
+				if (gui != null) {
 					lines.addElement(line);
+				}
 			}
 
 			sourceReader.close();
@@ -591,8 +610,9 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
 		}
 
 		if (errorMessage != null) {
-			if (gui != null)
+			if (gui != null) {
 				gui.enableLoadSource();
+			}
 
 			throw new HackTranslatorException(errorMessage);
 		}
@@ -618,8 +638,9 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
 	 */
 	protected void replaceCommand(int pc, short command) {
 		program[pc] = command;
-		if (updateGUI)
+		if (updateGUI) {
 			gui.getDestination().setLineAt(pc, getCodeString(command, pc, true));
+		}
 	}
 
 	/**
@@ -627,8 +648,9 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
 	 */
 	protected void resetProgram() {
 		programSize = 0;
-		if (gui != null)
+		if (gui != null) {
 			gui.getDestination().reset();
+		}
 	}
 
 	/**
@@ -675,6 +697,7 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
 	/**
 	 * Called when a line is selected in the source file.
 	 */
+	@Override
 	public void rowSelected(TextFileEvent event) {
 		int index = event.getRowIndex();
 		int[] range = rowIndexToRange(index);
@@ -682,10 +705,12 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
 		gui.getSource().hideSelect();
 		if (range != null) {
 			gui.getDestination().clearHighlights();
-			for (int i = range[0]; i <= range[1]; i++)
+			for (int i = range[0]; i <= range[1]; i++) {
 				gui.getDestination().addHighlight(i, false);
-		} else
+			}
+		} else {
 			gui.getDestination().clearHighlights();
+		}
 	}
 
 	// Saves the program into the given dest file name.
@@ -722,8 +747,9 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
 
 		String[] lines = new String[numOfCommands];
 
-		for (int i = 0; i < numOfCommands; i++)
+		for (int i = 0; i < numOfCommands; i++) {
 			lines[i] = getCodeString(program[i], i, true);
+		}
 
 		gui.getDestination().setContents(lines);
 	}
@@ -737,8 +763,9 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
 		try {
 			initCompilation();
 
-			if (!compilationStarted)
+			if (!compilationStarted) {
 				compilationStarted = true;
+			}
 
 			gui.getSource().addHighlight(sourcePC, true);
 			gui.getDestination().clearHighlights();
@@ -788,7 +815,8 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
 	 * Executed when a compilation is successful.
 	 */
 	protected void successfulCompilation() throws HackTranslatorException {
-		if (gui != null)
+		if (gui != null) {
 			gui.displayMessage("File compilation succeeded", false);
+		}
 	}
 }

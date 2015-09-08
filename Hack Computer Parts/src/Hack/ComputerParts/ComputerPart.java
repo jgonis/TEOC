@@ -56,8 +56,9 @@ public abstract class ComputerPart {
 	 * Resets the contents of the computer part.
 	 */
 	public void reset() {
-		if (hasGUI)
+		if (hasGUI) {
 			getGUI().reset();
+		}
 	}
 
 	/**

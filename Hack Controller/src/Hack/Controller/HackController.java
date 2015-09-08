@@ -45,6 +45,7 @@ public class HackController implements ControllerEventListener, ActionListener, 
 
 	// Performs the fast forward task
 	class FastForwardTask implements Runnable {
+		@Override
 		public synchronized void run() {
 			try {
 				System.runFinalization();
@@ -78,6 +79,7 @@ public class HackController implements ControllerEventListener, ActionListener, 
 
 		private int animationMode;
 
+		@Override
 		public void run() {
 			setAnimationMode(animationMode);
 		}
@@ -92,6 +94,7 @@ public class HackController implements ControllerEventListener, ActionListener, 
 
 		private int numericFormat;
 
+		@Override
 		public void run() {
 			setNumericFormat(numericFormat);
 		}
@@ -106,6 +109,7 @@ public class HackController implements ControllerEventListener, ActionListener, 
 	// Performs the single step task
 	class SingleStepTask implements Runnable {
 
+		@Override
 		public void run() {
 			singleStep();
 
@@ -197,9 +201,6 @@ public class HackController implements ControllerEventListener, ActionListener, 
 	 */
 	public static final int NO_ADDITIONAL_DISPLAY = 3;
 
-	// The default dir for loading script files
-	private static final String INITIAL_SCRIPT_DIR = "scripts";
-
 	// Minimum and maximum mili-seconds per script command execution
 	private static final int MAX_MS = 2500;
 
@@ -220,7 +221,7 @@ public class HackController implements ControllerEventListener, ActionListener, 
 		StringCharacterIterator outi = new StringCharacterIterator(out);
 		StringCharacterIterator cmpi = new StringCharacterIterator(cmp);
 		for (outi.first(), cmpi.first(); outi.current() != CharacterIterator.DONE; outi.next(), cmpi.next()) {
-			if (cmpi.current() != '*' && outi.current() != cmpi.current()) {
+			if ((cmpi.current() != '*') && (outi.current() != cmpi.current())) {
 				return false;
 			}
 		}
@@ -349,8 +350,9 @@ public class HackController implements ControllerEventListener, ActionListener, 
 		loadNewScript(defaultScriptFile, false);
 
 		delays = new int[NUMBER_OF_SPEED_UNITS];
-		for (int i = 0; i < NUMBER_OF_SPEED_UNITS; i++)
-			delays[i] = (int) (MAX_MS - SPEED_FUNCTION[i] * (float) (MAX_MS - MIN_MS));
+		for (int i = 0; i < NUMBER_OF_SPEED_UNITS; i++) {
+			delays[i] = (int) (MAX_MS - (SPEED_FUNCTION[i] * (MAX_MS - MIN_MS)));
+		}
 
 		currentSpeedUnit = INITIAL_SPEED_UNIT;
 		animationMode = simulator.getInitialAnimationMode();
@@ -386,8 +388,9 @@ public class HackController implements ControllerEventListener, ActionListener, 
 	 */
 	public HackController(HackSimulator simulator, String scriptFileName) {
 		File file = new File(scriptFileName);
-		if (!file.exists())
+		if (!file.exists()) {
 			displayMessage(scriptFileName + " doesn't exist", true);
+		}
 
 		this.simulator = simulator;
 		animationMode = NO_DISPLAY_CHANGES;
@@ -406,10 +409,12 @@ public class HackController implements ControllerEventListener, ActionListener, 
 
 		fastForwardRunning = true;
 
-		while (fastForwardRunning)
+		while (fastForwardRunning) {
 			singleStep();
+		}
 	}
 
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (!singleStepLocked) {
 			Thread t = new Thread(singleStepTask);
@@ -417,6 +422,7 @@ public class HackController implements ControllerEventListener, ActionListener, 
 		}
 	}
 
+	@Override
 	public void actionPerformed(ControllerEvent event) {
 		try {
 			switch (event.getAction()) {
@@ -435,8 +441,9 @@ public class HackController implements ControllerEventListener, ActionListener, 
 				fastForward();
 				break;
 			case ControllerEvent.STOP:
-				if (animationMode == NO_DISPLAY_CHANGES)
+				if (animationMode == NO_DISPLAY_CHANGES) {
 					displayMessage("", false);
+				}
 				stopMode();
 				break;
 			case ControllerEvent.REWIND:
@@ -493,8 +500,9 @@ public class HackController implements ControllerEventListener, ActionListener, 
 			case ControllerEvent.HALT_PROGRAM:
 				displayMessage("End of program", false);
 				programHalted = true;
-				if (fastForwardRunning)
+				if (fastForwardRunning) {
 					stopMode();
+				}
 				gui.disableSingleStep();
 				gui.disableFastForward();
 				break;
@@ -519,8 +527,9 @@ public class HackController implements ControllerEventListener, ActionListener, 
 				displayMessage((String) event.getData(), false);
 				break;
 			case ControllerEvent.DISPLAY_ERROR_MESSAGE:
-				if (timer.isRunning())
+				if (timer.isRunning()) {
 					stopMode();
+				}
 				displayMessage((String) event.getData(), true);
 				break;
 			default:
@@ -540,11 +549,12 @@ public class HackController implements ControllerEventListener, ActionListener, 
 	// vector.
 	private boolean breakpointExists(Vector breakpoints, Breakpoint breakpoint) {
 		boolean found = false;
-		for (int j = 0; j < breakpoints.size() && !found; j++) {
+		for (int j = 0; (j < breakpoints.size()) && !found; j++) {
 			Breakpoint scannedBreakpoint = (Breakpoint) breakpoints.elementAt(j);
 			if (breakpoint.getVarName().equals(scannedBreakpoint.getVarName())
-					&& breakpoint.getValue().equals(scannedBreakpoint.getValue()))
+					&& breakpoint.getValue().equals(scannedBreakpoint.getValue())) {
 				found = true;
+			}
 		}
 
 		return found;
@@ -552,9 +562,9 @@ public class HackController implements ControllerEventListener, ActionListener, 
 
 	// Displays the given message with the given type (error or not)
 	private void displayMessage(String message, boolean error) {
-		if (gui != null)
+		if (gui != null) {
 			gui.displayMessage(message, error);
-		else {
+		} else {
 			if (error) {
 				System.err.println(message);
 				System.exit(-1);
@@ -584,55 +594,61 @@ public class HackController implements ControllerEventListener, ActionListener, 
 	// Executes the controller's Clear-echo command.
 	private void doClearEchoCommand(Command command) throws ControllerException {
 		lastEcho = "";
-		if (gui != null)
+		if (gui != null) {
 			gui.displayMessage("", false);
+		}
 	}
 
 	// Executes the controller's compare-to command.
 	private void doCompareToCommand(Command command) throws ControllerException {
 		currentComparisonName = currentScriptFile.getParent() + "/" + (String) command.getArg();
 		resetComparisonFile();
-		if (gui != null)
+		if (gui != null) {
 			gui.setComparisonFile(currentComparisonName);
+		}
 	}
 
 	// Executes the controller's echo command.
 	private void doEchoCommand(Command command) throws ControllerException {
 		lastEcho = (String) command.getArg();
-		if (gui != null)
+		if (gui != null) {
 			gui.displayMessage(lastEcho, false);
+		}
 	}
 
 	// Executes the controller's output command.
 	private void doOutputCommand(Command command) throws ControllerException, VariableException {
-		if (output == null)
+		if (output == null) {
 			throw new ControllerException("No output file specified");
+		}
 
 		StringBuffer line = new StringBuffer("|");
 
-		for (int i = 0; i < varList.length; i++) {
+		for (VariableFormat element : varList) {
 			// find value string (convert to require format if necessary)
-			String value = simulator.getValue(varList[i].varName);
-			if (varList[i].format != VariableFormat.STRING_FORMAT) {
+			String value = simulator.getValue(element.varName);
+			if (element.format != VariableFormat.STRING_FORMAT) {
 				int numValue;
 				try {
 					numValue = Integer.parseInt(value);
 				} catch (NumberFormatException nfe) {
-					throw new VariableException("Variable is not numeric", varList[i].varName);
+					throw new VariableException("Variable is not numeric", element.varName);
 				}
-				if (varList[i].format == VariableFormat.HEX_FORMAT)
+				if (element.format == VariableFormat.HEX_FORMAT) {
 					value = Conversions.decimalToHex(numValue, 4);
-				else if (varList[i].format == VariableFormat.BINARY_FORMAT)
+				} else if (element.format == VariableFormat.BINARY_FORMAT) {
 					value = Conversions.decimalToBinary(numValue, 16);
+				}
 			}
 
-			if (value.length() > varList[i].len)
-				value = value.substring(value.length() - varList[i].len);
+			if (value.length() > element.len) {
+				value = value.substring(value.length() - element.len);
+			}
 
-			int leftSpace = varList[i].padL
-					+ (varList[i].format == VariableFormat.STRING_FORMAT ? 0 : (varList[i].len - value.length()));
-			int rightSpace = varList[i].padR
-					+ (varList[i].format == VariableFormat.STRING_FORMAT ? (varList[i].len - value.length()) : 0);
+			int leftSpace = element.padL
+					+ (element.format == VariableFormat.STRING_FORMAT ? 0 : (element.len - value.length()));
+			int rightSpace = element.padR
+					+ (element.format == VariableFormat.STRING_FORMAT ? (element.len - value.length()) : 0);
 			line.append(SPACES.substring(0, leftSpace) + value + SPACES.substring(0, rightSpace) + '|');
 		}
 
@@ -643,23 +659,24 @@ public class HackController implements ControllerEventListener, ActionListener, 
 	private void doOutputFileCommand(Command command) throws ControllerException {
 		currentOutputName = currentScriptFile.getParent() + "/" + (String) command.getArg();
 		resetOutputFile();
-		if (gui != null)
+		if (gui != null) {
 			gui.setOutputFile(currentOutputName);
+		}
 	}
 
 	// Executes the controller's output-list command.
 	private void doOutputListCommand(Command command) throws ControllerException {
-		if (output == null)
+		if (output == null) {
 			throw new ControllerException("No output file specified");
+		}
 
 		varList = (VariableFormat[]) command.getArg();
 		StringBuffer line = new StringBuffer("|");
 
-		for (int i = 0; i < varList.length; i++) {
-			int space = varList[i].padL + varList[i].padR + varList[i].len;
-			String varName = varList[i].varName.length() > space ? varList[i].varName.substring(0, space)
-					: varList[i].varName;
-			int leftSpace = (int) ((space - varName.length()) / 2);
+		for (VariableFormat element : varList) {
+			int space = element.padL + element.padR + element.len;
+			String varName = element.varName.length() > space ? element.varName.substring(0, space) : element.varName;
+			int leftSpace = (space - varName.length()) / 2;
 			int rightSpace = space - leftSpace - varName.length();
 
 			line.append(SPACES.substring(0, leftSpace) + varName + SPACES.substring(0, rightSpace) + '|');
@@ -688,9 +705,9 @@ public class HackController implements ControllerEventListener, ActionListener, 
 		fastForwardRunning = true;
 		simulator.prepareFastForward();
 
-		if (animationMode != NO_DISPLAY_CHANGES)
+		if (animationMode != NO_DISPLAY_CHANGES) {
 			timer.start();
-		else {
+		} else {
 			displayMessage("Running...", false);
 			gui.disableSpeedSlider();
 			Thread t = new Thread(fastForwardTask);
@@ -717,8 +734,9 @@ public class HackController implements ControllerEventListener, ActionListener, 
 			gui.setCurrentScriptLine(script.getLineNumberAt(0));
 		}
 
-		if (displayMessage)
+		if (displayMessage) {
 			displayMessage("New script loaded: " + file.getPath(), false);
+		}
 	}
 
 	// Returns the working dir that is saved in the data file, or "" if data
@@ -785,8 +803,9 @@ public class HackController implements ControllerEventListener, ActionListener, 
 				if (!whileCondititon.compare(simulator)) {
 					// advance till the nearest end while command.
 					for (; script.getCommandAt(currentCommandIndex)
-							.getCode() != Command.END_WHILE_COMMAND; currentCommandIndex++)
+							.getCode() != Command.END_WHILE_COMMAND; currentCommandIndex++) {
 						;
+					}
 				}
 				redo = true; // whether the test was successful or not,
 								// the while command doesn't count
@@ -801,18 +820,21 @@ public class HackController implements ControllerEventListener, ActionListener, 
 				}
 
 				try {
-					if (output != null)
+					if (output != null) {
 						output.close();
+					}
 
 					if (comparisonFile != null) {
-						if (comparisonFailed)
+						if (comparisonFailed) {
 							displayMessage("End of script - Comparison failure at line " + comparisonFailureLine, true);
-						else
+						} else {
 							displayMessage("End of script - Comparison ended successfully", false);
+						}
 
 						comparisonFile.close();
-					} else
+					} else {
 						displayMessage("End of script", false);
+					}
 				} catch (IOException ioe) {
 					throw new ControllerException("Could not read comparison file");
 				}
@@ -825,19 +847,22 @@ public class HackController implements ControllerEventListener, ActionListener, 
 				currentCommandIndex++;
 				Command nextCommand = script.getCommandAt(currentCommandIndex);
 				if (nextCommand.getCode() == Command.END_REPEAT_COMMAND) {
-					if (repeatCounter == 0 || --repeatCounter > 0)
+					if ((repeatCounter == 0) || (--repeatCounter > 0)) {
 						currentCommandIndex = loopCommandIndex;
-					else
+					} else {
 						currentCommandIndex++;
+					}
 				} else if (nextCommand.getCode() == Command.END_WHILE_COMMAND) {
-					if (whileCondititon.compare(simulator))
+					if (whileCondititon.compare(simulator)) {
 						currentCommandIndex = loopCommandIndex;
-					else
+					} else {
 						currentCommandIndex++;
+					}
 				}
 
-				if (animationMode != NO_DISPLAY_CHANGES)
+				if (animationMode != NO_DISPLAY_CHANGES) {
 					gui.setCurrentScriptLine(script.getLineNumberAt(currentCommandIndex));
+				}
 			}
 
 		} while (redo);
@@ -862,8 +887,9 @@ public class HackController implements ControllerEventListener, ActionListener, 
 			try {
 				String compareLine = comparisonFile.readLine();
 
-				if (gui != null)
+				if (gui != null) {
 					gui.setCurrentComparisonLine(compareLinesCounter);
+				}
 
 				compareLinesCounter++;
 
@@ -879,6 +905,7 @@ public class HackController implements ControllerEventListener, ActionListener, 
 		}
 	}
 
+	@Override
 	public void programChanged(ProgramEvent event) {
 		switch (event.getType()) {
 		case ProgramEvent.SAVE:
@@ -886,8 +913,9 @@ public class HackController implements ControllerEventListener, ActionListener, 
 			break;
 		case ProgramEvent.LOAD:
 			updateProgramFile(event.getProgramFileName());
-			if (!singleStepLocked) // new program was loaded manually
+			if (!singleStepLocked) {
 				reloadDefaultScript();
+			}
 			break;
 		case ProgramEvent.CLEAR:
 			gui.setTitle(simulator.getName() + getVersionString());
@@ -924,8 +952,9 @@ public class HackController implements ControllerEventListener, ActionListener, 
 			comparisonFile = new BufferedReader(new FileReader(currentComparisonName));
 			compareLinesCounter = 0;
 			comparisonFailed = false;
-			if (gui != null)
+			if (gui != null) {
 				gui.setCurrentComparisonLine(-1);
+			}
 		} catch (IOException ioe) {
 			throw new ControllerException("Could not open comparison file " + currentComparisonName);
 		}
@@ -936,14 +965,16 @@ public class HackController implements ControllerEventListener, ActionListener, 
 		try {
 			output = new PrintWriter(new FileWriter(currentOutputName));
 			outputLinesCounter = 0;
-			if (gui != null)
+			if (gui != null) {
 				gui.setCurrentOutputLine(-1);
+			}
 		} catch (IOException ioe) {
 			throw new ControllerException("Could not create output file " + currentOutputName);
 		}
 
-		if (gui != null)
+		if (gui != null) {
 			gui.setOutputFile(currentOutputName);
+		}
 	}
 
 	// Restarts the current script from the beginning.
@@ -962,10 +993,12 @@ public class HackController implements ControllerEventListener, ActionListener, 
 			refreshSimulator();
 			setAnimationMode(oldAnimationMode);
 
-			if (output != null)
+			if (output != null) {
 				resetOutputFile();
-			if (comparisonFile != null)
+			}
+			if (comparisonFile != null) {
 				resetComparisonFile();
+			}
 
 			lastEcho = "";
 			currentCommandIndex = 0;
@@ -980,8 +1013,9 @@ public class HackController implements ControllerEventListener, ActionListener, 
 	protected void saveWorkingDir(File file) {
 		File parent = file.getParentFile();
 
-		if (gui != null)
+		if (gui != null) {
 			gui.setWorkingDir(parent);
+		}
 
 		simulator.setWorkingDir(file);
 
@@ -1020,7 +1054,7 @@ public class HackController implements ControllerEventListener, ActionListener, 
 	private void setAnimationMode(int newAnimationMode) {
 		simulator.setAnimationMode(newAnimationMode);
 
-		if (animationMode == NO_DISPLAY_CHANGES && newAnimationMode != NO_DISPLAY_CHANGES) {
+		if ((animationMode == NO_DISPLAY_CHANGES) && (newAnimationMode != NO_DISPLAY_CHANGES)) {
 			simulator.refresh();
 			gui.setCurrentScriptLine(script.getLineNumberAt(currentCommandIndex));
 		}
@@ -1037,8 +1071,9 @@ public class HackController implements ControllerEventListener, ActionListener, 
 		for (int i = 0; i < newBreakpoints.size(); i++) {
 			Breakpoint currentBreakpoint = (Breakpoint) newBreakpoints.elementAt(i);
 
-			if (!breakpointExists(breakpoints, currentBreakpoint))
+			if (!breakpointExists(breakpoints, currentBreakpoint)) {
 				breakpoints.addElement(currentBreakpoint);
+			}
 		}
 	}
 
@@ -1067,7 +1102,7 @@ public class HackController implements ControllerEventListener, ActionListener, 
 
 			do {
 				terminatorType = miniStep();
-			} while (terminatorType == Command.MINI_STEP_TERMINATOR && singleStepRunning);
+			} while ((terminatorType == Command.MINI_STEP_TERMINATOR) && singleStepRunning);
 
 			singleStepRunning = false;
 
@@ -1132,8 +1167,9 @@ public class HackController implements ControllerEventListener, ActionListener, 
 			gui.disableStop();
 			gui.enableAnimationModes();
 
-			if (animationMode == NO_DISPLAY_CHANGES)
+			if (animationMode == NO_DISPLAY_CHANGES) {
 				gui.setCurrentScriptLine(script.getLineNumberAt(currentCommandIndex));
+			}
 
 			refreshSimulator();
 		}

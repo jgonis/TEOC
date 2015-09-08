@@ -38,6 +38,7 @@ public class HardwareSimulatorController extends HackController {
 			this.chipName = chipName;
 		}
 
+		@Override
 		public void run() {
 			try {
 				((HardwareSimulator) simulator).loadGate(chipName, true);
@@ -63,13 +64,15 @@ public class HardwareSimulatorController extends HackController {
 	/**
 	 * Executes an unknown controller action event.
 	 */
+	@Override
 	protected void doUnknownAction(byte action, Object data) {
 		switch (action) {
 		case HardwareSimulatorControllerEvent.CHIP_CHANGED:
 			File file = (File) data;
 			updateProgramFile(file.getPath());
-			if (!singleStepLocked) // new HDL was loaded manually
+			if (!singleStepLocked) {
 				reloadDefaultScript();
+			}
 
 			LoadChipTask loadChipTask = new LoadChipTask(file.getPath());
 			Thread t = new Thread(loadChipTask);
@@ -104,6 +107,7 @@ public class HardwareSimulatorController extends HackController {
 		}
 	}
 
+	@Override
 	protected void updateProgramFile(String programFileName) {
 		super.updateProgramFile(programFileName);
 		File file = (new File(programFileName)).getParentFile();

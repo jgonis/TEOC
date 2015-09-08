@@ -30,6 +30,7 @@ public interface MemorySegmentGUI extends InteractiveValueComputerPartGUI {
 	/**
 	 * Registers the given ComputerPartEventListener as a listener to this GUI.
 	 */
+	@Override
 	public void addListener(ComputerPartEventListener listener);
 
 	/**
@@ -42,12 +43,14 @@ public interface MemorySegmentGUI extends InteractiveValueComputerPartGUI {
 	 * creating a ComputerPartEvent (with the changed address and value) and
 	 * sending it using the memoryChanged method to all the listeners.
 	 */
+	@Override
 	public void notifyListeners(int address, short value);
 
 	/**
 	 * Un-registers the given ComputerPartEventListener from being a listener to
 	 * this GUI.
 	 */
+	@Override
 	public void removeListener(ComputerPartEventListener listener);
 
 	/**

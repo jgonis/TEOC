@@ -25,16 +25,22 @@ public class CompositeGate extends Gate {
 	// The contained parts (Gates), sorted in topological order.
 	protected Gate[] parts;
 
+	@Override
 	protected void clockDown() {
-		if (gateClass.isClocked)
-			for (int i = 0; i < parts.length; i++)
-				parts[i].tock();
+		if (gateClass.isClocked) {
+			for (Gate part : parts) {
+				part.tock();
+			}
+		}
 	}
 
+	@Override
 	protected void clockUp() {
-		if (gateClass.isClocked)
-			for (int i = 0; i < parts.length; i++)
-				parts[i].tick();
+		if (gateClass.isClocked) {
+			for (Gate part : parts) {
+				part.tick();
+			}
+		}
 	}
 
 	/**
@@ -48,14 +54,16 @@ public class CompositeGate extends Gate {
 	 * Returns the node according to the given node name (may be input, output
 	 * or internal). If doesn't exist, returns null.
 	 */
+	@Override
 	public Node getNode(String name) {
 		Node result = super.getNode(name);
 
 		if (result == null) {
 			byte type = gateClass.getPinType(name);
 			int index = gateClass.getPinNumber(name);
-			if (type == CompositeGateClass.INTERNAL_PIN_TYPE)
+			if (type == CompositeGateClass.INTERNAL_PIN_TYPE) {
 				result = internalPins[index];
+			}
 		}
 
 		return result;
@@ -81,9 +89,11 @@ public class CompositeGate extends Gate {
 		setDirty();
 	}
 
+	@Override
 	protected void reCompute() {
-		for (int i = 0; i < parts.length; i++)
-			parts[i].eval();
+		for (Gate part : parts) {
+			part.eval();
+		}
 	}
 
 }

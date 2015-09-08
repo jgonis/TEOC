@@ -60,9 +60,10 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
 	// the feature of coloring the background of a specific cell.
 	class ColoredTableCellRenderer extends DefaultTableCellRenderer {
 
+		@Override
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean selected, boolean focused,
 				int row, int column) {
-			setEnabled(table == null || table.isEnabled());
+			setEnabled((table == null) || table.isEnabled());
 			setBackground(null);
 			setForeground(null);
 
@@ -71,13 +72,14 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
 			} else {
 				setHorizontalAlignment(SwingConstants.LEFT);
 			}
-			if (row == instructionIndex)
+			if (row == instructionIndex) {
 				setBackground(Color.yellow);
-			else {
+			} else {
 				HVMInstruction currentInstruction = instructions[row];
 				String op = (currentInstruction.getFormattedStrings())[0];
-				if (op.equals("function") && (column == 1 || column == 2))
+				if (op.equals("function") && ((column == 1) || (column == 2))) {
 					setBackground(new Color(190, 171, 210));
+				}
 			}
 
 			super.getTableCellRendererComponent(table, value, selected, focused, row, column);
@@ -92,6 +94,7 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
 		/**
 		 * Returns the number of columns.
 		 */
+		@Override
 		public int getColumnCount() {
 			return 3;
 		}
@@ -99,6 +102,7 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
 		/**
 		 * Returns the names of the columns.
 		 */
+		@Override
 		public String getColumnName(int col) {
 			return null;
 		}
@@ -106,6 +110,7 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
 		/**
 		 * Returns the number of rows.
 		 */
+		@Override
 		public int getRowCount() {
 			return instructions.length;
 		}
@@ -113,6 +118,7 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
 		/**
 		 * Returns the value at a specific row and column.
 		 */
+		@Override
 		public Object getValueAt(int row, int col) {
 
 			String[] formattedString = instructions[row].getFormattedStrings();
@@ -120,10 +126,11 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
 			switch (col) {
 			case 0:
 				short index = instructions[row].getIndexInFunction();
-				if (index >= 0)
+				if (index >= 0) {
 					return new Short(index);
-				else
+				} else {
 					return "";
+				}
 			case 1:
 				return formattedString[0];
 			case 2:
@@ -137,6 +144,7 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
 		/**
 		 * Returns true of this table cells are editable, false - otherwise.
 		 */
+		@Override
 		public boolean isCellEditable(int row, int col) {
 			return false;
 		}
@@ -216,6 +224,7 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
 	/**
 	 * Registers the given ErrorEventListener as a listener to this GUI.
 	 */
+	@Override
 	public void addErrorListener(ErrorEventListener listener) {
 		errorEventListeners.addElement(listener);
 	}
@@ -223,6 +232,7 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
 	/**
 	 * Registers the given ProgramEventListener as a listener to this GUI.
 	 */
+	@Override
 	public void addProgramListener(ProgramEventListener listener) {
 		listeners.addElement(listener);
 	}
@@ -243,14 +253,16 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
 				"Are you sure you want to clear the program?", "Warning Message", JOptionPane.YES_NO_CANCEL_OPTION,
 				JOptionPane.WARNING_MESSAGE, null, options, options[2]);
 
-		if (pressedButtonValue == JOptionPane.YES_OPTION)
+		if (pressedButtonValue == JOptionPane.YES_OPTION) {
 			notifyProgramListeners(ProgramEvent.CLEAR, null);
+		}
 	}
 
 	/**
 	 * Displays a confirmation window asking the user permission to use built-in
 	 * vm functions
 	 */
+	@Override
 	public boolean confirmBuiltInAccess() {
 		String message = "No implementation was found for some functions which are called in the VM code.\n"
 				+ "The VM Emulator provides built-in implementations for the OS functions.\n"
@@ -264,12 +276,13 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
 		TableColumn column = null;
 		for (int i = 0; i < 3; i++) {
 			column = programTable.getColumnModel().getColumn(i);
-			if (i == 0)
+			if (i == 0) {
 				column.setPreferredWidth(30);
-			else if (i == 1)
+			} else if (i == 1) {
 				column.setPreferredWidth(40);
-			else if (i == 2)
+			} else if (i == 2) {
 				column.setPreferredWidth(100);
+			}
 		}
 	}
 
@@ -283,6 +296,7 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
 	/**
 	 * Hides the displayed message.
 	 */
+	@Override
 	public void hideMessage() {
 		messageTxt.setText("");
 		messageTxt.setVisible(false);
@@ -302,11 +316,7 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
 		browseButton.setToolTipText("Load Program");
 		browseButton.setIcon(browseIcon);
 		browseButton.setBounds(new Rectangle(119, 2, 31, 24));
-		browseButton.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				browseButton_actionPerformed(e);
-			}
-		});
+		browseButton.addActionListener(e -> browseButton_actionPerformed(e));
 		messageTxt.setBackground(SystemColor.info);
 		messageTxt.setEnabled(false);
 		messageTxt.setFont(Utilities.labelsFont);
@@ -319,22 +329,14 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
 		searchButton.setToolTipText("Search");
 		searchButton.setIcon(searchIcon);
 		searchButton.setBounds(new Rectangle(188, 2, 31, 24));
-		searchButton.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				searchButton_actionPerformed(e);
-			}
-		});
+		searchButton.addActionListener(e -> searchButton_actionPerformed(e));
 		this.setForeground(Color.lightGray);
 		this.setLayout(null);
 		nameLbl.setText("Program");
 		nameLbl.setBounds(new Rectangle(5, 5, 73, 20));
 		nameLbl.setFont(Utilities.labelsFont);
 
-		clearButton.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				clearButton_actionPerformed(e);
-			}
-		});
+		clearButton.addActionListener(e -> clearButton_actionPerformed(e));
 		clearButton.setBounds(new Rectangle(154, 2, 31, 24));
 		clearButton.setIcon(clearIcon);
 		clearButton.setToolTipText("Clear");
@@ -362,6 +364,7 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
 	/**
 	 * Displays a notification window with the given message.
 	 */
+	@Override
 	public void notify(String message) {
 		JOptionPane.showMessageDialog(this.getParent(), message, "Information Message",
 				JOptionPane.INFORMATION_MESSAGE);
@@ -372,10 +375,12 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
 	 * an ErrorEvent (with the error message) and sending it using the
 	 * errorOccured method to all the listeners.
 	 */
+	@Override
 	public void notifyErrorListeners(String errorMessage) {
 		ErrorEvent event = new ErrorEvent(this, errorMessage);
-		for (int i = 0; i < errorEventListeners.size(); i++)
+		for (int i = 0; i < errorEventListeners.size(); i++) {
 			((ErrorEventListener) errorEventListeners.elementAt(i)).errorOccured(event);
+		}
 	}
 
 	/**
@@ -384,6 +389,7 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
 	 * name) and sending it using the programChanged method to all the
 	 * listeners.
 	 */
+	@Override
 	public void notifyProgramListeners(byte eventType, String programFileName) {
 		ProgramEvent event = new ProgramEvent(this, eventType, programFileName);
 		for (int i = 0; i < listeners.size(); i++) {
@@ -395,6 +401,7 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
 	 * Un-registers the given ErrorEventListener from being a listener to this
 	 * GUI.
 	 */
+	@Override
 	public void removeErrorListener(ErrorEventListener listener) {
 		errorEventListeners.removeElement(listener);
 	}
@@ -403,6 +410,7 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
 	 * Un-registers the given ProgramEventListener from being a listener to this
 	 * GUI.
 	 */
+	@Override
 	public void removeProgramListener(ProgramEventListener listener) {
 		listeners.removeElement(listener);
 	}
@@ -410,6 +418,7 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
 	/**
 	 * Resets the contents of this ProgramComponent.
 	 */
+	@Override
 	public void reset() {
 		instructions = new VMEmulatorInstruction[0];
 		programTable.clearSelection();
@@ -427,6 +436,7 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
 	 * Sets the contents of the gui with the first instructionsLength
 	 * instructions from the given array of instructions.
 	 */
+	@Override
 	public synchronized void setContents(VMEmulatorInstruction[] newInstructions, int newInstructionsLength) {
 		instructions = new VMEmulatorInstruction[newInstructionsLength];
 		System.arraycopy(newInstructions, 0, instructions, 0, newInstructionsLength);
@@ -441,6 +451,7 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
 	/**
 	 * Sets the current instruction with the given instruction index.
 	 */
+	@Override
 	public void setCurrentInstruction(int instructionIndex) {
 		this.instructionIndex = instructionIndex;
 		Utilities.tableCenterScroll(this, programTable, instructionIndex);
@@ -473,6 +484,7 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
 	/**
 	 * Displays the given message.
 	 */
+	@Override
 	public void showMessage(String message) {
 		messageTxt.setText(message);
 		messageTxt.setVisible(true);

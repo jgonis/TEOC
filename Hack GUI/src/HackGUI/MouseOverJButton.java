@@ -39,6 +39,7 @@ public class MouseOverJButton extends JButton implements MouseListener {
 	/**
 	 * Empty implementation.
 	 */
+	@Override
 	public void mouseClicked(MouseEvent e) {
 	}
 
@@ -46,6 +47,7 @@ public class MouseOverJButton extends JButton implements MouseListener {
 	 * Called just after the cursor enters the bounds of the listened-to
 	 * component.
 	 */
+	@Override
 	public void mouseEntered(MouseEvent e) {
 		setBorder(BorderFactory.createRaisedBevelBorder());
 	}
@@ -54,6 +56,7 @@ public class MouseOverJButton extends JButton implements MouseListener {
 	 * Called just after the cursor exits the bounds of the listened-to
 	 * component.
 	 */
+	@Override
 	public void mouseExited(MouseEvent e) {
 		setBorder(null);
 	}
@@ -61,12 +64,14 @@ public class MouseOverJButton extends JButton implements MouseListener {
 	/**
 	 * Empty implementation.
 	 */
+	@Override
 	public void mousePressed(MouseEvent e) {
 	}
 
 	/**
 	 * Empty implementation.
 	 */
+	@Override
 	public void mouseReleased(MouseEvent e) {
 	}
 }

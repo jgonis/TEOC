@@ -86,11 +86,12 @@ public class CPU {
 
 		short exp = alu.getValueAt(2);
 
-		if ((exp < 0 && jumpNegative) || (exp == 0 && jumpEqual) || (exp > 0 && jumpPositive)) {
+		if (((exp < 0) && jumpNegative) || ((exp == 0) && jumpEqual) || ((exp > 0) && jumpPositive)) {
 			int newPC = A.get();
-			if (newPC < 0 || newPC >= Definitions.ROM_SIZE)
+			if ((newPC < 0) || (newPC >= Definitions.ROM_SIZE)) {
 				throw new ProgramException(
 						"At line " + PC.get() + ": Jump requested but A=" + newPC + " is an illegal program address.");
+			}
 			bus.send(A, 0, PC, 0);
 			changed = true;
 		}
@@ -121,14 +122,16 @@ public class CPU {
 		// sends A or M[A] to input1 of the alu
 		if (indirect) {
 			int address = A.get();
-			if (address < 0 || address >= M.getSize())
+			if ((address < 0) || (address >= M.getSize())) {
 				throw new ProgramException("At line " + PC.get() + ": Expression involves M but A=" + address
 						+ " is an illegal memory address.");
+			}
 			A.setUpdatePointer(true);
 			bus.send(M, address, alu, 1);
 			A.setUpdatePointer(false);
-		} else
+		} else {
 			bus.send(A, 0, alu, 1);
+		}
 
 		alu.compute();
 	}
@@ -143,19 +146,21 @@ public class CPU {
 		short instruction = rom.getValueAt(PC.get());
 		boolean pcChanged = false;
 
-		if ((instruction & 0x8000) == 0)
+		if ((instruction & 0x8000) == 0) {
 			bus.send(rom, PC.get(), A, 0);
-		else if ((instruction & 0xe000) == 0xe000) {
+		} else if ((instruction & 0xe000) == 0xe000) {
 			computeExp(instruction);
 			setDestination(instruction);
 			pcChanged = checkJump(instruction);
-		} else if (instruction != HackAssemblerTranslator.NOP)
+		} else if (instruction != HackAssemblerTranslator.NOP) {
 			throw new ProgramException("At line " + PC.get() + ": Illegal instruction");
+		}
 
 		if (!pcChanged) {
 			short newPC = (short) (PC.get() + 1);
-			if (newPC < 0 || newPC >= Definitions.ROM_SIZE)
+			if ((newPC < 0) || (newPC >= Definitions.ROM_SIZE)) {
 				throw new ProgramException("At line " + PC.get() + ": Can't continue past last line");
+			}
 			PC.setValueAt(0, newPC, true);
 		}
 
@@ -248,16 +253,19 @@ public class CPU {
 
 		if (destM) {
 			int address = A.get();
-			if (address < 0 || address >= M.getSize())
+			if ((address < 0) || (address >= M.getSize())) {
 				throw new ProgramException("At line " + PC.get() + ": Destination is M but A=" + address
 						+ " is an illegal memory address.");
+			}
 			A.setUpdatePointer(true);
 			bus.send(alu, 2, M, address);
 			A.setUpdatePointer(false);
 		}
-		if (destA)
+		if (destA) {
 			bus.send(alu, 2, A, 0);
-		if (destD)
+		}
+		if (destD) {
 			bus.send(alu, 2, D, 0);
+		}
 	}
 }

@@ -22,9 +22,11 @@ package Hack.Gates;
  */
 public abstract class BuiltInGate extends Gate {
 
+	@Override
 	protected void clockDown() {
 	}
 
+	@Override
 	protected void clockUp() {
 	}
 
@@ -38,6 +40,7 @@ public abstract class BuiltInGate extends Gate {
 		setDirty();
 	}
 
+	@Override
 	protected void reCompute() {
 	}
 }

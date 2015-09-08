@@ -33,9 +33,9 @@ public class Shifter {
 	public static short unsignedShiftRight(short value, byte shiftBits) {
 		short result;
 
-		if (value >= 0)
+		if (value >= 0) {
 			result = (short) (value >> shiftBits);
-		else {
+		} else {
 			value &= 0x7fff;
 			result = (short) (value >> shiftBits);
 			result |= powersOf2[15 - shiftBits];

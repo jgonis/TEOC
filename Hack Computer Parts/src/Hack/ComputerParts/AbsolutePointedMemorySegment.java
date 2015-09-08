@@ -41,14 +41,17 @@ public class AbsolutePointedMemorySegment extends PointedMemorySegment {
 		super(mainMemory, gui, minValue, maxValue);
 	}
 
+	@Override
 	public short getValueAt(int index) {
 		return mainMemory.getValueAt(index);
 	}
 
+	@Override
 	public void setValueAt(int index, short value, boolean quiet) {
 		super.setValueAt(index - startAddress, value, quiet);
 	}
 
+	@Override
 	public void valueChanged(ComputerPartEvent event) {
 		ComputerPartEvent newEvent = new ComputerPartEvent((ComputerPartGUI) event.getSource(),
 				event.getIndex() + startAddress, event.getValue());
