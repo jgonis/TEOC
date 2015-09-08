@@ -17,12 +17,21 @@
 
 package SimulatorsGUI;
 
-import HackGUI.*;
-import Hack.HardwareSimulator.*;
-import javax.swing.*;
-import java.awt.event.*;
-import java.awt.*;
-import java.io.*;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.io.File;
+
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
+import javax.swing.JMenuItem;
+
+import Hack.HardwareSimulator.HardwareSimulatorControllerEvent;
+import Hack.HardwareSimulator.HardwareSimulatorControllerGUI;
+import HackGUI.ControllerComponent;
+import HackGUI.MouseOverJButton;
+import HackGUI.Utilities;
 
 /**
  * The GUI Component of the Hardware Simulator.

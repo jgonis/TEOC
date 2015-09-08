@@ -17,8 +17,11 @@
 
 package HackGUI;
 
-import javax.swing.*;
-import java.awt.event.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
 
 /**
  * A button which draws a raised border when the mouse cursor is over it.

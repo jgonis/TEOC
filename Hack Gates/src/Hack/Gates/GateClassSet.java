@@ -17,7 +17,7 @@
 
 package Hack.Gates;
 
-import java.util.*;
+import java.util.HashSet;
 
 /**
  * A set of GateClasses.

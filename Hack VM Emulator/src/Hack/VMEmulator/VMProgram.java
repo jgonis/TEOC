@@ -17,14 +17,24 @@
 
 package Hack.VMEmulator;
 
-import java.util.*;
-import Hack.Utilities.*;
-import java.io.*;
-import Hack.Utilities.*;
-import Hack.Events.*;
-import Hack.ComputerParts.*;
-import Hack.Controller.*;
-import Hack.VirtualMachine.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Hashtable;
+import java.util.NoSuchElementException;
+import java.util.StringTokenizer;
+import java.util.Vector;
+
+import Hack.ComputerParts.ComputerPartGUI;
+import Hack.ComputerParts.InteractiveComputerPart;
+import Hack.Controller.ProgramException;
+import Hack.Events.ProgramEvent;
+import Hack.Events.ProgramEventListener;
+import Hack.Utilities.Definitions;
+import Hack.Utilities.HackFileFilter;
+import Hack.VirtualMachine.HVMInstructionSet;
 
 /**
  * A list of VM instructions, with a program counter.

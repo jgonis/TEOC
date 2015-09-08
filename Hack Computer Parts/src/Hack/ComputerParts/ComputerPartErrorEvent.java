@@ -17,7 +17,7 @@
 
 package Hack.ComputerParts;
 
-import Hack.Events.*;
+import Hack.Events.ErrorEvent;
 
 /**
  * An event for notifying a ComputerPartErrorEventListener on an error that

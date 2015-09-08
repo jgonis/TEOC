@@ -17,8 +17,9 @@
 
 package Hack.VirtualMachine;
 
-import java.util.*;
-import Hack.Utilities.*;
+import java.util.Hashtable;
+
+import Hack.Utilities.Definitions;
 
 /**
  * The instruction set of the hack virtual machine. This is a singleton class.

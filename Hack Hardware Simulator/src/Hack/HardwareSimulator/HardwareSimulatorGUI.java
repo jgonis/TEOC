@@ -17,9 +17,9 @@
 
 package Hack.HardwareSimulator;
 
-import Hack.Controller.*;
-import Hack.Gates.*;
-import Hack.ComputerParts.*;
+import Hack.ComputerParts.TextFileGUI;
+import Hack.Controller.HackSimulatorGUI;
+import Hack.Gates.GatesPanelGUI;
 
 /**
  * An interface for the GUI of the Hardware Simulator.

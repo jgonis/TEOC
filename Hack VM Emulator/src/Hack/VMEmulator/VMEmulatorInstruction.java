@@ -17,7 +17,7 @@
 
 package Hack.VMEmulator;
 
-import Hack.VirtualMachine.*;
+import Hack.VirtualMachine.HVMInstruction;
 
 /**
  * An HVMInstruction for the use of the VMEmulator.

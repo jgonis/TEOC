@@ -17,11 +17,21 @@
 
 package SimulatorsGUI;
 
-import HackGUI.*;
-import Hack.CPUEmulator.*;
-import Hack.ComputerParts.*;
-import java.awt.*;
-import java.io.*;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.io.File;
+
+import Hack.CPUEmulator.ALUGUI;
+import Hack.CPUEmulator.CPUEmulatorGUI;
+import Hack.CPUEmulator.KeyboardGUI;
+import Hack.CPUEmulator.ROMGUI;
+import Hack.CPUEmulator.ScreenGUI;
+import Hack.ComputerParts.BusGUI;
+import Hack.ComputerParts.PointedMemoryGUI;
+import Hack.ComputerParts.RegisterGUI;
+import HackGUI.BusComponent;
+import HackGUI.PointedMemoryComponent;
+import HackGUI.RegisterComponent;
 
 /**
  * This class represents the gui of the CPUEmulator.

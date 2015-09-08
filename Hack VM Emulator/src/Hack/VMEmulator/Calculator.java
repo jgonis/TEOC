@@ -17,7 +17,8 @@
 
 package Hack.VMEmulator;
 
-import Hack.ComputerParts.*;
+import Hack.ComputerParts.ComputerPartGUI;
+import Hack.ComputerParts.ValueComputerPart;
 
 /**
  * A simple calculator, with two inputs, one output, and a set of operators.

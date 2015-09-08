@@ -17,7 +17,7 @@
 
 package Hack.HardwareSimulator;
 
-import Hack.Gates.*;
+import Hack.Gates.Node;
 
 /**
  * A node that receives a Pins and an index and updates the Pins at the given

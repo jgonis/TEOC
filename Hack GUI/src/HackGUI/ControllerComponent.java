@@ -17,13 +17,41 @@
 
 package HackGUI;
 
-import Hack.Controller.*;
-import java.io.*;
-import javax.swing.*;
-import javax.swing.event.*;
-import java.awt.event.*;
-import java.awt.*;
-import java.util.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Frame;
+import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.io.File;
+import java.util.Hashtable;
+import java.util.Vector;
+
+import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
+import javax.swing.JComponent;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JRadioButtonMenuItem;
+import javax.swing.JSlider;
+import javax.swing.JToolBar;
+import javax.swing.KeyStroke;
+import javax.swing.UIManager;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
+import Hack.Controller.ControllerEvent;
+import Hack.Controller.ControllerEventListener;
+import Hack.Controller.ControllerGUI;
+import Hack.Controller.HackController;
+import Hack.Controller.HackSimulatorGUI;
 
 /**
  * This class represents the GUI of the controller component.

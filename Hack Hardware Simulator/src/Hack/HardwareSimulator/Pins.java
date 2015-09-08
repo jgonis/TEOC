@@ -17,8 +17,12 @@
 
 package Hack.HardwareSimulator;
 
-import Hack.ComputerParts.*;
-import Hack.Gates.*;
+import Hack.ComputerParts.ComputerPartEvent;
+import Hack.ComputerParts.ComputerPartGUI;
+import Hack.ComputerParts.InteractiveValueComputerPart;
+import Hack.Gates.GateClass;
+import Hack.Gates.Node;
+import Hack.Gates.PinInfo;
 
 /**
  * Represents a collection of pins, using the Nodes implementation. Enables

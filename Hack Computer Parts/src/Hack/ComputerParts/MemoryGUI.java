@@ -17,7 +17,7 @@
 
 package Hack.ComputerParts;
 
-import Hack.Events.*;
+import Hack.Events.ClearEventListener;
 
 /**
  * An interface for a computer memory GUI. Every memory row contains an address

@@ -17,12 +17,20 @@
 
 package SimulatorsGUI;
 
-import HackGUI.*;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
-import java.io.*;
+import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.util.Vector;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+
+import HackGUI.FileChooserComponent;
+import HackGUI.FilesTypeEvent;
+import HackGUI.FilesTypeListener;
+import HackGUI.Utilities;
 
 /**
  * This class represents the gui of the chip loader file chooser.

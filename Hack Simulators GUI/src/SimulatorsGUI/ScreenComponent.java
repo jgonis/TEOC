@@ -17,11 +17,19 @@
 
 package SimulatorsGUI;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import Hack.CPUEmulator.*;
-import Hack.Utilities.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.BorderFactory;
+import javax.swing.JPanel;
+import javax.swing.Timer;
+
+import Hack.CPUEmulator.ScreenGUI;
+import Hack.Utilities.Definitions;
 
 /**
  * A Screen GUI component.

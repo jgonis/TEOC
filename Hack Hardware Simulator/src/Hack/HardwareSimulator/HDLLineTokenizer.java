@@ -17,9 +17,14 @@
 
 package Hack.HardwareSimulator;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+
+import Hack.Gates.HDLException;
 import Hack.Gates.HDLTokenizer;
-import java.io.*;
-import Hack.Gates.*;
 
 /**
  * An HDL tokenizer for a single string line.

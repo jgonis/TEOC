@@ -17,13 +17,26 @@
 
 package SimulatorsGUI;
 
-import HackGUI.*;
-import Hack.VMEmulator.*;
-import Hack.CPUEmulator.*;
-import Hack.ComputerParts.*;
-import java.awt.*;
-import javax.swing.*;
-import java.io.*;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.io.File;
+
+import javax.swing.BorderFactory;
+
+import Hack.CPUEmulator.KeyboardGUI;
+import Hack.CPUEmulator.ScreenGUI;
+import Hack.ComputerParts.BusGUI;
+import Hack.ComputerParts.LabeledPointedMemoryGUI;
+import Hack.ComputerParts.MemorySegmentGUI;
+import Hack.ComputerParts.PointedMemorySegmentGUI;
+import Hack.VMEmulator.CalculatorGUI;
+import Hack.VMEmulator.CallStackGUI;
+import Hack.VMEmulator.VMEmulatorGUI;
+import Hack.VMEmulator.VMProgramGUI;
+import HackGUI.AbsolutePointedMemorySegmentComponent;
+import HackGUI.BusComponent;
+import HackGUI.LabeledMemoryComponent;
+import HackGUI.TrimmedValuesOnlyAbsoluteMemorySegmentComponent;
 
 /**
  * This class represents the gui of the VMEmulator.

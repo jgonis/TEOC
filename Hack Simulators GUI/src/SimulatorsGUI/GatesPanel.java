@@ -17,9 +17,13 @@
 
 package SimulatorsGUI;
 
-import Hack.Gates.*;
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Component;
+import java.awt.FlowLayout;
+import java.awt.Rectangle;
+
+import javax.swing.JPanel;
+
+import Hack.Gates.GatesPanelGUI;
 
 /**
  * A GUI for displaying gates.

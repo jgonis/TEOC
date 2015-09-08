@@ -17,12 +17,20 @@
 
 package SimulatorsGUI;
 
+import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.StringTokenizer;
-import java.awt.*;
-import javax.swing.*;
-import java.awt.event.*;
-import HackGUI.*;
-import Hack.VirtualMachine.*;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+
+import Hack.VirtualMachine.HVMInstruction;
+import HackGUI.Utilities;
 
 /**
  * This class represents a search window for the use of ProgramComponent.

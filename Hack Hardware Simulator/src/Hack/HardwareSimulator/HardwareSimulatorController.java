@@ -17,9 +17,13 @@
 
 package Hack.HardwareSimulator;
 
-import Hack.Controller.*;
-import Hack.Gates.*;
-import java.io.*;
+import java.io.File;
+
+import Hack.Controller.ControllerException;
+import Hack.Controller.HackController;
+import Hack.Controller.ScriptException;
+import Hack.Gates.GateException;
+import Hack.Gates.GatesManager;
 
 /**
  * A HackController for the Hardware Simulator.

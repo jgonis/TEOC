@@ -17,12 +17,27 @@
 
 package HackGUI;
 
-import Hack.ComputerParts.*;
-import Hack.Events.*;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.util.Vector;
+
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+
+import Hack.ComputerParts.ComputerPartEvent;
+import Hack.ComputerParts.ComputerPartEventListener;
+import Hack.ComputerParts.RegisterGUI;
+import Hack.Events.ErrorEvent;
+import Hack.Events.ErrorEventListener;
 
 /**
  * This class represents the GUI of a register.

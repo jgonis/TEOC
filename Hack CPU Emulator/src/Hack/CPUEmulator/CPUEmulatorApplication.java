@@ -17,7 +17,8 @@
 
 package Hack.CPUEmulator;
 
-import Hack.Controller.*;
+import Hack.Controller.ControllerGUI;
+import Hack.Controller.HackApplication;
 
 /**
  * A CPU Emulator application.

@@ -17,9 +17,16 @@
 
 package HackGUI;
 
-import java.awt.*;
-import javax.swing.*;
-import javax.swing.plaf.*;
+import java.awt.Component;
+import java.awt.Font;
+import java.awt.Point;
+import java.awt.Rectangle;
+
+import javax.swing.JPanel;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.plaf.FontUIResource;
 
 /**
  * A class of utility methods.

@@ -17,10 +17,12 @@
 
 package Hack.CPUEmulator;
 
-import Hack.Controller.*;
-import Hack.ComputerParts.*;
-import Hack.Utilities.*;
-import Hack.Assembler.*;
+import Hack.Assembler.AssemblerException;
+import Hack.Assembler.HackAssemblerTranslator;
+import Hack.ComputerParts.Bus;
+import Hack.ComputerParts.Register;
+import Hack.Controller.ProgramException;
+import Hack.Utilities.Definitions;
 
 /**
  * A computer with memory (ROM & RAM) and two registers (A & D). Includes a

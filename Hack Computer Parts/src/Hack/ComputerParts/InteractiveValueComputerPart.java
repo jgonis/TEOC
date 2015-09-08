@@ -17,8 +17,10 @@
 
 package Hack.ComputerParts;
 
-import java.util.*;
-import Hack.Events.*;
+import java.util.Vector;
+
+import Hack.Events.ErrorEvent;
+import Hack.Events.ErrorEventListener;
 
 /**
  * An interactive computer part that has values which can be get & set.

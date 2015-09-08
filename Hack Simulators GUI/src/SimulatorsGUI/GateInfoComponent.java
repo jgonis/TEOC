@@ -17,10 +17,17 @@
 
 package SimulatorsGUI;
 
-import HackGUI.*;
-import Hack.HardwareSimulator.*;
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Rectangle;
+import java.awt.SystemColor;
+
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+
+import Hack.HardwareSimulator.GateInfoGUI;
+import HackGUI.Utilities;
 
 /**
  * This class represents the GUI of a gate info.

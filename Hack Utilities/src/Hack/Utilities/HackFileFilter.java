@@ -17,7 +17,8 @@
 
 package Hack.Utilities;
 
-import java.io.*;
+import java.io.File;
+import java.io.FilenameFilter;
 
 /**
  * A File filter that only accepts files with the extension that is given in the

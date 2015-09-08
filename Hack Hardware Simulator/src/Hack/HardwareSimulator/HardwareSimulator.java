@@ -17,12 +17,33 @@
 
 package Hack.HardwareSimulator;
 
-import Hack.Controller.*;
-import Hack.ComputerParts.*;
-import Hack.Utilities.*;
-import java.io.*;
-import Hack.Gates.*;
-import Hack.Events.*;
+import java.io.File;
+
+import Hack.ComputerParts.ComputerPartErrorEvent;
+import Hack.ComputerParts.TextFileEvent;
+import Hack.ComputerParts.TextFileEventListener;
+import Hack.Controller.CommandException;
+import Hack.Controller.HackController;
+import Hack.Controller.HackSimulator;
+import Hack.Controller.HackSimulatorGUI;
+import Hack.Controller.ProgramException;
+import Hack.Controller.VariableException;
+import Hack.Events.ProgramEvent;
+import Hack.Gates.BuiltInGateClass;
+import Hack.Gates.BuiltInGateWithGUI;
+import Hack.Gates.CompositeGate;
+import Hack.Gates.CompositeGateClass;
+import Hack.Gates.DirtyGateListener;
+import Hack.Gates.Gate;
+import Hack.Gates.GateClass;
+import Hack.Gates.GateErrorEvent;
+import Hack.Gates.GateErrorEventListener;
+import Hack.Gates.GateException;
+import Hack.Gates.GatesManager;
+import Hack.Gates.HDLException;
+import Hack.Gates.HDLTokenizer;
+import Hack.Gates.Node;
+import Hack.Utilities.Conversions;
 
 /**
  * A simulator for the Hack Hardware. Simulates chips (in .hdl format).

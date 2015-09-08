@@ -17,8 +17,8 @@
 
 package Hack.HardwareSimulator;
 
-import Hack.ComputerParts.*;
-import Hack.Gates.*;
+import Hack.ComputerParts.ComputerPartGUI;
+import Hack.Gates.Gate;
 
 /**
  * An interface for the GUI of the Parts.

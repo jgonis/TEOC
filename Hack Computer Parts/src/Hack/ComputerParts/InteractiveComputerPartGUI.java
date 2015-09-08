@@ -17,7 +17,7 @@
 
 package Hack.ComputerParts;
 
-import Hack.Events.*;
+import Hack.Events.ErrorEventListener;
 
 /**
  * An interface for the GUI of an interactive computer part. This GUI enables

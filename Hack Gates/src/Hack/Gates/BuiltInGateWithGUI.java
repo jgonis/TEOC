@@ -17,9 +17,11 @@
 
 package Hack.Gates;
 
-import java.awt.*;
-import Hack.Events.*;
-import java.util.*;
+import java.awt.Component;
+import java.util.Vector;
+
+import Hack.Events.ErrorEvent;
+import Hack.Events.ErrorEventListener;
 
 /**
  * A BuiltInGate with a GUI component. Notifies its listeners on errors using

@@ -17,7 +17,7 @@
 
 package Hack.HardwareSimulator;
 
-import Hack.Controller.*;
+import Hack.Controller.ControllerEvent;
 
 /**
  * An event for notifying the hardware simulator on actions taken in the

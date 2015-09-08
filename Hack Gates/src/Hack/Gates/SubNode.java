@@ -17,7 +17,7 @@
 
 package Hack.Gates;
 
-import Hack.Utilities.*;
+import Hack.Utilities.Shifter;
 
 /**
  * A node that represents a sub-bus.

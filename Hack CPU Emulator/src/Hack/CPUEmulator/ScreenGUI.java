@@ -17,7 +17,7 @@
 
 package Hack.CPUEmulator;
 
-import Hack.ComputerParts.*;
+import Hack.ComputerParts.ComputerPartGUI;
 
 /**
  * A interface for a computer screen GUI.

@@ -17,8 +17,10 @@
 
 package Hack.Gates;
 
-import java.util.*;
-import Hack.Utilities.*;
+import java.util.Iterator;
+import java.util.Vector;
+
+import Hack.Utilities.Graph;
 
 /**
  * A GateClass for composite gates.

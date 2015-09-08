@@ -17,10 +17,12 @@
 
 package HackGUI;
 
-import Hack.*;
-import javax.swing.table.*;
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Point;
+import java.awt.Rectangle;
+
+import javax.swing.JScrollBar;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableModel;
 
 /**
  * An AbsolutePointedMemorySegmentComponent that displays only the values column

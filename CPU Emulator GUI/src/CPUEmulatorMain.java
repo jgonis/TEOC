@@ -16,11 +16,15 @@
  * mark your changes clearly, for the benefit of others.                        *
  ********************************************************************************/
 
-import Hack.Controller.*;
-import Hack.CPUEmulator.*;
-import HackGUI.*;
-import SimulatorsGUI.*;
-import javax.swing.*;
+import javax.swing.UIManager;
+
+import Hack.CPUEmulator.CPUEmulator;
+import Hack.CPUEmulator.CPUEmulatorApplication;
+import Hack.CPUEmulator.CPUEmulatorGUI;
+import Hack.Controller.ControllerGUI;
+import Hack.Controller.HackController;
+import HackGUI.ControllerComponent;
+import SimulatorsGUI.CPUEmulatorComponent;
 
 /**
  * The CPU Emulator.

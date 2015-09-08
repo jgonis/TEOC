@@ -17,7 +17,8 @@
 
 package Hack.VMEmulator;
 
-import Hack.Controller.*;
+import Hack.Controller.ControllerGUI;
+import Hack.Controller.HackApplication;
 
 /**
  * A VM Emulator application.

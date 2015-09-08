@@ -17,7 +17,7 @@
 
 package Hack.Assembler;
 
-import Hack.Translators.*;
+import Hack.Translators.HackTranslatorEvent;
 
 /**
  * An event for notifying a HackAssemblerEventListener on an action that should

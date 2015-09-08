@@ -17,11 +17,22 @@
 
 package SimulatorsGUI;
 
-import HackGUI.*;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.geom.Line2D;
+
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+
 import Hack.VMEmulator.CalculatorGUI;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.geom.*;
+import HackGUI.Format;
+import HackGUI.Utilities;
 
 /**
  * This class represents an operation performed on the Stack.

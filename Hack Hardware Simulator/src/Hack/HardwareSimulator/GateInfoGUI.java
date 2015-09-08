@@ -17,7 +17,7 @@
 
 package Hack.HardwareSimulator;
 
-import Hack.ComputerParts.*;
+import Hack.ComputerParts.ComputerPartGUI;
 
 /**
  * An interface for the GUI of the gate information.

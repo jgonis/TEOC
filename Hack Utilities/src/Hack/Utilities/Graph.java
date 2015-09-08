@@ -17,7 +17,11 @@
 
 package Hack.Utilities;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.Vector;
 
 /**
  * A directed graph that holds Objects as its nodes, and supports the following

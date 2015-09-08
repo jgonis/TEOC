@@ -17,7 +17,7 @@
 
 package Hack.CPUEmulator;
 
-import Hack.ComputerParts.*;
+import Hack.ComputerParts.ValueComputerPartGUI;
 
 /**
  * An interface for the GUI of the ALU. An ALU has two inputs (index 0,1) and an

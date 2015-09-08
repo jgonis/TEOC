@@ -17,8 +17,8 @@
 
 package Hack.VMEmulator;
 
-import Hack.ComputerParts.*;
-import Hack.Events.*;
+import Hack.ComputerParts.InteractiveComputerPartGUI;
+import Hack.Events.ProgramEventListener;
 
 /**
  * An interface for the GUI of the VM program. displays a list of instructions

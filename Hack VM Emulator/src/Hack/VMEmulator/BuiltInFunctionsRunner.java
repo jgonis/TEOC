@@ -17,10 +17,12 @@
 
 package Hack.VMEmulator;
 
+import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 import Hack.Controller.ProgramException;
 import Hack.Utilities.Definitions;
-import java.io.File;
-import java.lang.reflect.*;
 
 /**
  * A class that runs built-in VM code as a coroutine so that built-in code may

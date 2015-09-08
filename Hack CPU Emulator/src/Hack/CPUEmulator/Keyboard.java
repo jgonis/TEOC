@@ -17,10 +17,12 @@
 
 package Hack.CPUEmulator;
 
-import java.awt.event.*;
-import Hack.Utilities.*;
-import Hack.CPUEmulator.*;
-import Hack.ComputerParts.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+
+import Hack.ComputerParts.ComputerPart;
+import Hack.ComputerParts.ComputerPartGUI;
+import Hack.Utilities.Definitions;
 
 /**
  * A computer keyboard.

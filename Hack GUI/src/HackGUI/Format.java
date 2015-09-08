@@ -17,8 +17,8 @@
 
 package HackGUI;
 
+import Hack.Controller.HackController;
 import Hack.Utilities.Conversions;
-import Hack.Controller.*;
 
 /**
  * A utility class for handling format convsersions.

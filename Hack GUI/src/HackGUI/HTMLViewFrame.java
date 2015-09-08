@@ -17,11 +17,16 @@
 
 package HackGUI;
 
-import javax.swing.*;
-import java.awt.*;
-import java.io.*;
-import javax.swing.text.html.*;
-import javax.swing.event.*;
+import java.awt.BorderLayout;
+import java.io.IOException;
+
+import javax.swing.JEditorPane;
+import javax.swing.JFrame;
+import javax.swing.JScrollPane;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
+import javax.swing.text.html.HTMLDocument;
+import javax.swing.text.html.HTMLFrameHyperlinkEvent;
 
 /**
  * A frame for viewing HTML files.

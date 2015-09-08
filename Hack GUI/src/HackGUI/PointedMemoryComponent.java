@@ -17,10 +17,12 @@
 
 package HackGUI;
 
-import Hack.ComputerParts.*;
-import javax.swing.table.*;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Color;
+import java.awt.event.FocusEvent;
+
+import javax.swing.table.DefaultTableCellRenderer;
+
+import Hack.ComputerParts.PointedMemoryGUI;
 
 /**
  * This class represents the GUI of a pointed memory.

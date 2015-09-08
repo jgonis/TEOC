@@ -17,8 +17,9 @@
 
 package Hack.HardwareSimulator;
 
-import Hack.ComputerParts.*;
-import Hack.Gates.*;
+import Hack.ComputerParts.ComputerPart;
+import Hack.ComputerParts.ComputerPartGUI;
+import Hack.Gates.Gate;
 
 /**
  * A composite gate's parts list, where each part is a gate.

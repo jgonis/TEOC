@@ -17,13 +17,27 @@
 
 package SimulatorsGUI;
 
-import Hack.Gates.*;
-import Hack.ComputerParts.*;
-import Hack.HardwareSimulator.*;
-import HackGUI.*;
-import javax.swing.*;
-import java.awt.*;
-import java.io.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.FlowLayout;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.io.File;
+
+import javax.swing.BorderFactory;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.UIManager;
+
+import Hack.ComputerParts.TextFileGUI;
+import Hack.Gates.GatesPanelGUI;
+import Hack.HardwareSimulator.GateInfoGUI;
+import Hack.HardwareSimulator.HardwareSimulatorGUI;
+import Hack.HardwareSimulator.PartPinsGUI;
+import Hack.HardwareSimulator.PartsGUI;
+import Hack.HardwareSimulator.PinsGUI;
+import HackGUI.TextFileComponent;
 
 /**
  * This class represents the gui of the hardware simulator.

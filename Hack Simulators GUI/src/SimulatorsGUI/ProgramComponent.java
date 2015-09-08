@@ -17,16 +17,38 @@
 
 package SimulatorsGUI;
 
-import HackGUI.*;
-import Hack.VMEmulator.*;
-import Hack.Events.*;
-import javax.swing.*;
-import javax.swing.table.*;
-import java.awt.*;
-import java.util.*;
-import java.awt.event.*;
-import java.io.*;
-import Hack.VirtualMachine.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Rectangle;
+import java.awt.SystemColor;
+import java.awt.event.ActionEvent;
+import java.io.File;
+import java.util.Vector;
+
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableColumn;
+
+import Hack.Events.ErrorEvent;
+import Hack.Events.ErrorEventListener;
+import Hack.Events.ProgramEvent;
+import Hack.Events.ProgramEventListener;
+import Hack.VMEmulator.VMEmulatorInstruction;
+import Hack.VMEmulator.VMProgramGUI;
+import Hack.VirtualMachine.HVMInstruction;
+import HackGUI.MouseOverJButton;
+import HackGUI.Utilities;
 
 /**
  * This class represents the gui of a Program.

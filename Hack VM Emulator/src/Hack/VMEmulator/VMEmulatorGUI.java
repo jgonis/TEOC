@@ -17,10 +17,13 @@
 
 package Hack.VMEmulator;
 
-import Hack.ComputerParts.*;
-import Hack.Controller.*;
-import Hack.CPUEmulator.ScreenGUI;
 import Hack.CPUEmulator.KeyboardGUI;
+import Hack.CPUEmulator.ScreenGUI;
+import Hack.ComputerParts.BusGUI;
+import Hack.ComputerParts.LabeledPointedMemoryGUI;
+import Hack.ComputerParts.MemorySegmentGUI;
+import Hack.ComputerParts.PointedMemorySegmentGUI;
+import Hack.Controller.HackSimulatorGUI;
 
 /**
  * An interface for a GUI of the VM emulator.

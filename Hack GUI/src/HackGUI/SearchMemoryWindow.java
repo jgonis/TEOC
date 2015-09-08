@@ -17,9 +17,17 @@
 
 package HackGUI;
 
-import java.awt.*;
-import javax.swing.*;
-import java.awt.event.*;
+import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.JTextField;
 
 /**
  * This class represents a search window for the use of MemoryComponent,

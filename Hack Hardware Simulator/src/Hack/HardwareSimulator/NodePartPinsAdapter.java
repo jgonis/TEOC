@@ -17,7 +17,7 @@
 
 package Hack.HardwareSimulator;
 
-import Hack.Gates.*;
+import Hack.Gates.Node;
 
 /**
  * A Node that receives a PartPins and an index and updates the PartPins at the

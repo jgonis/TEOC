@@ -17,7 +17,7 @@
 
 package Hack.Gates;
 
-import java.io.*;
+import java.io.File;
 import java.util.Vector;
 
 /**

@@ -17,14 +17,22 @@
 
 package Hack.Translators;
 
-import javax.swing.*;
-import java.io.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Hashtable;
-import Hack.ComputerParts.*;
-import java.awt.event.*;
 import java.util.Vector;
-import Hack.Translators.*;
-import Hack.Utilities.*;
+
+import javax.swing.Timer;
+
+import Hack.ComputerParts.TextFileEvent;
+import Hack.ComputerParts.TextFileEventListener;
+import Hack.Utilities.Definitions;
 
 /**
  * This object provides translation services.

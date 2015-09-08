@@ -16,7 +16,9 @@
  * mark your changes clearly, for the benefit of others.                        *
  ********************************************************************************/
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 
 /**
  * A text file comparer. Receives two text file names as command line arguments

@@ -17,8 +17,10 @@
 
 package Hack.VMEmulator;
 
-import Hack.ComputerParts.*;
-import java.util.*;
+import java.util.Vector;
+
+import Hack.ComputerParts.ComputerPart;
+import Hack.ComputerParts.ComputerPartGUI;
 
 /**
  * A call stack. Holds a vector of called function names.

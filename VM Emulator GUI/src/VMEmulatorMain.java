@@ -16,11 +16,15 @@
  * mark your changes clearly, for the benefit of others.                        *
  ********************************************************************************/
 
-import Hack.Controller.*;
-import Hack.VMEmulator.*;
-import HackGUI.*;
-import SimulatorsGUI.*;
-import javax.swing.*;
+import javax.swing.UIManager;
+
+import Hack.Controller.ControllerGUI;
+import Hack.Controller.HackController;
+import Hack.VMEmulator.VMEmulator;
+import Hack.VMEmulator.VMEmulatorApplication;
+import Hack.VMEmulator.VMEmulatorGUI;
+import HackGUI.ControllerComponent;
+import SimulatorsGUI.VMEmulatorComponent;
 
 /**
  * The VM Emulator.

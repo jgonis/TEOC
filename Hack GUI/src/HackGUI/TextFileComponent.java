@@ -17,14 +17,31 @@
 
 package HackGUI;
 
-import HackGUI.*;
-import Hack.ComputerParts.*;
-import javax.swing.*;
-import javax.swing.table.*;
-import java.util.*;
-import java.awt.*;
-import javax.swing.event.*;
-import java.io.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Rectangle;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.Vector;
+
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
+
+import Hack.ComputerParts.TextFileEvent;
+import Hack.ComputerParts.TextFileEventListener;
+import Hack.ComputerParts.TextFileGUI;
 
 /**
  * A component for displaying a text file.

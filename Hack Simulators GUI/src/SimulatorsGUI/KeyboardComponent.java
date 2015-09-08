@@ -17,11 +17,24 @@
 
 package SimulatorsGUI;
 
-import Hack.CPUEmulator.*;
-import HackGUI.*;
-import java.awt.*;
-import javax.swing.*;
-import java.awt.event.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Rectangle;
+import java.awt.SystemColor;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+
+import Hack.CPUEmulator.KeyboardGUI;
+import HackGUI.Utilities;
 
 /**
  * A keyboard GUI component. Receives key input by using key events.

@@ -17,8 +17,9 @@
 
 package Hack.Gates;
 
-import java.util.*;
-import java.io.*;
+import java.io.File;
+import java.util.Hashtable;
+import java.util.Vector;
 
 /**
  * A factory and information source for gates.

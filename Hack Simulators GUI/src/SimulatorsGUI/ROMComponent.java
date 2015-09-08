@@ -17,18 +17,34 @@
 
 package SimulatorsGUI;
 
-import HackGUI.*;
-import Hack.CPUEmulator.*;
-import Hack.Events.*;
-import javax.swing.*;
-import javax.swing.table.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Rectangle;
+import java.awt.SystemColor;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.Vector;
-import java.awt.event.*;
-import java.awt.*;
+
+import javax.swing.ImageIcon;
+import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.filechooser.FileFilter;
-import javax.swing.table.*;
-import java.io.*;
-import Hack.Assembler.*;
+import javax.swing.table.DefaultTableCellRenderer;
+
+import Hack.Assembler.AssemblerException;
+import Hack.Assembler.HackAssemblerTranslator;
+import Hack.CPUEmulator.ROM;
+import Hack.CPUEmulator.ROMGUI;
+import Hack.Events.ProgramEvent;
+import Hack.Events.ProgramEventListener;
+import HackGUI.Format;
+import HackGUI.MouseOverJButton;
+import HackGUI.PointedMemoryComponent;
+import HackGUI.TranslationException;
+import HackGUI.Utilities;
 
 /**
  * This class represents the GUI of a ROM.

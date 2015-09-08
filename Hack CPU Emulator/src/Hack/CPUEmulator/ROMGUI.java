@@ -17,8 +17,8 @@
 
 package Hack.CPUEmulator;
 
-import Hack.ComputerParts.*;
-import Hack.Events.*;
+import Hack.ComputerParts.PointedMemoryGUI;
+import Hack.Events.ProgramEventListener;
 
 /**
  * An interface for a computer ROM GUI, which is a Pointed Memory GUI. Apart

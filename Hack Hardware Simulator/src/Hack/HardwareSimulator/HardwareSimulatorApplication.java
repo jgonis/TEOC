@@ -17,7 +17,11 @@
 
 package Hack.HardwareSimulator;
 
-import Hack.Controller.*;
+import Hack.Controller.ControllerException;
+import Hack.Controller.ControllerGUI;
+import Hack.Controller.HackApplication;
+import Hack.Controller.HackSimulator;
+import Hack.Controller.ScriptException;
 
 /**
  * A HardwareSimulator application.

@@ -17,14 +17,29 @@
 
 package Hack.VMEmulator;
 
-import java.io.*;
-import Hack.ComputerParts.*;
-import Hack.Utilities.*;
-import Hack.Controller.*;
-import Hack.Events.*;
-import Hack.Utilities.*;
-import Hack.CPUEmulator.*;
-import Hack.VirtualMachine.*;
+import java.io.File;
+
+import Hack.CPUEmulator.Keyboard;
+import Hack.CPUEmulator.RAM;
+import Hack.CPUEmulator.ScreenGUI;
+import Hack.ComputerParts.AbsolutePointedMemorySegment;
+import Hack.ComputerParts.Bus;
+import Hack.ComputerParts.ComputerPartErrorEvent;
+import Hack.ComputerParts.ComputerPartErrorEventListener;
+import Hack.ComputerParts.LabeledPointedMemoryGUI;
+import Hack.ComputerParts.MemorySegment;
+import Hack.ComputerParts.TrimmedAbsoluteMemorySegment;
+import Hack.Controller.CommandException;
+import Hack.Controller.ControllerEvent;
+import Hack.Controller.HackController;
+import Hack.Controller.HackSimulator;
+import Hack.Controller.HackSimulatorGUI;
+import Hack.Controller.ProgramException;
+import Hack.Controller.VariableException;
+import Hack.Events.ProgramEvent;
+import Hack.Utilities.Conversions;
+import Hack.Utilities.Definitions;
+import Hack.VirtualMachine.HVMInstructionSet;
 
 /**
  * A virtual machine emulator. Emulates virtual machine code (in VM format).

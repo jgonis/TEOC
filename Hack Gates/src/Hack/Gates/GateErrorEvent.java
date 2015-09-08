@@ -17,7 +17,7 @@
 
 package Hack.Gates;
 
-import Hack.Events.*;
+import Hack.Events.ErrorEvent;
 
 /**
  * An event for notifying a GateErrorEventListener on an error that occured in a

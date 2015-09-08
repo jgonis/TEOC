@@ -17,8 +17,12 @@
 
 package Hack.CPUEmulator;
 
-import Hack.Utilities.*;
-import Hack.ComputerParts.*;
+import Hack.ComputerParts.LabeledPointedMemoryGUI;
+import Hack.ComputerParts.MemorySegment;
+import Hack.ComputerParts.PointedMemory;
+import Hack.ComputerParts.PointedMemoryGUI;
+import Hack.ComputerParts.PointedMemorySegment;
+import Hack.Utilities.Definitions;
 
 /**
  * A Random Access Memory, which is mapped to a screen, and enables a segmented

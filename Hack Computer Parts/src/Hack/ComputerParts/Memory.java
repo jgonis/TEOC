@@ -17,7 +17,8 @@
 
 package Hack.ComputerParts;
 
-import Hack.Events.*;
+import Hack.Events.ClearEvent;
+import Hack.Events.ClearEventListener;
 
 /**
  * A computer memory.

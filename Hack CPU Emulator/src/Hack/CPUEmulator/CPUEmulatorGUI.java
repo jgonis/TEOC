@@ -17,9 +17,12 @@
 
 package Hack.CPUEmulator;
 
-import Hack.Controller.*;
-import Hack.ComputerParts.*;
-import java.awt.event.*;
+import java.awt.event.KeyListener;
+
+import Hack.ComputerParts.BusGUI;
+import Hack.ComputerParts.PointedMemoryGUI;
+import Hack.ComputerParts.RegisterGUI;
+import Hack.Controller.HackSimulatorGUI;
 
 /**
  * An interface for a GUI of the CPU emulator.

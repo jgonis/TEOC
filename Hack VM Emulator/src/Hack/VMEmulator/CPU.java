@@ -17,13 +17,18 @@
 
 package Hack.VMEmulator;
 
-import Hack.ComputerParts.*;
-import java.util.*;
-import java.io.*;
-import Hack.Utilities.*;
+import java.io.File;
+import java.util.Vector;
+
 import Hack.CPUEmulator.RAM;
-import Hack.Controller.*;
-import Hack.VirtualMachine.*;
+import Hack.ComputerParts.AbsolutePointedMemorySegment;
+import Hack.ComputerParts.Bus;
+import Hack.ComputerParts.MemorySegment;
+import Hack.ComputerParts.PointedMemorySegment;
+import Hack.ComputerParts.TrimmedAbsoluteMemorySegment;
+import Hack.Controller.ProgramException;
+import Hack.Utilities.Definitions;
+import Hack.VirtualMachine.HVMInstructionSet;
 
 /**
  * A CPU of a computer. Runs the program on the virtual machine emulator.

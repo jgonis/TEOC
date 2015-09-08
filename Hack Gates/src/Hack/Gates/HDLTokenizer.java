@@ -17,8 +17,11 @@
 
 package Hack.Gates;
 
-import java.io.*;
-import java.util.*;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StreamTokenizer;
+import java.util.Hashtable;
 
 /**
  * HDLTokenizer object: Reads input from an HDL reader and produces a stream of

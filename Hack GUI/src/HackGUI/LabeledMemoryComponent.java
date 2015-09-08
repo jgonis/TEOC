@@ -17,10 +17,14 @@
 
 package HackGUI;
 
+import java.awt.Color;
+
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableModel;
+
 import Hack.ComputerParts.LabeledPointedMemoryGUI;
-import javax.swing.table.*;
-import javax.swing.*;
-import java.awt.*;
 
 /**
  * This class represents a memomy component with additional feature of another

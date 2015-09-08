@@ -17,10 +17,14 @@
 
 package Hack.Assembler;
 
-import java.util.*;
-import java.io.*;
-import Hack.Utilities.*;
-import Hack.Translators.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Hashtable;
+
+import Hack.Translators.HackTranslatorException;
+import Hack.Utilities.Conversions;
 
 /**
  * A translation service between the Assembly text and the numeric instruction

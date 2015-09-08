@@ -17,9 +17,11 @@
 
 package HackGUI;
 
-import javax.swing.*;
-import javax.swing.table.*;
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.Rectangle;
+
+import javax.swing.JTable;
+import javax.swing.table.TableModel;
 
 /**
  * A table with a pre-determind width.

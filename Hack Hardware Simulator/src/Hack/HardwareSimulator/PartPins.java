@@ -17,9 +17,17 @@
 
 package Hack.HardwareSimulator;
 
-import Hack.ComputerParts.*;
-import Hack.Gates.*;
-import java.util.*;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Vector;
+
+import Hack.ComputerParts.ComputerPartGUI;
+import Hack.ComputerParts.ValueComputerPart;
+import Hack.Gates.CompositeGateClass;
+import Hack.Gates.Gate;
+import Hack.Gates.GateClass;
+import Hack.Gates.Node;
+import Hack.Gates.PinInfo;
 
 /**
  * Represents a collection of pins of a specific part.

@@ -17,9 +17,12 @@
 
 package SimulatorsGUI;
 
-import Hack.Controller.*;
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Point;
+
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+
+import Hack.Controller.HackSimulatorGUI;
 
 /**
  * The GUI component of a Hack Simulator.

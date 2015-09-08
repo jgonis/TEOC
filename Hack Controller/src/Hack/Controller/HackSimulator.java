@@ -17,10 +17,12 @@
 
 package Hack.Controller;
 
-import java.util.*;
-import Hack.Events.*;
-import Hack.ComputerParts.*;
-import java.io.*;
+import java.io.File;
+import java.util.Vector;
+
+import Hack.ComputerParts.ComputerPartErrorEventListener;
+import Hack.Events.ProgramEvent;
+import Hack.Events.ProgramEventListener;
 
 /**
  * An abstract base class for a simulator that can be controlled by the Hack

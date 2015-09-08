@@ -17,11 +17,19 @@
 
 package Hack.Assembler;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Hashtable;
-import Hack.ComputerParts.*;
-import Hack.Utilities.*;
-import Hack.Translators.*;
+
+import Hack.ComputerParts.TextFileEvent;
+import Hack.ComputerParts.TextFileGUI;
+import Hack.Translators.HackTranslator;
+import Hack.Translators.HackTranslatorEvent;
+import Hack.Translators.HackTranslatorException;
+import Hack.Utilities.Conversions;
+import Hack.Utilities.Definitions;
 
 /**
  * A translator from assmebly (.asm) to hack machine language (.hack)

@@ -17,9 +17,11 @@
 
 package Hack.Controller;
 
-import java.util.*;
-import java.io.*;
-import Hack.Utilities.*;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Vector;
+
+import Hack.Utilities.Conversions;
 
 /**
  * A list of controller commands. Loads a controller script file.

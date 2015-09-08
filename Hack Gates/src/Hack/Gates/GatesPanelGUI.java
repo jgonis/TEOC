@@ -17,7 +17,7 @@
 
 package Hack.Gates;
 
-import java.awt.*;
+import java.awt.Component;
 
 /**
  * An interface for the GUI of the GatesPanel. GUIs of the vairous gates are

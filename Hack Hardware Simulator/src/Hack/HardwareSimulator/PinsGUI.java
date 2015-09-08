@@ -17,8 +17,8 @@
 
 package Hack.HardwareSimulator;
 
-import Hack.ComputerParts.*;
-import Hack.Gates.*;
+import Hack.ComputerParts.InteractiveValueComputerPartGUI;
+import Hack.Gates.PinInfo;
 
 /**
  * An interface for the GUI of a pins list. Every pin row contains the pin's

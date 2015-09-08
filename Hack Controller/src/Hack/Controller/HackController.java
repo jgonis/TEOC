@@ -17,14 +17,24 @@
 
 package Hack.Controller;
 
-import javax.swing.*;
-import java.awt.event.*;
-import java.io.*;
-import java.util.Vector;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
-import Hack.Utilities.*;
-import Hack.Events.*;
+import java.util.Vector;
+
+import javax.swing.Timer;
+
+import Hack.Events.ProgramEvent;
+import Hack.Events.ProgramEventListener;
+import Hack.Utilities.Conversions;
+import Hack.Utilities.Definitions;
 
 /**
  * A Controller for HackSimulators. Executes scripts written in a special

@@ -17,10 +17,20 @@
 
 package Hack.CPUEmulator;
 
-import Hack.Controller.*;
-import Hack.ComputerParts.*;
-import Hack.Events.*;
-import Hack.Utilities.*;
+import Hack.ComputerParts.Bus;
+import Hack.ComputerParts.ComputerPartErrorEvent;
+import Hack.ComputerParts.ComputerPartErrorEventListener;
+import Hack.ComputerParts.Register;
+import Hack.Controller.CommandException;
+import Hack.Controller.ControllerEvent;
+import Hack.Controller.HackController;
+import Hack.Controller.HackSimulator;
+import Hack.Controller.HackSimulatorGUI;
+import Hack.Controller.ProgramException;
+import Hack.Controller.VariableException;
+import Hack.Events.ProgramEvent;
+import Hack.Utilities.Conversions;
+import Hack.Utilities.Definitions;
 
 /**
  * A CPU Emulator. Emulates machine code (In HACK format).

@@ -17,11 +17,14 @@
 
 package HackGUI;
 
-import java.awt.*;
-import javax.swing.*;
-import java.awt.event.*;
+import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Vector;
-import java.io.*;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
 
 /**
  * This class repersents the GUI of the component which allows the user to load

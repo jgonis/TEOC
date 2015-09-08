@@ -17,12 +17,26 @@
 
 package SimulatorsGUI;
 
-import HackGUI.*;
-import Hack.HardwareSimulator.*;
-import javax.swing.table.*;
-import javax.swing.*;
-import java.awt.*;
-import java.util.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.util.Vector;
+
+import javax.swing.JLabel;
+import javax.swing.JScrollBar;
+import javax.swing.JTable;
+import javax.swing.SwingConstants;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableModel;
+
+import Hack.HardwareSimulator.HardwareSimulator;
+import Hack.HardwareSimulator.PartPinInfo;
+import Hack.HardwareSimulator.PartPinsGUI;
+import HackGUI.Format;
+import HackGUI.Utilities;
 
 /**
  * This class represents the gui of a part pin.

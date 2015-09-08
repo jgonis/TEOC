@@ -17,11 +17,19 @@
 
 package HackGUI;
 
+import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Vector;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+
 import Hack.Controller.Breakpoint;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
 
 /**
  * This class represents the window of adding or editing a breakpoint.

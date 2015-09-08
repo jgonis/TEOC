@@ -17,13 +17,24 @@
 
 package SimulatorsGUI;
 
-import HackGUI.*;
-import Hack.Gates.*;
-import Hack.HardwareSimulator.*;
-import javax.swing.*;
-import javax.swing.table.*;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Dimension;
+import java.awt.Rectangle;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableColumn;
+
+import Hack.Gates.BuiltInGate;
+import Hack.Gates.CompositeGate;
+import Hack.Gates.Gate;
+import Hack.HardwareSimulator.PartsGUI;
+import HackGUI.Utilities;
 
 /**
  * This class represents the gui of the parts component.

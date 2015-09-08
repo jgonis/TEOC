@@ -17,9 +17,12 @@
 
 package SimulatorsGUI;
 
-import javax.swing.*;
-import java.awt.*;
-import HackGUI.*;
+import java.awt.Dimension;
+
+import javax.swing.JPanel;
+import javax.swing.JSplitPane;
+
+import HackGUI.MemorySegmentComponent;
 
 /**
  * This Panel contains six MemorySegmentComponents: static, local, arg, this,

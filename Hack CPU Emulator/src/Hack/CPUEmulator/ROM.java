@@ -17,12 +17,17 @@
 
 package Hack.CPUEmulator;
 
-import java.util.*;
-import Hack.Utilities.*;
-import Hack.ComputerParts.*;
-import Hack.Controller.*;
-import Hack.Events.*;
-import Hack.Assembler.*;
+import java.util.Vector;
+
+import Hack.Assembler.AssemblerException;
+import Hack.Assembler.HackAssemblerTranslator;
+import Hack.ComputerParts.ComputerPartEvent;
+import Hack.ComputerParts.PointedMemory;
+import Hack.Controller.HackController;
+import Hack.Controller.ProgramException;
+import Hack.Events.ProgramEvent;
+import Hack.Events.ProgramEventListener;
+import Hack.Utilities.Definitions;
 
 /**
  * A Read Only Memory. Has methods for loading a machine language file (.hack)

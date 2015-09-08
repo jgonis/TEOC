@@ -17,10 +17,11 @@
 
 package Hack.Assembler;
 
+import java.io.IOException;
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
-import java.io.*;
-import Hack.Translators.*;
+
+import Hack.Translators.LineTokenizer;
 
 /**
  * A tokenizer for lines of an Assembly program.

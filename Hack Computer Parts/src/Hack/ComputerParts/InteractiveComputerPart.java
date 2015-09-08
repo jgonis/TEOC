@@ -17,8 +17,10 @@
 
 package Hack.ComputerParts;
 
-import Hack.Events.*;
-import java.util.*;
+import java.util.Vector;
+
+import Hack.Events.ErrorEvent;
+import Hack.Events.ErrorEventListener;
 
 /**
  * An interactive computer part - a computer part that enables input to its GUI.

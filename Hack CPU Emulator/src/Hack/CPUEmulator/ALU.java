@@ -17,8 +17,9 @@
 
 package Hack.CPUEmulator;
 
-import Hack.Utilities.*;
-import Hack.ComputerParts.*;
+import Hack.ComputerParts.ComputerPartGUI;
+import Hack.ComputerParts.ValueComputerPart;
+import Hack.Utilities.Definitions;
 
 /**
  * A computer ALU. Has two inputs, one output, and a set of commands.

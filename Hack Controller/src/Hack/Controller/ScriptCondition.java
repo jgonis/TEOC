@@ -17,7 +17,7 @@
 
 package Hack.Controller;
 
-import Hack.Utilities.*;
+import Hack.Utilities.Conversions;
 
 /**
  * Represents a boolean condition. Has two arguments, which may be variable

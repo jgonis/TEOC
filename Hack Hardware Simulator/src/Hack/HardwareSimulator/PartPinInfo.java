@@ -17,7 +17,7 @@
 
 package Hack.HardwareSimulator;
 
-import Hack.Gates.*;
+import Hack.Gates.PinInfo;
 
 /**
  * Holds information on a pin of an internal part.

@@ -17,8 +17,8 @@
 
 package Hack.Assembler;
 
-import Hack.ComputerParts.*;
-import Hack.Translators.*;
+import Hack.ComputerParts.TextFileGUI;
+import Hack.Translators.HackTranslatorGUI;
 
 /**
  * The GUI of the HackAssembler.

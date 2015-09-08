@@ -17,7 +17,7 @@
 
 package Hack.HardwareSimulator;
 
-import Hack.Gates.*;
+import Hack.Gates.SubNode;
 
 /**
  * A SubNode that receives a PartPins and an index and updates the PartPins at

@@ -17,7 +17,8 @@
 
 package HackGUI;
 
-import javax.swing.table.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableModel;
 
 /**
  * A Memory component that has an address pointer and displays only its values

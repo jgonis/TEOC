@@ -17,10 +17,12 @@
 
 package HackGUI;
 
-import Hack.ComputerParts.*;
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.table.*;
+import java.awt.Color;
+import java.awt.event.FocusEvent;
+
+import javax.swing.table.DefaultTableCellRenderer;
+
+import Hack.ComputerParts.PointedMemorySegmentGUI;
 
 public class PointedMemorySegmentComponent extends MemorySegmentComponent implements PointedMemorySegmentGUI {
 
