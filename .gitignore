@@ -45,3 +45,12 @@ Temporary Items
 #local eclipse workspace folders
 .metadata
 .recommenders
+
+#java compiled class files
+*.class
+
+#log files
+*.log
+
+#final jar file output for running the simulators
+*.jar
