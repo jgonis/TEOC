@@ -18,27 +18,27 @@
 package Hack.Gates;
 
 /**
- * A node which has a gate, and calls the gate's setDirty() method whenever its (the node's)
- * value changes.
+ * A node which has a gate, and calls the gate's setDirty() method whenever its
+ * (the node's) value changes.
  */
 public class DirtyGateAdapter extends Node {
 
-    // the gate which is affected by this node.
-    private Gate affectedGate;
+	// the gate which is affected by this node.
+	private Gate affectedGate;
 
-    /**
-     * Constructs a new DirtyGateAdapter with the given affected gate.
-     */
-    public DirtyGateAdapter(Gate gate) {
-        affectedGate = gate;
-    }
+	/**
+	 * Constructs a new DirtyGateAdapter with the given affected gate.
+	 */
+	public DirtyGateAdapter(Gate gate) {
+		affectedGate = gate;
+	}
 
-    /**
-     * Sets the node's value with the given value.
-     * Notifies the listeners on the change by calling their set() method.
-     */
-    public void set(short value) {
-        super.set(value);
-        affectedGate.setDirty();
-    }
+	/**
+	 * Sets the node's value with the given value. Notifies the listeners on the
+	 * change by calling their set() method.
+	 */
+	public void set(short value) {
+		super.set(value);
+		affectedGate.setDirty();
+	}
 }

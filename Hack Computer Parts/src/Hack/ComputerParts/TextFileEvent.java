@@ -20,37 +20,38 @@ package Hack.ComputerParts;
 import java.util.EventObject;
 
 /**
- * An event for notifying an TextFileEventListener on a change in the selected row.
+ * An event for notifying an TextFileEventListener on a change in the selected
+ * row.
  */
 public class TextFileEvent extends EventObject {
 
-    // the changed row index;
-    private int rowIndex;
+	// the changed row index;
+	private int rowIndex;
 
-    // the changed row string
-    private String rowString;
+	// the changed row string
+	private String rowString;
 
-    /**
-     * Constructs a new TextFileEvent with the given source and the selected row
-     * string and index.
-     */
-    public TextFileEvent(Object source, String rowString, int rowIndex) {
-        super(source);
-        this.rowString = rowString;
-        this.rowIndex = rowIndex;
-    }
+	/**
+	 * Constructs a new TextFileEvent with the given source and the selected row
+	 * string and index.
+	 */
+	public TextFileEvent(Object source, String rowString, int rowIndex) {
+		super(source);
+		this.rowString = rowString;
+		this.rowIndex = rowIndex;
+	}
 
-    /**
-     * Returns the selected row String.
-     */
-    public String getRowString() {
-        return rowString;
-    }
+	/**
+	 * Returns the selected row String.
+	 */
+	public String getRowString() {
+		return rowString;
+	}
 
-    /**
-     * Returns the selected row index.
-     */
-    public int getRowIndex() {
-        return rowIndex;
-    }
+	/**
+	 * Returns the selected row index.
+	 */
+	public int getRowIndex() {
+		return rowIndex;
+	}
 }

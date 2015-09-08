@@ -24,31 +24,31 @@ import java.util.*;
  */
 public class GateClassSet extends HashSet {
 
-    /**
-     * Creates a new GateClassSet.
-     */
-    public GateClassSet() {
-        super();
-    }
+	/**
+	 * Creates a new GateClassSet.
+	 */
+	public GateClassSet() {
+		super();
+	}
 
-    /**
-     * Adds the given GateClass to the set.
-     */
-    public boolean add(GateClass gateClass) {
-        return super.add(gateClass);
-    }
+	/**
+	 * Adds the given GateClass to the set.
+	 */
+	public boolean add(GateClass gateClass) {
+		return super.add(gateClass);
+	}
 
-    /**
-     * Removes the given GateClass from the set.
-     */
-    public boolean remove(GateClass gateClass) {
-        return super.remove(gateClass);
-    }
+	/**
+	 * Removes the given GateClass from the set.
+	 */
+	public boolean remove(GateClass gateClass) {
+		return super.remove(gateClass);
+	}
 
-    /**
-     * Returns true if this set contains the given GateClass.
-     */
-    public boolean contains(GateClass gateClass) {
-        return super.contains(gateClass);
-    }
+	/**
+	 * Returns true if this set contains the given GateClass.
+	 */
+	public boolean contains(GateClass gateClass) {
+		return super.contains(gateClass);
+	}
 }

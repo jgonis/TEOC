@@ -22,24 +22,25 @@ package Hack.Gates;
  */
 public class HDLException extends Exception {
 
-    /**
-     * Constructs a new HDLException with the given message, HDL file name and Line number.
-     */
-    public HDLException(String message, String HDLName, int lineNumber) {
-        super("In HDL file " + HDLName + ", Line " + lineNumber + ", " + message);
-    }
+	/**
+	 * Constructs a new HDLException with the given message, HDL file name and
+	 * Line number.
+	 */
+	public HDLException(String message, String HDLName, int lineNumber) {
+		super("In HDL file " + HDLName + ", Line " + lineNumber + ", " + message);
+	}
 
-    /**
-     * Constructs a new HDLException with the given message and HDL file name.
-     */
-    public HDLException(String message, String HDLName) {
-        super("In HDL file " + HDLName + ", " + message);
-    }
+	/**
+	 * Constructs a new HDLException with the given message and HDL file name.
+	 */
+	public HDLException(String message, String HDLName) {
+		super("In HDL file " + HDLName + ", " + message);
+	}
 
-    /**
-     * Constructs a new HDLException with the given message.
-     */
-    public HDLException(String message) {
-        super(message);
-    }
+	/**
+	 * Constructs a new HDLException with the given message.
+	 */
+	public HDLException(String message) {
+		super(message);
+	}
 }

@@ -22,31 +22,30 @@ package Hack.ComputerParts;
  */
 public class PointedMemorySegment extends MemorySegment {
 
-    /**
-     * Constructs a new PointedMemorySegment with the given main memory and GUI.
-     */
-    public PointedMemorySegment(Memory mainMemory, PointedMemorySegmentGUI gui) {
-        super(mainMemory, gui);
-    }
+	/**
+	 * Constructs a new PointedMemorySegment with the given main memory and GUI.
+	 */
+	public PointedMemorySegment(Memory mainMemory, PointedMemorySegmentGUI gui) {
+		super(mainMemory, gui);
+	}
 
-    /**
-     * Constructs a new PointedMemorySegment with the given main memory, GUI
-     * and the legal values range.
-     */
-    public PointedMemorySegment(Memory mainMemory, PointedMemorySegmentGUI gui,
-                                short minValue, short maxValue) {
-        super(mainMemory, gui, minValue, maxValue);
-    }
+	/**
+	 * Constructs a new PointedMemorySegment with the given main memory, GUI and
+	 * the legal values range.
+	 */
+	public PointedMemorySegment(Memory mainMemory, PointedMemorySegmentGUI gui, short minValue, short maxValue) {
+		super(mainMemory, gui, minValue, maxValue);
+	}
 
-    /**
-     * Sets the pointer to point at the given address.
-     */
-    public void setPointerAddress(int address) {
-        if (displayChanges)
-            ((PointedMemorySegmentGUI)gui).setPointer(address);
-    }
+	/**
+	 * Sets the pointer to point at the given address.
+	 */
+	public void setPointerAddress(int address) {
+		if (displayChanges)
+			((PointedMemorySegmentGUI) gui).setPointer(address);
+	}
 
-    public void reset() {
-        super.reset();
-    }
+	public void reset() {
+		super.reset();
+	}
 }

@@ -22,24 +22,23 @@ import javax.swing.*;
 import Hack.ComputerParts.*;
 
 /**
- * An interface for the GUI of a computer Keyboard.
- * This GUI displays the currently pressed key.
- * It should disable direct input into the GUI.
+ * An interface for the GUI of a computer Keyboard. This GUI displays the
+ * currently pressed key. It should disable direct input into the GUI.
  */
 public interface KeyboardGUI extends ComputerPartGUI {
 
-    /**
-     * Displayes the given key name.
-     */
-    public void setKey(String keyName);
+	/**
+	 * Displayes the given key name.
+	 */
+	public void setKey(String keyName);
 
-    /**
-     * Clears the key display.
-     */
-    public void clearKey();
+	/**
+	 * Clears the key display.
+	 */
+	public void clearKey();
 
-    /**
-     * Returns the GUI component that handles Key events.
-     */
-    public JComponent getKeyEventHandler();
+	/**
+	 * Returns the GUI component that handles Key events.
+	 */
+	public JComponent getKeyEventHandler();
 }

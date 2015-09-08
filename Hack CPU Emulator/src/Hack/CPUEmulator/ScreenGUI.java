@@ -24,29 +24,29 @@ import Hack.ComputerParts.*;
  */
 public interface ScreenGUI extends ComputerPartGUI {
 
-    /**
-     * Updates the screen at the given index with the given value
-     * (Assumes legal index)
-     */
-    public void setValueAt(int index, short value);
+	/**
+	 * Updates the screen at the given index with the given value (Assumes legal
+	 * index)
+	 */
+	public void setValueAt(int index, short value);
 
-    /**
-     * Updates the screen's contents with the given values array.
-     */
-    public void setContents(short[] values);
+	/**
+	 * Updates the screen's contents with the given values array.
+	 */
+	public void setContents(short[] values);
 
-    /**
-     * Refreshes the screen
-     */
-    public void refresh();
+	/**
+	 * Refreshes the screen
+	 */
+	public void refresh();
 
-    /**
-     * Starts animating the screen display
-     */
-    public void startAnimation();
+	/**
+	 * Starts animating the screen display
+	 */
+	public void startAnimation();
 
-    /**
-     * Stops animating the screen display
-     */
-    public void stopAnimation();
+	/**
+	 * Stops animating the screen display
+	 */
+	public void stopAnimation();
 }

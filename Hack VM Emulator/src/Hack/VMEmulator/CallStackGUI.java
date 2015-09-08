@@ -25,8 +25,8 @@ import java.util.*;
  */
 public interface CallStackGUI extends ComputerPartGUI {
 
-    /**
-     * Sets the stack with the given vector of method names.
-     */
-    public void setContents(Vector names);
+	/**
+	 * Sets the stack with the given vector of method names.
+	 */
+	public void setContents(Vector names);
 }

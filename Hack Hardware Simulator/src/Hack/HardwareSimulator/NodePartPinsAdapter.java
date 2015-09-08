@@ -20,27 +20,27 @@ package Hack.HardwareSimulator;
 import Hack.Gates.*;
 
 /**
- * A Node that receives a PartPins and an index and updates the PartPins at the given
- * index when the value of the node changes.
+ * A Node that receives a PartPins and an index and updates the PartPins at the
+ * given index when the value of the node changes.
  */
 public class NodePartPinsAdapter extends Node {
 
-    // The PartPins that contain the node.
-    private PartPins partPins;
+	// The PartPins that contain the node.
+	private PartPins partPins;
 
-    // The index of the node in the PartPins.
-    private int index;
+	// The index of the node in the PartPins.
+	private int index;
 
-    /**
-     * Constructs a new NodePartPinsAdapter with the given PartPins and index.
-     */
-    public NodePartPinsAdapter(PartPins partPins, int index) {
-        this.partPins = partPins;
-        this.index = index;
-    }
+	/**
+	 * Constructs a new NodePartPinsAdapter with the given PartPins and index.
+	 */
+	public NodePartPinsAdapter(PartPins partPins, int index) {
+		this.partPins = partPins;
+		this.index = index;
+	}
 
-    public void set(short value) {
-        this.value = value;
-        partPins.quietUpdateGUI(index, get());
-    }
+	public void set(short value) {
+		this.value = value;
+		partPins.quietUpdateGUI(index, get());
+	}
 }

@@ -20,58 +20,52 @@ package Hack.HardwareSimulator;
 import Hack.Controller.*;
 
 /**
- * An event for notifying the hardware simulator on actions taken in the controller.
+ * An event for notifying the hardware simulator on actions taken in the
+ * controller.
  */
 public class HardwareSimulatorControllerEvent extends ControllerEvent {
 
-    /**
-     * Action code for clicking on the TickTock button.
-     * supplied data = null.
-     */
-    public static final byte TICKTOCK_CLICKED = 100;
+	/**
+	 * Action code for clicking on the TickTock button. supplied data = null.
+	 */
+	public static final byte TICKTOCK_CLICKED = 100;
 
-    /**
-     * Action code for clicking on the Eval button.
-     * supplied data = null.
-     */
-    public static final byte EVAL_CLICKED = 101;
+	/**
+	 * Action code for clicking on the Eval button. supplied data = null.
+	 */
+	public static final byte EVAL_CLICKED = 101;
 
-    /**
-     * Action code for selecting a new chip name.
-     * supplied data = The new chip file (File)
-     */
-    public static final byte CHIP_CHANGED = 102;
+	/**
+	 * Action code for selecting a new chip name. supplied data = The new chip
+	 * file (File)
+	 */
+	public static final byte CHIP_CHANGED = 102;
 
-    /**
-     * Action code for disabling the TickTock button.
-     * supplied data = null
-     */
-    public static final byte DISABLE_TICKTOCK = 105;
+	/**
+	 * Action code for disabling the TickTock button. supplied data = null
+	 */
+	public static final byte DISABLE_TICKTOCK = 105;
 
-    /**
-     * Action code for enabling the TickTock button.
-     * supplied data = null
-     */
-    public static final byte ENABLE_TICKTOCK = 106;
+	/**
+	 * Action code for enabling the TickTock button. supplied data = null
+	 */
+	public static final byte ENABLE_TICKTOCK = 106;
 
-    /**
-     * Action code for disabling the Eval button.
-     * supplied data = null
-     */
-    public static final byte DISABLE_EVAL = 107;
+	/**
+	 * Action code for disabling the Eval button. supplied data = null
+	 */
+	public static final byte DISABLE_EVAL = 107;
 
-    /**
-     * Action code for enabling the Eval button.
-     * supplied data = null
-     */
-    public static final byte ENABLE_EVAL = 108;
+	/**
+	 * Action code for enabling the Eval button. supplied data = null
+	 */
+	public static final byte ENABLE_EVAL = 108;
 
-
-    /**
-     * Constructs a new HardwareSimulatorControllerEvent with given source, the action code and
-     * the supplied data.
-     */
-    public HardwareSimulatorControllerEvent(Object source, byte action, Object data) {
-        super(source, action, data);
-    }
+	/**
+	 * Constructs a new HardwareSimulatorControllerEvent with given source, the
+	 * action code and the supplied data.
+	 */
+	public HardwareSimulatorControllerEvent(Object source, byte action, Object data) {
+		super(source, action, data);
+	}
 }

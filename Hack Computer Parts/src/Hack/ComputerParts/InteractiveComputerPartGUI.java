@@ -20,27 +20,26 @@ package Hack.ComputerParts;
 import Hack.Events.*;
 
 /**
- * An interface for the GUI of an interactive computer part.
- * This GUI enables user input and therefore should handle errors
- * using the ErrorEvent.
+ * An interface for the GUI of an interactive computer part. This GUI enables
+ * user input and therefore should handle errors using the ErrorEvent.
  */
 public interface InteractiveComputerPartGUI extends ComputerPartGUI {
 
-    /**
-     * Registers the given ErrorEventListener as a listener to this simulator.
-     */
-    public void addErrorListener(ErrorEventListener listener);
+	/**
+	 * Registers the given ErrorEventListener as a listener to this simulator.
+	 */
+	public void addErrorListener(ErrorEventListener listener);
 
-    /**
-     * Un-registers the given ErrorEventListener from being a listener
-     * to this GUI.
-     */
-    public void removeErrorListener(ErrorEventListener listener);
+	/**
+	 * Un-registers the given ErrorEventListener from being a listener to this
+	 * GUI.
+	 */
+	public void removeErrorListener(ErrorEventListener listener);
 
-    /**
-     * Notifies all the ErrorEventListeners on an error that occured in the
-     * computer part gui by creating an ErrorEvent (with the error message)
-     * and sending it using the errorOccured method to all the listeners.
-     */
-    public void notifyErrorListeners(String errorMessage);
+	/**
+	 * Notifies all the ErrorEventListeners on an error that occured in the
+	 * computer part gui by creating an ErrorEvent (with the error message) and
+	 * sending it using the errorOccured method to all the listeners.
+	 */
+	public void notifyErrorListeners(String errorMessage);
 }

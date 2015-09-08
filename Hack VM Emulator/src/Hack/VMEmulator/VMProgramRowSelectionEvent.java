@@ -21,38 +21,38 @@ import java.util.EventObject;
 import Hack.VirtualMachine.*;
 
 /**
- * An event for notifying an VMProgramRowSelectionEventListener on a change in the selected row,
- * which was done through the HDL view GUI.
+ * An event for notifying an VMProgramRowSelectionEventListener on a change in
+ * the selected row, which was done through the HDL view GUI.
  */
 public class VMProgramRowSelectionEvent extends EventObject {
 
-    // the changed row index;
-    private int rowIndex;
+	// the changed row index;
+	private int rowIndex;
 
-    // the changed row instruction
-    private HVMInstruction rowInstruction;
+	// the changed row instruction
+	private HVMInstruction rowInstruction;
 
-    /**
-     * Constructs a new VMProgramRowSelectionEvent with the given source and the selected row
-     * instruction and index.
-     */
-    public VMProgramRowSelectionEvent(Object source, HVMInstruction rowInstruction, int rowIndex) {
-        super(source);
-        this.rowInstruction = rowInstruction;
-        this.rowIndex = rowIndex;
-    }
+	/**
+	 * Constructs a new VMProgramRowSelectionEvent with the given source and the
+	 * selected row instruction and index.
+	 */
+	public VMProgramRowSelectionEvent(Object source, HVMInstruction rowInstruction, int rowIndex) {
+		super(source);
+		this.rowInstruction = rowInstruction;
+		this.rowIndex = rowIndex;
+	}
 
-    /**
-     * Returns the selected row instruction.
-     */
-    public HVMInstruction getRowInstruction() {
-        return rowInstruction;
-    }
+	/**
+	 * Returns the selected row instruction.
+	 */
+	public HVMInstruction getRowInstruction() {
+		return rowInstruction;
+	}
 
-    /**
-     * Returns the selected row index.
-     */
-    public int getRowIndex() {
-        return rowIndex;
-    }
+	/**
+	 * Returns the selected row index.
+	 */
+	public int getRowIndex() {
+		return rowIndex;
+	}
 }

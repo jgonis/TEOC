@@ -24,15 +24,14 @@ import Hack.Controller.*;
  */
 public class VMEmulatorApplication extends HackApplication {
 
-    /**
-     * Constructs a new VMEmulatorApplication with the given controller GUI
-     * component, the simulator GUI component, the default script name and the names of
-     * the help files.
-     */
-    public VMEmulatorApplication(ControllerGUI controllerComponent,
-                                 VMEmulatorGUI simulatorComponent, String defaultScript,
-                                 String contentsFileName, String aboutFileName) {
-        super(new VMEmulator(simulatorComponent), controllerComponent, simulatorComponent,
-              defaultScript, contentsFileName, aboutFileName);
-    }
+	/**
+	 * Constructs a new VMEmulatorApplication with the given controller GUI
+	 * component, the simulator GUI component, the default script name and the
+	 * names of the help files.
+	 */
+	public VMEmulatorApplication(ControllerGUI controllerComponent, VMEmulatorGUI simulatorComponent,
+			String defaultScript, String contentsFileName, String aboutFileName) {
+		super(new VMEmulator(simulatorComponent), controllerComponent, simulatorComponent, defaultScript,
+				contentsFileName, aboutFileName);
+	}
 }

@@ -25,35 +25,34 @@ import Hack.Translators.*;
  */
 public interface HackAssemblerGUI extends HackTranslatorGUI {
 
-    /**
-     * Returns the GUI of the Comparison file.
-     */
-    public TextFileGUI getComparison();
+	/**
+	 * Returns the GUI of the Comparison file.
+	 */
+	public TextFileGUI getComparison();
 
-    /**
-     * Sets the name of the Comparison file with the given name.
-     */
-    public void setComparisonName(String name);
+	/**
+	 * Sets the name of the Comparison file with the given name.
+	 */
+	public void setComparisonName(String name);
 
-    /**
-     * Enables loading a comparison file.
-     */
-    public void enableLoadComparison();
+	/**
+	 * Enables loading a comparison file.
+	 */
+	public void enableLoadComparison();
 
-    /**
-     * Disables loading a comparison file.
-     */
-    public void disableLoadComparison();
+	/**
+	 * Disables loading a comparison file.
+	 */
+	public void disableLoadComparison();
 
-    /**
-     * Shows the comparison file
-     */
-    public void showComparison();
+	/**
+	 * Shows the comparison file
+	 */
+	public void showComparison();
 
-    /**
-     * Hides the comparison file
-     */
-    public void hideComparison();
-
+	/**
+	 * Hides the comparison file
+	 */
+	public void hideComparison();
 
 }

@@ -1,3 +1,4 @@
+
 /********************************************************************************
  * The contents of this file are subject to the GNU General Public License      *
  * (GPL) Version 2 or later (the "License"); you may not use this file except   *
@@ -33,32 +34,28 @@ import SimulatorsGUI.HardwareSimulatorControllerComponent;
 public class HardwareSimulatorMain {
 	/**
 	 * The command line Hardware Simulator program.
-	 * @throws IOException 
+	 * 
+	 * @throws IOException
 	 */
 	public static void main(String[] args) throws IOException {
-		if (args.length > 1) 
-		{
+		if (args.length > 1) {
 			System.err.println("Usage: java HardwareSimulatorMain [script name]");
-		} 
-		else if (args.length == 0) 
-		{
-			SwingUtilities.invokeLater(()-> {
-			HardwareSimulatorGUI simulatorGUI = new HardwareSimulatorComponent();
-			HardwareSimulatorControllerGUI controllerGUI = new HardwareSimulatorControllerComponent();
-			
-			try {
-				new HardwareSimulatorApplication(controllerGUI, simulatorGUI,
-						Paths.get(ClassLoader.getSystemResource("defaultHW.txt").toURI()).toString(),
-						Paths.get(ClassLoader.getSystemResource("hwUsage.html").toURI()).toString(),
-						Paths.get(ClassLoader.getSystemResource("hwAbout.html").toURI()).toString());
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		} else if (args.length == 0) {
+			SwingUtilities.invokeLater(() -> {
+				HardwareSimulatorGUI simulatorGUI = new HardwareSimulatorComponent();
+				HardwareSimulatorControllerGUI controllerGUI = new HardwareSimulatorControllerComponent();
+
+				try {
+					new HardwareSimulatorApplication(controllerGUI, simulatorGUI,
+							Paths.get(ClassLoader.getSystemResource("defaultHW.txt").toURI()).toString(),
+							Paths.get(ClassLoader.getSystemResource("hwUsage.html").toURI()).toString(),
+							Paths.get(ClassLoader.getSystemResource("hwAbout.html").toURI()).toString());
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			});
-		} 
-		else 
-		{
+		} else {
 			new HackController(new HardwareSimulator(), args[0]);
 		}
 	}

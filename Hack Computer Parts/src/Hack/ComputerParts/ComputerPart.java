@@ -22,57 +22,58 @@ package Hack.ComputerParts;
  */
 public abstract class ComputerPart {
 
-    // If true, changes to the computer part's values will be displayed in its gui.
-    protected boolean displayChanges = true;
+	// If true, changes to the computer part's values will be displayed in its
+	// gui.
+	protected boolean displayChanges = true;
 
-    // If true, changes to the computer part's values will be animated.
-    protected boolean animate;
+	// If true, changes to the computer part's values will be animated.
+	protected boolean animate;
 
-    // when true, the ComputerPart should display its contents.
-    protected boolean hasGUI;
+	// when true, the ComputerPart should display its contents.
+	protected boolean hasGUI;
 
-    /**
-     * Constructs a new ComputerPart.
-     * If hasGUI is true, the ComputerPart will display its contents.
-     */
-    public ComputerPart(boolean hasGUI) {
-        this.hasGUI = hasGUI;
-        displayChanges = hasGUI;
-        animate = false;
-    }
+	/**
+	 * Constructs a new ComputerPart. If hasGUI is true, the ComputerPart will
+	 * display its contents.
+	 */
+	public ComputerPart(boolean hasGUI) {
+		this.hasGUI = hasGUI;
+		displayChanges = hasGUI;
+		animate = false;
+	}
 
-    /**
-     * Sets the display changes property of the computer part. If set to true, changes
-     * that are made to the values of the computer part will be displayed in its GUI.
-     * Otherwise, changes will not be displayed.
-     */
-    public void setDisplayChanges(boolean trueOrFalse) {
-        displayChanges = trueOrFalse && hasGUI;
-    }
+	/**
+	 * Sets the display changes property of the computer part. If set to true,
+	 * changes that are made to the values of the computer part will be
+	 * displayed in its GUI. Otherwise, changes will not be displayed.
+	 */
+	public void setDisplayChanges(boolean trueOrFalse) {
+		displayChanges = trueOrFalse && hasGUI;
+	}
 
-    /**
-     * Sets the animate property of the computer part. If set to true, changes
-     * that are made to the values of the computer part will be animated.
-     */
-    public void setAnimate(boolean trueOrFalse) {
-        animate = trueOrFalse && hasGUI;
-    }
+	/**
+	 * Sets the animate property of the computer part. If set to true, changes
+	 * that are made to the values of the computer part will be animated.
+	 */
+	public void setAnimate(boolean trueOrFalse) {
+		animate = trueOrFalse && hasGUI;
+	}
 
-    /**
-     * Resets the contents of the computer part.
-     */
-    public void reset() {
-        if (hasGUI)
-            getGUI().reset();
-    }
+	/**
+	 * Resets the contents of the computer part.
+	 */
+	public void reset() {
+		if (hasGUI)
+			getGUI().reset();
+	}
 
-    /**
-     * Returns the GUI of the computer part.
-     */
-    public abstract ComputerPartGUI getGUI();
+	/**
+	 * Returns the GUI of the computer part.
+	 */
+	public abstract ComputerPartGUI getGUI();
 
-    /**
-     * Refreshes the GUI of this computer part.
-     */
-    public abstract void refreshGUI();
+	/**
+	 * Refreshes the GUI of this computer part.
+	 */
+	public abstract void refreshGUI();
 }

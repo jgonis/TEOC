@@ -26,24 +26,23 @@ import Hack.Gates.*;
  */
 public class HDLLineTokenizer extends HDLTokenizer {
 
-    /**
-     * Constructs a new HDLLineTokenizer with the given string line.
-     */
-    public HDLLineTokenizer(String line) throws HDLException {
-        Reader input = new BufferedReader(new InputStreamReader(new
-             ByteArrayInputStream(line.getBytes())));
+	/**
+	 * Constructs a new HDLLineTokenizer with the given string line.
+	 */
+	public HDLLineTokenizer(String line) throws HDLException {
+		Reader input = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(line.getBytes())));
 
-        try {
-            initizalizeInput(input);
-        } catch (IOException ioe) {
-            throw new HDLException("Error while initializing HDL for reading");
-        }
-    }
+		try {
+			initizalizeInput(input);
+		} catch (IOException ioe) {
+			throw new HDLException("Error while initializing HDL for reading");
+		}
+	}
 
-    /**
-     * Generates an HDLException with the given message.
-     */
-    public void HDLError(String message) throws HDLException {
-        throw new HDLException(message);
-    }
+	/**
+	 * Generates an HDLException with the given message.
+	 */
+	public void HDLError(String message) throws HDLException {
+		throw new HDLException(message);
+	}
 }

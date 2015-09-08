@@ -18,44 +18,45 @@
 package Hack.ComputerParts;
 
 /**
- * An interface for a computer memory GUI, representing a specific memory segment.
- * A memory segment holds the main memory gui.
- * Changes in the main memory gui should be reflected in this gui.
- * As with the memory gui, every memory cell contains an address and the contents
- * can be displayed in decimal, hexadecimal or binary format.
- * The displayed addresses should start from 0 and should be filled in consecutive order.
+ * An interface for a computer memory GUI, representing a specific memory
+ * segment. A memory segment holds the main memory gui. Changes in the main
+ * memory gui should be reflected in this gui. As with the memory gui, every
+ * memory cell contains an address and the contents can be displayed in decimal,
+ * hexadecimal or binary format. The displayed addresses should start from 0 and
+ * should be filled in consecutive order.
  */
 public interface MemorySegmentGUI extends InteractiveValueComputerPartGUI {
 
-    /**
-     * Registers the given ComputerPartEventListener as a listener to this GUI.
-     */
-    public void addListener(ComputerPartEventListener listener);
+	/**
+	 * Registers the given ComputerPartEventListener as a listener to this GUI.
+	 */
+	public void addListener(ComputerPartEventListener listener);
 
-    /**
-     * Un-registers the given ComputerPartEventListener from being a listener to this GUI.
-     */
-    public void removeListener(ComputerPartEventListener listener);
+	/**
+	 * Un-registers the given ComputerPartEventListener from being a listener to
+	 * this GUI.
+	 */
+	public void removeListener(ComputerPartEventListener listener);
 
-    /**
-     * Notifies all the ComputerPartEventListeners on a change in the memory by creating
-     * a ComputerPartEvent (with the changed address and value) and sending it using the
-     * memoryChanged method to all the listeners.
-     */
-    public void notifyListeners(int address, short value);
+	/**
+	 * Notifies all the ComputerPartEventListeners on a change in the memory by
+	 * creating a ComputerPartEvent (with the changed address and value) and
+	 * sending it using the memoryChanged method to all the listeners.
+	 */
+	public void notifyListeners(int address, short value);
 
-    /**
-     * Sets the start address with the given one.
-     */
-    public void setStartAddress(int startAddress);
+	/**
+	 * Sets the start address with the given one.
+	 */
+	public void setStartAddress(int startAddress);
 
-    /**
-     * Hides all selections.
-     */
-    public void hideSelect();
+	/**
+	 * Hides all selections.
+	 */
+	public void hideSelect();
 
-    /**
-     * Scrolls the memory such that the given address will be on top.
-     */
-    public void scrollTo(int address);
+	/**
+	 * Scrolls the memory such that the given address will be on top.
+	 */
+	public void scrollTo(int address);
 }

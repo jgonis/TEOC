@@ -26,74 +26,74 @@ import Hack.ComputerParts.*;
  */
 public interface HardwareSimulatorGUI extends HackSimulatorGUI {
 
-    /**
-     * Returns the Gates panel.
-     */
-    public GatesPanelGUI getGatesPanel();
+	/**
+	 * Returns the Gates panel.
+	 */
+	public GatesPanelGUI getGatesPanel();
 
-    /**
-     * Returns the HDLView.
-     */
-    public TextFileGUI getHDLView();
+	/**
+	 * Returns the HDLView.
+	 */
+	public TextFileGUI getHDLView();
 
-    /**
-     * Returns the GateInfo component.
-     */
-    public GateInfoGUI getGateInfo();
+	/**
+	 * Returns the GateInfo component.
+	 */
+	public GateInfoGUI getGateInfo();
 
-    /**
-     * Returns the input pins table.
-     */
-    public PinsGUI getInputPins();
+	/**
+	 * Returns the input pins table.
+	 */
+	public PinsGUI getInputPins();
 
-    /**
-     * Returns the output pins table.
-     */
-    public PinsGUI getOutputPins();
+	/**
+	 * Returns the output pins table.
+	 */
+	public PinsGUI getOutputPins();
 
-    /**
-     * Returns the internal pins table.
-     */
-    public PinsGUI getInternalPins();
+	/**
+	 * Returns the internal pins table.
+	 */
+	public PinsGUI getInternalPins();
 
-    /**
-     * Returns the part pins table.
-     */
-    public PartPinsGUI getPartPins();
+	/**
+	 * Returns the part pins table.
+	 */
+	public PartPinsGUI getPartPins();
 
-    /**
-     * Returns the parts table.
-     */
-    public PartsGUI getParts();
+	/**
+	 * Returns the parts table.
+	 */
+	public PartsGUI getParts();
 
-    /**
-     * Displays the Internal pins table.
-     */
-    public void showInternalPins();
+	/**
+	 * Displays the Internal pins table.
+	 */
+	public void showInternalPins();
 
-    /**
-     * Hides the Internal pins table.
-     */
-    public void hideInternalPins();
+	/**
+	 * Hides the Internal pins table.
+	 */
+	public void hideInternalPins();
 
-    /**
-     * Displays the Part pins table.
-     */
-    public void showPartPins();
+	/**
+	 * Displays the Part pins table.
+	 */
+	public void showPartPins();
 
-    /**
-     * Hides the Part pins table.
-     */
-    public void hidePartPins();
+	/**
+	 * Hides the Part pins table.
+	 */
+	public void hidePartPins();
 
-    /**
-     * Displays the Parts table.
-     */
-    public void showParts();
+	/**
+	 * Displays the Parts table.
+	 */
+	public void showParts();
 
-    /**
-     * Hides the Parts table.
-     */
-    public void hideParts();
+	/**
+	 * Hides the Parts table.
+	 */
+	public void hideParts();
 
 }

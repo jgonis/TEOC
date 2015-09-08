@@ -27,47 +27,47 @@ import Hack.Translators.*;
  */
 public class AssemblyLineTokenizer extends LineTokenizer {
 
-    /**
-     * Constructs a new AssemblyLineTokenizer for the given line.
-     */
-    public AssemblyLineTokenizer(String line) throws IOException {
+	/**
+	 * Constructs a new AssemblyLineTokenizer for the given line.
+	 */
+	public AssemblyLineTokenizer(String line) throws IOException {
 		// Remove spaces from line. This needs to be done here
 		// manually and not via whitespaceChars(' ', ' ') because
 		// A + 1 for example should be regarded as the SINGLE
 		// token A+1.
-        super(removeSpaces(line));
+		super(removeSpaces(line));
 
-        resetSyntax();
-        slashSlashComments(true);
+		resetSyntax();
+		slashSlashComments(true);
 
-        whitespaceChars(' ',' ');
-        whitespaceChars('\n','\n');
-        whitespaceChars('\r','\r');
-        whitespaceChars('\t','\t');
+		whitespaceChars(' ', ' ');
+		whitespaceChars('\n', '\n');
+		whitespaceChars('\r', '\r');
+		whitespaceChars('\t', '\t');
 
-        wordChars('0','9');
-        wordChars('A','Z');
-        wordChars('a','z');
-        wordChars('_','_');
-        wordChars('+','+');
-        wordChars('-','-');
-        wordChars('.','.');
-        wordChars(':',':');
-        wordChars('!','!');
-        wordChars('&','&');
-        wordChars('|','|');
-        wordChars('$','$');
+		wordChars('0', '9');
+		wordChars('A', 'Z');
+		wordChars('a', 'z');
+		wordChars('_', '_');
+		wordChars('+', '+');
+		wordChars('-', '-');
+		wordChars('.', '.');
+		wordChars(':', ':');
+		wordChars('!', '!');
+		wordChars('&', '&');
+		wordChars('|', '|');
+		wordChars('$', '$');
 
-        nextToken();
-    }
+		nextToken();
+	}
 
 	/**
 	 * Removes space characters from the given string.
 	 */
 	private static String removeSpaces(String line) {
 		StringBuffer nospc = new StringBuffer();
-        StringCharacterIterator i = new StringCharacterIterator(line);
-        for (i.first(); i.current() != CharacterIterator.DONE; i.next()) {
+		StringCharacterIterator i = new StringCharacterIterator(line);
+		for (i.first(); i.current() != CharacterIterator.DONE; i.next()) {
 			if (i.current() != ' ') {
 				nospc.append(i.current());
 			}

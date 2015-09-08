@@ -26,58 +26,58 @@ import java.awt.event.*;
  */
 public interface CPUEmulatorGUI extends HackSimulatorGUI {
 
-    /**
-     * Returns the bus GUI component.
-     */
-    public BusGUI getBus();
+	/**
+	 * Returns the bus GUI component.
+	 */
+	public BusGUI getBus();
 
-    /**
-     * Returns the screen GUI component.
-     */
-    public ScreenGUI getScreen();
+	/**
+	 * Returns the screen GUI component.
+	 */
+	public ScreenGUI getScreen();
 
-    /**
-     * Returns the keyboard GUI component.
-     */
-    public KeyboardGUI getKeyboard();
+	/**
+	 * Returns the keyboard GUI component.
+	 */
+	public KeyboardGUI getKeyboard();
 
-    /**
-     * Returns the RAM GUI component.
-     */
-    public PointedMemoryGUI getRAM();
+	/**
+	 * Returns the RAM GUI component.
+	 */
+	public PointedMemoryGUI getRAM();
 
-    /**
-     * Returns the ROM GUI component.
-     */
-    public ROMGUI getROM();
+	/**
+	 * Returns the ROM GUI component.
+	 */
+	public ROMGUI getROM();
 
-    /**
-     * Returns the A register GUI component.
-     */
-    public RegisterGUI getA();
+	/**
+	 * Returns the A register GUI component.
+	 */
+	public RegisterGUI getA();
 
-    /**
-     * Returns the D register GUI component.
-     */
-    public RegisterGUI getD();
+	/**
+	 * Returns the D register GUI component.
+	 */
+	public RegisterGUI getD();
 
-    /**
-     * Returns the PC register GUI component.
-     */
-    public RegisterGUI getPC();
+	/**
+	 * Returns the PC register GUI component.
+	 */
+	public RegisterGUI getPC();
 
-    /**
-     * Returns the ALU GUI component.
-     */
-    public ALUGUI getALU();
+	/**
+	 * Returns the ALU GUI component.
+	 */
+	public ALUGUI getALU();
 
-    /**
-     * Registers the given listener to listen to key events.
-     */
-    public void addKeyListener(KeyListener listener);
+	/**
+	 * Registers the given listener to listen to key events.
+	 */
+	public void addKeyListener(KeyListener listener);
 
-    /**
-     * Sets the focus on the CPUEmulator's frame
-     */
-    public void requestFocus();
+	/**
+	 * Sets the focus on the CPUEmulator's frame
+	 */
+	public void requestFocus();
 }

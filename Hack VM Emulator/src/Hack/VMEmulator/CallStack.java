@@ -25,65 +25,65 @@ import java.util.*;
  */
 public class CallStack extends ComputerPart {
 
-    // the vector of function names.
-    private Vector names;
+	// the vector of function names.
+	private Vector names;
 
-    // the stack gui
-    private CallStackGUI gui;
+	// the stack gui
+	private CallStackGUI gui;
 
-    /**
-     * Constructs a new call stack with the given GUI (optional).
-     */
-    public CallStack(CallStackGUI gui) {
-        super(gui != null);
-        names = new Vector();
-        this.gui = gui;
-    }
+	/**
+	 * Constructs a new call stack with the given GUI (optional).
+	 */
+	public CallStack(CallStackGUI gui) {
+		super(gui != null);
+		names = new Vector();
+		this.gui = gui;
+	}
 
-    /**
-     * Returns the name of the function at the top of the stack.
-     */
-    public String getTopFunction() {
-        return (names.size() > 0 ? (String)names.elementAt(names.size() - 1) : "");
-    }
+	/**
+	 * Returns the name of the function at the top of the stack.
+	 */
+	public String getTopFunction() {
+		return (names.size() > 0 ? (String) names.elementAt(names.size() - 1) : "");
+	}
 
-    /**
-     * Adds the given function name at the top of the stack.
-     */
-    public void pushFunction(String functionName) {
-        names.addElement(functionName);
-        if (displayChanges)
-            gui.setContents(names);
-    }
+	/**
+	 * Adds the given function name at the top of the stack.
+	 */
+	public void pushFunction(String functionName) {
+		names.addElement(functionName);
+		if (displayChanges)
+			gui.setContents(names);
+	}
 
-    /**
-     * Removes the function at the top of the stack.
-     */
-    public void popFunction() {
-        if (names.size() > 0) {
-            names.removeElementAt(names.size() - 1);
-            if (displayChanges)
-                gui.setContents(names);
-        }
-    }
+	/**
+	 * Removes the function at the top of the stack.
+	 */
+	public void popFunction() {
+		if (names.size() > 0) {
+			names.removeElementAt(names.size() - 1);
+			if (displayChanges)
+				gui.setContents(names);
+		}
+	}
 
-    /**
-     * Resets the contents of the computer part.
-     */
-    public void reset() {
-        super.reset();
-        names.removeAllElements();
-    }
+	/**
+	 * Resets the contents of the computer part.
+	 */
+	public void reset() {
+		super.reset();
+		names.removeAllElements();
+	}
 
-    /**
-     * Returns the GUI of the computer part.
-     */
-    public ComputerPartGUI getGUI() {
-        return gui;
-    }
+	/**
+	 * Returns the GUI of the computer part.
+	 */
+	public ComputerPartGUI getGUI() {
+		return gui;
+	}
 
-    public void refreshGUI() {
-        if (displayChanges)
-            gui.setContents(names);
-    }
+	public void refreshGUI() {
+		if (displayChanges)
+			gui.setContents(names);
+	}
 }

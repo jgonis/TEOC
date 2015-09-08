@@ -21,19 +21,19 @@ import Hack.ComputerParts.*;
 import Hack.Gates.*;
 
 /**
- * An interface for the GUI of a pins list.
- * Every pin row contains the pin's name and value (which may be in a specified width).
- * The GUI can display its values in decimal, hexadecimal or binary format.
+ * An interface for the GUI of a pins list. Every pin row contains the pin's
+ * name and value (which may be in a specified width). The GUI can display its
+ * values in decimal, hexadecimal or binary format.
  */
 public interface PinsGUI extends InteractiveValueComputerPartGUI {
-    /**
-     * Sets the pins list's contents with the given array of PinInfo objects.
-     */
-    public void setContents(PinInfo[] pins);
+	/**
+	 * Sets the pins list's contents with the given array of PinInfo objects.
+	 */
+	public void setContents(PinInfo[] pins);
 
-    /**
-     * Set the pins to be dimmed or not dimmed.
-     */
-    public void setDimmed(boolean cond);
+	/**
+	 * Set the pins to be dimmed or not dimmed.
+	 */
+	public void setDimmed(boolean cond);
 
 }

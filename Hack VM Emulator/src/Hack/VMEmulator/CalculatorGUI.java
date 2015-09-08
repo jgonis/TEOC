@@ -24,28 +24,28 @@ import Hack.ComputerParts.ValueComputerPartGUI;
  */
 public interface CalculatorGUI extends ValueComputerPartGUI {
 
-    /**
-     * Sets the operator of the calculator with the given operator.
-     */
-    public void setOperator(char operator);
+	/**
+	 * Sets the operator of the calculator with the given operator.
+	 */
+	public void setOperator(char operator);
 
-    /**
-     * Displays the calculator GUI.
-     */
-    public void showCalculator();
+	/**
+	 * Displays the calculator GUI.
+	 */
+	public void showCalculator();
 
-    /**
-     * Hides the calculator GUI.
-     */
-    public void hideCalculator();
+	/**
+	 * Hides the calculator GUI.
+	 */
+	public void hideCalculator();
 
-    /**
-     * Displays the left input.
-     */
-    public void showLeftInput();
+	/**
+	 * Displays the left input.
+	 */
+	public void showLeftInput();
 
-    /**
-     * Hides the left input.
-     */
-    public void hideLeftInput();
+	/**
+	 * Hides the left input.
+	 */
+	public void hideLeftInput();
 }

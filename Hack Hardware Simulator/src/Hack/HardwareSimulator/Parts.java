@@ -25,36 +25,36 @@ import Hack.Gates.*;
  */
 public class Parts extends ComputerPart {
 
-    // The gui
-    private PartsGUI gui;
+	// The gui
+	private PartsGUI gui;
 
-    // The parts (gates) array
-    private Gate[] parts;
+	// The parts (gates) array
+	private Gate[] parts;
 
-    /**
-     * Constructs a new Parts with the given gui (optional).
-     */
-    public Parts(PartsGUI gui) {
-        super(gui != null);
-        this.gui = gui;
-        parts = new Gate[0];
-        refreshGUI();
-    }
+	/**
+	 * Constructs a new Parts with the given gui (optional).
+	 */
+	public Parts(PartsGUI gui) {
+		super(gui != null);
+		this.gui = gui;
+		parts = new Gate[0];
+		refreshGUI();
+	}
 
-    public ComputerPartGUI getGUI() {
-        return gui;
-    }
+	public ComputerPartGUI getGUI() {
+		return gui;
+	}
 
-    public void refreshGUI() {
-        if (displayChanges)
-            gui.setContents(parts);
-    }
+	public void refreshGUI() {
+		if (displayChanges)
+			gui.setContents(parts);
+	}
 
-    /**
-     * Sets the internal parts (gates) with the given array of gates.
-     */
-    public void setParts(Gate[] parts) {
-        this.parts = parts;
-        refreshGUI();
-    }
+	/**
+	 * Sets the internal parts (gates) with the given array of gates.
+	 */
+	public void setParts(Gate[] parts) {
+		this.parts = parts;
+		refreshGUI();
+	}
 }

@@ -24,74 +24,74 @@ import java.util.EventObject;
  */
 public class Register extends InteractiveValueComputerPart implements ComputerPartEventListener {
 
-    // The 16-bit value.
-    protected short value;
+	// The 16-bit value.
+	protected short value;
 
-    // The register's gui component
-    protected RegisterGUI gui;
+	// The register's gui component
+	protected RegisterGUI gui;
 
-    /**
-     * Constructs a new register with the given GUI component and the legal
-     * values range.
-     */
-    public Register(RegisterGUI gui, short minValue, short maxValue) {
-        super(gui != null, minValue, maxValue);
-        init(gui);
-    }
+	/**
+	 * Constructs a new register with the given GUI component and the legal
+	 * values range.
+	 */
+	public Register(RegisterGUI gui, short minValue, short maxValue) {
+		super(gui != null, minValue, maxValue);
+		init(gui);
+	}
 
-    /**
-     * Constructs a new register with the given GUI component (optional).
-     */
-    public Register(RegisterGUI gui) {
-        super(gui != null);
-        init(gui);
-    }
+	/**
+	 * Constructs a new register with the given GUI component (optional).
+	 */
+	public Register(RegisterGUI gui) {
+		super(gui != null);
+		init(gui);
+	}
 
-    // Initalizes the register
-    private void init(RegisterGUI gui) {
-        this.gui = gui;
+	// Initalizes the register
+	private void init(RegisterGUI gui) {
+		this.gui = gui;
 
-        if (hasGUI) {
-            gui.addListener(this);
-            gui.addErrorListener(this);
-        }
-    }
+		if (hasGUI) {
+			gui.addListener(this);
+			gui.addErrorListener(this);
+		}
+	}
 
-    /**
-     * Returns the value of the register.
-     */
-    public short get() {
-        return getValueAt(0);
-    }
+	/**
+	 * Returns the value of the register.
+	 */
+	public short get() {
+		return getValueAt(0);
+	}
 
-    /**
-     * Sets the value of the register with the given value.
-     */
-    public void store(short value) {
-        setValueAt(0, value, false);
-    }
+	/**
+	 * Sets the value of the register with the given value.
+	 */
+	public void store(short value) {
+		setValueAt(0, value, false);
+	}
 
-    public short getValueAt(int index) {
-        return value;
-    }
+	public short getValueAt(int index) {
+		return value;
+	}
 
-    public void doSetValueAt(int index, short value) {
-        this.value = value;
-    }
+	public void doSetValueAt(int index, short value) {
+		this.value = value;
+	}
 
-    public void reset() {
-        super.reset();
-        value = nullValue;
-    }
+	public void reset() {
+		super.reset();
+		value = nullValue;
+	}
 
-    public ComputerPartGUI getGUI() {
-        return gui;
-    }
+	public ComputerPartGUI getGUI() {
+		return gui;
+	}
 
-    public void refreshGUI() {
-        super.refreshGUI();
+	public void refreshGUI() {
+		super.refreshGUI();
 
-        if (displayChanges)
-            quietUpdateGUI(0, value);
-    }
+		if (displayChanges)
+			quietUpdateGUI(0, value);
+	}
 }

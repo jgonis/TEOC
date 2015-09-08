@@ -20,16 +20,16 @@ package Hack.Gates;
 import Hack.Events.*;
 
 /**
- * An event for notifying a GateErrorEventListener on an error that occured
- * in a gate.
+ * An event for notifying a GateErrorEventListener on an error that occured in a
+ * gate.
  */
 public class GateErrorEvent extends ErrorEvent {
 
-    /**
-     * Constructs a new GateErrorEvent with the given source (gate)
-     * and errorMessage.
-     */
-    public GateErrorEvent(Gate source, String errorMessage) {
-        super(source, errorMessage);
-    }
+	/**
+	 * Constructs a new GateErrorEvent with the given source (gate) and
+	 * errorMessage.
+	 */
+	public GateErrorEvent(Gate source, String errorMessage) {
+		super(source, errorMessage);
+	}
 }

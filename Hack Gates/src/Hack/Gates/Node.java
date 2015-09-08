@@ -22,61 +22,61 @@ package Hack.Gates;
  */
 public class Node {
 
-    // the value of the node
-    protected short value;
+	// the value of the node
+	protected short value;
 
-    // listeners list
-    protected NodeSet listeners;
+	// listeners list
+	protected NodeSet listeners;
 
-    /**
-     * Constructs a new node.
-     */
-    public Node() {
-    }
+	/**
+	 * Constructs a new node.
+	 */
+	public Node() {
+	}
 
-    /**
-     * Constructs a new Node with the given initial value.
-     */
-    public Node(short initialValue) {
-        value = initialValue;
-    }
+	/**
+	 * Constructs a new Node with the given initial value.
+	 */
+	public Node(short initialValue) {
+		value = initialValue;
+	}
 
-    /**
-     * Adds the given node as a listener.
-     */
-    public void addListener(Node node) {
-        if (listeners == null)
-            listeners = new NodeSet();
+	/**
+	 * Adds the given node as a listener.
+	 */
+	public void addListener(Node node) {
+		if (listeners == null)
+			listeners = new NodeSet();
 
-        listeners.add(node);
-    }
+		listeners.add(node);
+	}
 
-    /**
-     * Removes the given node from being a listener.
-     */
-    public void removeListener(Node node) {
-        if (listeners != null)
-            listeners.remove(node);
-    }
+	/**
+	 * Removes the given node from being a listener.
+	 */
+	public void removeListener(Node node) {
+		if (listeners != null)
+			listeners.remove(node);
+	}
 
-    /**
-     * Returns the value of this node.
-     */
-    public short get() {
-        return value;
-    }
+	/**
+	 * Returns the value of this node.
+	 */
+	public short get() {
+		return value;
+	}
 
-    /**
-     * Sets the node's value with the given value.
-     * Notifies the listeners on the change by calling their set() method.
-     */
-    public void set(short value) {
-        if (this.value != value) {
-            this.value = value;
+	/**
+	 * Sets the node's value with the given value. Notifies the listeners on the
+	 * change by calling their set() method.
+	 */
+	public void set(short value) {
+		if (this.value != value) {
+			this.value = value;
 
-            if (listeners != null)
-                for (int i = 0; i < listeners.size(); i++)
-                    listeners.getNodeAt(i).set(get());
-        }
-    }
+			if (listeners != null)
+				for (int i = 0; i < listeners.size(); i++)
+					listeners.getNodeAt(i).set(get());
+		}
+	}
 }

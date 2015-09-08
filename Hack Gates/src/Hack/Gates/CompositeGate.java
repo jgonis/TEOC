@@ -19,71 +19,71 @@ package Hack.Gates;
 
 public class CompositeGate extends Gate {
 
-    // the internal pins
-    protected Node[] internalPins;
+	// the internal pins
+	protected Node[] internalPins;
 
-    // The contained parts (Gates), sorted in topological order.
-    protected Gate[] parts;
+	// The contained parts (Gates), sorted in topological order.
+	protected Gate[] parts;
 
-    protected void clockUp() {
-        if (gateClass.isClocked)
-            for (int i = 0; i < parts.length; i++)
-                parts[i].tick();
-    }
+	protected void clockUp() {
+		if (gateClass.isClocked)
+			for (int i = 0; i < parts.length; i++)
+				parts[i].tick();
+	}
 
-    protected void clockDown() {
-        if (gateClass.isClocked)
-            for (int i = 0; i < parts.length; i++)
-                parts[i].tock();
-    }
+	protected void clockDown() {
+		if (gateClass.isClocked)
+			for (int i = 0; i < parts.length; i++)
+				parts[i].tock();
+	}
 
-    protected void reCompute() {
-        for (int i = 0; i < parts.length; i++)
-            parts[i].eval();
-    }
+	protected void reCompute() {
+		for (int i = 0; i < parts.length; i++)
+			parts[i].eval();
+	}
 
-    /**
-     * Returns the node according to the given node name (may be input, output or internal).
-     * If doesn't exist, returns null.
-     */
-    public Node getNode(String name) {
-        Node result = super.getNode(name);
+	/**
+	 * Returns the node according to the given node name (may be input, output
+	 * or internal). If doesn't exist, returns null.
+	 */
+	public Node getNode(String name) {
+		Node result = super.getNode(name);
 
-        if (result == null) {
-            byte type = gateClass.getPinType(name);
-            int index = gateClass.getPinNumber(name);
-            if (type == CompositeGateClass.INTERNAL_PIN_TYPE)
-                result = internalPins[index];
-        }
+		if (result == null) {
+			byte type = gateClass.getPinType(name);
+			int index = gateClass.getPinNumber(name);
+			if (type == CompositeGateClass.INTERNAL_PIN_TYPE)
+				result = internalPins[index];
+		}
 
-        return result;
-    }
+		return result;
+	}
 
-    /**
-     * Returns the internal pins.
-     */
-    public Node[] getInternalNodes() {
-        return internalPins;
-    }
+	/**
+	 * Returns the internal pins.
+	 */
+	public Node[] getInternalNodes() {
+		return internalPins;
+	}
 
-    /**
-     * Returns the parts (internal gates) of this gate, sorted in topological order.
-     */
-    public Gate[] getParts() {
-        return parts;
-    }
+	/**
+	 * Returns the parts (internal gates) of this gate, sorted in topological
+	 * order.
+	 */
+	public Gate[] getParts() {
+		return parts;
+	}
 
-    /**
-     * Initializes the gate
-     */
-    public void init(Node[] inputPins, Node[] outputPins, Node[] internalPins, Gate[] parts,
-                     GateClass gateClass) {
-        this.inputPins = inputPins;
-        this.outputPins = outputPins;
-        this.internalPins = internalPins;
-        this.parts = parts;
-        this.gateClass = gateClass;
-        setDirty();
-    }
+	/**
+	 * Initializes the gate
+	 */
+	public void init(Node[] inputPins, Node[] outputPins, Node[] internalPins, Gate[] parts, GateClass gateClass) {
+		this.inputPins = inputPins;
+		this.outputPins = outputPins;
+		this.internalPins = internalPins;
+		this.parts = parts;
+		this.gateClass = gateClass;
+		setDirty();
+	}
 
 }

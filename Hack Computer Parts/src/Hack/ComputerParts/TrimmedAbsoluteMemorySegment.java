@@ -20,32 +20,33 @@ package Hack.ComputerParts;
 import Hack.ComputerParts.*;
 
 /**
- * An AbsolutePointedMemorySegment in which the pointer is always set to the address just
- * after the last updated address.
- * Can be useful together with a gui that doesn't display addresses beyond the pointer address.
+ * An AbsolutePointedMemorySegment in which the pointer is always set to the
+ * address just after the last updated address. Can be useful together with a
+ * gui that doesn't display addresses beyond the pointer address.
  */
 public class TrimmedAbsoluteMemorySegment extends AbsolutePointedMemorySegment {
 
-    /**
-     * Constructs a new TrimmedAbsoluteMemorySegment with the given main memory and GUI.
-     */
-    public TrimmedAbsoluteMemorySegment(Memory mainMemory, PointedMemorySegmentGUI gui) {
-        super(mainMemory, gui);
-    }
+	/**
+	 * Constructs a new TrimmedAbsoluteMemorySegment with the given main memory
+	 * and GUI.
+	 */
+	public TrimmedAbsoluteMemorySegment(Memory mainMemory, PointedMemorySegmentGUI gui) {
+		super(mainMemory, gui);
+	}
 
-    /**
-     * Constructs a new TrimmedAbsoluteMemorySegment with the given main memory, GUI and the legal
-     * values range.
-     */
-    public TrimmedAbsoluteMemorySegment(Memory mainMemory, PointedMemorySegmentGUI gui,
-                                        short minValue, short maxValue) {
-        super(mainMemory, gui, minValue, maxValue);
-    }
+	/**
+	 * Constructs a new TrimmedAbsoluteMemorySegment with the given main memory,
+	 * GUI and the legal values range.
+	 */
+	public TrimmedAbsoluteMemorySegment(Memory mainMemory, PointedMemorySegmentGUI gui, short minValue,
+			short maxValue) {
+		super(mainMemory, gui, minValue, maxValue);
+	}
 
-    public void setValueAt(int index, short value, boolean quiet) {
-        if (displayChanges)
-            ((PointedMemorySegmentGUI)gui).setPointer(index + 1);
+	public void setValueAt(int index, short value, boolean quiet) {
+		if (displayChanges)
+			((PointedMemorySegmentGUI) gui).setPointer(index + 1);
 
-        super.setValueAt(index, value, quiet);
-    }
+		super.setValueAt(index, value, quiet);
+	}
 }

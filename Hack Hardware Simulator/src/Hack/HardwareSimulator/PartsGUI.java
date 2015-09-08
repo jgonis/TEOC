@@ -25,8 +25,8 @@ import Hack.Gates.*;
  */
 public interface PartsGUI extends ComputerPartGUI {
 
-    /**
-     * Sets the contents with the given parts (gates) array.
-     */
-    public void setContents(Gate[] parts);
+	/**
+	 * Sets the contents with the given parts (gates) array.
+	 */
+	public void setContents(Gate[] parts);
 }

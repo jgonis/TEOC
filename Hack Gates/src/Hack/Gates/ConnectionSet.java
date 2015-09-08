@@ -24,31 +24,31 @@ import java.util.HashSet;
  */
 public class ConnectionSet extends HashSet {
 
-    /**
-     * Constructs a new ConnectionSet
-     */
-    public ConnectionSet() {
-        super();
-    }
+	/**
+	 * Constructs a new ConnectionSet
+	 */
+	public ConnectionSet() {
+		super();
+	}
 
-    /**
-     * Adds the given connection to the set.
-     */
-    public boolean add(Connection connection) {
-        return super.add(connection);
-    }
+	/**
+	 * Adds the given connection to the set.
+	 */
+	public boolean add(Connection connection) {
+		return super.add(connection);
+	}
 
-    /**
-     * Removes the given connection from the set.
-     */
-    public boolean remove(Connection connection) {
-        return super.remove(connection);
-    }
+	/**
+	 * Removes the given connection from the set.
+	 */
+	public boolean remove(Connection connection) {
+		return super.remove(connection);
+	}
 
-    /**
-     * Returns true if this set contains the given connection.
-     */
-    public boolean contains(Connection connection) {
-        return super.contains(connection);
-    }
+	/**
+	 * Returns true if this set contains the given connection.
+	 */
+	public boolean contains(Connection connection) {
+		return super.contains(connection);
+	}
 }

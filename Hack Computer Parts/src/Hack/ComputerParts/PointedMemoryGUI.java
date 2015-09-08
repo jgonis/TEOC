@@ -18,13 +18,13 @@
 package Hack.ComputerParts;
 
 /**
- * An interface for a pointed memory GUI.
- * This memory gui has a pointer (address) which should be marked.
+ * An interface for a pointed memory GUI. This memory gui has a pointer
+ * (address) which should be marked.
  */
 public interface PointedMemoryGUI extends MemoryGUI {
 
-    /**
-     * Sets the pointer with the given pointer address.
-     */
-    public void setPointer(int pointerAddress);
+	/**
+	 * Sets the pointer with the given pointer address.
+	 */
+	public void setPointer(int pointerAddress);
 }

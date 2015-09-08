@@ -23,13 +23,13 @@ package Hack.Gates;
  */
 public interface DirtyGateListener {
 
-    /**
-     * Executed when a gate becomes dirty.
-     */
-    public void gotDirty();
+	/**
+	 * Executed when a gate becomes dirty.
+	 */
+	public void gotDirty();
 
-    /**
-     * Executed when a gate becomes clean.
-     */
-    public void gotClean();
+	/**
+	 * Executed when a gate becomes clean.
+	 */
+	public void gotClean();
 }

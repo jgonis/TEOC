@@ -1,3 +1,4 @@
+
 /********************************************************************************
  * The contents of this file are subject to the GNU General Public License      *
  * (GPL) Version 2 or later (the "License"); you may not use this file except   *
@@ -24,28 +25,25 @@ import javax.swing.*;
 /**
  * The CPU Emulator.
  */
-public class CPUEmulatorMain
-{
-  /**
-   * The command line CPU Emulator program.
-   */
-  public static void main(String[] args) {
-        if (args.length > 1)
-            System.err.println("Usage: java CPUEmulatorMain [script name]");
-        else if (args.length == 0) {
-            try {
-                UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-            } catch (Exception e) {
-            }
+public class CPUEmulatorMain {
+	/**
+	 * The command line CPU Emulator program.
+	 */
+	public static void main(String[] args) {
+		if (args.length > 1)
+			System.err.println("Usage: java CPUEmulatorMain [script name]");
+		else if (args.length == 0) {
+			try {
+				UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+			} catch (Exception e) {
+			}
 
-            CPUEmulatorGUI simulatorGUI = new CPUEmulatorComponent();
+			CPUEmulatorGUI simulatorGUI = new CPUEmulatorComponent();
 
-            ControllerGUI controllerGUI = new ControllerComponent();
-            CPUEmulatorApplication application =
-                new CPUEmulatorApplication(controllerGUI, simulatorGUI, "bin/scripts/defaultCPU.txt",
-                                           "bin/help/cpuUsage.html", "bin/help/cpuAbout.html");
-        }
-        else
-            new HackController(new CPUEmulator(), args[0]);
-    }
+			ControllerGUI controllerGUI = new ControllerComponent();
+			CPUEmulatorApplication application = new CPUEmulatorApplication(controllerGUI, simulatorGUI,
+					"bin/scripts/defaultCPU.txt", "bin/help/cpuUsage.html", "bin/help/cpuAbout.html");
+		} else
+			new HackController(new CPUEmulator(), args[0]);
+	}
 }

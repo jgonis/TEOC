@@ -27,83 +27,83 @@ import Hack.CPUEmulator.KeyboardGUI;
  */
 public interface VMEmulatorGUI extends HackSimulatorGUI {
 
-    /**
-     * Returns the bus GUI component.
-     */
-    public BusGUI getBus();
+	/**
+	 * Returns the bus GUI component.
+	 */
+	public BusGUI getBus();
 
-    /**
-     * Returns the screen GUI component.
-     */
-    public ScreenGUI getScreen();
+	/**
+	 * Returns the screen GUI component.
+	 */
+	public ScreenGUI getScreen();
 
-    /**
-     * Returns the keyboard GUI component.
-     */
-    public KeyboardGUI getKeyboard();
+	/**
+	 * Returns the keyboard GUI component.
+	 */
+	public KeyboardGUI getKeyboard();
 
-    /**
-     * Returns the RAM GUI component.
-     */
-    public LabeledPointedMemoryGUI getRAM();
+	/**
+	 * Returns the RAM GUI component.
+	 */
+	public LabeledPointedMemoryGUI getRAM();
 
-    /**
-     * Returns the Program GUI component.
-     */
-    public VMProgramGUI getProgram();
+	/**
+	 * Returns the Program GUI component.
+	 */
+	public VMProgramGUI getProgram();
 
-    /**
-     * Returns the call stack GUI component.
-     */
-    public CallStackGUI getCallStack();
+	/**
+	 * Returns the call stack GUI component.
+	 */
+	public CallStackGUI getCallStack();
 
-    /**
-     * Returns the calculator GUI component.
-     */
-    public CalculatorGUI getCalculator();
+	/**
+	 * Returns the calculator GUI component.
+	 */
+	public CalculatorGUI getCalculator();
 
-    /**
-     * Returns the method stack GUI component.
-     */
-    public PointedMemorySegmentGUI getWorkingStack();
+	/**
+	 * Returns the method stack GUI component.
+	 */
+	public PointedMemorySegmentGUI getWorkingStack();
 
-    /**
-     * Returns the Stack GUI component.
-     */
-    public PointedMemorySegmentGUI getStack();
+	/**
+	 * Returns the Stack GUI component.
+	 */
+	public PointedMemorySegmentGUI getStack();
 
-    /**
-     * Returns the static memory segment component.
-     */
-    public MemorySegmentGUI getStaticSegment();
+	/**
+	 * Returns the static memory segment component.
+	 */
+	public MemorySegmentGUI getStaticSegment();
 
-    /**
-     * Returns the local memory segment component.
-     */
-    public MemorySegmentGUI getLocalSegment();
+	/**
+	 * Returns the local memory segment component.
+	 */
+	public MemorySegmentGUI getLocalSegment();
 
-    /**
-     * Returns the arg memory segment component.
-     */
-    public MemorySegmentGUI getArgSegment();
+	/**
+	 * Returns the arg memory segment component.
+	 */
+	public MemorySegmentGUI getArgSegment();
 
-    /**
-     * Returns the this memory segment component.
-     */
-    public MemorySegmentGUI getThisSegment();
+	/**
+	 * Returns the this memory segment component.
+	 */
+	public MemorySegmentGUI getThisSegment();
 
-    /**
-     * Returns the that memory segment component.
-     */
-    public MemorySegmentGUI getThatSegment();
+	/**
+	 * Returns the that memory segment component.
+	 */
+	public MemorySegmentGUI getThatSegment();
 
-    /**
-     * Returns the temp memory segment component.
-     */
-    public MemorySegmentGUI getTempSegment();
+	/**
+	 * Returns the temp memory segment component.
+	 */
+	public MemorySegmentGUI getTempSegment();
 
-    /**
-     * Sets the focus on the VMEmulator's frame.
-     */
-    public void requestFocus();
+	/**
+	 * Sets the focus on the VMEmulator's frame.
+	 */
+	public void requestFocus();
 }

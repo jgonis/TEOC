@@ -24,24 +24,24 @@ import Hack.Controller.ControllerGUI;
  */
 public interface HardwareSimulatorControllerGUI extends ControllerGUI {
 
-    /**
-     * Enables the TickTock button.
-     */
-    public void enableTickTock();
+	/**
+	 * Enables the TickTock button.
+	 */
+	public void enableTickTock();
 
-    /**
-     * Disables the TickTock button.
-     */
-    public void disableTickTock();
+	/**
+	 * Disables the TickTock button.
+	 */
+	public void disableTickTock();
 
-    /**
-     * Enables the Eval button.
-     */
-    public void enableEval();
+	/**
+	 * Enables the Eval button.
+	 */
+	public void enableEval();
 
-    /**
-     * Disables the Eval button.
-     */
-    public void disableEval();
+	/**
+	 * Disables the Eval button.
+	 */
+	public void disableEval();
 
 }

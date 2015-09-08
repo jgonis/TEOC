@@ -25,145 +25,147 @@ import java.io.*;
  */
 public interface HackTranslatorGUI {
 
-    /**
-     * Registers the given HackTranslatorEventListener as a listener to this GUI.
-     */
-    public void addHackTranslatorListener(HackTranslatorEventListener listener);
+	/**
+	 * Registers the given HackTranslatorEventListener as a listener to this
+	 * GUI.
+	 */
+	public void addHackTranslatorListener(HackTranslatorEventListener listener);
 
-    /**
-     * Un-registers the given HackTranslatorEventListener from being a listener to this GUI.
-     */
-    public void removeHackTranslatorListener(HackTranslatorEventListener listener);
+	/**
+	 * Un-registers the given HackTranslatorEventListener from being a listener
+	 * to this GUI.
+	 */
+	public void removeHackTranslatorListener(HackTranslatorEventListener listener);
 
-    /**
-     * Notify all the HackTranslatorEventListeners on actions taken in it, by creating
-     * a HackTranslatorEvent (with the action and supplied data) and sending it using
-     * the actionPerformed method to all the listeners.
-     */
-    public void notifyHackTranslatorListeners(byte action, Object data);
+	/**
+	 * Notify all the HackTranslatorEventListeners on actions taken in it, by
+	 * creating a HackTranslatorEvent (with the action and supplied data) and
+	 * sending it using the actionPerformed method to all the listeners.
+	 */
+	public void notifyHackTranslatorListeners(byte action, Object data);
 
-    /**
-     * Displays the given message, according to the given type.
-     */
-    public void displayMessage(String message, boolean error);
+	/**
+	 * Displays the given message, according to the given type.
+	 */
+	public void displayMessage(String message, boolean error);
 
-    /**
-     * Sets the title of the translator with the given title.
-     */
-    public void setTitle(String title);
+	/**
+	 * Sets the title of the translator with the given title.
+	 */
+	public void setTitle(String title);
 
-    /**
-     * Returns the GUI of the Source file.
-     */
-    public TextFileGUI getSource();
+	/**
+	 * Returns the GUI of the Source file.
+	 */
+	public TextFileGUI getSource();
 
-    /**
-     * Returns the GUI of the Destination file.
-     */
-    public TextFileGUI getDestination();
+	/**
+	 * Returns the GUI of the Destination file.
+	 */
+	public TextFileGUI getDestination();
 
-    /**
-     * Sets the name of the Source file with the given name.
-     */
-    public void setSourceName(String name);
+	/**
+	 * Sets the name of the Source file with the given name.
+	 */
+	public void setSourceName(String name);
 
-    /**
-     * Sets the name of the Destination file with the given name.
-     */
-    public void setDestinationName(String name);
+	/**
+	 * Sets the name of the Destination file with the given name.
+	 */
+	public void setDestinationName(String name);
 
-    /**
-     * Sets the working dir name with the given one.
-     */
-    public void setWorkingDir(File file);
+	/**
+	 * Sets the working dir name with the given one.
+	 */
+	public void setWorkingDir(File file);
 
-    /**
-     * Sets the name of the html file that contains the help usage.
-     */
-    public void setUsageFileName(String fileName);
+	/**
+	 * Sets the name of the html file that contains the help usage.
+	 */
+	public void setUsageFileName(String fileName);
 
-    /**
-     * Sets the name of the html file that contains the "about" information.
-     */
-    public void setAboutFileName(String fileName);
+	/**
+	 * Sets the name of the html file that contains the "about" information.
+	 */
+	public void setAboutFileName(String fileName);
 
-    /**
-     * Enables the single step action.
-     */
-    public void enableSingleStep();
+	/**
+	 * Enables the single step action.
+	 */
+	public void enableSingleStep();
 
-    /**
-     * Disables the single step action.
-     */
-    public void disableSingleStep();
+	/**
+	 * Disables the single step action.
+	 */
+	public void disableSingleStep();
 
-    /**
-     * Enables the fast forward action.
-     */
-    public void enableFastForward();
+	/**
+	 * Enables the fast forward action.
+	 */
+	public void enableFastForward();
 
-    /**
-     * Disables the fast forward action.
-     */
-    public void disableFastForward();
+	/**
+	 * Disables the fast forward action.
+	 */
+	public void disableFastForward();
 
-    /**
-     * Enables the stop action.
-     */
-    public void enableStop();
+	/**
+	 * Enables the stop action.
+	 */
+	public void enableStop();
 
-    /**
-     * Disables the stop action.
-     */
-    public void disableStop();
+	/**
+	 * Disables the stop action.
+	 */
+	public void disableStop();
 
-    /**
-     * Enables the rewind action.
-     */
-    public void enableRewind();
+	/**
+	 * Enables the rewind action.
+	 */
+	public void enableRewind();
 
-    /**
-     * Disables the rewind action.
-     */
-    public void disableRewind();
+	/**
+	 * Disables the rewind action.
+	 */
+	public void disableRewind();
 
-    /**
-     * Enables the full compilation action.
-     */
-    public void enableFullCompilation();
+	/**
+	 * Enables the full compilation action.
+	 */
+	public void enableFullCompilation();
 
-    /**
-     * Disables the full compilation action.
-     */
-    public void disableFullCompilation();
+	/**
+	 * Disables the full compilation action.
+	 */
+	public void disableFullCompilation();
 
-    /**
-     * Enables the save action.
-     */
-    public void enableSave();
+	/**
+	 * Enables the save action.
+	 */
+	public void enableSave();
 
-    /**
-     * Disables the save action.
-     */
-    public void disableSave();
+	/**
+	 * Disables the save action.
+	 */
+	public void disableSave();
 
-    /**
-     * Enables loading a new source file.
-     */
-    public void enableLoadSource();
+	/**
+	 * Enables loading a new source file.
+	 */
+	public void enableLoadSource();
 
-    /**
-     * Disables loading a new source file.
-     */
-    public void disableLoadSource();
+	/**
+	 * Disables loading a new source file.
+	 */
+	public void disableLoadSource();
 
-    /**
-     * Enables selecting a row in the source.
-     */
-    public void enableSourceRowSelection();
+	/**
+	 * Enables selecting a row in the source.
+	 */
+	public void enableSourceRowSelection();
 
-    /**
-     * Disables selecting a row in the source.
-     */
-    public void disableSourceRowSelection();
+	/**
+	 * Disables selecting a row in the source.
+	 */
+	public void disableSourceRowSelection();
 }

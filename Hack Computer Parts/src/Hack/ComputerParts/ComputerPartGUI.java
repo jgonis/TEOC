@@ -22,8 +22,8 @@ package Hack.ComputerParts;
  */
 public interface ComputerPartGUI {
 
-    /**
-     * Resets the contents of the computer part GUI.
-     */
-    public void reset();
+	/**
+	 * Resets the contents of the computer part GUI.
+	 */
+	public void reset();
 }

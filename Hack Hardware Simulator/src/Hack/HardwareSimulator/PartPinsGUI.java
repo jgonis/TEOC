@@ -20,18 +20,20 @@ package Hack.HardwareSimulator;
 import java.util.*;
 
 /**
- * An interface for the GUI of the part pins table. The GUI is similar to the Pins GUI,
- * including the name of the part pin which is connected to the gate's pin.
+ * An interface for the GUI of the part pins table. The GUI is similar to the
+ * Pins GUI, including the name of the part pin which is connected to the gate's
+ * pin.
  */
 public interface PartPinsGUI extends PinsGUI {
 
-    /**
-     * Sets the pins list's contents with the given Vector of PartPinInfo objects.
-     */
-    public void setContents(Vector pins);
+	/**
+	 * Sets the pins list's contents with the given Vector of PartPinInfo
+	 * objects.
+	 */
+	public void setContents(Vector pins);
 
-    /**
-     * Sets the name of the part with the given name.
-     */
-    public void setPartName(String partName);
+	/**
+	 * Sets the name of the part with the given name.
+	 */
+	public void setPartName(String partName);
 }

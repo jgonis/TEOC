@@ -22,19 +22,22 @@ package Hack.Gates;
  */
 public abstract class BuiltInGate extends Gate {
 
-    protected void clockUp() {}
+	protected void clockUp() {
+	}
 
-    protected void clockDown() {}
+	protected void clockDown() {
+	}
 
-    protected void reCompute() {}
+	protected void reCompute() {
+	}
 
-    /**
-     * Initializes the gate
-     */
-    public void init(Node[] inputPins, Node[] outputPins, GateClass gateClass) {
-        this.inputPins = inputPins;
-        this.outputPins = outputPins;
-        this.gateClass = gateClass;
-        setDirty();
-    }
+	/**
+	 * Initializes the gate
+	 */
+	public void init(Node[] inputPins, Node[] outputPins, GateClass gateClass) {
+		this.inputPins = inputPins;
+		this.outputPins = outputPins;
+		this.gateClass = gateClass;
+		setDirty();
+	}
 }
