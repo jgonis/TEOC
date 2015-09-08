@@ -60,43 +60,6 @@ public class PartPins extends ValueComputerPart {
 		clearGate();
 	}
 
-	// Removes the current gate
-	private void clearGate() {
-		gate = null;
-		clearPart();
-	}
-
-	// Removes the current part
-	private void clearPart() {
-		partPins.removeAllElements();
-		partGateClass = null;
-
-		// remove all node gui adapters
-		Enumeration<?> enums = nodes.keys();
-		while (enums.hasMoreElements()) {
-			Node node = (Node) enums.nextElement();
-			Node nodeAdapter = (Node) nodes.get(node);
-			node.removeListener(nodeAdapter);
-		}
-
-		refreshGUI();
-	}
-
-	// Sets the current gate.
-	public void setGate(Gate gate) {
-		clearGate();
-		this.gate = gate;
-	}
-
-	// Sets the current part GateClass.
-	public void setPart(GateClass partGateClass, String partName) {
-		clearPart();
-		this.partGateClass = partGateClass;
-
-		if (hasGUI)
-			gui.setPartName(partName);
-	}
-
 	// Adds the given pin to list
 	public void addPin(String partPinName, String gatePinName) {
 		if (gate != null && partGateClass != null) {
@@ -163,6 +126,31 @@ public class PartPins extends ValueComputerPart {
 		}
 	}
 
+	// Removes the current gate
+	private void clearGate() {
+		gate = null;
+		clearPart();
+	}
+
+	// Removes the current part
+	private void clearPart() {
+		partPins.removeAllElements();
+		partGateClass = null;
+
+		// remove all node gui adapters
+		Enumeration<?> enums = nodes.keys();
+		while (enums.hasMoreElements()) {
+			Node node = (Node) enums.nextElement();
+			Node nodeAdapter = (Node) nodes.get(node);
+			node.removeListener(nodeAdapter);
+		}
+
+		refreshGUI();
+	}
+
+	public void doSetValueAt(int index, short value) {
+	}
+
 	public ComputerPartGUI getGUI() {
 		return gui;
 	}
@@ -176,11 +164,23 @@ public class PartPins extends ValueComputerPart {
 			gui.setContents(partPins);
 	}
 
+	// Sets the current gate.
+	public void setGate(Gate gate) {
+		clearGate();
+		this.gate = gate;
+	}
+
+	// Sets the current part GateClass.
+	public void setPart(GateClass partGateClass, String partName) {
+		clearPart();
+		this.partGateClass = partGateClass;
+
+		if (hasGUI)
+			gui.setPartName(partName);
+	}
+
 	public void setValueAt(int index, short value, boolean quiet) {
 		if (getValueAt(index) != value)
 			super.setValueAt(index, value, quiet);
-	}
-
-	public void doSetValueAt(int index, short value) {
 	}
 }

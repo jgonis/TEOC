@@ -33,10 +33,104 @@ public interface ControllerGUI {
 	public void addControllerListener(ControllerEventListener listener);
 
 	/**
-	 * Un-registers the given ControllerEventListener from being a listener to
-	 * this GUI.
+	 * Disables the animation mode buttons.
 	 */
-	public void removeControllerListener(ControllerEventListener listener);
+	public void disableAnimationModes();
+
+	/**
+	 * Disables the fast forward action.
+	 */
+	public void disableFastForward();
+
+	/**
+	 * Disables the load program action.
+	 */
+	public void disableLoadProgram();
+
+	/**
+	 * Disables the rewind action.
+	 */
+	public void disableRewind();
+
+	/**
+	 * Disables the open script action.
+	 */
+	public void disableScript();
+
+	/**
+	 * Disables the single step action.
+	 */
+	public void disableSingleStep();
+
+	/**
+	 * Disables the speed slider.
+	 */
+	public void disableSpeedSlider();
+
+	/**
+	 * Disables the stop action.
+	 */
+	public void disableStop();
+
+	/**
+	 * Displays the given message, according to the given type.
+	 */
+	public void displayMessage(String message, boolean error);
+
+	/**
+	 * Enables the animation mode buttons.
+	 */
+	public void enableAnimationModes();
+
+	/**
+	 * Enables the fast forward action.
+	 */
+	public void enableFastForward();
+
+	/**
+	 * Enables the load program action.
+	 */
+	public void enableLoadProgram();
+
+	/**
+	 * Enables the rewind action.
+	 */
+	public void enableRewind();
+
+	/**
+	 * Enables the open script action.
+	 */
+	public void enableScript();
+
+	/**
+	 * Enables the single step action.
+	 */
+	public void enableSingleStep();
+
+	/**
+	 * Enables the speed slider.
+	 */
+	public void enableSpeedSlider();
+
+	/**
+	 * Enables the stop action.
+	 */
+	public void enableStop();
+
+	/**
+	 * Returns the comparison file component.
+	 */
+	public JComponent getComparisonComponent();
+
+	/**
+	 * Returns the output file component.
+	 */
+	public JComponent getOutputComponent();
+
+	/**
+	 * Returns the script file component.
+	 */
+	public JComponent getScriptComponent();
 
 	/**
 	 * Notify all the ControllerEventListeners on actions taken in it, by
@@ -46,54 +140,32 @@ public interface ControllerGUI {
 	public void notifyControllerListeners(byte action, Object data);
 
 	/**
-	 * Sets the simulator component
+	 * Called when the output file is updated.
 	 */
-	public void setSimulator(HackSimulatorGUI simulator);
+	public void outputFileUpdated();
 
 	/**
-	 * Sets the title of the translator with the given title.
+	 * Un-registers the given ControllerEventListener from being a listener to
+	 * this GUI.
 	 */
-	public void setTitle(String title);
+	public void removeControllerListener(ControllerEventListener listener);
 
 	/**
-	 * Displays the given message, according to the given type.
+	 * Sets the additional display (int code, out of the possible additional
+	 * display constants in HackController)
 	 */
-	public void displayMessage(String message, boolean error);
+	public void setAdditionalDisplay(int additionalDisplayCode);
 
 	/**
-	 * Sets the working dir name with the given one.
+	 * Sets the animation mode (int code, out of the possible animation
+	 * constants in HackController)
 	 */
-	public void setWorkingDir(File file);
+	public void setAnimationMode(int animationMode);
 
 	/**
-	 * Sets the script file name with the given one.
+	 * Sets the breakpoints list with the given one.
 	 */
-	public void setScriptFile(String fileName);
-
-	/**
-	 * Sets the current script line.
-	 */
-	public void setCurrentScriptLine(int line);
-
-	/**
-	 * Returns the script file component.
-	 */
-	public JComponent getScriptComponent();
-
-	/**
-	 * Sets the output file name with the given one.
-	 */
-	public void setOutputFile(String fileName);
-
-	/**
-	 * Sets the current output line.
-	 */
-	public void setCurrentOutputLine(int line);
-
-	/**
-	 * Returns the output file component.
-	 */
-	public JComponent getOutputComponent();
+	public void setBreakpoints(Vector breakpoints);
 
 	/**
 	 * Sets the comparison file name with the given one.
@@ -106,37 +178,14 @@ public interface ControllerGUI {
 	public void setCurrentComparisonLine(int line);
 
 	/**
-	 * Returns the comparison file component.
+	 * Sets the current output line.
 	 */
-	public JComponent getComparisonComponent();
+	public void setCurrentOutputLine(int line);
 
 	/**
-	 * Sets the additional display (int code, out of the possible additional
-	 * display constants in HackController)
+	 * Sets the current script line.
 	 */
-	public void setAdditionalDisplay(int additionalDisplayCode);
-
-	/**
-	 * Sets the breakpoints list with the given one.
-	 */
-	public void setBreakpoints(Vector breakpoints);
-
-	/**
-	 * Sets the list of recognized variables with the given one.
-	 */
-	public void setVariables(String[] vars);
-
-	/**
-	 * Sets the speed (int code, between 1 and
-	 * HackController.NUMBER_OF_SPEED_UNTIS)
-	 */
-	public void setSpeed(int speed);
-
-	/**
-	 * Sets the animation mode (int code, out of the possible animation
-	 * constants in HackController)
-	 */
-	public void setAnimationMode(int animationMode);
+	public void setCurrentScriptLine(int line);
 
 	/**
 	 * Sets the numeric format (int code, out of the possible format constants
@@ -145,92 +194,43 @@ public interface ControllerGUI {
 	public void setNumericFormat(int formatCode);
 
 	/**
+	 * Sets the output file name with the given one.
+	 */
+	public void setOutputFile(String fileName);
+
+	/**
+	 * Sets the script file name with the given one.
+	 */
+	public void setScriptFile(String fileName);
+
+	/**
+	 * Sets the simulator component
+	 */
+	public void setSimulator(HackSimulatorGUI simulator);
+
+	/**
+	 * Sets the speed (int code, between 1 and
+	 * HackController.NUMBER_OF_SPEED_UNTIS)
+	 */
+	public void setSpeed(int speed);
+
+	/**
+	 * Sets the title of the translator with the given title.
+	 */
+	public void setTitle(String title);
+
+	/**
+	 * Sets the list of recognized variables with the given one.
+	 */
+	public void setVariables(String[] vars);
+
+	/**
+	 * Sets the working dir name with the given one.
+	 */
+	public void setWorkingDir(File file);
+
+	/**
 	 * Opens the breakpoints panel.
 	 */
 	public void showBreakpoints();
-
-	/**
-	 * Called when the output file is updated.
-	 */
-	public void outputFileUpdated();
-
-	/**
-	 * Enables the single step action.
-	 */
-	public void enableSingleStep();
-
-	/**
-	 * Disables the single step action.
-	 */
-	public void disableSingleStep();
-
-	/**
-	 * Enables the fast forward action.
-	 */
-	public void enableFastForward();
-
-	/**
-	 * Disables the fast forward action.
-	 */
-	public void disableFastForward();
-
-	/**
-	 * Enables the stop action.
-	 */
-	public void enableStop();
-
-	/**
-	 * Disables the stop action.
-	 */
-	public void disableStop();
-
-	/**
-	 * Enables the open script action.
-	 */
-	public void enableScript();
-
-	/**
-	 * Disables the open script action.
-	 */
-	public void disableScript();
-
-	/**
-	 * Enables the rewind action.
-	 */
-	public void enableRewind();
-
-	/**
-	 * Disables the rewind action.
-	 */
-	public void disableRewind();
-
-	/**
-	 * Enables the load program action.
-	 */
-	public void enableLoadProgram();
-
-	/**
-	 * Disables the load program action.
-	 */
-	public void disableLoadProgram();
-
-	/**
-	 * Enables the speed slider.
-	 */
-	public void enableSpeedSlider();
-
-	/**
-	 * Disables the speed slider.
-	 */
-	public void disableSpeedSlider();
-
-	/**
-	 * Enables the animation mode buttons.
-	 */
-	public void enableAnimationModes();
-
-	/**
-	 * Disables the animation mode buttons.
-	 */
-	public void disableAnimationModes();
 }

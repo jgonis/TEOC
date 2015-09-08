@@ -29,6 +29,20 @@ import Hack.Translators.LineTokenizer;
 public class AssemblyLineTokenizer extends LineTokenizer {
 
 	/**
+	 * Removes space characters from the given string.
+	 */
+	private static String removeSpaces(String line) {
+		StringBuffer nospc = new StringBuffer();
+		StringCharacterIterator i = new StringCharacterIterator(line);
+		for (i.first(); i.current() != CharacterIterator.DONE; i.next()) {
+			if (i.current() != ' ') {
+				nospc.append(i.current());
+			}
+		}
+		return nospc.toString();
+	}
+
+	/**
 	 * Constructs a new AssemblyLineTokenizer for the given line.
 	 */
 	public AssemblyLineTokenizer(String line) throws IOException {
@@ -60,20 +74,6 @@ public class AssemblyLineTokenizer extends LineTokenizer {
 		wordChars('$', '$');
 
 		nextToken();
-	}
-
-	/**
-	 * Removes space characters from the given string.
-	 */
-	private static String removeSpaces(String line) {
-		StringBuffer nospc = new StringBuffer();
-		StringCharacterIterator i = new StringCharacterIterator(line);
-		for (i.first(); i.current() != CharacterIterator.DONE; i.next()) {
-			if (i.current() != ' ') {
-				nospc.append(i.current());
-			}
-		}
-		return nospc.toString();
 	}
 
 }

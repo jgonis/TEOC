@@ -88,68 +88,14 @@ public class RegisterComponent extends JPanel implements RegisterGUI {
 	}
 
 	/**
-	 * Sets the null value of this component.
-	 */
-	public void setNullValue(short newValue, boolean hideNullValue) {
-		nullValue = newValue;
-		this.hideNullValue = hideNullValue;
-		if (value == nullValue && hideNullValue)
-			oldValue = "";
-	}
-
-	public void addListener(ComputerPartEventListener listener) {
-		listeners.addElement(listener);
-	}
-
-	public void removeListener(ComputerPartEventListener listener) {
-		listeners.removeElement(listener);
-	}
-
-	public void notifyListeners(int address, short value) {
-		ComputerPartEvent event = new ComputerPartEvent(this, 0, value);
-		for (int i = 0; i < listeners.size(); i++) {
-			((ComputerPartEventListener) listeners.elementAt(i)).valueChanged(event);
-		}
-	}
-
-	public void notifyListeners() {
-		ComputerPartEvent event = new ComputerPartEvent(this);
-		for (int i = 0; i < listeners.size(); i++) {
-			((ComputerPartEventListener) listeners.elementAt(i)).guiGainedFocus();
-		}
-	}
-
-	/**
 	 * Registers the given ErrorEventListener as a listener to this GUI.
 	 */
 	public void addErrorListener(ErrorEventListener listener) {
 		errorEventListeners.addElement(listener);
 	}
 
-	/**
-	 * Un-registers the given ErrorEventListener from being a listener to this
-	 * GUI.
-	 */
-	public void removeErrorListener(ErrorEventListener listener) {
-		errorEventListeners.removeElement(listener);
-	}
-
-	/**
-	 * Notifies all the ErrorEventListener on an error in this gui by creating
-	 * an ErrorEvent (with the error message) and sending it using the
-	 * errorOccured method to all the listeners.
-	 */
-	public void notifyErrorListeners(String errorMessage) {
-		ErrorEvent event = new ErrorEvent(this, errorMessage);
-		for (int i = 0; i < errorEventListeners.size(); i++)
-			((ErrorEventListener) errorEventListeners.elementAt(i)).errorOccured(event);
-	}
-
-	/**
-	 * Enables user input into the source.
-	 */
-	public void enableUserInput() {
-		registerValue.setEnabled(true);
+	public void addListener(ComputerPartEventListener listener) {
+		listeners.addElement(listener);
 	}
 
 	/**
@@ -160,37 +106,17 @@ public class RegisterComponent extends JPanel implements RegisterGUI {
 	}
 
 	/**
-	 * Translates a given short to a string according to the current format.
+	 * Enables user input into the source.
 	 */
-	protected String translateValueToString(short value) {
-		if (hideNullValue) {
-			if (value == nullValue)
-				return "";
-			else
-				return Format.translateValueToString(value, dataFormat);
-		} else
-			return Format.translateValueToString(value, dataFormat);
+	public void enableUserInput() {
+		registerValue.setEnabled(true);
 	}
 
 	/**
-	 * Sets the value of the register with the given value.
+	 * flashes the value at the given index.
 	 */
-	public void setValueAt(int index, short value) {
-		String data = translateValueToString(value);
-		this.value = value;
-		registerValue.setText(data);
-	}
-
-	/**
-	 * Resets the contents of this RegisterComponent.
-	 */
-	public void reset() {
-		value = nullValue;
-		if (hideNullValue)
-			oldValue = "";
-		registerValue.setText(translateValueToString(nullValue));
-		hideFlash();
-		hideHighlight();
+	public void flash(int index) {
+		registerValue.setBackground(Color.orange);
 	}
 
 	/**
@@ -200,6 +126,20 @@ public class RegisterComponent extends JPanel implements RegisterGUI {
 	public Point getCoordinates(int index) {
 		Point location = getLocation();
 		return new Point((int) location.getX() + registerValue.getX(), (int) location.getY() + registerValue.getY());
+	}
+
+	/**
+	 * Returns the value at the given index in its string representation.
+	 */
+	public String getValueAsString(int index) {
+		return registerValue.getText();
+	}
+
+	/**
+	 * hides the existing flash.
+	 */
+	public void hideFlash() {
+		registerValue.setBackground(Color.white);
 	}
 
 	/**
@@ -214,63 +154,6 @@ public class RegisterComponent extends JPanel implements RegisterGUI {
 	 */
 	public void highlight(int index) {
 		registerValue.setForeground(Color.blue);
-	}
-
-	/**
-	 * flashes the value at the given index.
-	 */
-	public void flash(int index) {
-		registerValue.setBackground(Color.orange);
-	}
-
-	/**
-	 * hides the existing flash.
-	 */
-	public void hideFlash() {
-		registerValue.setBackground(Color.white);
-	}
-
-	/**
-	 * Sets the enabled range of this segment. Any address outside this range
-	 * will be disabled for user input. If gray is true, addresses outside the
-	 * range will be gray colored.
-	 */
-	public void setEnabledRange(int start, int end, boolean gray) {
-	}
-
-	/**
-	 * Returns the value at the given index in its string representation.
-	 */
-	public String getValueAsString(int index) {
-		return registerValue.getText();
-	}
-
-	/**
-	 * Sets the numeric format with the given code (out of the format constants
-	 * in HackController).
-	 */
-	public void setNumericFormat(int formatCode) {
-		dataFormat = formatCode;
-		registerValue.setText(Format.translateValueToString(value, formatCode));
-	}
-
-	// Implementing the action of changing the register's value.
-	private void valueChanged() {
-		String text = registerValue.getText();
-		if (!text.equals(oldValue)) {
-			try {
-				value = Format.translateValueToShort(text, dataFormat);
-				notifyListeners(0, value);
-				oldValue = text;
-			} catch (NumberFormatException nfe) {
-				notifyErrorListeners("Illegal value");
-				registerValue.setText(translateValueToString(value));
-			}
-		}
-	}
-
-	public void setName(String name) {
-		registerName.setText(name);
 	}
 
 	// Initializes this register.
@@ -306,6 +189,38 @@ public class RegisterComponent extends JPanel implements RegisterGUI {
 	}
 
 	/**
+	 * Notifies all the ErrorEventListener on an error in this gui by creating
+	 * an ErrorEvent (with the error message) and sending it using the
+	 * errorOccured method to all the listeners.
+	 */
+	public void notifyErrorListeners(String errorMessage) {
+		ErrorEvent event = new ErrorEvent(this, errorMessage);
+		for (int i = 0; i < errorEventListeners.size(); i++)
+			((ErrorEventListener) errorEventListeners.elementAt(i)).errorOccured(event);
+	}
+
+	public void notifyListeners() {
+		ComputerPartEvent event = new ComputerPartEvent(this);
+		for (int i = 0; i < listeners.size(); i++) {
+			((ComputerPartEventListener) listeners.elementAt(i)).guiGainedFocus();
+		}
+	}
+
+	public void notifyListeners(int address, short value) {
+		ComputerPartEvent event = new ComputerPartEvent(this, 0, value);
+		for (int i = 0; i < listeners.size(); i++) {
+			((ComputerPartEventListener) listeners.elementAt(i)).valueChanged(event);
+		}
+	}
+
+	/**
+	 * Implements the action of changing the text of this register.
+	 */
+	public void registerValue_actionPerformed(ActionEvent e) {
+		valueChanged();
+	}
+
+	/**
 	 * The action of the text field gaining the focus.
 	 */
 	public void registerValue_focusGained(FocusEvent e) {
@@ -321,9 +236,94 @@ public class RegisterComponent extends JPanel implements RegisterGUI {
 	}
 
 	/**
-	 * Implements the action of changing the text of this register.
+	 * Un-registers the given ErrorEventListener from being a listener to this
+	 * GUI.
 	 */
-	public void registerValue_actionPerformed(ActionEvent e) {
-		valueChanged();
+	public void removeErrorListener(ErrorEventListener listener) {
+		errorEventListeners.removeElement(listener);
+	}
+
+	public void removeListener(ComputerPartEventListener listener) {
+		listeners.removeElement(listener);
+	}
+
+	/**
+	 * Resets the contents of this RegisterComponent.
+	 */
+	public void reset() {
+		value = nullValue;
+		if (hideNullValue)
+			oldValue = "";
+		registerValue.setText(translateValueToString(nullValue));
+		hideFlash();
+		hideHighlight();
+	}
+
+	/**
+	 * Sets the enabled range of this segment. Any address outside this range
+	 * will be disabled for user input. If gray is true, addresses outside the
+	 * range will be gray colored.
+	 */
+	public void setEnabledRange(int start, int end, boolean gray) {
+	}
+
+	public void setName(String name) {
+		registerName.setText(name);
+	}
+
+	/**
+	 * Sets the null value of this component.
+	 */
+	public void setNullValue(short newValue, boolean hideNullValue) {
+		nullValue = newValue;
+		this.hideNullValue = hideNullValue;
+		if (value == nullValue && hideNullValue)
+			oldValue = "";
+	}
+
+	/**
+	 * Sets the numeric format with the given code (out of the format constants
+	 * in HackController).
+	 */
+	public void setNumericFormat(int formatCode) {
+		dataFormat = formatCode;
+		registerValue.setText(Format.translateValueToString(value, formatCode));
+	}
+
+	/**
+	 * Sets the value of the register with the given value.
+	 */
+	public void setValueAt(int index, short value) {
+		String data = translateValueToString(value);
+		this.value = value;
+		registerValue.setText(data);
+	}
+
+	/**
+	 * Translates a given short to a string according to the current format.
+	 */
+	protected String translateValueToString(short value) {
+		if (hideNullValue) {
+			if (value == nullValue)
+				return "";
+			else
+				return Format.translateValueToString(value, dataFormat);
+		} else
+			return Format.translateValueToString(value, dataFormat);
+	}
+
+	// Implementing the action of changing the register's value.
+	private void valueChanged() {
+		String text = registerValue.getText();
+		if (!text.equals(oldValue)) {
+			try {
+				value = Format.translateValueToShort(text, dataFormat);
+				notifyListeners(0, value);
+				oldValue = text;
+			} catch (NumberFormatException nfe) {
+				notifyErrorListeners("Illegal value");
+				registerValue.setText(translateValueToString(value));
+			}
+		}
 	}
 }

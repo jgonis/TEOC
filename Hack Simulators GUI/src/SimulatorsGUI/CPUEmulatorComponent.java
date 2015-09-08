@@ -88,19 +88,11 @@ public class CPUEmulatorComponent extends HackSimulatorComponent implements CPUE
 		rom.setTopLevelLocation(this);
 	}
 
-	public void setWorkingDir(File file) {
-		rom.setWorkingDir(file);
-	}
-
-	public void loadProgram() {
-		rom.loadProgram();
-	}
-
-	// Sets the names of the registers.
-	private void setRegistersNames() {
-		a.setName("A");
-		d.setName("D");
-		pc.setName("PC");
+	/**
+	 * Returns the screen GUI component.
+	 */
+	public RegisterGUI getA() {
+		return a;
 	}
 
 	public Point getAdditionalDisplayLocation() {
@@ -124,8 +116,8 @@ public class CPUEmulatorComponent extends HackSimulatorComponent implements CPUE
 	/**
 	 * Returns the screen GUI component.
 	 */
-	public ScreenGUI getScreen() {
-		return screen;
+	public RegisterGUI getD() {
+		return d;
 	}
 
 	/**
@@ -133,6 +125,13 @@ public class CPUEmulatorComponent extends HackSimulatorComponent implements CPUE
 	 */
 	public KeyboardGUI getKeyboard() {
 		return keyboard;
+	}
+
+	/**
+	 * Returns the screen GUI component.
+	 */
+	public RegisterGUI getPC() {
+		return pc;
 	}
 
 	/**
@@ -152,22 +151,8 @@ public class CPUEmulatorComponent extends HackSimulatorComponent implements CPUE
 	/**
 	 * Returns the screen GUI component.
 	 */
-	public RegisterGUI getA() {
-		return a;
-	}
-
-	/**
-	 * Returns the screen GUI component.
-	 */
-	public RegisterGUI getD() {
-		return d;
-	}
-
-	/**
-	 * Returns the screen GUI component.
-	 */
-	public RegisterGUI getPC() {
-		return pc;
+	public ScreenGUI getScreen() {
+		return screen;
 	}
 
 	// Initialization of this component.
@@ -197,5 +182,20 @@ public class CPUEmulatorComponent extends HackSimulatorComponent implements CPUE
 		this.add(alu, null);
 		this.add(d, null);
 		setSize(EMULATOR_WIDTH, EMULATOR_HEIGHT);
+	}
+
+	public void loadProgram() {
+		rom.loadProgram();
+	}
+
+	// Sets the names of the registers.
+	private void setRegistersNames() {
+		a.setName("A");
+		d.setName("D");
+		pc.setName("PC");
+	}
+
+	public void setWorkingDir(File file) {
+		rom.setWorkingDir(file);
 	}
 }

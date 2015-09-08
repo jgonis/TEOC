@@ -32,112 +32,6 @@ import Hack.ComputerParts.LabeledPointedMemoryGUI;
  */
 public class LabeledMemoryComponent extends PointedMemoryComponent implements LabeledPointedMemoryGUI {
 
-	// The array of labels of this memory.
-	protected String[] labels;
-
-	// The flash index of the labels.
-	private int labelFlashIndex = -1;
-
-	/**
-	 * Constructs a new LabeledMemoryComponent.
-	 */
-	public LabeledMemoryComponent() {
-		searchButton.setLocation(199, 2);
-		clearButton.setLocation(168, 2);
-		memoryTable.setGridColor(Color.lightGray);
-		labels = new String[0];
-	}
-
-	/**
-	 * Returns the width of the table.
-	 */
-	public int getTableWidth() {
-		return 233;
-	}
-
-	/**
-	 * Returns the index of the values column.
-	 */
-	protected int getValueColumnIndex() {
-		return 2;
-	}
-
-	/**
-	 * Sets a name for the memory cell that matches the given address
-	 */
-	public void setLabel(int address, String name) {
-		labels[address] = name + ":";
-		repaint();
-	}
-
-	/**
-	 * Clears all cell names.
-	 */
-	public void clearLabels() {
-		for (int i = 0; i < labels.length; i++)
-			if (labels[i] != null)
-				labels[i] = null;
-		repaint();
-	}
-
-	/**
-	 * flashes the label at the given index.
-	 */
-	public void labelFlash(int index) {
-		labelFlashIndex = index;
-		repaint();
-	}
-
-	/**
-	 * hides all existing falsh label.
-	 */
-	public void hideLabelFlash() {
-		labelFlashIndex = -1;
-		repaint();
-	}
-
-	/**
-	 * Sets the memory contents with the given values array. (assumes that the
-	 * length of the given array equals to the gui's size)
-	 */
-	public void setContents(short[] newValues) {
-		String[] oldLabels = labels;
-		labels = new String[newValues.length];
-		System.arraycopy(oldLabels, 0, labels, 0, Math.min(oldLabels.length, labels.length));
-		super.setContents(newValues);
-	}
-
-	/**
-	 * Returns the table model of this component.
-	 */
-	protected TableModel getTableModel() {
-		return new LabeledMemoryTableModel();
-	}
-
-	/**
-	 * Returns the cell renderer for this component.
-	 */
-	protected DefaultTableCellRenderer getCellRenderer() {
-		return new LabeledPointedMemoryTableCellRenderer();
-	}
-
-	/**
-	 * Determines the width of each column in the table.
-	 */
-	protected void determineColumnWidth() {
-		TableColumn column = null;
-		for (int i = 0; i < 2; i++) {
-			column = memoryTable.getColumnModel().getColumn(i);
-			if (i == 0) {
-				column.setMinWidth(1);
-				column.setPreferredWidth(1);
-			} else if (i == 1) {
-				column.setMinWidth(1);
-				column.setPreferredWidth(1);
-			}
-		}
-	}
-
 	// An inner class representing the model of this table.
 	class LabeledMemoryTableModel extends MemoryTableModel {
 
@@ -187,5 +81,111 @@ public class LabeledMemoryComponent extends PointedMemoryComponent implements La
 					setBackground(Color.orange);
 			}
 		}
+	}
+
+	// The array of labels of this memory.
+	protected String[] labels;
+
+	// The flash index of the labels.
+	private int labelFlashIndex = -1;
+
+	/**
+	 * Constructs a new LabeledMemoryComponent.
+	 */
+	public LabeledMemoryComponent() {
+		searchButton.setLocation(199, 2);
+		clearButton.setLocation(168, 2);
+		memoryTable.setGridColor(Color.lightGray);
+		labels = new String[0];
+	}
+
+	/**
+	 * Clears all cell names.
+	 */
+	public void clearLabels() {
+		for (int i = 0; i < labels.length; i++)
+			if (labels[i] != null)
+				labels[i] = null;
+		repaint();
+	}
+
+	/**
+	 * Determines the width of each column in the table.
+	 */
+	protected void determineColumnWidth() {
+		TableColumn column = null;
+		for (int i = 0; i < 2; i++) {
+			column = memoryTable.getColumnModel().getColumn(i);
+			if (i == 0) {
+				column.setMinWidth(1);
+				column.setPreferredWidth(1);
+			} else if (i == 1) {
+				column.setMinWidth(1);
+				column.setPreferredWidth(1);
+			}
+		}
+	}
+
+	/**
+	 * Returns the cell renderer for this component.
+	 */
+	protected DefaultTableCellRenderer getCellRenderer() {
+		return new LabeledPointedMemoryTableCellRenderer();
+	}
+
+	/**
+	 * Returns the table model of this component.
+	 */
+	protected TableModel getTableModel() {
+		return new LabeledMemoryTableModel();
+	}
+
+	/**
+	 * Returns the width of the table.
+	 */
+	public int getTableWidth() {
+		return 233;
+	}
+
+	/**
+	 * Returns the index of the values column.
+	 */
+	protected int getValueColumnIndex() {
+		return 2;
+	}
+
+	/**
+	 * hides all existing falsh label.
+	 */
+	public void hideLabelFlash() {
+		labelFlashIndex = -1;
+		repaint();
+	}
+
+	/**
+	 * flashes the label at the given index.
+	 */
+	public void labelFlash(int index) {
+		labelFlashIndex = index;
+		repaint();
+	}
+
+	/**
+	 * Sets the memory contents with the given values array. (assumes that the
+	 * length of the given array equals to the gui's size)
+	 */
+	public void setContents(short[] newValues) {
+		String[] oldLabels = labels;
+		labels = new String[newValues.length];
+		System.arraycopy(oldLabels, 0, labels, 0, Math.min(oldLabels.length, labels.length));
+		super.setContents(newValues);
+	}
+
+	/**
+	 * Sets a name for the memory cell that matches the given address
+	 */
+	public void setLabel(int address, String name) {
+		labels[address] = name + ":";
+		repaint();
 	}
 }

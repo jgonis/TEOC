@@ -93,17 +93,17 @@ public class Connection {
 	}
 
 	/**
-	 * Returns the type of this connection
-	 */
-	public byte getType() {
-		return type;
-	}
-
-	/**
 	 * Returns the gate's pin number.
 	 */
 	public int getGatePinNumber() {
 		return gatePinNumber;
+	}
+
+	/**
+	 * Returns the gate's sub-bus indice (may be null).
+	 */
+	public byte[] getGateSubBus() {
+		return gateSubBus;
 	}
 
 	/**
@@ -121,17 +121,17 @@ public class Connection {
 	}
 
 	/**
-	 * Returns the gate's sub-bus indice (may be null).
-	 */
-	public byte[] getGateSubBus() {
-		return gateSubBus;
-	}
-
-	/**
 	 * Returns the part's sub-bus indice (may be null).
 	 */
 	public byte[] getPartSubBus() {
 		return partSubBus;
+	}
+
+	/**
+	 * Returns the type of this connection
+	 */
+	public byte getType() {
+		return type;
 	}
 
 }

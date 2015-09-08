@@ -34,10 +34,28 @@ import Hack.Utilities.Definitions;
  * and for setting a pointer (a specific address in the ROM for GUI perposes).
  */
 public class ROM extends PointedMemory implements ProgramEventListener {
+	class ROMLoadProgramTask implements Runnable {
+
+		private String programName;
+
+		public ROMLoadProgramTask(String programName) {
+			this.programName = programName;
+		}
+
+		public void run() {
+			clearErrorListeners();
+			try {
+				loadProgram(programName);
+			} catch (ProgramException pe) {
+				notifyErrorListeners(pe.getMessage());
+			}
+		}
+	}
+
 	/**
 	 * Decimal numeric format
 	 */
-	public static final int DECIMAL_FORMAT = HackController.DECIMAL_FORMAT;
+	public static final int DECIMAL_FORMAT = HackController.DECIMAL_FORMAT;;
 
 	/**
 	 * Hexadecimal numeric format
@@ -47,7 +65,7 @@ public class ROM extends PointedMemory implements ProgramEventListener {
 	/**
 	 * Binary numeric format
 	 */
-	public static final int BINARY_FORMAT = HackController.BINARY_FORMAT;;
+	public static final int BINARY_FORMAT = HackController.BINARY_FORMAT;
 
 	/**
 	 * Assembler format
@@ -70,6 +88,13 @@ public class ROM extends PointedMemory implements ProgramEventListener {
 			gui.setNumericFormat(ASM_FORMAT); // enable assembler
 			// gui.setNumericFormat(BINARY_FORMAT); // disable assembler
 		}
+	}
+
+	/**
+	 * Registers the given ProgramEventListener as a listener to this GUI.
+	 */
+	public void addProgramListener(ProgramEventListener listener) {
+		listeners.add(listener);
 	}
 
 	/**
@@ -106,6 +131,20 @@ public class ROM extends PointedMemory implements ProgramEventListener {
 	}
 
 	/**
+	 * Notifies all the ProgramEventListeners on a change in the ROM's program
+	 * by creating a ProgramEvent (with the new event type and program's file
+	 * name) and sending it using the programChanged method to all the
+	 * listeners.
+	 */
+	protected void notifyProgramListeners(byte eventType, String programFileName) {
+		ProgramEvent event = new ProgramEvent(this, eventType, programFileName);
+
+		for (int i = 0; i < listeners.size(); i++) {
+			((ProgramEventListener) listeners.elementAt(i)).programChanged(event);
+		}
+	}
+
+	/**
 	 * Called when the ROM's current program is changed. The event contains the
 	 * source object, event type and the new program's file name (if any).
 	 */
@@ -122,6 +161,14 @@ public class ROM extends PointedMemory implements ProgramEventListener {
 	}
 
 	/**
+	 * Un-registers the given ProgramEventListener from being a listener to this
+	 * GUI.
+	 */
+	public void removeProgramListener(ProgramEventListener listener) {
+		listeners.remove(listener);
+	}
+
+	/**
 	 * Called when the contents of the memory are changed through the memory
 	 * gui.
 	 */
@@ -135,53 +182,6 @@ public class ROM extends PointedMemory implements ProgramEventListener {
 		} catch (AssemblerException ae) {
 			notifyErrorListeners("Illegal instruction");
 			quietUpdateGUI(newAddress, mem[newAddress]);
-		}
-	}
-
-	class ROMLoadProgramTask implements Runnable {
-
-		private String programName;
-
-		public ROMLoadProgramTask(String programName) {
-			this.programName = programName;
-		}
-
-		public void run() {
-			clearErrorListeners();
-			try {
-				loadProgram(programName);
-			} catch (ProgramException pe) {
-				notifyErrorListeners(pe.getMessage());
-			}
-		}
-	}
-
-	/**
-	 * Registers the given ProgramEventListener as a listener to this GUI.
-	 */
-	public void addProgramListener(ProgramEventListener listener) {
-		listeners.add(listener);
-	}
-
-	/**
-	 * Un-registers the given ProgramEventListener from being a listener to this
-	 * GUI.
-	 */
-	public void removeProgramListener(ProgramEventListener listener) {
-		listeners.remove(listener);
-	}
-
-	/**
-	 * Notifies all the ProgramEventListeners on a change in the ROM's program
-	 * by creating a ProgramEvent (with the new event type and program's file
-	 * name) and sending it using the programChanged method to all the
-	 * listeners.
-	 */
-	protected void notifyProgramListeners(byte eventType, String programFileName) {
-		ProgramEvent event = new ProgramEvent(this, eventType, programFileName);
-
-		for (int i = 0; i < listeners.size(); i++) {
-			((ProgramEventListener) listeners.elementAt(i)).programChanged(event);
 		}
 	}
 }

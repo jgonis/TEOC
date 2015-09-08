@@ -47,6 +47,60 @@ public class CompositeGateClass extends GateClass {
 	 */
 	public static final PinInfo CLOCK_NODE_INFO = new PinInfo("clk", (byte) 1);
 
+	/**
+	 * Returns an array of two integers: the low and high bits of the given pin
+	 * name. If no sub bus specified, returns null. If illegal name, throws a
+	 * HDLException.
+	 */
+	public static byte[] getSubBus(String pinName) throws Exception {
+		byte[] result = null;
+
+		int bracketsPos = pinName.indexOf("[");
+		if (bracketsPos >= 0) {
+			result = new byte[2];
+			String num = null;
+			int dotsPos = pinName.indexOf("..");
+			if (dotsPos >= 0) {
+				num = pinName.substring(bracketsPos + 1, dotsPos);
+				result[0] = Byte.parseByte(num);
+				num = pinName.substring(dotsPos + 2, pinName.indexOf("]"));
+				result[1] = Byte.parseByte(num);
+			} else {
+				num = pinName.substring(bracketsPos + 1, pinName.indexOf("]"));
+				result[0] = Byte.parseByte(num);
+				result[1] = result[0];
+			}
+		}
+
+		return result;
+	}
+
+	// Returns an array of two integers: the low and high bits of the given pin
+	// name.
+	// If no sub bus specified, returns null.
+	// This ensures that if result != null, than result[0] <= result[1] and
+	// result[0] > 0
+	private static byte[] getSubBusAndCheck(HDLTokenizer input, String pinName, int busWidth) throws HDLException {
+		byte[] result = null;
+
+		try {
+			result = getSubBus(pinName);
+		} catch (Exception e) {
+			input.HDLError(pinName + " has an invalid sub bus specification");
+		}
+
+		if (result != null) {
+			if (result[0] < 0 || result[1] < 0)
+				input.HDLError(pinName + ": negative bit numbers are illegal");
+			else if (result[0] > result[1])
+				input.HDLError(pinName + ": left bit number should be lower than the right one");
+			else if (result[1] >= busWidth)
+				input.HDLError(pinName + ": the specified sub bus is not in the bus range");
+		}
+
+		return result;
+	}
+
 	// internal pins info
 	protected Vector internalPinsInfo;
 
@@ -109,152 +163,6 @@ public class CompositeGateClass extends GateClass {
 		// If there is, the output is not clocked. Otherwise, it is.
 		for (int i = 0; i < outputPinsInfo.length; i++)
 			isOutputClocked[i] = !graph.pathExists(inputPinsInfo, outputPinsInfo[i]);
-	}
-
-	// Reads the parts list from the given HDL input
-	private void readParts(HDLTokenizer input) throws HDLException {
-		boolean endOfParts = false;
-
-		while (input.hasMoreTokens() && !endOfParts) {
-
-			input.advance();
-
-			// check if end of hdl
-			if (input.getTokenType() == HDLTokenizer.TYPE_SYMBOL && input.getSymbol() == '}')
-				endOfParts = true;
-			else {
-				// check if part name
-				if (!(input.getTokenType() == HDLTokenizer.TYPE_IDENTIFIER))
-					input.HDLError("A GateClass name is expected");
-
-				String partName = input.getIdentifier();
-				GateClass gateClass = getGateClass(partName, false);
-				partsList.addElement(gateClass);
-				isClocked = isClocked || gateClass.isClocked;
-				int partNumber = partsList.size() - 1;
-
-				// check '('
-				input.advance();
-				if (!(input.getTokenType() == HDLTokenizer.TYPE_SYMBOL && input.getSymbol() == '('))
-					input.HDLError("Missing '('");
-
-				readPinNames(input, partNumber, partName);
-
-				// check ';'
-				input.advance();
-				if (!(input.getTokenType() == HDLTokenizer.TYPE_SYMBOL && input.getSymbol() == ';'))
-					input.HDLError("Missing ';'");
-
-			}
-		}
-		if (!endOfParts) {
-			input.HDLError("Missing '}'");
-		}
-		if (input.hasMoreTokens()) {
-			input.HDLError("Expected end-of-file after '}'");
-		}
-
-		// check if internal pins have no source
-		boolean[] hasSource = new boolean[internalPinsInfo.size()];
-		Iterator connectionIter = connections.iterator();
-		while (connectionIter.hasNext()) {
-			Connection connection = (Connection) connectionIter.next();
-			if (connection.getType() == Connection.TO_INTERNAL)
-				hasSource[connection.getGatePinNumber()] = true;
-		}
-		for (int i = 0; i < hasSource.length; i++)
-			if (!hasSource[i])
-				input.HDLError(((PinInfo) internalPinsInfo.elementAt(i)).name + " has no source pin");
-	}
-
-	// Reads the pin names list from the HDL input. Returns the input after the
-	// ')' .
-	private void readPinNames(HDLTokenizer input, int partNumber, String partName) throws HDLException {
-		boolean endOfPins = false;
-
-		// read pin names
-		while (!endOfPins) {
-			// read left pin name
-			input.advance();
-			if (!(input.getTokenType() == HDLTokenizer.TYPE_IDENTIFIER))
-				input.HDLError("A pin name is expected");
-
-			String leftName = input.getIdentifier();
-
-			// check '='
-			input.advance();
-			if (!(input.getTokenType() == HDLTokenizer.TYPE_SYMBOL && input.getSymbol() == '='))
-				input.HDLError("Missing '='");
-
-			// read right pin name
-			input.advance();
-			if (!(input.getTokenType() == HDLTokenizer.TYPE_IDENTIFIER))
-				input.HDLError("A pin name is expected");
-
-			String rightName = input.getIdentifier();
-			addConnection(input, partNumber, partName, leftName, rightName);
-
-			// check ',' or ')'
-			input.advance();
-			if (input.getTokenType() == HDLTokenizer.TYPE_SYMBOL && input.getSymbol() == ')')
-				endOfPins = true;
-			else if (!(input.getTokenType() == HDLTokenizer.TYPE_SYMBOL && input.getSymbol() == ','))
-				input.HDLError("',' or ')' are expected");
-		}
-	}
-
-	// Returns an array of two integers: the low and high bits of the given pin
-	// name.
-	// If no sub bus specified, returns null.
-	// This ensures that if result != null, than result[0] <= result[1] and
-	// result[0] > 0
-	private static byte[] getSubBusAndCheck(HDLTokenizer input, String pinName, int busWidth) throws HDLException {
-		byte[] result = null;
-
-		try {
-			result = getSubBus(pinName);
-		} catch (Exception e) {
-			input.HDLError(pinName + " has an invalid sub bus specification");
-		}
-
-		if (result != null) {
-			if (result[0] < 0 || result[1] < 0)
-				input.HDLError(pinName + ": negative bit numbers are illegal");
-			else if (result[0] > result[1])
-				input.HDLError(pinName + ": left bit number should be lower than the right one");
-			else if (result[1] >= busWidth)
-				input.HDLError(pinName + ": the specified sub bus is not in the bus range");
-		}
-
-		return result;
-	}
-
-	/**
-	 * Returns an array of two integers: the low and high bits of the given pin
-	 * name. If no sub bus specified, returns null. If illegal name, throws a
-	 * HDLException.
-	 */
-	public static byte[] getSubBus(String pinName) throws Exception {
-		byte[] result = null;
-
-		int bracketsPos = pinName.indexOf("[");
-		if (bracketsPos >= 0) {
-			result = new byte[2];
-			String num = null;
-			int dotsPos = pinName.indexOf("..");
-			if (dotsPos >= 0) {
-				num = pinName.substring(bracketsPos + 1, dotsPos);
-				result[0] = Byte.parseByte(num);
-				num = pinName.substring(dotsPos + 2, pinName.indexOf("]"));
-				result[1] = Byte.parseByte(num);
-			} else {
-				num = pinName.substring(bracketsPos + 1, pinName.indexOf("]"));
-				result[0] = Byte.parseByte(num);
-				result[1] = result[0];
-			}
-		}
-
-		return result;
 	}
 
 	// Adds a connection between the two given pin names, where fullLeftName is
@@ -395,6 +303,22 @@ public class CompositeGateClass extends GateClass {
 		connections.add(connection);
 	}
 
+	// Connects the given source node to the given target node.
+	private void connectGateToPart(Node sourceNode, byte[] sourceSubBus, Node targetNode, byte[] targetSubBus) {
+		Node source = sourceNode;
+		Node target = targetNode;
+		if (targetSubBus != null)
+			target = new SubBusListeningAdapter(target, targetSubBus[0], targetSubBus[1]);
+
+		if (sourceSubBus == null)
+			source.addListener(target);
+		else {
+			Node subNode = new SubNode(sourceSubBus[0], sourceSubBus[1]);
+			source.addListener(subNode);
+			subNode.addListener(target);
+		}
+	}
+
 	/*
 	 * Creates and returns the graph of the connections in the chip. The nodes
 	 * in the graph are: 1. Internal parts, represented with Integer objects
@@ -469,24 +393,6 @@ public class CompositeGateClass extends GateClass {
 		return graph;
 	}
 
-	// Returns true if an edge should be connected to the given part.
-	// a connection to a clocked input is not considered as a connection
-	// in the graph.
-	private boolean isLegalToPartEdge(Connection connection, Integer part) {
-		GateClass partGateClass = (GateClass) partsList.elementAt(part.intValue());
-		int partPinNumber = partGateClass.getPinNumber(connection.getPartPinName());
-		return !partGateClass.isInputClocked[partPinNumber];
-	}
-
-	// Returns true if an edge should be connected from the given part.
-	// a connection from a clocked output is not considered as a connection
-	// in the graph.
-	private boolean isLegalFromPartEdge(Connection connection, Integer part) {
-		GateClass partGateClass = (GateClass) partsList.elementAt(part.intValue());
-		int partPinNumber = partGateClass.getPinNumber(connection.getPartPinName());
-		return !partGateClass.isOutputClocked[partPinNumber];
-	}
-
 	/**
 	 * Returns the PinInfo according to the given pin type and number. If
 	 * doesn't exist, return null.
@@ -501,6 +407,24 @@ public class CompositeGateClass extends GateClass {
 			result = super.getPinInfo(type, number);
 
 		return result;
+	}
+
+	// Returns true if an edge should be connected from the given part.
+	// a connection from a clocked output is not considered as a connection
+	// in the graph.
+	private boolean isLegalFromPartEdge(Connection connection, Integer part) {
+		GateClass partGateClass = (GateClass) partsList.elementAt(part.intValue());
+		int partPinNumber = partGateClass.getPinNumber(connection.getPartPinName());
+		return !partGateClass.isOutputClocked[partPinNumber];
+	}
+
+	// Returns true if an edge should be connected to the given part.
+	// a connection to a clocked input is not considered as a connection
+	// in the graph.
+	private boolean isLegalToPartEdge(Connection connection, Integer part) {
+		GateClass partGateClass = (GateClass) partsList.elementAt(part.intValue());
+		int partPinNumber = partGateClass.getPinNumber(connection.getPartPinName());
+		return !partGateClass.isInputClocked[partPinNumber];
 	}
 
 	/**
@@ -654,19 +578,95 @@ public class CompositeGateClass extends GateClass {
 		return result;
 	}
 
-	// Connects the given source node to the given target node.
-	private void connectGateToPart(Node sourceNode, byte[] sourceSubBus, Node targetNode, byte[] targetSubBus) {
-		Node source = sourceNode;
-		Node target = targetNode;
-		if (targetSubBus != null)
-			target = new SubBusListeningAdapter(target, targetSubBus[0], targetSubBus[1]);
+	// Reads the parts list from the given HDL input
+	private void readParts(HDLTokenizer input) throws HDLException {
+		boolean endOfParts = false;
 
-		if (sourceSubBus == null)
-			source.addListener(target);
-		else {
-			Node subNode = new SubNode(sourceSubBus[0], sourceSubBus[1]);
-			source.addListener(subNode);
-			subNode.addListener(target);
+		while (input.hasMoreTokens() && !endOfParts) {
+
+			input.advance();
+
+			// check if end of hdl
+			if (input.getTokenType() == HDLTokenizer.TYPE_SYMBOL && input.getSymbol() == '}')
+				endOfParts = true;
+			else {
+				// check if part name
+				if (!(input.getTokenType() == HDLTokenizer.TYPE_IDENTIFIER))
+					input.HDLError("A GateClass name is expected");
+
+				String partName = input.getIdentifier();
+				GateClass gateClass = getGateClass(partName, false);
+				partsList.addElement(gateClass);
+				isClocked = isClocked || gateClass.isClocked;
+				int partNumber = partsList.size() - 1;
+
+				// check '('
+				input.advance();
+				if (!(input.getTokenType() == HDLTokenizer.TYPE_SYMBOL && input.getSymbol() == '('))
+					input.HDLError("Missing '('");
+
+				readPinNames(input, partNumber, partName);
+
+				// check ';'
+				input.advance();
+				if (!(input.getTokenType() == HDLTokenizer.TYPE_SYMBOL && input.getSymbol() == ';'))
+					input.HDLError("Missing ';'");
+
+			}
+		}
+		if (!endOfParts) {
+			input.HDLError("Missing '}'");
+		}
+		if (input.hasMoreTokens()) {
+			input.HDLError("Expected end-of-file after '}'");
+		}
+
+		// check if internal pins have no source
+		boolean[] hasSource = new boolean[internalPinsInfo.size()];
+		Iterator connectionIter = connections.iterator();
+		while (connectionIter.hasNext()) {
+			Connection connection = (Connection) connectionIter.next();
+			if (connection.getType() == Connection.TO_INTERNAL)
+				hasSource[connection.getGatePinNumber()] = true;
+		}
+		for (int i = 0; i < hasSource.length; i++)
+			if (!hasSource[i])
+				input.HDLError(((PinInfo) internalPinsInfo.elementAt(i)).name + " has no source pin");
+	}
+
+	// Reads the pin names list from the HDL input. Returns the input after the
+	// ')' .
+	private void readPinNames(HDLTokenizer input, int partNumber, String partName) throws HDLException {
+		boolean endOfPins = false;
+
+		// read pin names
+		while (!endOfPins) {
+			// read left pin name
+			input.advance();
+			if (!(input.getTokenType() == HDLTokenizer.TYPE_IDENTIFIER))
+				input.HDLError("A pin name is expected");
+
+			String leftName = input.getIdentifier();
+
+			// check '='
+			input.advance();
+			if (!(input.getTokenType() == HDLTokenizer.TYPE_SYMBOL && input.getSymbol() == '='))
+				input.HDLError("Missing '='");
+
+			// read right pin name
+			input.advance();
+			if (!(input.getTokenType() == HDLTokenizer.TYPE_IDENTIFIER))
+				input.HDLError("A pin name is expected");
+
+			String rightName = input.getIdentifier();
+			addConnection(input, partNumber, partName, leftName, rightName);
+
+			// check ',' or ')'
+			input.advance();
+			if (input.getTokenType() == HDLTokenizer.TYPE_SYMBOL && input.getSymbol() == ')')
+				endOfPins = true;
+			else if (!(input.getTokenType() == HDLTokenizer.TYPE_SYMBOL && input.getSymbol() == ','))
+				input.HDLError("',' or ')' are expected");
 		}
 	}
 }

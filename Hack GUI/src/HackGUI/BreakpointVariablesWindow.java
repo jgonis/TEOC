@@ -79,61 +79,10 @@ public class BreakpointVariablesWindow extends JFrame {
 	}
 
 	/**
-	 * Un-registers the given BreakpointChangedListener from being a listener to
-	 * this component.
+	 * Implementing the action of pressing the cancel button.
 	 */
-	public void removeListener(BreakpointChangedListener listener) {
-		listeners.removeElement(listener);
-	}
-
-	/**
-	 * Notify all the BreakpointChangedListeners on actions taken in it, by
-	 * creating a BreakpointChangedEvent and sending it using the
-	 * breakpointChanged method to all of the listeners.
-	 */
-	public void notifyListeners() {
-		BreakpointChangedEvent event = new BreakpointChangedEvent(this, breakpoint);
-		for (int i = 0; i < listeners.size(); i++) {
-			((BreakpointChangedListener) listeners.elementAt(i)).breakpointChanged(event);
-		}
-	}
-
-	/**
-	 * Sets the list of recognized variables with the given one.
-	 */
-	public void setVariables(String[] newVars) {
-		for (int i = 0; i < newVars.length; i++) {
-			nameCombo.addItem(newVars[i]);
-		}
-	}
-
-	/**
-	 * Sets the name of the breakpoint.
-	 */
-	public void setBreakpointName(String name) {
-		nameTxt.setText(name);
-	}
-
-	/**
-	 * Sets the value of the breakpoint.
-	 */
-	public void setBreakpointValue(String value) {
-		valueTxt.setText(value);
-	}
-
-	/**
-	 * Sets the selected value in the combobox to the given index.
-	 */
-	public void setNameCombo(int index) {
-		nameCombo.setSelectedIndex(index);
-	}
-
-	/**
-	 * Shows the breakpoint variables window.
-	 */
-	public void showWindow() {
-		nameTxt.requestFocus();
-		setVisible(true);
+	public void cancelButton_actionPerformed(ActionEvent e) {
+		setVisible(false);
 	}
 
 	// Initializes this component.
@@ -182,6 +131,26 @@ public class BreakpointVariablesWindow extends JFrame {
 	}
 
 	/**
+	 * Implementing the action of changing the selected item in the combo box.
+	 */
+	public void nameCombo_actionPerformed(ActionEvent e) {
+		String name = (String) nameCombo.getSelectedItem();
+		nameTxt.setText(name);
+	}
+
+	/**
+	 * Notify all the BreakpointChangedListeners on actions taken in it, by
+	 * creating a BreakpointChangedEvent and sending it using the
+	 * breakpointChanged method to all of the listeners.
+	 */
+	public void notifyListeners() {
+		BreakpointChangedEvent event = new BreakpointChangedEvent(this, breakpoint);
+		for (int i = 0; i < listeners.size(); i++) {
+			((BreakpointChangedListener) listeners.elementAt(i)).breakpointChanged(event);
+		}
+	}
+
+	/**
 	 * Implementing the action of pressing the ok button.
 	 */
 	public void okButton_actionPerformed(ActionEvent e) {
@@ -191,17 +160,48 @@ public class BreakpointVariablesWindow extends JFrame {
 	}
 
 	/**
-	 * Implementing the action of pressing the cancel button.
+	 * Un-registers the given BreakpointChangedListener from being a listener to
+	 * this component.
 	 */
-	public void cancelButton_actionPerformed(ActionEvent e) {
-		setVisible(false);
+	public void removeListener(BreakpointChangedListener listener) {
+		listeners.removeElement(listener);
 	}
 
 	/**
-	 * Implementing the action of changing the selected item in the combo box.
+	 * Sets the name of the breakpoint.
 	 */
-	public void nameCombo_actionPerformed(ActionEvent e) {
-		String name = (String) nameCombo.getSelectedItem();
+	public void setBreakpointName(String name) {
 		nameTxt.setText(name);
+	}
+
+	/**
+	 * Sets the value of the breakpoint.
+	 */
+	public void setBreakpointValue(String value) {
+		valueTxt.setText(value);
+	}
+
+	/**
+	 * Sets the selected value in the combobox to the given index.
+	 */
+	public void setNameCombo(int index) {
+		nameCombo.setSelectedIndex(index);
+	}
+
+	/**
+	 * Sets the list of recognized variables with the given one.
+	 */
+	public void setVariables(String[] newVars) {
+		for (int i = 0; i < newVars.length; i++) {
+			nameCombo.addItem(newVars[i]);
+		}
+	}
+
+	/**
+	 * Shows the breakpoint variables window.
+	 */
+	public void showWindow() {
+		nameTxt.requestFocus();
+		setVisible(true);
 	}
 }

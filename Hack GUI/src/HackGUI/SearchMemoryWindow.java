@@ -67,11 +67,10 @@ public class SearchMemoryWindow extends JFrame {
 	}
 
 	/**
-	 * Shows the memory window.
+	 * Implementing the action of pressing the cancel button.
 	 */
-	public void showWindow() {
-		setVisible(true);
-		rowNumber.requestFocus();
+	public void cancelButton_actionPerformed(ActionEvent e) {
+		setVisible(false);
 	}
 
 	// Initialization of this component.
@@ -127,17 +126,18 @@ public class SearchMemoryWindow extends JFrame {
 	}
 
 	/**
-	 * Implementing the action of pressing the cancel button.
-	 */
-	public void cancelButton_actionPerformed(ActionEvent e) {
-		setVisible(false);
-	}
-
-	/**
 	 * Implementing the action of pressing 'enter' on the text field (this
 	 * action is similar to pressing the ok button).
 	 */
 	public void rowNumber_actionPerformed(ActionEvent e) {
 		okButton_actionPerformed(e);
+	}
+
+	/**
+	 * Shows the memory window.
+	 */
+	public void showWindow() {
+		setVisible(true);
+		rowNumber.requestFocus();
 	}
 }

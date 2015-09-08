@@ -47,24 +47,68 @@ public class LineTokenizer extends StreamTokenizer {
 	}
 
 	/**
-	 * Return the current token, or null if no more tokens.
+	 * Returns true if the tokenizer contains the given token. The tokenizer
+	 * advances until its end to find the token.
 	 */
-	public String token() {
-		String token = null;
+	public boolean contains(String token) throws IOException {
+		boolean found = false;
 
-		switch (ttype) {
-		case StreamTokenizer.TT_NUMBER:
-			token = String.valueOf((int) nval);
-			break;
-		case StreamTokenizer.TT_WORD:
-			token = sval;
-			break;
-		default:
-			token = String.valueOf((char) ttype);
-			break;
+		while (!found && !isEnd()) {
+			if (!(found = token().equals(token))) {
+				try {
+					advance(false);
+				} catch (HackTranslatorException hte) {
+				}
+			}
 		}
 
-		return token;
+		return found;
+	}
+
+	/**
+	 * Makes sure that there are no more tokens. If there are, throw an
+	 * exception.
+	 */
+	public void ensureEnd() throws HackTranslatorException, IOException {
+		advance(false);
+
+		if (!isEnd())
+			throw new HackTranslatorException("end of line expected, '" + token() + "' is found");
+	}
+
+	/**
+	 * Checks whether the tokenizer reached its end.
+	 */
+	public boolean isEnd() {
+		return (ttype == TT_EOF);
+	}
+
+	/**
+	 * Checks whether the current token is a number.
+	 */
+	public boolean isNumber() {
+		return ttype == TT_NUMBER;
+	}
+
+	/**
+	 * Checks whether the current token is a symbol.
+	 */
+	public boolean isSymbol() {
+		return ttype > 0;
+	}
+
+	/**
+	 * Checks whether the current token matches the given token
+	 */
+	public boolean isToken(String token) {
+		return token().equalsIgnoreCase(token);
+	}
+
+	/**
+	 * Checks whether the current token is a word.
+	 */
+	public boolean isWord() {
+		return ttype == TT_WORD;
 	}
 
 	/**
@@ -89,67 +133,23 @@ public class LineTokenizer extends StreamTokenizer {
 	}
 
 	/**
-	 * Checks whether the current token matches the given token
+	 * Return the current token, or null if no more tokens.
 	 */
-	public boolean isToken(String token) {
-		return token().equalsIgnoreCase(token);
-	}
+	public String token() {
+		String token = null;
 
-	/**
-	 * Checks whether the current token is a word.
-	 */
-	public boolean isWord() {
-		return ttype == TT_WORD;
-	}
-
-	/**
-	 * Checks whether the current token is a number.
-	 */
-	public boolean isNumber() {
-		return ttype == TT_NUMBER;
-	}
-
-	/**
-	 * Checks whether the current token is a symbol.
-	 */
-	public boolean isSymbol() {
-		return ttype > 0;
-	}
-
-	/**
-	 * Checks whether the tokenizer reached its end.
-	 */
-	public boolean isEnd() {
-		return (ttype == TT_EOF);
-	}
-
-	/**
-	 * Makes sure that there are no more tokens. If there are, throw an
-	 * exception.
-	 */
-	public void ensureEnd() throws HackTranslatorException, IOException {
-		advance(false);
-
-		if (!isEnd())
-			throw new HackTranslatorException("end of line expected, '" + token() + "' is found");
-	}
-
-	/**
-	 * Returns true if the tokenizer contains the given token. The tokenizer
-	 * advances until its end to find the token.
-	 */
-	public boolean contains(String token) throws IOException {
-		boolean found = false;
-
-		while (!found && !isEnd()) {
-			if (!(found = token().equals(token))) {
-				try {
-					advance(false);
-				} catch (HackTranslatorException hte) {
-				}
-			}
+		switch (ttype) {
+		case StreamTokenizer.TT_NUMBER:
+			token = String.valueOf((int) nval);
+			break;
+		case StreamTokenizer.TT_WORD:
+			token = sval;
+			break;
+		default:
+			token = String.valueOf((char) ttype);
+			break;
 		}
 
-		return found;
+		return token;
 	}
 }

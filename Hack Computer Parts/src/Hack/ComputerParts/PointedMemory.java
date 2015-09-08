@@ -38,16 +38,16 @@ public class PointedMemory extends Memory {
 		super(size, gui, minValue, maxValue);
 	}
 
+	public void reset() {
+		setPointerAddress(0);
+		super.reset();
+	}
+
 	/**
 	 * Set the pointer to point at the given address.
 	 */
 	public void setPointerAddress(int address) {
 		if (displayChanges)
 			((PointedMemoryGUI) gui).setPointer(address);
-	}
-
-	public void reset() {
-		setPointerAddress(0);
-		super.reset();
 	}
 }

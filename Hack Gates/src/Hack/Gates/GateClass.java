@@ -41,43 +41,21 @@ public abstract class GateClass {
 	 */
 	public static final byte OUTPUT_PIN_TYPE = 2;
 
-	// input and output pin names
-	protected PinInfo[] inputPinsInfo;
-	protected PinInfo[] outputPinsInfo;
-
-	// The name of the gate
-	protected String name;
-
-	// true if this gate is clocked
-	protected boolean isClocked;
-
-	// true if the corresponding input is clocked
-	protected boolean[] isInputClocked;
-
-	// true if the corresponding output is clocked
-	protected boolean[] isOutputClocked;
-
-	// Mapping from pin names to their types (INPUT_PIN_TYPE, OUTPUT_PIN_TYPE)
-	protected Hashtable namesToTypes;
-
-	// Mapping from pin names to their numbers (Integer objects)
-	protected Hashtable namesToNumbers;
-
 	// a table that maps a gate name with its GateClass
 	protected static Hashtable GateClasses = new Hashtable();
+	/**
+	 * Clears the gate Cache
+	 */
+	public static void clearGateCache() {
+		GateClasses.clear();
+	}
 
-	// Constructs a new GateCLass (public access through the getGateClass
-	// method)
-	protected GateClass(String gateName, PinInfo[] inputPinsInfo, PinInfo[] outputPinsInfo) {
-		namesToTypes = new Hashtable();
-		namesToNumbers = new Hashtable();
-
-		this.name = gateName;
-
-		this.inputPinsInfo = inputPinsInfo;
-		registerPins(inputPinsInfo, INPUT_PIN_TYPE);
-		this.outputPinsInfo = outputPinsInfo;
-		registerPins(outputPinsInfo, OUTPUT_PIN_TYPE);
+	/**
+	 * Returns true if a GateClass exists for the given gate name.
+	 */
+	public static boolean gateClassExists(String gateName) {
+		String fileName = GatesManager.getInstance().getHDLFileName(gateName);
+		return (GateClasses.get(fileName) != null);
 	}
 
 	/**
@@ -117,19 +95,29 @@ public abstract class GateClass {
 		return result;
 	}
 
-	/**
-	 * Clears the gate Cache
-	 */
-	public static void clearGateCache() {
-		GateClasses.clear();
-	}
+	// Returns a PinInfo array according to the given pin names
+	// (which may contain width specification).
+	private static PinInfo[] getPinsInfo(HDLTokenizer input, String[] names) throws HDLException {
+		PinInfo[] result = new PinInfo[names.length];
 
-	/**
-	 * Returns true if a GateClass exists for the given gate name.
-	 */
-	public static boolean gateClassExists(String gateName) {
-		String fileName = GatesManager.getInstance().getHDLFileName(gateName);
-		return (GateClasses.get(fileName) != null);
+		for (int i = 0; i < names.length; i++) {
+			result[i] = new PinInfo();
+			int bracketsPos = names[i].indexOf("[");
+			if (bracketsPos >= 0) {
+				try {
+					String width = names[i].substring(bracketsPos + 1, names[i].indexOf("]"));
+					result[i].width = (byte) Integer.parseInt(width);
+					result[i].name = names[i].substring(0, bracketsPos);
+				} catch (Exception e) {
+					input.HDLError(names[i] + " has an invalid bus width");
+				}
+			} else {
+				result[i].width = 1;
+				result[i].name = names[i];
+			}
+		}
+
+		return result;
 	}
 
 	// Loads the HDL from the given input, creates the appropriate GateClass and
@@ -221,29 +209,48 @@ public abstract class GateClass {
 		return result;
 	}
 
-	// Returns a PinInfo array according to the given pin names
-	// (which may contain width specification).
-	private static PinInfo[] getPinsInfo(HDLTokenizer input, String[] names) throws HDLException {
-		PinInfo[] result = new PinInfo[names.length];
+	// input and output pin names
+	protected PinInfo[] inputPinsInfo;
 
-		for (int i = 0; i < names.length; i++) {
-			result[i] = new PinInfo();
-			int bracketsPos = names[i].indexOf("[");
-			if (bracketsPos >= 0) {
-				try {
-					String width = names[i].substring(bracketsPos + 1, names[i].indexOf("]"));
-					result[i].width = (byte) Integer.parseInt(width);
-					result[i].name = names[i].substring(0, bracketsPos);
-				} catch (Exception e) {
-					input.HDLError(names[i] + " has an invalid bus width");
-				}
-			} else {
-				result[i].width = 1;
-				result[i].name = names[i];
-			}
-		}
+	protected PinInfo[] outputPinsInfo;
 
-		return result;
+	// The name of the gate
+	protected String name;
+
+	// true if this gate is clocked
+	protected boolean isClocked;
+
+	// true if the corresponding input is clocked
+	protected boolean[] isInputClocked;
+
+	// true if the corresponding output is clocked
+	protected boolean[] isOutputClocked;
+
+	// Mapping from pin names to their types (INPUT_PIN_TYPE, OUTPUT_PIN_TYPE)
+	protected Hashtable namesToTypes;
+
+	// Mapping from pin names to their numbers (Integer objects)
+	protected Hashtable namesToNumbers;
+
+	// Constructs a new GateCLass (public access through the getGateClass
+	// method)
+	protected GateClass(String gateName, PinInfo[] inputPinsInfo, PinInfo[] outputPinsInfo) {
+		namesToTypes = new Hashtable();
+		namesToNumbers = new Hashtable();
+
+		this.name = gateName;
+
+		this.inputPinsInfo = inputPinsInfo;
+		registerPins(inputPinsInfo, INPUT_PIN_TYPE);
+		this.outputPinsInfo = outputPinsInfo;
+		registerPins(outputPinsInfo, OUTPUT_PIN_TYPE);
+	}
+
+	/**
+	 * Returns the name of the gate.
+	 */
+	public String getName() {
+		return name;
 	}
 
 	/**
@@ -278,21 +285,11 @@ public abstract class GateClass {
 	}
 
 	/**
-	 * Registers the given pins with their given type and numbers.
+	 * Returns the number of the given pinName. If not found, returns -1.
 	 */
-	protected void registerPins(PinInfo[] pins, byte type) {
-		for (int i = 0; i < pins.length; i++) {
-			namesToTypes.put(pins[i].name, new Byte(type));
-			namesToNumbers.put(pins[i].name, new Integer(i));
-		}
-	}
-
-	/**
-	 * Registers the given pin with its given type and number.
-	 */
-	protected void registerPin(PinInfo pin, byte type, int number) {
-		namesToTypes.put(pin.name, new Byte(type));
-		namesToNumbers.put(pin.name, new Integer(number));
+	public int getPinNumber(String pinName) {
+		Integer result = (Integer) namesToNumbers.get(pinName);
+		return (result != null ? result.intValue() : -1);
 	}
 
 	/**
@@ -302,21 +299,6 @@ public abstract class GateClass {
 	public byte getPinType(String pinName) {
 		Byte result = (Byte) namesToTypes.get(pinName);
 		return (result != null ? result.byteValue() : UNKNOWN_PIN_TYPE);
-	}
-
-	/**
-	 * Returns the number of the given pinName. If not found, returns -1.
-	 */
-	public int getPinNumber(String pinName) {
-		Integer result = (Integer) namesToNumbers.get(pinName);
-		return (result != null ? result.intValue() : -1);
-	}
-
-	/**
-	 * Returns the name of the gate.
-	 */
-	public String getName() {
-		return name;
 	}
 
 	/**
@@ -330,4 +312,22 @@ public abstract class GateClass {
 	 * Creates and returns a new Gate instance of this GateClass type.
 	 */
 	public abstract Gate newInstance() throws InstantiationException;
+
+	/**
+	 * Registers the given pin with its given type and number.
+	 */
+	protected void registerPin(PinInfo pin, byte type, int number) {
+		namesToTypes.put(pin.name, new Byte(type));
+		namesToNumbers.put(pin.name, new Integer(number));
+	}
+
+	/**
+	 * Registers the given pins with their given type and numbers.
+	 */
+	protected void registerPins(PinInfo[] pins, byte type) {
+		for (int i = 0; i < pins.length; i++) {
+			namesToTypes.put(pins[i].name, new Byte(type));
+			namesToNumbers.put(pins[i].name, new Integer(i));
+		}
+	}
 }

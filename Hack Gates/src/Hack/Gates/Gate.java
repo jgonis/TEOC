@@ -65,18 +65,9 @@ public abstract class Gate {
 	}
 
 	/**
-	 * Removes the given listener from being a listener to the isDirty property.
+	 * Updates the outputs of the gate according to its internal state.
 	 */
-	public void removeDirtyGateListener(DirtyGateListener listener) {
-		if (dirtyGateListeners != null)
-			dirtyGateListeners.remove(listener);
-	}
-
-	/**
-	 * Re-computes the values of all output pins according to the gate's
-	 * functionality.
-	 */
-	protected abstract void reCompute();
+	protected abstract void clockDown();
 
 	/**
 	 * Updates the internal state of a clocked gate according to the gate's
@@ -85,20 +76,28 @@ public abstract class Gate {
 	protected abstract void clockUp();
 
 	/**
-	 * Updates the outputs of the gate according to its internal state.
+	 * Recomputes the gate's outputs.
 	 */
-	protected abstract void clockDown();
+	private void doEval() {
+		if (isDirty) {
+			isDirty = false;
+
+			// notify listeners
+			if (dirtyGateListeners != null)
+				for (int i = 0; i < dirtyGateListeners.size(); i++)
+					((DirtyGateListener) dirtyGateListeners.elementAt(i)).gotClean();
+		}
+
+		reCompute();
+	}
 
 	/**
-	 * Marks the gate as "dirty" - needs to be recomputed.
+	 * Recomputes the gate's outputs if inputs changed since the last
+	 * computation.
 	 */
-	public void setDirty() {
-		isDirty = true;
-
-		// notify listeners
-		if (dirtyGateListeners != null)
-			for (int i = 0; i < dirtyGateListeners.size(); i++)
-				((DirtyGateListener) dirtyGateListeners.elementAt(i)).gotDirty();
+	public void eval() {
+		if (isDirty)
+			doEval();
 	}
 
 	/**
@@ -106,6 +105,13 @@ public abstract class Gate {
 	 */
 	public GateClass getGateClass() {
 		return gateClass;
+	}
+
+	/**
+	 * Returns the input pins.
+	 */
+	public Node[] getInputNodes() {
+		return inputPins;
 	}
 
 	/**
@@ -130,13 +136,6 @@ public abstract class Gate {
 	}
 
 	/**
-	 * Returns the input pins.
-	 */
-	public Node[] getInputNodes() {
-		return inputPins;
-	}
-
-	/**
 	 * Returns the output pins.
 	 */
 	public Node[] getOutputNodes() {
@@ -144,28 +143,29 @@ public abstract class Gate {
 	}
 
 	/**
-	 * Recomputes the gate's outputs if inputs changed since the last
-	 * computation.
+	 * Re-computes the values of all output pins according to the gate's
+	 * functionality.
 	 */
-	public void eval() {
-		if (isDirty)
-			doEval();
+	protected abstract void reCompute();
+
+	/**
+	 * Removes the given listener from being a listener to the isDirty property.
+	 */
+	public void removeDirtyGateListener(DirtyGateListener listener) {
+		if (dirtyGateListeners != null)
+			dirtyGateListeners.remove(listener);
 	}
 
 	/**
-	 * Recomputes the gate's outputs.
+	 * Marks the gate as "dirty" - needs to be recomputed.
 	 */
-	private void doEval() {
-		if (isDirty) {
-			isDirty = false;
+	public void setDirty() {
+		isDirty = true;
 
-			// notify listeners
-			if (dirtyGateListeners != null)
-				for (int i = 0; i < dirtyGateListeners.size(); i++)
-					((DirtyGateListener) dirtyGateListeners.elementAt(i)).gotClean();
-		}
-
-		reCompute();
+		// notify listeners
+		if (dirtyGateListeners != null)
+			for (int i = 0; i < dirtyGateListeners.size(); i++)
+				((DirtyGateListener) dirtyGateListeners.elementAt(i)).gotDirty();
 	}
 
 	/**

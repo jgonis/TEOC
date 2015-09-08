@@ -29,6 +29,21 @@ import Hack.ComputerParts.PointedMemoryGUI;
  */
 public class PointedMemoryComponent extends MemoryComponent implements PointedMemoryGUI {
 
+	// An inner class which implemets the cell renderer of the program table,
+	// giving
+	// the feature of coloring the background of a specific cell.
+	public class PointedMemoryTableCellRenderer extends MemoryTableCellRenderer {
+
+		public void setRenderer(int row, int column) {
+			if (row == pointerAddress)
+				setBackground(Color.yellow);
+			else
+				setBackground(null);
+
+			super.setRenderer(row, column);
+		}
+	}
+
 	// The pointer address
 	protected int pointerAddress = -1;
 
@@ -37,16 +52,6 @@ public class PointedMemoryComponent extends MemoryComponent implements PointedMe
 
 	protected DefaultTableCellRenderer getCellRenderer() {
 		return new PointedMemoryTableCellRenderer();
-	}
-
-	/**
-	 * Sets the pointer with the given pointer address.
-	 */
-	public void setPointer(int pointerAddress) {
-		this.pointerAddress = pointerAddress;
-
-		if (pointerAddress >= 0)
-			Utilities.tableCenterScroll(this, memoryTable, pointerAddress);
 	}
 
 	/**
@@ -65,18 +70,13 @@ public class PointedMemoryComponent extends MemoryComponent implements PointedMe
 		hasFocus = false;
 	}
 
-	// An inner class which implemets the cell renderer of the program table,
-	// giving
-	// the feature of coloring the background of a specific cell.
-	public class PointedMemoryTableCellRenderer extends MemoryTableCellRenderer {
+	/**
+	 * Sets the pointer with the given pointer address.
+	 */
+	public void setPointer(int pointerAddress) {
+		this.pointerAddress = pointerAddress;
 
-		public void setRenderer(int row, int column) {
-			if (row == pointerAddress)
-				setBackground(Color.yellow);
-			else
-				setBackground(null);
-
-			super.setRenderer(row, column);
-		}
+		if (pointerAddress >= 0)
+			Utilities.tableCenterScroll(this, memoryTable, pointerAddress);
 	}
 }

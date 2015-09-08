@@ -52,18 +52,18 @@ public class Node {
 	}
 
 	/**
+	 * Returns the value of this node.
+	 */
+	public short get() {
+		return value;
+	}
+
+	/**
 	 * Removes the given node from being a listener.
 	 */
 	public void removeListener(Node node) {
 		if (listeners != null)
 			listeners.remove(node);
-	}
-
-	/**
-	 * Returns the value of this node.
-	 */
-	public short get() {
-		return value;
 	}
 
 	/**

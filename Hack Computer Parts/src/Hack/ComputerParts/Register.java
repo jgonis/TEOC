@@ -29,6 +29,14 @@ public class Register extends InteractiveValueComputerPart implements ComputerPa
 	protected RegisterGUI gui;
 
 	/**
+	 * Constructs a new register with the given GUI component (optional).
+	 */
+	public Register(RegisterGUI gui) {
+		super(gui != null);
+		init(gui);
+	}
+
+	/**
 	 * Constructs a new register with the given GUI component and the legal
 	 * values range.
 	 */
@@ -37,12 +45,23 @@ public class Register extends InteractiveValueComputerPart implements ComputerPa
 		init(gui);
 	}
 
+	public void doSetValueAt(int index, short value) {
+		this.value = value;
+	}
+
 	/**
-	 * Constructs a new register with the given GUI component (optional).
+	 * Returns the value of the register.
 	 */
-	public Register(RegisterGUI gui) {
-		super(gui != null);
-		init(gui);
+	public short get() {
+		return getValueAt(0);
+	}
+
+	public ComputerPartGUI getGUI() {
+		return gui;
+	}
+
+	public short getValueAt(int index) {
+		return value;
 	}
 
 	// Initalizes the register
@@ -55,26 +74,11 @@ public class Register extends InteractiveValueComputerPart implements ComputerPa
 		}
 	}
 
-	/**
-	 * Returns the value of the register.
-	 */
-	public short get() {
-		return getValueAt(0);
-	}
+	public void refreshGUI() {
+		super.refreshGUI();
 
-	/**
-	 * Sets the value of the register with the given value.
-	 */
-	public void store(short value) {
-		setValueAt(0, value, false);
-	}
-
-	public short getValueAt(int index) {
-		return value;
-	}
-
-	public void doSetValueAt(int index, short value) {
-		this.value = value;
+		if (displayChanges)
+			quietUpdateGUI(0, value);
 	}
 
 	public void reset() {
@@ -82,14 +86,10 @@ public class Register extends InteractiveValueComputerPart implements ComputerPa
 		value = nullValue;
 	}
 
-	public ComputerPartGUI getGUI() {
-		return gui;
-	}
-
-	public void refreshGUI() {
-		super.refreshGUI();
-
-		if (displayChanges)
-			quietUpdateGUI(0, value);
+	/**
+	 * Sets the value of the register with the given value.
+	 */
+	public void store(short value) {
+		setValueAt(0, value, false);
 	}
 }

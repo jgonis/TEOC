@@ -58,6 +58,25 @@ public class FileContentWindow extends JFrame {
 	}
 
 	/**
+	 * Deletes the content of the window.
+	 */
+	public void deleteContent() {
+		fileContent.setText("");
+	}
+
+	// Initializes this component.
+	private void jbInit() {
+		fileContent.setEditable(false);
+		fileContent.setFont(Utilities.valueFont);
+		fileContent.setEnabled(false);
+		fileContent.setDisabledTextColor(Color.black);
+		scrollPane = new JScrollPane(fileContent);
+		scrollPane.setPreferredSize(new Dimension(190, 330));
+		setSize(375, 372);
+		this.getContentPane().add(scrollPane, BorderLayout.CENTER);
+	}
+
+	/**
 	 * Calling this method causes the next call to setContent to load the file
 	 * even if its name wasn't changed.
 	 */
@@ -84,24 +103,5 @@ public class FileContentWindow extends JFrame {
 			}
 		}
 		fileContent.select(0, 0);
-	}
-
-	/**
-	 * Deletes the content of the window.
-	 */
-	public void deleteContent() {
-		fileContent.setText("");
-	}
-
-	// Initializes this component.
-	private void jbInit() {
-		fileContent.setEditable(false);
-		fileContent.setFont(Utilities.valueFont);
-		fileContent.setEnabled(false);
-		fileContent.setDisabledTextColor(Color.black);
-		scrollPane = new JScrollPane(fileContent);
-		scrollPane.setPreferredSize(new Dimension(190, 330));
-		setSize(375, 372);
-		this.getContentPane().add(scrollPane, BorderLayout.CENTER);
 	}
 }

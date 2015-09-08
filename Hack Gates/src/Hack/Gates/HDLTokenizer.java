@@ -76,6 +76,9 @@ public class HDLTokenizer {
 	// The source file name
 	private String fileName;
 
+	public HDLTokenizer() {
+	}
+
 	/**
 	 * Constructs a new HDLTokenizer with the given file name.
 	 */
@@ -94,32 +97,6 @@ public class HDLTokenizer {
 		} catch (IOException ioe) {
 			throw new HDLException("Error while initializing for reading", fileName);
 		}
-	}
-
-	public HDLTokenizer() {
-	}
-
-	/**
-	 * Initializes the tokenizer input
-	 */
-	protected void initizalizeInput(Reader input) throws IOException {
-		parser = new StreamTokenizer(input);
-		parser.parseNumbers();
-		parser.slashSlashComments(true);
-		parser.slashStarComments(true);
-		parser.wordChars(':', ':');
-		parser.wordChars('[', '[');
-		parser.wordChars(']', ']');
-		parser.nextToken();
-		initKeywords();
-		initSymbols();
-	}
-
-	/**
-	 * Returns the source file name.
-	 */
-	public String getFileName() {
-		return fileName;
 	}
 
 	/**
@@ -161,6 +138,53 @@ public class HDLTokenizer {
 	}
 
 	/**
+	 * Returns the source file name.
+	 */
+	public String getFileName() {
+		return fileName;
+	}
+
+	/**
+	 * Returns the identifier value of the current token May only be called when
+	 * getTokenType() == IDENTIFIER
+	 */
+	public String getIdentifier() {
+		return identifier;
+	}
+
+	/**
+	 * Returns the int value of the current token May only be called when
+	 * getTokenType() == INT_CONST
+	 */
+	public int getIntValue() {
+		return intValue;
+	}
+
+	/**
+	 * Returns the keyword type of the current token May only be called when
+	 * getTokenType() == KEYWORD
+	 */
+	public int getKeywordType() {
+		return keyWordType;
+	}
+
+	/**
+	 * Returns the string value of the current token May only be called when
+	 * getTokenType() == STRING_CONST
+	 */
+	public String getStringValue() {
+		return stringValue;
+	}
+
+	/**
+	 * Returns the symbol of the current token May only be called when
+	 * getTokenType() == SYMBOL
+	 */
+	public char getSymbol() {
+		return symbol;
+	}
+
+	/**
 	 * Returns the current token as a String.
 	 */
 	public String getToken() {
@@ -175,50 +199,33 @@ public class HDLTokenizer {
 	}
 
 	/**
-	 * Returns the keyword type of the current token May only be called when
-	 * getTokenType() == KEYWORD
-	 */
-	public int getKeywordType() {
-		return keyWordType;
-	}
-
-	/**
-	 * Returns the symbol of the current token May only be called when
-	 * getTokenType() == SYMBOL
-	 */
-	public char getSymbol() {
-		return symbol;
-	}
-
-	/**
-	 * Returns the int value of the current token May only be called when
-	 * getTokenType() == INT_CONST
-	 */
-	public int getIntValue() {
-		return intValue;
-	}
-
-	/**
-	 * Returns the string value of the current token May only be called when
-	 * getTokenType() == STRING_CONST
-	 */
-	public String getStringValue() {
-		return stringValue;
-	}
-
-	/**
-	 * Returns the identifier value of the current token May only be called when
-	 * getTokenType() == IDENTIFIER
-	 */
-	public String getIdentifier() {
-		return identifier;
-	}
-
-	/**
 	 * Returns if there are more tokens in the stream
 	 */
 	public boolean hasMoreTokens() {
 		return (parser.ttype != parser.TT_EOF);
+	}
+
+	/**
+	 * Generates an HDLException with the given message.
+	 */
+	public void HDLError(String message) throws HDLException {
+		throw new HDLException(message, fileName, parser.lineno());
+	}
+
+	/**
+	 * Initializes the tokenizer input
+	 */
+	protected void initizalizeInput(Reader input) throws IOException {
+		parser = new StreamTokenizer(input);
+		parser.parseNumbers();
+		parser.slashSlashComments(true);
+		parser.slashStarComments(true);
+		parser.wordChars(':', ':');
+		parser.wordChars('[', '[');
+		parser.wordChars(']', ']');
+		parser.nextToken();
+		initKeywords();
+		initSymbols();
 	}
 
 	// Initializes the keywords hashtable
@@ -241,12 +248,5 @@ public class HDLTokenizer {
 		symbols.put(";", ";");
 		symbols.put("(", "(");
 		symbols.put(")", ")");
-	}
-
-	/**
-	 * Generates an HDLException with the given message.
-	 */
-	public void HDLError(String message) throws HDLException {
-		throw new HDLException(message, fileName, parser.lineno());
 	}
 }

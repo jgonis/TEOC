@@ -31,12 +31,12 @@ public interface GatesPanelGUI {
 	public void addGateComponent(Component gateComponent);
 
 	/**
-	 * Removes the given gate component from the gates panel.
-	 */
-	public void removeGateComponent(Component gateComponent);
-
-	/**
 	 * Removes all the gate components from the gates panel.
 	 */
 	public void removeAllGateComponents();
+
+	/**
+	 * Removes the given gate component from the gates panel.
+	 */
+	public void removeGateComponent(Component gateComponent);
 }

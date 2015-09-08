@@ -55,6 +55,93 @@ import HackGUI.Utilities;
  */
 public class ProgramComponent extends JPanel implements VMProgramGUI {
 
+	// An inner class which implemets the cell renderer of the program table,
+	// giving
+	// the feature of coloring the background of a specific cell.
+	class ColoredTableCellRenderer extends DefaultTableCellRenderer {
+
+		public Component getTableCellRendererComponent(JTable table, Object value, boolean selected, boolean focused,
+				int row, int column) {
+			setEnabled(table == null || table.isEnabled());
+			setBackground(null);
+			setForeground(null);
+
+			if (column == 0) {
+				setHorizontalAlignment(SwingConstants.CENTER);
+			} else {
+				setHorizontalAlignment(SwingConstants.LEFT);
+			}
+			if (row == instructionIndex)
+				setBackground(Color.yellow);
+			else {
+				HVMInstruction currentInstruction = instructions[row];
+				String op = (currentInstruction.getFormattedStrings())[0];
+				if (op.equals("function") && (column == 1 || column == 2))
+					setBackground(new Color(190, 171, 210));
+			}
+
+			super.getTableCellRendererComponent(table, value, selected, focused, row, column);
+
+			return this;
+		}
+	}
+
+	// An inner class representing the model of the CallStack table.
+	class ProgramTableModel extends AbstractTableModel {
+
+		/**
+		 * Returns the number of columns.
+		 */
+		public int getColumnCount() {
+			return 3;
+		}
+
+		/**
+		 * Returns the names of the columns.
+		 */
+		public String getColumnName(int col) {
+			return null;
+		}
+
+		/**
+		 * Returns the number of rows.
+		 */
+		public int getRowCount() {
+			return instructions.length;
+		}
+
+		/**
+		 * Returns the value at a specific row and column.
+		 */
+		public Object getValueAt(int row, int col) {
+
+			String[] formattedString = instructions[row].getFormattedStrings();
+
+			switch (col) {
+			case 0:
+				short index = instructions[row].getIndexInFunction();
+				if (index >= 0)
+					return new Short(index);
+				else
+					return "";
+			case 1:
+				return formattedString[0];
+			case 2:
+				return formattedString[1] + " " + formattedString[2];
+			default:
+				return null;
+
+			}
+		}
+
+		/**
+		 * Returns true of this table cells are editable, false - otherwise.
+		 */
+		public boolean isCellEditable(int row, int col) {
+			return false;
+		}
+	}
+
 	// A vector containing the listeners to this object.
 	private Vector listeners;
 
@@ -127,34 +214,6 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
 	}
 
 	/**
-	 * Registers the given ProgramEventListener as a listener to this GUI.
-	 */
-	public void addProgramListener(ProgramEventListener listener) {
-		listeners.addElement(listener);
-	}
-
-	/**
-	 * Un-registers the given ProgramEventListener from being a listener to this
-	 * GUI.
-	 */
-	public void removeProgramListener(ProgramEventListener listener) {
-		listeners.removeElement(listener);
-	}
-
-	/**
-	 * Notifies all the ProgramEventListeners on a change in the program by
-	 * creating a ProgramEvent (with the new event type and program's directory
-	 * name) and sending it using the programChanged method to all the
-	 * listeners.
-	 */
-	public void notifyProgramListeners(byte eventType, String programFileName) {
-		ProgramEvent event = new ProgramEvent(this, eventType, programFileName);
-		for (int i = 0; i < listeners.size(); i++) {
-			((ProgramEventListener) listeners.elementAt(i)).programChanged(event);
-		}
-	}
-
-	/**
 	 * Registers the given ErrorEventListener as a listener to this GUI.
 	 */
 	public void addErrorListener(ErrorEventListener listener) {
@@ -162,71 +221,10 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
 	}
 
 	/**
-	 * Un-registers the given ErrorEventListener from being a listener to this
-	 * GUI.
+	 * Registers the given ProgramEventListener as a listener to this GUI.
 	 */
-	public void removeErrorListener(ErrorEventListener listener) {
-		errorEventListeners.removeElement(listener);
-	}
-
-	/**
-	 * Notifies all the ErrorEventListener on an error in this gui by creating
-	 * an ErrorEvent (with the error message) and sending it using the
-	 * errorOccured method to all the listeners.
-	 */
-	public void notifyErrorListeners(String errorMessage) {
-		ErrorEvent event = new ErrorEvent(this, errorMessage);
-		for (int i = 0; i < errorEventListeners.size(); i++)
-			((ErrorEventListener) errorEventListeners.elementAt(i)).errorOccured(event);
-	}
-
-	/**
-	 * Sets the working directory with the given directory File.
-	 */
-	public void setWorkingDir(File file) {
-		fileChooser.setCurrentDirectory(file);
-	}
-
-	/**
-	 * Sets the contents of the gui with the first instructionsLength
-	 * instructions from the given array of instructions.
-	 */
-	public synchronized void setContents(VMEmulatorInstruction[] newInstructions, int newInstructionsLength) {
-		instructions = new VMEmulatorInstruction[newInstructionsLength];
-		System.arraycopy(newInstructions, 0, instructions, 0, newInstructionsLength);
-		programTable.revalidate();
-		try {
-			wait(100);
-		} catch (InterruptedException ie) {
-		}
-		searchWindow.setInstructions(instructions);
-	}
-
-	/**
-	 * Sets the current instruction with the given instruction index.
-	 */
-	public void setCurrentInstruction(int instructionIndex) {
-		this.instructionIndex = instructionIndex;
-		Utilities.tableCenterScroll(this, programTable, instructionIndex);
-	}
-
-	/**
-	 * Resets the contents of this ProgramComponent.
-	 */
-	public void reset() {
-		instructions = new VMEmulatorInstruction[0];
-		programTable.clearSelection();
-		repaint();
-	}
-
-	/**
-	 * Opens the program file chooser for loading a program.
-	 */
-	public void loadProgram() {
-		int returnVal = fileChooser.showDialog(this, "Load Program");
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			notifyProgramListeners(ProgramEvent.LOAD, fileChooser.getSelectedFile().getAbsolutePath());
-		}
+	public void addProgramListener(ProgramEventListener listener) {
+		listeners.addElement(listener);
 	}
 
 	/**
@@ -237,25 +235,28 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
 	}
 
 	/**
-	 * Hides the displayed message.
+	 * Implementing the action of pressing the clear button.
 	 */
-	public void hideMessage() {
-		messageTxt.setText("");
-		messageTxt.setVisible(false);
-		searchButton.setVisible(true);
-		clearButton.setVisible(true);
-		browseButton.setVisible(true);
+	public void clearButton_actionPerformed(ActionEvent e) {
+		Object[] options = { "Yes", "No", "Cancel" };
+		int pressedButtonValue = JOptionPane.showOptionDialog(this.getParent(),
+				"Are you sure you want to clear the program?", "Warning Message", JOptionPane.YES_NO_CANCEL_OPTION,
+				JOptionPane.WARNING_MESSAGE, null, options, options[2]);
+
+		if (pressedButtonValue == JOptionPane.YES_OPTION)
+			notifyProgramListeners(ProgramEvent.CLEAR, null);
 	}
 
 	/**
-	 * Displays the given message.
+	 * Displays a confirmation window asking the user permission to use built-in
+	 * vm functions
 	 */
-	public void showMessage(String message) {
-		messageTxt.setText(message);
-		messageTxt.setVisible(true);
-		searchButton.setVisible(false);
-		clearButton.setVisible(false);
-		browseButton.setVisible(false);
+	public boolean confirmBuiltInAccess() {
+		String message = "No implementation was found for some functions which are called in the VM code.\n"
+				+ "The VM Emulator provides built-in implementations for the OS functions.\n"
+				+ "If available, should this built-in implementation be used for functions which were not implemented in the VM code?";
+		return (JOptionPane.showConfirmDialog(this.getParent(), message, "Confirmation Message",
+				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION);
 	}
 
 	// Determines the width of each column in the table.
@@ -273,47 +274,21 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
 	}
 
 	/**
-	 * Implementing the action of pressing the search button.
-	 */
-	public void searchButton_actionPerformed(ActionEvent e) {
-		searchWindow.showWindow();
-	}
-
-	/**
-	 * Implementing the action of pressing the clear button.
-	 */
-	public void clearButton_actionPerformed(ActionEvent e) {
-		Object[] options = { "Yes", "No", "Cancel" };
-		int pressedButtonValue = JOptionPane.showOptionDialog(this.getParent(),
-				"Are you sure you want to clear the program?", "Warning Message", JOptionPane.YES_NO_CANCEL_OPTION,
-				JOptionPane.WARNING_MESSAGE, null, options, options[2]);
-
-		if (pressedButtonValue == JOptionPane.YES_OPTION)
-			notifyProgramListeners(ProgramEvent.CLEAR, null);
-	}
-
-	/**
-	 * Sets the number of visible rows.
-	 */
-	public void setVisibleRows(int num) {
-		int tableHeight = num * programTable.getRowHeight();
-		scrollPane.setSize(getTableWidth(), tableHeight + 3);
-		setPreferredSize(new Dimension(getTableWidth(), tableHeight + 30));
-		setSize(getTableWidth(), tableHeight + 30);
-	}
-
-	/**
-	 * Sets the name label.
-	 */
-	public void setNameLabel(String name) {
-		nameLbl.setText(name);
-	}
-
-	/**
 	 * Returns the width of the table.
 	 */
 	public int getTableWidth() {
 		return 225;
+	}
+
+	/**
+	 * Hides the displayed message.
+	 */
+	public void hideMessage() {
+		messageTxt.setText("");
+		messageTxt.setVisible(false);
+		searchButton.setVisible(true);
+		clearButton.setVisible(true);
+		browseButton.setVisible(true);
 	}
 
 	// Initialization of this component.
@@ -374,103 +349,14 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
 		setBorder(BorderFactory.createEtchedBorder());
 	}
 
-	// An inner class representing the model of the CallStack table.
-	class ProgramTableModel extends AbstractTableModel {
-
-		/**
-		 * Returns the number of columns.
-		 */
-		public int getColumnCount() {
-			return 3;
-		}
-
-		/**
-		 * Returns the number of rows.
-		 */
-		public int getRowCount() {
-			return instructions.length;
-		}
-
-		/**
-		 * Returns the names of the columns.
-		 */
-		public String getColumnName(int col) {
-			return null;
-		}
-
-		/**
-		 * Returns the value at a specific row and column.
-		 */
-		public Object getValueAt(int row, int col) {
-
-			String[] formattedString = instructions[row].getFormattedStrings();
-
-			switch (col) {
-			case 0:
-				short index = instructions[row].getIndexInFunction();
-				if (index >= 0)
-					return new Short(index);
-				else
-					return "";
-			case 1:
-				return formattedString[0];
-			case 2:
-				return formattedString[1] + " " + formattedString[2];
-			default:
-				return null;
-
-			}
-		}
-
-		/**
-		 * Returns true of this table cells are editable, false - otherwise.
-		 */
-		public boolean isCellEditable(int row, int col) {
-			return false;
-		}
-	}
-
-	// An inner class which implemets the cell renderer of the program table,
-	// giving
-	// the feature of coloring the background of a specific cell.
-	class ColoredTableCellRenderer extends DefaultTableCellRenderer {
-
-		public Component getTableCellRendererComponent(JTable table, Object value, boolean selected, boolean focused,
-				int row, int column) {
-			setEnabled(table == null || table.isEnabled());
-			setBackground(null);
-			setForeground(null);
-
-			if (column == 0) {
-				setHorizontalAlignment(SwingConstants.CENTER);
-			} else {
-				setHorizontalAlignment(SwingConstants.LEFT);
-			}
-			if (row == instructionIndex)
-				setBackground(Color.yellow);
-			else {
-				HVMInstruction currentInstruction = instructions[row];
-				String op = (currentInstruction.getFormattedStrings())[0];
-				if (op.equals("function") && (column == 1 || column == 2))
-					setBackground(new Color(190, 171, 210));
-			}
-
-			super.getTableCellRendererComponent(table, value, selected, focused, row, column);
-
-			return this;
-		}
-	}
-
 	/**
-	 * Displays a confirmation window asking the user permission to use built-in
-	 * vm functions
+	 * Opens the program file chooser for loading a program.
 	 */
-	public boolean confirmBuiltInAccess() {
-		String message = "No implementation was found for some functions which are called in the VM code.\n"
-				+ "The VM Emulator provides built-in implementations for the OS functions.\n"
-				+ "If available, should this built-in implementation be used for functions which were not implemented in the VM code?";
-		return (JOptionPane.showConfirmDialog(this.getParent(), message, "Confirmation Message",
-				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION);
+	public void loadProgram() {
+		int returnVal = fileChooser.showDialog(this, "Load Program");
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			notifyProgramListeners(ProgramEvent.LOAD, fileChooser.getSelectedFile().getAbsolutePath());
+		}
 	}
 
 	/**
@@ -479,5 +365,119 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
 	public void notify(String message) {
 		JOptionPane.showMessageDialog(this.getParent(), message, "Information Message",
 				JOptionPane.INFORMATION_MESSAGE);
+	}
+
+	/**
+	 * Notifies all the ErrorEventListener on an error in this gui by creating
+	 * an ErrorEvent (with the error message) and sending it using the
+	 * errorOccured method to all the listeners.
+	 */
+	public void notifyErrorListeners(String errorMessage) {
+		ErrorEvent event = new ErrorEvent(this, errorMessage);
+		for (int i = 0; i < errorEventListeners.size(); i++)
+			((ErrorEventListener) errorEventListeners.elementAt(i)).errorOccured(event);
+	}
+
+	/**
+	 * Notifies all the ProgramEventListeners on a change in the program by
+	 * creating a ProgramEvent (with the new event type and program's directory
+	 * name) and sending it using the programChanged method to all the
+	 * listeners.
+	 */
+	public void notifyProgramListeners(byte eventType, String programFileName) {
+		ProgramEvent event = new ProgramEvent(this, eventType, programFileName);
+		for (int i = 0; i < listeners.size(); i++) {
+			((ProgramEventListener) listeners.elementAt(i)).programChanged(event);
+		}
+	}
+
+	/**
+	 * Un-registers the given ErrorEventListener from being a listener to this
+	 * GUI.
+	 */
+	public void removeErrorListener(ErrorEventListener listener) {
+		errorEventListeners.removeElement(listener);
+	}
+
+	/**
+	 * Un-registers the given ProgramEventListener from being a listener to this
+	 * GUI.
+	 */
+	public void removeProgramListener(ProgramEventListener listener) {
+		listeners.removeElement(listener);
+	}
+
+	/**
+	 * Resets the contents of this ProgramComponent.
+	 */
+	public void reset() {
+		instructions = new VMEmulatorInstruction[0];
+		programTable.clearSelection();
+		repaint();
+	}
+
+	/**
+	 * Implementing the action of pressing the search button.
+	 */
+	public void searchButton_actionPerformed(ActionEvent e) {
+		searchWindow.showWindow();
+	}
+
+	/**
+	 * Sets the contents of the gui with the first instructionsLength
+	 * instructions from the given array of instructions.
+	 */
+	public synchronized void setContents(VMEmulatorInstruction[] newInstructions, int newInstructionsLength) {
+		instructions = new VMEmulatorInstruction[newInstructionsLength];
+		System.arraycopy(newInstructions, 0, instructions, 0, newInstructionsLength);
+		programTable.revalidate();
+		try {
+			wait(100);
+		} catch (InterruptedException ie) {
+		}
+		searchWindow.setInstructions(instructions);
+	}
+
+	/**
+	 * Sets the current instruction with the given instruction index.
+	 */
+	public void setCurrentInstruction(int instructionIndex) {
+		this.instructionIndex = instructionIndex;
+		Utilities.tableCenterScroll(this, programTable, instructionIndex);
+	}
+
+	/**
+	 * Sets the name label.
+	 */
+	public void setNameLabel(String name) {
+		nameLbl.setText(name);
+	}
+
+	/**
+	 * Sets the number of visible rows.
+	 */
+	public void setVisibleRows(int num) {
+		int tableHeight = num * programTable.getRowHeight();
+		scrollPane.setSize(getTableWidth(), tableHeight + 3);
+		setPreferredSize(new Dimension(getTableWidth(), tableHeight + 30));
+		setSize(getTableWidth(), tableHeight + 30);
+	}
+
+	/**
+	 * Sets the working directory with the given directory File.
+	 */
+	public void setWorkingDir(File file) {
+		fileChooser.setCurrentDirectory(file);
+	}
+
+	/**
+	 * Displays the given message.
+	 */
+	public void showMessage(String message) {
+		messageTxt.setText(message);
+		messageTxt.setVisible(true);
+		searchButton.setVisible(false);
+		clearButton.setVisible(false);
+		browseButton.setVisible(false);
 	}
 }

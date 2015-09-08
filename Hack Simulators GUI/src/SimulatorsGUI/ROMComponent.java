@@ -51,11 +51,25 @@ import HackGUI.Utilities;
  */
 public class ROMComponent extends PointedMemoryComponent implements ROMGUI {
 
-	// A vector containing the listeners to this object.
-	private Vector programEventListeners;
+	/**
+	 * An inner class which implemets the cell renderer of the rom table, giving
+	 * the feature of coloring the background of a specific cell.
+	 */
+	public class ROMTableCellRenderer extends PointedMemoryTableCellRenderer {
+
+		public void setRenderer(int row, int column) {
+			super.setRenderer(row, column);
+
+			if (dataFormat == ASM_FORMAT && column == 1)
+				setHorizontalAlignment(SwingConstants.LEFT);
+		}
+	}
 
 	// The ASM format.
 	private final static int ASM_FORMAT = ROM.ASM_FORMAT;
+
+	// A vector containing the listeners to this object.
+	private Vector programEventListeners;
 
 	// The load file button.
 	protected MouseOverJButton loadButton = new MouseOverJButton();
@@ -96,24 +110,6 @@ public class ROMComponent extends PointedMemoryComponent implements ROMGUI {
 		jbInit();
 	}
 
-	public void setNumericFormat(int formatCode) {
-		super.setNumericFormat(formatCode);
-		switch (formatCode) {
-		case ASM_FORMAT:
-			romFormat.setSelectedIndex(0);
-			break;
-		case Format.DEC_FORMAT:
-			romFormat.setSelectedIndex(1);
-			break;
-		case Format.HEX_FORMAT:
-			romFormat.setSelectedIndex(2);
-			break;
-		case Format.BIN_FORMAT:
-			romFormat.setSelectedIndex(3);
-			break;
-		}
-	}
-
 	/**
 	 * Registers the given ProgramEventListener as a listener to this GUI.
 	 */
@@ -121,43 +117,8 @@ public class ROMComponent extends PointedMemoryComponent implements ROMGUI {
 		programEventListeners.addElement(listener);
 	}
 
-	/**
-	 * Un-registers the given ProgramEventListener from being a listener to this
-	 * GUI.
-	 */
-	public void removeProgramListener(ProgramEventListener listener) {
-		programEventListeners.removeElement(listener);
-	}
-
-	/**
-	 * Notifies all the ProgramEventListeners on a change in the ROM's program
-	 * by creating a ProgramEvent (with the new event type and program's file
-	 * name) and sending it using the programChanged method to all the
-	 * listeners.
-	 */
-	public void notifyProgramListeners(byte eventType, String programFileName) {
-		ProgramEvent event = new ProgramEvent(this, eventType, programFileName);
-		for (int i = 0; i < programEventListeners.size(); i++)
-			((ProgramEventListener) programEventListeners.elementAt(i)).programChanged(event);
-	}
-
-	/**
-	 * Overrides to add the program clear functionality.
-	 */
-	public void notifyClearListeners() {
-		super.notifyClearListeners();
-		notifyProgramListeners(ProgramEvent.CLEAR, null);
-	}
-
 	protected DefaultTableCellRenderer getCellRenderer() {
 		return new ROMTableCellRenderer();
-	}
-
-	/**
-	 * Sets the current program file name with the given name.
-	 */
-	public void setProgram(String programFileName) {
-		this.programFileName = programFileName;
 	}
 
 	/**
@@ -179,6 +140,132 @@ public class ROMComponent extends PointedMemoryComponent implements ROMGUI {
 		loadButton.setVisible(true);
 		searchButton.setVisible(true);
 		romFormat.setVisible(true);
+	}
+
+	// Initializes this rom.
+	private void jbInit() {
+		loadButton.setIcon(loadIcon);
+		loadButton.setBounds(new Rectangle(97, 2, 31, 25));
+		loadButton.setToolTipText("Load Program");
+		loadButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				loadButton_actionPerformed(e);
+			}
+		});
+		messageTxt.setBackground(SystemColor.info);
+		messageTxt.setEnabled(false);
+		messageTxt.setFont(Utilities.labelsFont);
+		messageTxt.setPreferredSize(new Dimension(70, 20));
+		messageTxt.setDisabledTextColor(Color.red);
+		messageTxt.setEditable(false);
+		messageTxt.setHorizontalAlignment(SwingConstants.CENTER);
+		messageTxt.setBounds(new Rectangle(37, 3, 154, 22));
+		messageTxt.setVisible(false);
+		romFormat.setPreferredSize(new Dimension(125, 23));
+		romFormat.setBounds(new Rectangle(39, 3, 56, 23));
+		romFormat.setFont(Utilities.thinLabelsFont);
+		romFormat.setToolTipText("Display Format");
+		romFormat.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				romFormat_actionPerformed(e);
+			}
+		});
+		this.add(messageTxt, null);
+		this.add(loadButton);
+		this.add(romFormat, null);
+	}
+
+	/**
+	 * Implements the action of clicking the load button.
+	 */
+	public void loadButton_actionPerformed(ActionEvent e) {
+		loadProgram();
+	}
+
+	/**
+	 * Opens the file chooser for loading a new program.
+	 */
+	public void loadProgram() {
+		int returnVal = fileChooser.showDialog(this, "Load ROM");
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			notifyProgramListeners(ProgramEvent.LOAD, fileChooser.getSelectedFile().getAbsolutePath());
+		}
+	}
+
+	/**
+	 * Overrides to add the program clear functionality.
+	 */
+	public void notifyClearListeners() {
+		super.notifyClearListeners();
+		notifyProgramListeners(ProgramEvent.CLEAR, null);
+	}
+
+	/**
+	 * Notifies all the ProgramEventListeners on a change in the ROM's program
+	 * by creating a ProgramEvent (with the new event type and program's file
+	 * name) and sending it using the programChanged method to all the
+	 * listeners.
+	 */
+	public void notifyProgramListeners(byte eventType, String programFileName) {
+		ProgramEvent event = new ProgramEvent(this, eventType, programFileName);
+		for (int i = 0; i < programEventListeners.size(); i++)
+			((ProgramEventListener) programEventListeners.elementAt(i)).programChanged(event);
+	}
+
+	/**
+	 * Un-registers the given ProgramEventListener from being a listener to this
+	 * GUI.
+	 */
+	public void removeProgramListener(ProgramEventListener listener) {
+		programEventListeners.removeElement(listener);
+	}
+
+	/**
+	 * Implemeting the action of changing the selected item in the combo box
+	 */
+	public void romFormat_actionPerformed(ActionEvent e) {
+		String newFormat = (String) romFormat.getSelectedItem();
+		if (newFormat.equals(format[0])) {
+			setNumericFormat(ASM_FORMAT);
+		} else if (newFormat.equals(format[1])) {
+			setNumericFormat(Format.DEC_FORMAT);
+		} else if (newFormat.equals(format[2])) {
+			setNumericFormat(Format.HEX_FORMAT);
+		} else if (newFormat.equals(format[3])) {
+			setNumericFormat(Format.BIN_FORMAT);
+		}
+	}
+
+	public void setNumericFormat(int formatCode) {
+		super.setNumericFormat(formatCode);
+		switch (formatCode) {
+		case ASM_FORMAT:
+			romFormat.setSelectedIndex(0);
+			break;
+		case Format.DEC_FORMAT:
+			romFormat.setSelectedIndex(1);
+			break;
+		case Format.HEX_FORMAT:
+			romFormat.setSelectedIndex(2);
+			break;
+		case Format.BIN_FORMAT:
+			romFormat.setSelectedIndex(3);
+			break;
+		}
+	}
+
+	/**
+	 * Sets the current program file name with the given name.
+	 */
+	public void setProgram(String programFileName) {
+		this.programFileName = programFileName;
+	}
+
+	/**
+	 * Sets the current working dir.
+	 */
+	public void setWorkingDir(File file) {
+		fileChooser.setCurrentDirectory(file);
 	}
 
 	/**
@@ -223,92 +310,5 @@ public class ROMComponent extends PointedMemoryComponent implements ROMGUI {
 			}
 		}
 		return result;
-	}
-
-	// Initializes this rom.
-	private void jbInit() {
-		loadButton.setIcon(loadIcon);
-		loadButton.setBounds(new Rectangle(97, 2, 31, 25));
-		loadButton.setToolTipText("Load Program");
-		loadButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				loadButton_actionPerformed(e);
-			}
-		});
-		messageTxt.setBackground(SystemColor.info);
-		messageTxt.setEnabled(false);
-		messageTxt.setFont(Utilities.labelsFont);
-		messageTxt.setPreferredSize(new Dimension(70, 20));
-		messageTxt.setDisabledTextColor(Color.red);
-		messageTxt.setEditable(false);
-		messageTxt.setHorizontalAlignment(SwingConstants.CENTER);
-		messageTxt.setBounds(new Rectangle(37, 3, 154, 22));
-		messageTxt.setVisible(false);
-		romFormat.setPreferredSize(new Dimension(125, 23));
-		romFormat.setBounds(new Rectangle(39, 3, 56, 23));
-		romFormat.setFont(Utilities.thinLabelsFont);
-		romFormat.setToolTipText("Display Format");
-		romFormat.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				romFormat_actionPerformed(e);
-			}
-		});
-		this.add(messageTxt, null);
-		this.add(loadButton);
-		this.add(romFormat, null);
-	}
-
-	/**
-	 * Sets the current working dir.
-	 */
-	public void setWorkingDir(File file) {
-		fileChooser.setCurrentDirectory(file);
-	}
-
-	/**
-	 * Opens the file chooser for loading a new program.
-	 */
-	public void loadProgram() {
-		int returnVal = fileChooser.showDialog(this, "Load ROM");
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			notifyProgramListeners(ProgramEvent.LOAD, fileChooser.getSelectedFile().getAbsolutePath());
-		}
-	}
-
-	/**
-	 * Implements the action of clicking the load button.
-	 */
-	public void loadButton_actionPerformed(ActionEvent e) {
-		loadProgram();
-	}
-
-	/**
-	 * Implemeting the action of changing the selected item in the combo box
-	 */
-	public void romFormat_actionPerformed(ActionEvent e) {
-		String newFormat = (String) romFormat.getSelectedItem();
-		if (newFormat.equals(format[0])) {
-			setNumericFormat(ASM_FORMAT);
-		} else if (newFormat.equals(format[1])) {
-			setNumericFormat(Format.DEC_FORMAT);
-		} else if (newFormat.equals(format[2])) {
-			setNumericFormat(Format.HEX_FORMAT);
-		} else if (newFormat.equals(format[3])) {
-			setNumericFormat(Format.BIN_FORMAT);
-		}
-	}
-
-	/**
-	 * An inner class which implemets the cell renderer of the rom table, giving
-	 * the feature of coloring the background of a specific cell.
-	 */
-	public class ROMTableCellRenderer extends PointedMemoryTableCellRenderer {
-
-		public void setRenderer(int row, int column) {
-			super.setRenderer(row, column);
-
-			if (dataFormat == ASM_FORMAT && column == 1)
-				setHorizontalAlignment(SwingConstants.LEFT);
-		}
 	}
 }

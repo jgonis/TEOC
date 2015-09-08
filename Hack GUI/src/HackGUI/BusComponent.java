@@ -116,6 +116,23 @@ public class BusComponent extends JPanel implements ActionListener, BusGUI {
 		}
 	}
 
+	// Initializes this component.
+	private void jbInit() {
+		txtBorder = BorderFactory.createMatteBorder(4, 4, 4, 4, Color.orange);
+		txtField.setBounds(new Rectangle(10, 8, WIDTH, HEIGHT));
+		txtField.setBackground(Color.white);
+		txtField.setEnabled(false);
+		txtField.setBorder(txtBorder);
+		txtField.setDisabledTextColor(Color.black);
+		txtField.setEditable(false);
+		txtField.setHorizontalAlignment(SwingConstants.RIGHT);
+		txtField.setFont(Utilities.valueFont);
+		this.setLayout(null);
+		this.add(txtField, null);
+		txtField.setVisible(false);
+		this.setOpaque(false);
+	}
+
 	/**
 	 * Moves the given value from the source coordinates to the target
 	 * coordinates.
@@ -149,15 +166,6 @@ public class BusComponent extends JPanel implements ActionListener, BusGUI {
 	}
 
 	/**
-	 * Sets the sending speed (in the range
-	 * 1..HackController.NUMBER_OF_SPEED_UNITS).
-	 */
-	public void setSpeed(int speedUnit) {
-		timer.setDelay(delays[speedUnit - 1]);
-		currentStepLength = stepLengths[speedUnit - 1];
-	}
-
-	/**
 	 * Resets the content of this BusComponent.
 	 */
 	public void reset() {
@@ -177,20 +185,12 @@ public class BusComponent extends JPanel implements ActionListener, BusGUI {
 		txtField.setBounds(r);
 	}
 
-	// Initializes this component.
-	private void jbInit() {
-		txtBorder = BorderFactory.createMatteBorder(4, 4, 4, 4, Color.orange);
-		txtField.setBounds(new Rectangle(10, 8, WIDTH, HEIGHT));
-		txtField.setBackground(Color.white);
-		txtField.setEnabled(false);
-		txtField.setBorder(txtBorder);
-		txtField.setDisabledTextColor(Color.black);
-		txtField.setEditable(false);
-		txtField.setHorizontalAlignment(SwingConstants.RIGHT);
-		txtField.setFont(Utilities.valueFont);
-		this.setLayout(null);
-		this.add(txtField, null);
-		txtField.setVisible(false);
-		this.setOpaque(false);
+	/**
+	 * Sets the sending speed (in the range
+	 * 1..HackController.NUMBER_OF_SPEED_UNITS).
+	 */
+	public void setSpeed(int speedUnit) {
+		timer.setDelay(delays[speedUnit - 1]);
+		currentStepLength = stepLengths[speedUnit - 1];
 	}
 }

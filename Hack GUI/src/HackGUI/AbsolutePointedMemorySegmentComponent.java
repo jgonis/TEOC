@@ -26,6 +26,28 @@ import javax.swing.table.TableModel;
  */
 public class AbsolutePointedMemorySegmentComponent extends PointedMemorySegmentComponent {
 
+	// An inner class representing the model of this table.
+	public class AbsoluteTableModel extends MemorySegmentTableModel {
+
+		/**
+		 * Returns the value at a specific row and column.
+		 */
+		public Object getValueAt(int row, int col) {
+			if (col == 0)
+				return String.valueOf(row + startAddress);
+			else
+				return super.getValueAt(row, col);
+		}
+	}
+
+	/**
+	 * Returns the coordinates of the top left corner of the value at the given
+	 * index.
+	 */
+	public Point getCoordinates(int index) {
+		return super.getCoordinates(index - startAddress);
+	}
+
 	/**
 	 * Returns the appropriate table model.
 	 */
@@ -41,31 +63,9 @@ public class AbsolutePointedMemorySegmentComponent extends PointedMemorySegmentC
 	}
 
 	/**
-	 * Returns the coordinates of the top left corner of the value at the given
-	 * index.
-	 */
-	public Point getCoordinates(int index) {
-		return super.getCoordinates(index - startAddress);
-	}
-
-	/**
 	 * Scrolls the table to the pointer location.
 	 */
 	protected void scrollToPointer() {
 		Utilities.tableCenterScroll(this, segmentTable, pointerAddress - startAddress);
-	}
-
-	// An inner class representing the model of this table.
-	public class AbsoluteTableModel extends MemorySegmentTableModel {
-
-		/**
-		 * Returns the value at a specific row and column.
-		 */
-		public Object getValueAt(int row, int col) {
-			if (col == 0)
-				return String.valueOf(row + startAddress);
-			else
-				return super.getValueAt(row, col);
-		}
 	}
 }

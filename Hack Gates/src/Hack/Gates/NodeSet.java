@@ -39,13 +39,6 @@ public class NodeSet extends Vector {
 	}
 
 	/**
-	 * Removes the given node from the set.
-	 */
-	public boolean remove(Node node) {
-		return super.remove(node);
-	}
-
-	/**
 	 * Returns true if this set contains the given node.
 	 */
 	public boolean contains(Node node) {
@@ -57,5 +50,12 @@ public class NodeSet extends Vector {
 	 */
 	public Node getNodeAt(int index) {
 		return (Node) elementAt(index);
+	}
+
+	/**
+	 * Removes the given node from the set.
+	 */
+	public boolean remove(Node node) {
+		return super.remove(node);
 	}
 }

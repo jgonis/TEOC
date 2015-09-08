@@ -26,19 +26,9 @@ import Hack.ComputerParts.ValueComputerPartGUI;
 public interface ALUGUI extends ValueComputerPartGUI {
 
 	/**
-	 * Sets the command of the ALU with the given command.
-	 */
-	public void setCommand(String command);
-
-	/**
 	 * Flashes the ALU body.
 	 */
 	public void bodyFlash();
-
-	/**
-	 * Hides the ALU's body flash.
-	 */
-	public void hideBodyFlash();
 
 	/**
 	 * Flashes the ALU command.
@@ -46,7 +36,17 @@ public interface ALUGUI extends ValueComputerPartGUI {
 	public void commandFlash();
 
 	/**
+	 * Hides the ALU's body flash.
+	 */
+	public void hideBodyFlash();
+
+	/**
 	 * Hides the ALU's command flash.
 	 */
 	public void hideCommandFlash();
+
+	/**
+	 * Sets the command of the ALU with the given command.
+	 */
+	public void setCommand(String command);
 }

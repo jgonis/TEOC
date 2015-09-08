@@ -65,22 +65,6 @@ public class Graph {
 		}
 	}
 
-	/**
-	 * Returns true if the graph is empty.
-	 */
-	public boolean isEmpty() {
-		return graph.keySet().isEmpty();
-	}
-
-	/**
-	 * Returns true if there is a path from the given source node to the given
-	 * destination node.
-	 */
-	public boolean pathExists(Object source, Object destination) {
-		Set marked = new HashSet();
-		return doPathExists(source, destination, marked);
-	}
-
 	// Finds recursively using the DFS algorithm if there is a path from the
 	// source to destination.
 	private boolean doPathExists(Object source, Object destination, Set marked) {
@@ -98,26 +82,6 @@ public class Graph {
 		}
 
 		return pathFound;
-	}
-
-	/**
-	 * Returns the objects (nodes) of this graph sorted in a topological order,
-	 * starting from the given object. Sets the 'containsCircle' property if a
-	 * circle is detected in the graph.
-	 */
-	public Object[] topologicalSort(Object start) {
-		hasCircle = false;
-		Set marked = new HashSet();
-		Set processed = new HashSet();
-		Vector nodes = new Vector();
-		doTopologicalSort(start, nodes, marked, processed);
-
-		// reverse the order received from the DFS algorithm
-		Object[] result = new Object[nodes.size()];
-		for (int i = 0; i < result.length; i++)
-			result[i] = nodes.elementAt(result.length - i - 1);
-
-		return result;
 	}
 
 	// Runs the topological sort on the given node. This will run recursively
@@ -149,5 +113,41 @@ public class Graph {
 	 */
 	public boolean hasCircle() {
 		return hasCircle;
+	}
+
+	/**
+	 * Returns true if the graph is empty.
+	 */
+	public boolean isEmpty() {
+		return graph.keySet().isEmpty();
+	}
+
+	/**
+	 * Returns true if there is a path from the given source node to the given
+	 * destination node.
+	 */
+	public boolean pathExists(Object source, Object destination) {
+		Set marked = new HashSet();
+		return doPathExists(source, destination, marked);
+	}
+
+	/**
+	 * Returns the objects (nodes) of this graph sorted in a topological order,
+	 * starting from the given object. Sets the 'containsCircle' property if a
+	 * circle is detected in the graph.
+	 */
+	public Object[] topologicalSort(Object start) {
+		hasCircle = false;
+		Set marked = new HashSet();
+		Set processed = new HashSet();
+		Vector nodes = new Vector();
+		doTopologicalSort(start, nodes, marked, processed);
+
+		// reverse the order received from the DFS algorithm
+		Object[] result = new Object[nodes.size()];
+		for (int i = 0; i < result.length; i++)
+			result[i] = nodes.elementAt(result.length - i - 1);
+
+		return result;
 	}
 }

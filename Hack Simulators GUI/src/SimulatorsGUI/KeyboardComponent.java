@@ -58,13 +58,6 @@ public class KeyboardComponent extends JPanel implements KeyboardGUI {
 	}
 
 	/**
-	 * Displayes the given key name.
-	 */
-	public void setKey(String keyName) {
-		keyNameText.setText(keyName);
-	}
-
-	/**
 	 * Clears the key display.
 	 */
 	public void clearKey() {
@@ -72,9 +65,10 @@ public class KeyboardComponent extends JPanel implements KeyboardGUI {
 	}
 
 	/**
-	 * Resets the contents of this KeyboardComponent.
+	 * Returns the keyboard's button.
 	 */
-	public void reset() {
+	public JComponent getKeyEventHandler() {
+		return keyButton;
 	}
 
 	// Initializes this component.
@@ -106,13 +100,6 @@ public class KeyboardComponent extends JPanel implements KeyboardGUI {
 	}
 
 	/**
-	 * Returns the keyboard's button.
-	 */
-	public JComponent getKeyEventHandler() {
-		return keyButton;
-	}
-
-	/**
 	 * Implements the action of gaining the focus (changing the background of
 	 * this component).
 	 */
@@ -126,5 +113,18 @@ public class KeyboardComponent extends JPanel implements KeyboardGUI {
 	 */
 	public void keyButton_focusLost(FocusEvent e) {
 		keyButton.setBackground(UIManager.getColor("Button.background"));
+	}
+
+	/**
+	 * Resets the contents of this KeyboardComponent.
+	 */
+	public void reset() {
+	}
+
+	/**
+	 * Displayes the given key name.
+	 */
+	public void setKey(String keyName) {
+		keyNameText.setText(keyName);
 	}
 }

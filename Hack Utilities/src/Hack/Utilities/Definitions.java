@@ -387,27 +387,6 @@ public class Definitions {
 	// the single instance
 	private static Definitions instance;
 
-	// the translation table from pointer names to addresses
-	private Hashtable addresses;
-
-	// translation table for action key codes
-	private short[] actionKeyCodes;
-
-	// Constructor: initializes addresses and key codes.
-	private Definitions() {
-		initAddresses();
-		initKeyCodes();
-	}
-
-	/**
-	 * Returns the single instance of the definitions object.
-	 */
-	public static Definitions getInstance() {
-		if (instance == null)
-			instance = new Definitions();
-		return instance;
-	}
-
 	/**
 	 * Computes an ALU's command with the given information and returns the
 	 * result. input0, input1 - the two ALU inputs. zero0 - if true, zeros
@@ -437,6 +416,27 @@ public class Definitions {
 			result = (short) (~result);
 
 		return result;
+	}
+
+	/**
+	 * Returns the single instance of the definitions object.
+	 */
+	public static Definitions getInstance() {
+		if (instance == null)
+			instance = new Definitions();
+		return instance;
+	}
+
+	// the translation table from pointer names to addresses
+	private Hashtable addresses;
+
+	// translation table for action key codes
+	private short[] actionKeyCodes;
+
+	// Constructor: initializes addresses and key codes.
+	private Definitions() {
+		initAddresses();
+		initKeyCodes();
 	}
 
 	/**

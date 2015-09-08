@@ -22,11 +22,10 @@ package Hack.Controller;
  */
 public class ScriptException extends Exception {
 	/**
-	 * Constructs a new ScriptException with the given message, script name and
-	 * Line number.
+	 * Constructs a new ScriptException with the given message.
 	 */
-	public ScriptException(String message, String scriptName, int lineNumber) {
-		super("In script " + scriptName + ", Line " + lineNumber + ", " + message);
+	public ScriptException(String message) {
+		super(message);
 	}
 
 	/**
@@ -37,9 +36,10 @@ public class ScriptException extends Exception {
 	}
 
 	/**
-	 * Constructs a new ScriptException with the given message.
+	 * Constructs a new ScriptException with the given message, script name and
+	 * Line number.
 	 */
-	public ScriptException(String message) {
-		super(message);
+	public ScriptException(String message, String scriptName, int lineNumber) {
+		super("In script " + scriptName + ", Line " + lineNumber + ", " + message);
 	}
 }

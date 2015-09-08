@@ -39,8 +39,10 @@ public class WideTable extends JTable {
 		this.width = width;
 	}
 
-	public Dimension getSize() {
-		return new Dimension(width, super.getHeight());
+	public Rectangle getBounds() {
+		Rectangle rect = super.getBounds();
+		rect.width = width;
+		return rect;
 	}
 
 	public Dimension getPreferredSize() {
@@ -49,10 +51,8 @@ public class WideTable extends JTable {
 		return dimension;
 	}
 
-	public Rectangle getBounds() {
-		Rectangle rect = super.getBounds();
-		rect.width = width;
-		return rect;
+	public Dimension getSize() {
+		return new Dimension(width, super.getHeight());
 	}
 
 	public int getWidth() {

@@ -61,44 +61,14 @@ public class GateInfoComponent extends JPanel implements GateInfoGUI {
 		jbInit();
 	}
 
-	public void setChip(String chipName) {
-		this.chipName = chipName;
-		chipNameTxt.setText(chipName);
-	}
-
-	public void setClock(boolean up) {
-		clockUp = up;
-		if (up)
-			timeTxt.setText(timeTxt.getText() + "+");
-	}
-
-	public void setClocked(boolean clocked) {
-		if (clocked)
-			chipNameTxt.setText(chipName + " (Clocked) ");
-		else
-			chipNameTxt.setText(chipName);
-	}
-
-	public void setTime(int time) {
-		if (clockUp)
-			timeTxt.setText(String.valueOf(time) + "+");
-		else
-			timeTxt.setText(String.valueOf(time));
-	}
-
-	public void reset() {
-		chipNameTxt.setText("");
-		timeTxt.setText("0");
+	public void disableTime() {
+		timeLbl.setEnabled(false);
+		timeTxt.setEnabled(false);
 	}
 
 	public void enableTime() {
 		timeLbl.setEnabled(true);
 		timeTxt.setEnabled(true);
-	}
-
-	public void disableTime() {
-		timeLbl.setEnabled(false);
-		timeTxt.setEnabled(false);
 	}
 
 	// Initializes this component.
@@ -129,5 +99,35 @@ public class GateInfoComponent extends JPanel implements GateInfoGUI {
 
 		setSize(483, 37);
 		setBorder(BorderFactory.createEtchedBorder());
+	}
+
+	public void reset() {
+		chipNameTxt.setText("");
+		timeTxt.setText("0");
+	}
+
+	public void setChip(String chipName) {
+		this.chipName = chipName;
+		chipNameTxt.setText(chipName);
+	}
+
+	public void setClock(boolean up) {
+		clockUp = up;
+		if (up)
+			timeTxt.setText(timeTxt.getText() + "+");
+	}
+
+	public void setClocked(boolean clocked) {
+		if (clocked)
+			chipNameTxt.setText(chipName + " (Clocked) ");
+		else
+			chipNameTxt.setText(chipName);
+	}
+
+	public void setTime(int time) {
+		if (clockUp)
+			timeTxt.setText(String.valueOf(time) + "+");
+		else
+			timeTxt.setText(String.valueOf(time));
 	}
 }

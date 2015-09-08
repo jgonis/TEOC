@@ -31,15 +31,15 @@ public interface InteractiveComputerPartGUI extends ComputerPartGUI {
 	public void addErrorListener(ErrorEventListener listener);
 
 	/**
-	 * Un-registers the given ErrorEventListener from being a listener to this
-	 * GUI.
-	 */
-	public void removeErrorListener(ErrorEventListener listener);
-
-	/**
 	 * Notifies all the ErrorEventListeners on an error that occured in the
 	 * computer part gui by creating an ErrorEvent (with the error message) and
 	 * sending it using the errorOccured method to all the listeners.
 	 */
 	public void notifyErrorListeners(String errorMessage);
+
+	/**
+	 * Un-registers the given ErrorEventListener from being a listener to this
+	 * GUI.
+	 */
+	public void removeErrorListener(ErrorEventListener listener);
 }

@@ -33,10 +33,9 @@ public interface MemorySegmentGUI extends InteractiveValueComputerPartGUI {
 	public void addListener(ComputerPartEventListener listener);
 
 	/**
-	 * Un-registers the given ComputerPartEventListener from being a listener to
-	 * this GUI.
+	 * Hides all selections.
 	 */
-	public void removeListener(ComputerPartEventListener listener);
+	public void hideSelect();
 
 	/**
 	 * Notifies all the ComputerPartEventListeners on a change in the memory by
@@ -46,17 +45,18 @@ public interface MemorySegmentGUI extends InteractiveValueComputerPartGUI {
 	public void notifyListeners(int address, short value);
 
 	/**
-	 * Sets the start address with the given one.
+	 * Un-registers the given ComputerPartEventListener from being a listener to
+	 * this GUI.
 	 */
-	public void setStartAddress(int startAddress);
-
-	/**
-	 * Hides all selections.
-	 */
-	public void hideSelect();
+	public void removeListener(ComputerPartEventListener listener);
 
 	/**
 	 * Scrolls the memory such that the given address will be on top.
 	 */
 	public void scrollTo(int address);
+
+	/**
+	 * Sets the start address with the given one.
+	 */
+	public void setStartAddress(int startAddress);
 }

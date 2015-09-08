@@ -27,26 +27,9 @@ import javax.swing.JComponent;
 public interface HackSimulatorGUI {
 
 	/**
-	 * Displays the given component in the simulator. If another component is
-	 * already displayed, it will be removed. If the given component is null,
-	 * removes the currently displayed component.
+	 * Returns the name of the about information file.
 	 */
-	public void setAdditionalDisplay(JComponent component);
-
-	/**
-	 * Opens the program file dialog for choosing a new program.
-	 */
-	public void loadProgram();
-
-	/**
-	 * Sets the name of the html file that contains the help usage.
-	 */
-	public void setUsageFileName(String fileName);
-
-	/**
-	 * Sets the name of the html file that contains the "about" information.
-	 */
-	public void setAboutFileName(String fileName);
+	public String getAboutFileName();
 
 	/**
 	 * Returns the name of the help usage file.
@@ -54,9 +37,26 @@ public interface HackSimulatorGUI {
 	public String getUsageFileName();
 
 	/**
-	 * Returns the name of the about information file.
+	 * Opens the program file dialog for choosing a new program.
 	 */
-	public String getAboutFileName();
+	public void loadProgram();
+
+	/**
+	 * Sets the name of the html file that contains the "about" information.
+	 */
+	public void setAboutFileName(String fileName);
+
+	/**
+	 * Displays the given component in the simulator. If another component is
+	 * already displayed, it will be removed. If the given component is null,
+	 * removes the currently displayed component.
+	 */
+	public void setAdditionalDisplay(JComponent component);
+
+	/**
+	 * Sets the name of the html file that contains the help usage.
+	 */
+	public void setUsageFileName(String fileName);
 
 	/**
 	 * Sets the working dir name with the given one.

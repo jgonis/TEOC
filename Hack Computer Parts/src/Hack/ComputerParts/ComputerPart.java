@@ -43,12 +43,21 @@ public abstract class ComputerPart {
 	}
 
 	/**
-	 * Sets the display changes property of the computer part. If set to true,
-	 * changes that are made to the values of the computer part will be
-	 * displayed in its GUI. Otherwise, changes will not be displayed.
+	 * Returns the GUI of the computer part.
 	 */
-	public void setDisplayChanges(boolean trueOrFalse) {
-		displayChanges = trueOrFalse && hasGUI;
+	public abstract ComputerPartGUI getGUI();
+
+	/**
+	 * Refreshes the GUI of this computer part.
+	 */
+	public abstract void refreshGUI();
+
+	/**
+	 * Resets the contents of the computer part.
+	 */
+	public void reset() {
+		if (hasGUI)
+			getGUI().reset();
 	}
 
 	/**
@@ -60,20 +69,11 @@ public abstract class ComputerPart {
 	}
 
 	/**
-	 * Resets the contents of the computer part.
+	 * Sets the display changes property of the computer part. If set to true,
+	 * changes that are made to the values of the computer part will be
+	 * displayed in its GUI. Otherwise, changes will not be displayed.
 	 */
-	public void reset() {
-		if (hasGUI)
-			getGUI().reset();
+	public void setDisplayChanges(boolean trueOrFalse) {
+		displayChanges = trueOrFalse && hasGUI;
 	}
-
-	/**
-	 * Returns the GUI of the computer part.
-	 */
-	public abstract ComputerPartGUI getGUI();
-
-	/**
-	 * Refreshes the GUI of this computer part.
-	 */
-	public abstract void refreshGUI();
 }

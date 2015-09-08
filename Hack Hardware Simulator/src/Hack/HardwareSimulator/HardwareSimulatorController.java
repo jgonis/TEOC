@@ -30,6 +30,23 @@ import Hack.Gates.GatesManager;
  */
 public class HardwareSimulatorController extends HackController {
 
+	class LoadChipTask implements Runnable {
+
+		private String chipName;
+
+		public LoadChipTask(String chipName) {
+			this.chipName = chipName;
+		}
+
+		public void run() {
+			try {
+				((HardwareSimulator) simulator).loadGate(chipName, true);
+			} catch (GateException ge) {
+				gui.displayMessage(ge.getMessage(), true);
+			}
+		}
+	}
+
 	/**
 	 * Constructs a new HardwareSimulatorController with the given
 	 * HardwareSimulatorControllerGUI component, the HardwareSimulator and the
@@ -41,12 +58,6 @@ public class HardwareSimulatorController extends HackController {
 
 		gui.disableEval();
 		gui.disableTickTock();
-	}
-
-	protected void updateProgramFile(String programFileName) {
-		super.updateProgramFile(programFileName);
-		File file = (new File(programFileName)).getParentFile();
-		GatesManager.getInstance().setWorkingDir(file);
 	}
 
 	/**
@@ -93,21 +104,10 @@ public class HardwareSimulatorController extends HackController {
 		}
 	}
 
-	class LoadChipTask implements Runnable {
-
-		private String chipName;
-
-		public LoadChipTask(String chipName) {
-			this.chipName = chipName;
-		}
-
-		public void run() {
-			try {
-				((HardwareSimulator) simulator).loadGate(chipName, true);
-			} catch (GateException ge) {
-				gui.displayMessage(ge.getMessage(), true);
-			}
-		}
+	protected void updateProgramFile(String programFileName) {
+		super.updateProgramFile(programFileName);
+		File file = (new File(programFileName)).getParentFile();
+		GatesManager.getInstance().setWorkingDir(file);
 	}
 
 }

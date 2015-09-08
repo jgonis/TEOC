@@ -67,73 +67,6 @@ public class HardwareSimulatorControllerComponent extends ControllerComponent
 		comparisonComponent.updateSize(516, 592);
 	}
 
-	public void disableEval() {
-		evalButton.setEnabled(false);
-		evalMenuItem.setEnabled(false);
-	}
-
-	public void enableEval() {
-		evalButton.setEnabled(true);
-		evalMenuItem.setEnabled(true);
-	}
-
-	public void disableTickTock() {
-		tickTockButton.setEnabled(false);
-		tickTockMenuItem.setEnabled(false);
-	}
-
-	public void enableTickTock() {
-		tickTockButton.setEnabled(true);
-		tickTockMenuItem.setEnabled(true);
-	}
-
-	/**
-	 * Initializes this component.
-	 */
-	protected void init() {
-		super.init();
-
-		settingsWindow = new ChipLoaderFileChooser();
-		settingsWindow.addListener(this);
-
-		chipFileChooser = new JFileChooser();
-		chipFileChooser.setFileFilter(new HDLFileFilter());
-
-		initLoadChipButton();
-		initTickTockButton();
-		initEvalButton();
-	}
-
-	public void setWorkingDir(File file) {
-		super.setWorkingDir(file);
-		chipFileChooser.setCurrentDirectory(file);
-	}
-
-	/**
-	 * Arranges the tool bar.
-	 */
-	protected void arrangeToolBar() {
-		toolBar.setSize(TOOLBAR_WIDTH, TOOLBAR_HEIGHT);
-		toolBar.add(loadChipButton);
-		toolBar.addSeparator(separatorDimension);
-		toolBar.add(singleStepButton);
-		toolBar.add(ffwdButton);
-		toolBar.add(stopButton);
-		toolBar.add(rewindButton);
-		toolBar.addSeparator(separatorDimension);
-		toolBar.add(evalButton);
-		toolBar.add(tickTockButton);
-		toolBar.addSeparator(separatorDimension);
-		toolBar.add(scriptButton);
-		toolBar.add(breakButton);
-		toolBar.addSeparator(separatorDimension);
-		toolBar.add(speedSlider);
-		toolBar.addSeparator(separatorDimension);
-		toolBar.add(animationCombo);
-		toolBar.add(formatCombo);
-		toolBar.add(additionalDisplayCombo);
-	}
-
 	/**
 	 * Arranges the menu bar.
 	 */
@@ -183,6 +116,98 @@ public class HardwareSimulatorControllerComponent extends ControllerComponent
 		runMenu.add(breakpointsMenuItem);
 	}
 
+	/**
+	 * Arranges the tool bar.
+	 */
+	protected void arrangeToolBar() {
+		toolBar.setSize(TOOLBAR_WIDTH, TOOLBAR_HEIGHT);
+		toolBar.add(loadChipButton);
+		toolBar.addSeparator(separatorDimension);
+		toolBar.add(singleStepButton);
+		toolBar.add(ffwdButton);
+		toolBar.add(stopButton);
+		toolBar.add(rewindButton);
+		toolBar.addSeparator(separatorDimension);
+		toolBar.add(evalButton);
+		toolBar.add(tickTockButton);
+		toolBar.addSeparator(separatorDimension);
+		toolBar.add(scriptButton);
+		toolBar.add(breakButton);
+		toolBar.addSeparator(separatorDimension);
+		toolBar.add(speedSlider);
+		toolBar.addSeparator(separatorDimension);
+		toolBar.add(animationCombo);
+		toolBar.add(formatCombo);
+		toolBar.add(additionalDisplayCombo);
+	}
+
+	public void disableEval() {
+		evalButton.setEnabled(false);
+		evalMenuItem.setEnabled(false);
+	}
+
+	public void disableTickTock() {
+		tickTockButton.setEnabled(false);
+		tickTockMenuItem.setEnabled(false);
+	}
+
+	public void enableEval() {
+		evalButton.setEnabled(true);
+		evalMenuItem.setEnabled(true);
+	}
+
+	public void enableTickTock() {
+		tickTockButton.setEnabled(true);
+		tickTockMenuItem.setEnabled(true);
+	}
+
+	/**
+	 * Implementing the action of pressing the eval button.
+	 */
+	public void evalButton_actionPerformed(ActionEvent e) {
+		notifyControllerListeners(HardwareSimulatorControllerEvent.EVAL_CLICKED, null);
+	}
+
+	/**
+	 * Implementing the action of choosing the eval menu item from the menu bar.
+	 */
+	public void evalMenuItem_actionPerformed(ActionEvent e) {
+		notifyControllerListeners(HardwareSimulatorControllerEvent.EVAL_CLICKED, null);
+	}
+
+	/**
+	 * Initializes this component.
+	 */
+	protected void init() {
+		super.init();
+
+		settingsWindow = new ChipLoaderFileChooser();
+		settingsWindow.addListener(this);
+
+		chipFileChooser = new JFileChooser();
+		chipFileChooser.setFileFilter(new HDLFileFilter());
+
+		initLoadChipButton();
+		initTickTockButton();
+		initEvalButton();
+	}
+
+	// Initializing the eval button.
+	private void initEvalButton() {
+		evalIcon = new ImageIcon(Utilities.imagesDir + "calculator2.gif");
+		evalButton = new MouseOverJButton();
+		evalButton.setMaximumSize(new Dimension(39, 39));
+		evalButton.setMinimumSize(new Dimension(39, 39));
+		evalButton.setPreferredSize(new Dimension(39, 39));
+		evalButton.setToolTipText("Eval");
+		evalButton.setIcon(evalIcon);
+		evalButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				evalButton_actionPerformed(e);
+			}
+		});
+	}
+
 	// Initializing the load chip button.
 	private void initLoadChipButton() {
 		loadChipIcon = new ImageIcon(Utilities.imagesDir + "chip.gif");
@@ -215,20 +240,19 @@ public class HardwareSimulatorControllerComponent extends ControllerComponent
 		});
 	}
 
-	// Initializing the eval button.
-	private void initEvalButton() {
-		evalIcon = new ImageIcon(Utilities.imagesDir + "calculator2.gif");
-		evalButton = new MouseOverJButton();
-		evalButton.setMaximumSize(new Dimension(39, 39));
-		evalButton.setMinimumSize(new Dimension(39, 39));
-		evalButton.setPreferredSize(new Dimension(39, 39));
-		evalButton.setToolTipText("Eval");
-		evalButton.setIcon(evalIcon);
-		evalButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				evalButton_actionPerformed(e);
-			}
-		});
+	/**
+	 * Implementing the action of pressing the load chip button.
+	 */
+	public void loadChipButton_actionPerformed(ActionEvent e) {
+		loadChipPressed();
+	}
+
+	/**
+	 * Implementing the action of choosing the load chip menu item from the menu
+	 * bar.
+	 */
+	public void loadChipMenuItem_actionPerformed(ActionEvent e) {
+		loadChipPressed();
 	}
 
 	// Called when the load chip button is pressed.
@@ -240,11 +264,9 @@ public class HardwareSimulatorControllerComponent extends ControllerComponent
 		}
 	}
 
-	/**
-	 * Implementing the action of pressing the load chip button.
-	 */
-	public void loadChipButton_actionPerformed(ActionEvent e) {
-		loadChipPressed();
+	public void setWorkingDir(File file) {
+		super.setWorkingDir(file);
+		chipFileChooser.setCurrentDirectory(file);
 	}
 
 	/**
@@ -252,28 +274,6 @@ public class HardwareSimulatorControllerComponent extends ControllerComponent
 	 */
 	public void tickTockButton_actionPerformed(ActionEvent e) {
 		notifyControllerListeners(HardwareSimulatorControllerEvent.TICKTOCK_CLICKED, null);
-	}
-
-	/**
-	 * Implementing the action of pressing the eval button.
-	 */
-	public void evalButton_actionPerformed(ActionEvent e) {
-		notifyControllerListeners(HardwareSimulatorControllerEvent.EVAL_CLICKED, null);
-	}
-
-	/**
-	 * Implementing the action of choosing the load chip menu item from the menu
-	 * bar.
-	 */
-	public void loadChipMenuItem_actionPerformed(ActionEvent e) {
-		loadChipPressed();
-	}
-
-	/**
-	 * Implementing the action of choosing the eval menu item from the menu bar.
-	 */
-	public void evalMenuItem_actionPerformed(ActionEvent e) {
-		notifyControllerListeners(HardwareSimulatorControllerEvent.EVAL_CLICKED, null);
 	}
 
 	/**

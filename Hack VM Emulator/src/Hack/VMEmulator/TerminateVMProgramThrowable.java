@@ -23,19 +23,19 @@ package Hack.VMEmulator;
  */
 public class TerminateVMProgramThrowable extends Throwable {
 	/**
-	 * Constructs a new TerminateVMProgramThrowable with the given message.
-	 * Don't allow builtins (which are outside this package) to construct.
-	 */
-	TerminateVMProgramThrowable(String message) {
-		super(message);
-	}
-
-	/**
 	 * Constructs a new TerminateVMProgramThrowable with no message Don't allow
 	 * builtins (which are outside this package) to construct.
 	 */
 	TerminateVMProgramThrowable() {
 		super();
+	}
+
+	/**
+	 * Constructs a new TerminateVMProgramThrowable with the given message.
+	 * Don't allow builtins (which are outside this package) to construct.
+	 */
+	TerminateVMProgramThrowable(String message) {
+		super(message);
 	}
 
 }

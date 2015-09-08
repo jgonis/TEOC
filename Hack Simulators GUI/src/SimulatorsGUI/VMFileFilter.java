@@ -27,18 +27,6 @@ import javax.swing.filechooser.FileFilter;
  */
 public class VMFileFilter extends FileFilter {
 
-	/**
-	 * Determines which files this filter should accept.
-	 */
-	public boolean accept(File f) {
-		if (f.isDirectory()) {
-			return true;
-		}
-
-		String extension = getExtension(f);
-		return (extension != null) && (extension.equals("vm"));
-	}
-
 	/*
 	 * Get the extension of a file.
 	 */
@@ -51,6 +39,18 @@ public class VMFileFilter extends FileFilter {
 			ext = s.substring(i + 1).toLowerCase();
 		}
 		return ext;
+	}
+
+	/**
+	 * Determines which files this filter should accept.
+	 */
+	public boolean accept(File f) {
+		if (f.isDirectory()) {
+			return true;
+		}
+
+		String extension = getExtension(f);
+		return (extension != null) && (extension.equals("vm"));
 	}
 
 	/**

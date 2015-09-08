@@ -37,15 +37,15 @@ public class PointedMemorySegment extends MemorySegment {
 		super(mainMemory, gui, minValue, maxValue);
 	}
 
+	public void reset() {
+		super.reset();
+	}
+
 	/**
 	 * Sets the pointer to point at the given address.
 	 */
 	public void setPointerAddress(int address) {
 		if (displayChanges)
 			((PointedMemorySegmentGUI) gui).setPointer(address);
-	}
-
-	public void reset() {
-		super.reset();
 	}
 }

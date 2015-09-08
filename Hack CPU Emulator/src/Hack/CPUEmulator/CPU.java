@@ -73,108 +73,29 @@ public class CPU {
 		assemblerTranslator = HackAssemblerTranslator.getInstance();
 	}
 
-	/**
-	 * Returns the bus.
-	 */
-	public Bus getBus() {
-		return bus;
-	}
+	// Sets the program counter (if necessary) according to
+	// the given instruction and the alu's output.
+	// If the program counter was changed, returns true, otherwise false.
+	// Throws ProgramException if the program counter should be changed and A
+	// contains an illegal address.
+	protected boolean checkJump(short instruction) throws ProgramException {
+		boolean jumpNegative = (instruction & 0x0004) > 0;
+		boolean jumpEqual = (instruction & 0x0002) > 0;
+		boolean jumpPositive = (instruction & 0x0001) > 0;
+		boolean changed = false;
 
-	/**
-	 * Returns the A register.
-	 */
-	public Register getA() {
-		return A;
-	}
+		short exp = alu.getValueAt(2);
 
-	/**
-	 * Returns the D register.
-	 */
-	public Register getD() {
-		return D;
-	}
-
-	/**
-	 * Returns the PC register.
-	 */
-	public Register getPC() {
-		return PC;
-	}
-
-	/**
-	 * Returns the RAM (random access memory).
-	 */
-	public RAM getRAM() {
-		return M;
-	}
-
-	/**
-	 * Returns the ROM (read only memory).
-	 */
-	public ROM getROM() {
-		return rom;
-	}
-
-	/**
-	 * Returns the ALU.
-	 */
-	public ALU getALU() {
-		return alu;
-	}
-
-	/**
-	 * Returns the time that passed since the program started running.
-	 */
-	public long getTime() {
-		return time;
-	}
-
-	/**
-	 * Restarts the program from the beginning.
-	 */
-	public void initProgram() {
-		A.reset();
-		A.setUpdatePointer(true);
-		A.setUpdatePointer(false);
-
-		D.reset();
-		PC.reset();
-		alu.reset();
-		M.clearScreen();
-		M.hideSelect();
-		M.hideHighlight();
-		rom.hideSelect();
-		rom.hideHighlight();
-		time = 0;
-	}
-
-	/**
-	 * Executes the current instruction (ROM at pc). Throws ProgramException if
-	 * the current instruction is illegal or if it causes an illegal effect
-	 * (read/write from M when A is an illegal address or jump when A is an
-	 * illegal address).
-	 */
-	public void executeInstruction() throws ProgramException {
-		short instruction = rom.getValueAt(PC.get());
-		boolean pcChanged = false;
-
-		if ((instruction & 0x8000) == 0)
-			bus.send(rom, PC.get(), A, 0);
-		else if ((instruction & 0xe000) == 0xe000) {
-			computeExp(instruction);
-			setDestination(instruction);
-			pcChanged = checkJump(instruction);
-		} else if (instruction != HackAssemblerTranslator.NOP)
-			throw new ProgramException("At line " + PC.get() + ": Illegal instruction");
-
-		if (!pcChanged) {
-			short newPC = (short) (PC.get() + 1);
+		if ((exp < 0 && jumpNegative) || (exp == 0 && jumpEqual) || (exp > 0 && jumpPositive)) {
+			int newPC = A.get();
 			if (newPC < 0 || newPC >= Definitions.ROM_SIZE)
-				throw new ProgramException("At line " + PC.get() + ": Can't continue past last line");
-			PC.setValueAt(0, newPC, true);
+				throw new ProgramException(
+						"At line " + PC.get() + ": Jump requested but A=" + newPC + " is an illegal program address.");
+			bus.send(A, 0, PC, 0);
+			changed = true;
 		}
 
-		time++;
+		return changed;
 	}
 
 	// computes the exp part of the given instruction.
@@ -212,6 +133,110 @@ public class CPU {
 		alu.compute();
 	}
 
+	/**
+	 * Executes the current instruction (ROM at pc). Throws ProgramException if
+	 * the current instruction is illegal or if it causes an illegal effect
+	 * (read/write from M when A is an illegal address or jump when A is an
+	 * illegal address).
+	 */
+	public void executeInstruction() throws ProgramException {
+		short instruction = rom.getValueAt(PC.get());
+		boolean pcChanged = false;
+
+		if ((instruction & 0x8000) == 0)
+			bus.send(rom, PC.get(), A, 0);
+		else if ((instruction & 0xe000) == 0xe000) {
+			computeExp(instruction);
+			setDestination(instruction);
+			pcChanged = checkJump(instruction);
+		} else if (instruction != HackAssemblerTranslator.NOP)
+			throw new ProgramException("At line " + PC.get() + ": Illegal instruction");
+
+		if (!pcChanged) {
+			short newPC = (short) (PC.get() + 1);
+			if (newPC < 0 || newPC >= Definitions.ROM_SIZE)
+				throw new ProgramException("At line " + PC.get() + ": Can't continue past last line");
+			PC.setValueAt(0, newPC, true);
+		}
+
+		time++;
+	}
+
+	/**
+	 * Returns the A register.
+	 */
+	public Register getA() {
+		return A;
+	}
+
+	/**
+	 * Returns the ALU.
+	 */
+	public ALU getALU() {
+		return alu;
+	}
+
+	/**
+	 * Returns the bus.
+	 */
+	public Bus getBus() {
+		return bus;
+	}
+
+	/**
+	 * Returns the D register.
+	 */
+	public Register getD() {
+		return D;
+	}
+
+	/**
+	 * Returns the PC register.
+	 */
+	public Register getPC() {
+		return PC;
+	}
+
+	/**
+	 * Returns the RAM (random access memory).
+	 */
+	public RAM getRAM() {
+		return M;
+	}
+
+	/**
+	 * Returns the ROM (read only memory).
+	 */
+	public ROM getROM() {
+		return rom;
+	}
+
+	/**
+	 * Returns the time that passed since the program started running.
+	 */
+	public long getTime() {
+		return time;
+	}
+
+	/**
+	 * Restarts the program from the beginning.
+	 */
+	public void initProgram() {
+		A.reset();
+		A.setUpdatePointer(true);
+		A.setUpdatePointer(false);
+
+		D.reset();
+		PC.reset();
+		alu.reset();
+		M.clearScreen();
+		M.hideSelect();
+		M.hideHighlight();
+		rom.hideSelect();
+		rom.hideHighlight();
+		time = 0;
+	}
+
 	// Sets the registers with the alu's output according to
 	// the given instruction
 	// Throws ProgramException if destination contains M and A contains
@@ -234,30 +259,5 @@ public class CPU {
 			bus.send(alu, 2, A, 0);
 		if (destD)
 			bus.send(alu, 2, D, 0);
-	}
-
-	// Sets the program counter (if necessary) according to
-	// the given instruction and the alu's output.
-	// If the program counter was changed, returns true, otherwise false.
-	// Throws ProgramException if the program counter should be changed and A
-	// contains an illegal address.
-	protected boolean checkJump(short instruction) throws ProgramException {
-		boolean jumpNegative = (instruction & 0x0004) > 0;
-		boolean jumpEqual = (instruction & 0x0002) > 0;
-		boolean jumpPositive = (instruction & 0x0001) > 0;
-		boolean changed = false;
-
-		short exp = alu.getValueAt(2);
-
-		if ((exp < 0 && jumpNegative) || (exp == 0 && jumpEqual) || (exp > 0 && jumpPositive)) {
-			int newPC = A.get();
-			if (newPC < 0 || newPC >= Definitions.ROM_SIZE)
-				throw new ProgramException(
-						"At line " + PC.get() + ": Jump requested but A=" + newPC + " is an illegal program address.");
-			bus.send(A, 0, PC, 0);
-			changed = true;
-		}
-
-		return changed;
 	}
 }

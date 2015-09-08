@@ -88,22 +88,6 @@ public class HackAssemblerTranslator {
 	// the single instance
 	private static HackAssemblerTranslator instance;
 
-	// The translation tables from text to codes
-	private Hashtable expToCode, destToCode, jmpToCode;
-
-	// The translation table from code to text.
-	private Hashtable expToText, destToText, jmpToText;
-
-	/**
-	 * Creates a new translator.
-	 */
-	private HackAssemblerTranslator() {
-		instance = this;
-		initExp();
-		initDest();
-		initJmp();
-	}
-
 	/**
 	 * Returns the single instance of the translator.
 	 */
@@ -111,182 +95,6 @@ public class HackAssemblerTranslator {
 		if (instance == null)
 			new HackAssemblerTranslator();
 		return instance;
-	}
-
-	/**
-	 * Returns the code which represents the given exp text. If doesn't exist,
-	 * throws AssemblerException.
-	 */
-	public short getExpByText(String text) throws AssemblerException {
-		Short code = (Short) expToCode.get(text);
-		if (code == null)
-			throw new AssemblerException("Illegal exp: " + text);
-		return code.shortValue();
-	}
-
-	/**
-	 * Returns the text which represents the given exp code. If doesn't exist,
-	 * throws AssemblerException.
-	 */
-	public String getExpByCode(short code) throws AssemblerException {
-		String result = (String) expToText.get(new Short(code));
-		if (result == null)
-			throw new AssemblerException("Illegal exp: " + code);
-		return result;
-	}
-
-	/**
-	 * Returns the code which represents the given dest text. If doesn't exist,
-	 * throws AssemblerException.
-	 */
-	public short getDestByText(String text) throws AssemblerException {
-		Short code = (Short) destToCode.get(text);
-		if (code == null)
-			throw new AssemblerException("Illegal dest: " + text);
-		return code.shortValue();
-	}
-
-	/**
-	 * Returns the text which represents the given dest code. If doesn't exist,
-	 * throws AssemblerException.
-	 */
-	public String getDestByCode(short code) throws AssemblerException {
-		String result = (String) destToText.get(new Short(code));
-		if (result == null)
-			throw new AssemblerException("Illegal dest: " + code);
-		return result;
-	}
-
-	/**
-	 * Returns the code which represents the given jmp text. If doesn't exist,
-	 * throws AssemblerException.
-	 */
-	public short getJmpByText(String text) throws AssemblerException {
-		Short code = (Short) jmpToCode.get(text);
-		if (code == null)
-			throw new AssemblerException("Illegal jmp: " + text);
-		return code.shortValue();
-	}
-
-	/**
-	 * Returns the text which represents the given jmp code. If doesn't exist,
-	 * throws AssemblerException.
-	 */
-	public String getJmpByCode(short code) throws AssemblerException {
-		String result = (String) jmpToText.get(new Short(code));
-		if (result == null)
-			throw new AssemblerException("Illegal jmp: " + code);
-		return result;
-	}
-
-	/**
-	 * Translates the given assembly language command and returns the
-	 * corresponding machine language code. If the command is not legal, throws
-	 * AssemblerException.
-	 */
-	public short textToCode(String command) throws AssemblerException {
-		short code = 0;
-		short expCode = 0, jmpCode = 0, destCode = 0;
-
-		try {
-			AssemblyLineTokenizer input = new AssemblyLineTokenizer(command);
-
-			if (input.isToken("@")) {
-				input.advance(true);
-				try {
-					code = Short.parseShort(input.token());
-				} catch (NumberFormatException nfe) {
-					throw new AssemblerException("A numeric value is expected");
-				}
-			} else { // compute-store-jump command
-
-				String firstToken = input.token();
-				input.advance(false);
-
-				// find dest (if any)
-				if (input.isToken("=")) {
-					Short dest = (Short) destToCode.get(firstToken);
-					if (dest == null)
-						throw new AssemblerException("Destination expected");
-
-					destCode = dest.shortValue();
-					input.advance(true);
-				}
-
-				// find exp
-				Short exp;
-				if (!firstToken.equals("=") && destCode == 0)
-					exp = (Short) expToCode.get(firstToken);
-				else
-					exp = (Short) expToCode.get(input.token());
-
-				if (exp == null)
-					throw new AssemblerException("Expression expected");
-
-				expCode = exp.shortValue();
-				input.advance(false);
-
-				if (input.isToken(";"))
-					input.advance(false);
-
-				// find jmp (if any)
-				if (!input.isEnd()) {
-					Short jmp = (Short) jmpToCode.get(input.token());
-					if (jmp == null)
-						throw new AssemblerException("Jump directive expected");
-
-					jmpCode = jmp.shortValue();
-					input.ensureEnd();
-				}
-
-				code = (short) (destCode + expCode + jmpCode);
-			}
-
-		} catch (IOException ioe) {
-			throw new AssemblerException("Error while parsing assembly line");
-		} catch (HackTranslatorException hte) {
-			throw new AssemblerException(hte.getMessage());
-		}
-
-		return code;
-	}
-
-	/**
-	 * Translates the given machine language code and returns the corresponding
-	 * Assembly language command (String). If illegal, throws
-	 * AssemblerException.
-	 */
-	public String codeToText(short code) throws AssemblerException {
-		StringBuffer command = new StringBuffer();
-
-		if (code != HackAssemblerTranslator.NOP) {
-			if ((code & 0x8000) == 0) {
-				command.append('@');
-				command.append(code);
-			} else {
-				short exp = (short) (code & 0xffc0);
-				short dest = (short) (code & 0x0038);
-				short jmp = (short) (code & 0x0007);
-
-				String expText = getExpByCode(exp);
-				if (!expText.equals("")) {
-
-					if (dest != 0) {
-						command.append(getDestByCode(dest));
-						command.append('=');
-					}
-
-					command.append(expText);
-
-					if (jmp != 0) {
-						command.append(';');
-						command.append(getJmpByCode(jmp));
-					}
-				}
-			}
-		}
-
-		return command.toString();
 	}
 
 	/**
@@ -342,6 +150,148 @@ public class HackAssemblerTranslator {
 			throw new AssemblerException(fileName + " is not a .hack or .asm file");
 
 		return memory;
+	}
+
+	// The translation tables from text to codes
+	private Hashtable expToCode, destToCode, jmpToCode;
+
+	// The translation table from code to text.
+	private Hashtable expToText, destToText, jmpToText;
+
+	/**
+	 * Creates a new translator.
+	 */
+	private HackAssemblerTranslator() {
+		instance = this;
+		initExp();
+		initDest();
+		initJmp();
+	}
+
+	/**
+	 * Translates the given machine language code and returns the corresponding
+	 * Assembly language command (String). If illegal, throws
+	 * AssemblerException.
+	 */
+	public String codeToText(short code) throws AssemblerException {
+		StringBuffer command = new StringBuffer();
+
+		if (code != HackAssemblerTranslator.NOP) {
+			if ((code & 0x8000) == 0) {
+				command.append('@');
+				command.append(code);
+			} else {
+				short exp = (short) (code & 0xffc0);
+				short dest = (short) (code & 0x0038);
+				short jmp = (short) (code & 0x0007);
+
+				String expText = getExpByCode(exp);
+				if (!expText.equals("")) {
+
+					if (dest != 0) {
+						command.append(getDestByCode(dest));
+						command.append('=');
+					}
+
+					command.append(expText);
+
+					if (jmp != 0) {
+						command.append(';');
+						command.append(getJmpByCode(jmp));
+					}
+				}
+			}
+		}
+
+		return command.toString();
+	}
+
+	/**
+	 * Returns the text which represents the given dest code. If doesn't exist,
+	 * throws AssemblerException.
+	 */
+	public String getDestByCode(short code) throws AssemblerException {
+		String result = (String) destToText.get(new Short(code));
+		if (result == null)
+			throw new AssemblerException("Illegal dest: " + code);
+		return result;
+	}
+
+	/**
+	 * Returns the code which represents the given dest text. If doesn't exist,
+	 * throws AssemblerException.
+	 */
+	public short getDestByText(String text) throws AssemblerException {
+		Short code = (Short) destToCode.get(text);
+		if (code == null)
+			throw new AssemblerException("Illegal dest: " + text);
+		return code.shortValue();
+	}
+
+	/**
+	 * Returns the text which represents the given exp code. If doesn't exist,
+	 * throws AssemblerException.
+	 */
+	public String getExpByCode(short code) throws AssemblerException {
+		String result = (String) expToText.get(new Short(code));
+		if (result == null)
+			throw new AssemblerException("Illegal exp: " + code);
+		return result;
+	}
+
+	/**
+	 * Returns the code which represents the given exp text. If doesn't exist,
+	 * throws AssemblerException.
+	 */
+	public short getExpByText(String text) throws AssemblerException {
+		Short code = (Short) expToCode.get(text);
+		if (code == null)
+			throw new AssemblerException("Illegal exp: " + text);
+		return code.shortValue();
+	}
+
+	/**
+	 * Returns the text which represents the given jmp code. If doesn't exist,
+	 * throws AssemblerException.
+	 */
+	public String getJmpByCode(short code) throws AssemblerException {
+		String result = (String) jmpToText.get(new Short(code));
+		if (result == null)
+			throw new AssemblerException("Illegal jmp: " + code);
+		return result;
+	}
+
+	/**
+	 * Returns the code which represents the given jmp text. If doesn't exist,
+	 * throws AssemblerException.
+	 */
+	public short getJmpByText(String text) throws AssemblerException {
+		Short code = (Short) jmpToCode.get(text);
+		if (code == null)
+			throw new AssemblerException("Illegal jmp: " + text);
+		return code.shortValue();
+	}
+
+	// initializes the dest table
+	private void initDest() {
+		destToCode = new Hashtable();
+		destToText = new Hashtable();
+
+		destToCode.put("A", A);
+		destToCode.put("M", M);
+		destToCode.put("D", D);
+		destToCode.put("AM", AM);
+		destToCode.put("AD", AD);
+		destToCode.put("MD", MD);
+		destToCode.put("AMD", AMD);
+
+		destToText.put(A, "A");
+		destToText.put(M, "M");
+		destToText.put(D, "D");
+		destToText.put(AM, "AM");
+		destToText.put(AD, "AD");
+		destToText.put(MD, "MD");
+		destToText.put(AMD, "AMD");
 	}
 
 	// initializes the exp table
@@ -417,28 +367,6 @@ public class HackAssemblerTranslator {
 		expToText.put(D_OR_A, "D|A");
 	}
 
-	// initializes the dest table
-	private void initDest() {
-		destToCode = new Hashtable();
-		destToText = new Hashtable();
-
-		destToCode.put("A", A);
-		destToCode.put("M", M);
-		destToCode.put("D", D);
-		destToCode.put("AM", AM);
-		destToCode.put("AD", AD);
-		destToCode.put("MD", MD);
-		destToCode.put("AMD", AMD);
-
-		destToText.put(A, "A");
-		destToText.put(M, "M");
-		destToText.put(D, "D");
-		destToText.put(AM, "AM");
-		destToText.put(AD, "AD");
-		destToText.put(MD, "MD");
-		destToText.put(AMD, "AMD");
-	}
-
 	// initializes the jmp table
 	private void initJmp() {
 		jmpToCode = new Hashtable();
@@ -459,5 +387,77 @@ public class HackAssemblerTranslator {
 		jmpToText.put(JMP_NOT_EQUAL, "JNE");
 		jmpToText.put(JMP_LESS_EQUAL, "JLE");
 		jmpToText.put(JMP_GREATER_EQUAL, "JGE");
+	}
+
+	/**
+	 * Translates the given assembly language command and returns the
+	 * corresponding machine language code. If the command is not legal, throws
+	 * AssemblerException.
+	 */
+	public short textToCode(String command) throws AssemblerException {
+		short code = 0;
+		short expCode = 0, jmpCode = 0, destCode = 0;
+
+		try {
+			AssemblyLineTokenizer input = new AssemblyLineTokenizer(command);
+
+			if (input.isToken("@")) {
+				input.advance(true);
+				try {
+					code = Short.parseShort(input.token());
+				} catch (NumberFormatException nfe) {
+					throw new AssemblerException("A numeric value is expected");
+				}
+			} else { // compute-store-jump command
+
+				String firstToken = input.token();
+				input.advance(false);
+
+				// find dest (if any)
+				if (input.isToken("=")) {
+					Short dest = (Short) destToCode.get(firstToken);
+					if (dest == null)
+						throw new AssemblerException("Destination expected");
+
+					destCode = dest.shortValue();
+					input.advance(true);
+				}
+
+				// find exp
+				Short exp;
+				if (!firstToken.equals("=") && destCode == 0)
+					exp = (Short) expToCode.get(firstToken);
+				else
+					exp = (Short) expToCode.get(input.token());
+
+				if (exp == null)
+					throw new AssemblerException("Expression expected");
+
+				expCode = exp.shortValue();
+				input.advance(false);
+
+				if (input.isToken(";"))
+					input.advance(false);
+
+				// find jmp (if any)
+				if (!input.isEnd()) {
+					Short jmp = (Short) jmpToCode.get(input.token());
+					if (jmp == null)
+						throw new AssemblerException("Jump directive expected");
+
+					jmpCode = jmp.shortValue();
+					input.ensureEnd();
+				}
+
+				code = (short) (destCode + expCode + jmpCode);
+			}
+
+		} catch (IOException ioe) {
+			throw new AssemblerException("Error while parsing assembly line");
+		} catch (HackTranslatorException hte) {
+			throw new AssemblerException(hte.getMessage());
+		}
+
+		return code;
 	}
 }

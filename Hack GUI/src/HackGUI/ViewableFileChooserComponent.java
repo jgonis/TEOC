@@ -47,22 +47,6 @@ public class ViewableFileChooserComponent extends FileChooserComponent {
 	}
 
 	/**
-	 * Sets the content window's location.
-	 */
-	public void setWindowLocation(int x, int y) {
-		window.setLocation(x, y);
-	}
-
-	/**
-	 * Sets the file shown in the content window.
-	 */
-	public void setFileContent() {
-		contentFile = new File(getFileName());
-		window.setContent(contentFile);
-		window.setTitle("File: " + contentFile);
-	}
-
-	/**
 	 * Delete the information currently shown in the content window.
 	 */
 	public void deleteContentFile() {
@@ -71,31 +55,10 @@ public class ViewableFileChooserComponent extends FileChooserComponent {
 	}
 
 	/**
-	 * Refreshes the contents of the file.
-	 */
-	public void refresh() {
-		window.loadAnyway();
-		setFileContent();
-	}
-
-	/**
 	 * Disables the checkbox which shows the content of the file.
 	 */
 	public void disableCheckBox() {
 		viewCheckBox.setEnabled(false);
-	}
-
-	public void showCurrentFileName() {
-		fileName.setText(currentFileName);
-		if (viewCheckBox.isSelected()) {
-			if (!currentFileName.equals("")) {
-				setFileContent();
-			} else {
-				viewCheckBox.setSelected(false);
-				window.setVisible(false);
-				deleteContentFile();
-			}
-		}
 	}
 
 	// Initializations
@@ -110,6 +73,43 @@ public class ViewableFileChooserComponent extends FileChooserComponent {
 		});
 
 		this.add(viewCheckBox, null);
+	}
+
+	/**
+	 * Refreshes the contents of the file.
+	 */
+	public void refresh() {
+		window.loadAnyway();
+		setFileContent();
+	}
+
+	/**
+	 * Sets the file shown in the content window.
+	 */
+	public void setFileContent() {
+		contentFile = new File(getFileName());
+		window.setContent(contentFile);
+		window.setTitle("File: " + contentFile);
+	}
+
+	/**
+	 * Sets the content window's location.
+	 */
+	public void setWindowLocation(int x, int y) {
+		window.setLocation(x, y);
+	}
+
+	public void showCurrentFileName() {
+		fileName.setText(currentFileName);
+		if (viewCheckBox.isSelected()) {
+			if (!currentFileName.equals("")) {
+				setFileContent();
+			} else {
+				viewCheckBox.setSelected(false);
+				window.setVisible(false);
+				deleteContentFile();
+			}
+		}
 	}
 
 	/**

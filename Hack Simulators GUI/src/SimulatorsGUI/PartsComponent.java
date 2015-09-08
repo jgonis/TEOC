@@ -41,8 +41,66 @@ import HackGUI.Utilities;
  */
 public class PartsComponent extends JPanel implements PartsGUI {
 
+	// An inner class representing the model of the parts table.
+	class PartsTableModel extends AbstractTableModel {
+
+		String[] columnNames = { "Chip Name", "Type", "Clocked" };
+
+		/**
+		 * Returns the the class of a specific column.
+		 */
+		public Class getColumnClass(int c) {
+			return getValueAt(0, c).getClass();
+		}
+
+		/**
+		 * Returns the number of columns.
+		 */
+		public int getColumnCount() {
+			return columnNames.length;
+		}
+
+		/**
+		 * Returns the names of the columns.
+		 */
+		public String getColumnName(int col) {
+			return columnNames[col];
+		}
+
+		/**
+		 * Returns the number of rows.
+		 */
+		public int getRowCount() {
+			return parts.length;
+		}
+
+		/**
+		 * Returns the value at a specific row and column.
+		 */
+		public Object getValueAt(int row, int col) {
+			Object result = null;
+			if (col == 0)
+				result = parts[row].getGateClass().getName();
+			else if (col == 1) {
+				if (parts[row] instanceof CompositeGate)
+					result = COMPOSITE_GATE;
+				else if (parts[row] instanceof BuiltInGate)
+					result = BUILTIN_GATE;
+			} else if (col == 2)
+				result = new Boolean(parts[row].getGateClass().isClocked());
+			return result;
+		}
+
+		/**
+		 * Returns true of this table cells are editable, false - otherwise.
+		 */
+		public boolean isCellEditable(int row, int col) {
+			return false;
+		}
+	}
 	// The strings representing a composite and BuiltIn gates.
 	private final static String BUILTIN_GATE = "BuiltIn";
+
 	private final static String COMPOSITE_GATE = "Composite";
 
 	// The table containing the parts data
@@ -70,48 +128,6 @@ public class PartsComponent extends JPanel implements PartsGUI {
 		jbInit();
 	}
 
-	/**
-	 * Sets the number of visible rows.
-	 */
-	public void setVisibleRows(int num) {
-		int tableHeight = num * partsTable.getRowHeight();
-		scrollPane.setSize(getTableWidth(), tableHeight + 3);
-		setPreferredSize(new Dimension(getTableWidth(), tableHeight + 30));
-		setSize(getTableWidth(), tableHeight + 30);
-	}
-
-	/**
-	 * Returns the width of the table.
-	 */
-	public int getTableWidth() {
-		return 241;
-	}
-
-	/**
-	 * Sets the name of this component.
-	 */
-	public void setName(String name) {
-		nameLbl.setText(name);
-	}
-
-	/**
-	 * Sets the contents with the given parts (gates) array.
-	 */
-	public void setContents(Gate[] newParts) {
-		parts = new Gate[newParts.length];
-		System.arraycopy(newParts, 0, parts, 0, newParts.length);
-		partsTable.clearSelection();
-		partsTable.revalidate();
-	}
-
-	/**
-	 * Resets the contents of this parts compoennt.
-	 */
-	public void reset() {
-		partsTable.clearSelection();
-		repaint();
-	}
-
 	// Determines the width of each column in the table.
 	private void determineColumnWidth() {
 		TableColumn column = null;
@@ -124,6 +140,13 @@ public class PartsComponent extends JPanel implements PartsGUI {
 			else if (i == 2)
 				column.setPreferredWidth(55);
 		}
+	}
+
+	/**
+	 * Returns the width of the table.
+	 */
+	public int getTableWidth() {
+		return 241;
 	}
 
 	// Initialization of this component.
@@ -165,61 +188,38 @@ public class PartsComponent extends JPanel implements PartsGUI {
 		partsTable.clearSelection();
 	}
 
-	// An inner class representing the model of the parts table.
-	class PartsTableModel extends AbstractTableModel {
+	/**
+	 * Resets the contents of this parts compoennt.
+	 */
+	public void reset() {
+		partsTable.clearSelection();
+		repaint();
+	}
 
-		String[] columnNames = { "Chip Name", "Type", "Clocked" };
+	/**
+	 * Sets the contents with the given parts (gates) array.
+	 */
+	public void setContents(Gate[] newParts) {
+		parts = new Gate[newParts.length];
+		System.arraycopy(newParts, 0, parts, 0, newParts.length);
+		partsTable.clearSelection();
+		partsTable.revalidate();
+	}
 
-		/**
-		 * Returns the number of columns.
-		 */
-		public int getColumnCount() {
-			return columnNames.length;
-		}
+	/**
+	 * Sets the name of this component.
+	 */
+	public void setName(String name) {
+		nameLbl.setText(name);
+	}
 
-		/**
-		 * Returns the number of rows.
-		 */
-		public int getRowCount() {
-			return parts.length;
-		}
-
-		/**
-		 * Returns the names of the columns.
-		 */
-		public String getColumnName(int col) {
-			return columnNames[col];
-		}
-
-		/**
-		 * Returns the value at a specific row and column.
-		 */
-		public Object getValueAt(int row, int col) {
-			Object result = null;
-			if (col == 0)
-				result = parts[row].getGateClass().getName();
-			else if (col == 1) {
-				if (parts[row] instanceof CompositeGate)
-					result = COMPOSITE_GATE;
-				else if (parts[row] instanceof BuiltInGate)
-					result = BUILTIN_GATE;
-			} else if (col == 2)
-				result = new Boolean(parts[row].getGateClass().isClocked());
-			return result;
-		}
-
-		/**
-		 * Returns true of this table cells are editable, false - otherwise.
-		 */
-		public boolean isCellEditable(int row, int col) {
-			return false;
-		}
-
-		/**
-		 * Returns the the class of a specific column.
-		 */
-		public Class getColumnClass(int c) {
-			return getValueAt(0, c).getClass();
-		}
+	/**
+	 * Sets the number of visible rows.
+	 */
+	public void setVisibleRows(int num) {
+		int tableHeight = num * partsTable.getRowHeight();
+		scrollPane.setSize(getTableWidth(), tableHeight + 3);
+		setPreferredSize(new Dimension(getTableWidth(), tableHeight + 30));
+		setSize(getTableWidth(), tableHeight + 30);
 	}
 }

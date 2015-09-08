@@ -86,11 +86,11 @@ public class TitledComboBox extends JPanel {
 		listeners.add(listener);
 	}
 
-	// Notifies the registered listeners on an action in the combo box.
-	private void notifyListeners(ActionEvent e) {
-		Iterator iter = listeners.iterator();
-		while (iter.hasNext())
-			((ActionListener) iter.next()).actionPerformed(e);
+	/**
+	 * Returns the selected index.
+	 */
+	public int getSelectedIndex() {
+		return combo.getSelectedIndex();
 	}
 
 	/**
@@ -107,11 +107,16 @@ public class TitledComboBox extends JPanel {
 		return combo.getSelectedItem().equals(item);
 	}
 
-	/**
-	 * Returns the selected index.
-	 */
-	public int getSelectedIndex() {
-		return combo.getSelectedIndex();
+	// Notifies the registered listeners on an action in the combo box.
+	private void notifyListeners(ActionEvent e) {
+		Iterator iter = listeners.iterator();
+		while (iter.hasNext())
+			((ActionListener) iter.next()).actionPerformed(e);
+	}
+
+	public void setEnabled(boolean value) {
+		combo.setEnabled(value);
+		title.setEnabled(value);
 	}
 
 	/**
@@ -119,10 +124,5 @@ public class TitledComboBox extends JPanel {
 	 */
 	public void setSelectedIndex(int index) {
 		combo.setSelectedIndex(index);
-	}
-
-	public void setEnabled(boolean value) {
-		combo.setEnabled(value);
-		title.setEnabled(value);
 	}
 }

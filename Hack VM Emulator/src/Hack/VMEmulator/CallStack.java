@@ -43,19 +43,17 @@ public class CallStack extends ComputerPart {
 	}
 
 	/**
+	 * Returns the GUI of the computer part.
+	 */
+	public ComputerPartGUI getGUI() {
+		return gui;
+	}
+
+	/**
 	 * Returns the name of the function at the top of the stack.
 	 */
 	public String getTopFunction() {
 		return (names.size() > 0 ? (String) names.elementAt(names.size() - 1) : "");
-	}
-
-	/**
-	 * Adds the given function name at the top of the stack.
-	 */
-	public void pushFunction(String functionName) {
-		names.addElement(functionName);
-		if (displayChanges)
-			gui.setContents(names);
 	}
 
 	/**
@@ -70,22 +68,24 @@ public class CallStack extends ComputerPart {
 	}
 
 	/**
-	 * Resets the contents of the computer part.
+	 * Adds the given function name at the top of the stack.
 	 */
-	public void reset() {
-		super.reset();
-		names.removeAllElements();
-	}
-
-	/**
-	 * Returns the GUI of the computer part.
-	 */
-	public ComputerPartGUI getGUI() {
-		return gui;
+	public void pushFunction(String functionName) {
+		names.addElement(functionName);
+		if (displayChanges)
+			gui.setContents(names);
 	}
 
 	public void refreshGUI() {
 		if (displayChanges)
 			gui.setContents(names);
+	}
+
+	/**
+	 * Resets the contents of the computer part.
+	 */
+	public void reset() {
+		super.reset();
+		names.removeAllElements();
 	}
 }

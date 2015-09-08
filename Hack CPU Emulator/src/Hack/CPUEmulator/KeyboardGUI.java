@@ -28,11 +28,6 @@ import Hack.ComputerParts.ComputerPartGUI;
 public interface KeyboardGUI extends ComputerPartGUI {
 
 	/**
-	 * Displayes the given key name.
-	 */
-	public void setKey(String keyName);
-
-	/**
 	 * Clears the key display.
 	 */
 	public void clearKey();
@@ -41,4 +36,9 @@ public interface KeyboardGUI extends ComputerPartGUI {
 	 * Returns the GUI component that handles Key events.
 	 */
 	public JComponent getKeyEventHandler();
+
+	/**
+	 * Displayes the given key name.
+	 */
+	public void setKey(String keyName);
 }

@@ -23,9 +23,59 @@ package Hack.ComputerParts;
 public interface TextFileGUI extends ComputerPartGUI {
 
 	/**
+	 * Puts an emphasis on the line with the given index. This adds to the
+	 * current emphasized lines.
+	 */
+	public void addEmphasis(int index);
+
+	/**
+	 * Highlights the line with the given index. This adds to the current
+	 * highlighted lines. If clear is true, other highlights will be cleared.
+	 */
+	public void addHighlight(int index, boolean clear);
+
+	/**
+	 * Adds the given line at the end of the text file.
+	 */
+	public void addLine(String line);
+
+	/**
 	 * Registers the given TextFileEventListener as a listener to this GUI.
 	 */
 	public void addTextFileListener(TextFileEventListener listener);
+
+	/**
+	 * Clears all the current highlights.
+	 */
+	public void clearHighlights();
+
+	/**
+	 * Returns the line at the given index (assumes a legal index).
+	 */
+	public String getLineAt(int index);
+
+	/**
+	 * Returns the number of lines in the file.
+	 */
+	public int getNumberOfLines();
+
+	/**
+	 * Hides all selections.
+	 */
+	public void hideSelect();
+
+	/**
+	 * Notifies all the TextFileEventListeners on a change in the selected row
+	 * by creating an TextFileEvent (with the selected row string and index) and
+	 * sending it using the rowSelected method to all the listeners.
+	 */
+	public void notifyTextFileListeners(String rowSrting, int rowIndex);
+
+	/**
+	 * Removes the emphasis from the line with the given index. This removes the
+	 * line from the current emphasized lines.
+	 */
+	public void removeEmphasis(int index);
 
 	/**
 	 * Un-registers the given TextFileEventListener from being a listener to
@@ -34,11 +84,9 @@ public interface TextFileGUI extends ComputerPartGUI {
 	public void removeTextFileListener(TextFileEventListener listener);
 
 	/**
-	 * Notifies all the TextFileEventListeners on a change in the selected row
-	 * by creating an TextFileEvent (with the selected row string and index) and
-	 * sending it using the rowSelected method to all the listeners.
+	 * Selects the commands in the range fromIndex..toIndex
 	 */
-	public void notifyTextFileListeners(String rowSrting, int rowIndex);
+	public void select(int fromIndex, int toIndex);
 
 	/**
 	 * Sets the TextFile's contents with the given file.
@@ -51,56 +99,8 @@ public interface TextFileGUI extends ComputerPartGUI {
 	public void setContents(String[] text);
 
 	/**
-	 * Adds the given line at the end of the text file.
-	 */
-	public void addLine(String line);
-
-	/**
-	 * Highlights the line with the given index. This adds to the current
-	 * highlighted lines. If clear is true, other highlights will be cleared.
-	 */
-	public void addHighlight(int index, boolean clear);
-
-	/**
-	 * Clears all the current highlights.
-	 */
-	public void clearHighlights();
-
-	/**
-	 * Puts an emphasis on the line with the given index. This adds to the
-	 * current emphasized lines.
-	 */
-	public void addEmphasis(int index);
-
-	/**
-	 * Removes the emphasis from the line with the given index. This removes the
-	 * line from the current emphasized lines.
-	 */
-	public void removeEmphasis(int index);
-
-	/**
-	 * Returns the line at the given index (assumes a legal index).
-	 */
-	public String getLineAt(int index);
-
-	/**
 	 * Replaces the line at the given index (assumes a legal index) with the
 	 * given line.
 	 */
 	public void setLineAt(int index, String line);
-
-	/**
-	 * Returns the number of lines in the file.
-	 */
-	public int getNumberOfLines();
-
-	/**
-	 * Selects the commands in the range fromIndex..toIndex
-	 */
-	public void select(int fromIndex, int toIndex);
-
-	/**
-	 * Hides all selections.
-	 */
-	public void hideSelect();
 }

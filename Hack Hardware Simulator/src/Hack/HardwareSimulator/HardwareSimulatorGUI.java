@@ -27,6 +27,11 @@ import Hack.Gates.GatesPanelGUI;
 public interface HardwareSimulatorGUI extends HackSimulatorGUI {
 
 	/**
+	 * Returns the GateInfo component.
+	 */
+	public GateInfoGUI getGateInfo();
+
+	/**
 	 * Returns the Gates panel.
 	 */
 	public GatesPanelGUI getGatesPanel();
@@ -37,24 +42,19 @@ public interface HardwareSimulatorGUI extends HackSimulatorGUI {
 	public TextFileGUI getHDLView();
 
 	/**
-	 * Returns the GateInfo component.
-	 */
-	public GateInfoGUI getGateInfo();
-
-	/**
 	 * Returns the input pins table.
 	 */
 	public PinsGUI getInputPins();
 
 	/**
-	 * Returns the output pins table.
-	 */
-	public PinsGUI getOutputPins();
-
-	/**
 	 * Returns the internal pins table.
 	 */
 	public PinsGUI getInternalPins();
+
+	/**
+	 * Returns the output pins table.
+	 */
+	public PinsGUI getOutputPins();
 
 	/**
 	 * Returns the part pins table.
@@ -67,19 +67,9 @@ public interface HardwareSimulatorGUI extends HackSimulatorGUI {
 	public PartsGUI getParts();
 
 	/**
-	 * Displays the Internal pins table.
-	 */
-	public void showInternalPins();
-
-	/**
 	 * Hides the Internal pins table.
 	 */
 	public void hideInternalPins();
-
-	/**
-	 * Displays the Part pins table.
-	 */
-	public void showPartPins();
 
 	/**
 	 * Hides the Part pins table.
@@ -87,13 +77,23 @@ public interface HardwareSimulatorGUI extends HackSimulatorGUI {
 	public void hidePartPins();
 
 	/**
-	 * Displays the Parts table.
-	 */
-	public void showParts();
-
-	/**
 	 * Hides the Parts table.
 	 */
 	public void hideParts();
+
+	/**
+	 * Displays the Internal pins table.
+	 */
+	public void showInternalPins();
+
+	/**
+	 * Displays the Part pins table.
+	 */
+	public void showPartPins();
+
+	/**
+	 * Displays the Parts table.
+	 */
+	public void showParts();
 
 }

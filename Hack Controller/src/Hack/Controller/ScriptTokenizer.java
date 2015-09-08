@@ -197,6 +197,53 @@ public class ScriptTokenizer {
 	}
 
 	/**
+	 * Returns the identifier value of the current token May only be called when
+	 * getTokenType() == IDENTIFIER
+	 */
+	public String getIdentifier() {
+		return identifier;
+	}
+
+	/**
+	 * Returns the int value of the current token May only be called when
+	 * getTokenType() == INT_CONST
+	 */
+	public int getIntValue() {
+		return intValue;
+	}
+
+	/**
+	 * Returns the keyword type of the current token May only be called when
+	 * getTokenType() == KEYWORD
+	 */
+	public int getKeywordType() {
+		return keyWordType;
+	}
+
+	/**
+	 * Returns the current line number
+	 */
+	public int getLineNumber() {
+		return parser.lineno();
+	}
+
+	/**
+	 * Returns the string value of the current token May only be called when
+	 * getTokenType() == STRING_CONST
+	 */
+	public String getStringValue() {
+		return stringValue;
+	}
+
+	/**
+	 * Returns the symbol of the current token May only be called when
+	 * getTokenType() == SYMBOL
+	 */
+	public char getSymbol() {
+		return symbol;
+	}
+
+	/**
 	 * Returns the current token as a String.
 	 */
 	public String getToken() {
@@ -211,57 +258,10 @@ public class ScriptTokenizer {
 	}
 
 	/**
-	 * Returns the keyword type of the current token May only be called when
-	 * getTokenType() == KEYWORD
-	 */
-	public int getKeywordType() {
-		return keyWordType;
-	}
-
-	/**
-	 * Returns the symbol of the current token May only be called when
-	 * getTokenType() == SYMBOL
-	 */
-	public char getSymbol() {
-		return symbol;
-	}
-
-	/**
-	 * Returns the int value of the current token May only be called when
-	 * getTokenType() == INT_CONST
-	 */
-	public int getIntValue() {
-		return intValue;
-	}
-
-	/**
-	 * Returns the string value of the current token May only be called when
-	 * getTokenType() == STRING_CONST
-	 */
-	public String getStringValue() {
-		return stringValue;
-	}
-
-	/**
-	 * Returns the identifier value of the current token May only be called when
-	 * getTokenType() == IDENTIFIER
-	 */
-	public String getIdentifier() {
-		return identifier;
-	}
-
-	/**
 	 * Returns if there are more tokens in the stream
 	 */
 	public boolean hasMoreTokens() {
 		return (parser.ttype != parser.TT_EOF);
-	}
-
-	/**
-	 * Returns the current line number
-	 */
-	public int getLineNumber() {
-		return parser.lineno();
 	}
 
 	// Initializes the keywords hashtable

@@ -80,16 +80,13 @@ public class GatesPanel implements GatesPanelGUI {
 	}
 
 	/**
-	 * Removes the given gate component from the gates panel.
+	 * Returns the gate panel.
 	 */
-	public void removeGateComponent(Component gateComponent) {
-		nullLayoutGatesPanel.remove(gateComponent);
-		flowLayoutGatesPanel.remove(gateComponent);
-		nullLayoutGatesPanel.revalidate();
-		flowLayoutGatesPanel.revalidate();
-		// getParent().repaint();
-		nullLayoutGatesPanel.repaint();
-		flowLayoutGatesPanel.repaint();
+	public JPanel getGatesPanel() {
+		if (flowLayout)
+			return flowLayoutGatesPanel;
+		else
+			return nullLayoutGatesPanel;
 	}
 
 	/**
@@ -107,12 +104,15 @@ public class GatesPanel implements GatesPanelGUI {
 	}
 
 	/**
-	 * Returns the gate panel.
+	 * Removes the given gate component from the gates panel.
 	 */
-	public JPanel getGatesPanel() {
-		if (flowLayout)
-			return flowLayoutGatesPanel;
-		else
-			return nullLayoutGatesPanel;
+	public void removeGateComponent(Component gateComponent) {
+		nullLayoutGatesPanel.remove(gateComponent);
+		flowLayoutGatesPanel.remove(gateComponent);
+		nullLayoutGatesPanel.revalidate();
+		flowLayoutGatesPanel.revalidate();
+		// getParent().repaint();
+		nullLayoutGatesPanel.repaint();
+		flowLayoutGatesPanel.repaint();
 	}
 }

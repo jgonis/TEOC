@@ -106,50 +106,20 @@ public class BinaryComponent extends JPanel implements MouseListener, KeyListene
 	}
 
 	/**
-	 * Un-registers the given PinValueListener from being a listener to this
-	 * component.
+	 * Approve the change (called when OK is pressed or ENTER is pressed
 	 */
-	public void removeListener(PinValueListener listener) {
-		listeners.removeElement(listener);
+	private void approve() {
+		isOk = true;
+		updateValue();
+		notifyListeners();
+		setVisible(false);
 	}
 
 	/**
-	 * Notify all the PinValueListeners on actions taken in it, by creating a
-	 * PinValueEvent and sending it using the pinValueChanged method to all of
-	 * the listeners.
+	 * Implementing the action of pressing the cancel button.
 	 */
-	public void notifyListeners() {
-		PinValueEvent event = new PinValueEvent(this, valueStr.toString(), isOk);
-		for (int i = 0; i < listeners.size(); i++) {
-			((PinValueListener) listeners.elementAt(i)).pinValueChanged(event);
-		}
-	}
-
-	/**
-	 * Sets the number of bits of this component.
-	 */
-	public void setNumOfBits(int num) {
-		numberOfBits = num;
-		for (int i = 0; i < bits.length; i++) {
-			if (i < bits.length - num) {
-				bits[i].setText("");
-				bits[i].setBackground(Color.darkGray);
-				bits[i].setEnabled(false);
-			} else {
-				bits[i].setBackground(Color.white);
-				bits[i].setEnabled(true);
-			}
-		}
-	}
-
-	/**
-	 * Sets the value of this component.
-	 */
-	public void setValue(short value) {
-		valueStr = new StringBuffer(Conversions.decimalToBinary(value, 16));
-		for (int i = 0; i < bits.length; i++) {
-			bits[i].setText(String.valueOf(valueStr.charAt(i)));
-		}
+	public void cancelButton_actionPerformed(ActionEvent e) {
+		hideBinary();
 	}
 
 	/**
@@ -159,69 +129,13 @@ public class BinaryComponent extends JPanel implements MouseListener, KeyListene
 		return (short) Conversions.binaryToInt(valueStr.toString());
 	}
 
-	// Updates the value of this component.
-	private void updateValue() {
-		valueStr = new StringBuffer(16);
-		char currentChar;
-		for (int i = 0; i < bits.length; i++) {
-			if (bits[i].getText().equals(""))
-				currentChar = '0';
-			else
-				currentChar = bits[i].getText().charAt(0);
-			valueStr.append(currentChar);
-		}
-	}
-
 	/**
-	 * Implementing the action of double-clicking the mouse on the text field.
-	 * "0" --> "1" "1" --> "0"
+	 * Hides the binary component as though the cancel button was pressed
 	 */
-	public void mouseClicked(MouseEvent e) {
-		if (e.getClickCount() == 2) {
-			JTextField t = (JTextField) e.getSource();
-			if (t.getText().equals("0"))
-				t.setText("1");
-			else if (t.getText().equals("1"))
-				t.setText("0");
-		}
-	}
-
-	/**
-	 * Implementing the action of inserting a letter into the text field, or
-	 * pressing enter / escape.
-	 */
-	public void keyTyped(KeyEvent e) {
-		JTextField t = (JTextField) e.getSource();
-		if (e.getKeyChar() == '0' || e.getKeyChar() == '1') {
-			t.transferFocus();
-			t.selectAll();
-		} else if (e.getKeyChar() == Event.ENTER) {
-			approve();
-		} else if (e.getKeyChar() == Event.ESCAPE) {
-			hideBinary();
-		} else {
-			t.selectAll();
-			t.getToolkit().beep();
-		}
-	}
-
-	// Empty implementations
-	public void mouseExited(MouseEvent e) {
-	}
-
-	public void mouseEntered(MouseEvent e) {
-	}
-
-	public void mouseReleased(MouseEvent e) {
-	}
-
-	public void mousePressed(MouseEvent e) {
-	}
-
-	public void keyReleased(KeyEvent e) {
-	}
-
-	public void keyPressed(KeyEvent e) {
+	public void hideBinary() {
+		isOk = false;
+		notifyListeners();
+		setVisible(false);
 	}
 
 	// Initialization of this component.
@@ -379,14 +293,68 @@ public class BinaryComponent extends JPanel implements MouseListener, KeyListene
 
 	}
 
+	public void keyPressed(KeyEvent e) {
+	}
+
+	public void keyReleased(KeyEvent e) {
+	}
+
 	/**
-	 * Approve the change (called when OK is pressed or ENTER is pressed
+	 * Implementing the action of inserting a letter into the text field, or
+	 * pressing enter / escape.
 	 */
-	private void approve() {
-		isOk = true;
-		updateValue();
-		notifyListeners();
-		setVisible(false);
+	public void keyTyped(KeyEvent e) {
+		JTextField t = (JTextField) e.getSource();
+		if (e.getKeyChar() == '0' || e.getKeyChar() == '1') {
+			t.transferFocus();
+			t.selectAll();
+		} else if (e.getKeyChar() == Event.ENTER) {
+			approve();
+		} else if (e.getKeyChar() == Event.ESCAPE) {
+			hideBinary();
+		} else {
+			t.selectAll();
+			t.getToolkit().beep();
+		}
+	}
+
+	/**
+	 * Implementing the action of double-clicking the mouse on the text field.
+	 * "0" --> "1" "1" --> "0"
+	 */
+	public void mouseClicked(MouseEvent e) {
+		if (e.getClickCount() == 2) {
+			JTextField t = (JTextField) e.getSource();
+			if (t.getText().equals("0"))
+				t.setText("1");
+			else if (t.getText().equals("1"))
+				t.setText("0");
+		}
+	}
+
+	public void mouseEntered(MouseEvent e) {
+	}
+
+	// Empty implementations
+	public void mouseExited(MouseEvent e) {
+	}
+
+	public void mousePressed(MouseEvent e) {
+	}
+
+	public void mouseReleased(MouseEvent e) {
+	}
+
+	/**
+	 * Notify all the PinValueListeners on actions taken in it, by creating a
+	 * PinValueEvent and sending it using the pinValueChanged method to all of
+	 * the listeners.
+	 */
+	public void notifyListeners() {
+		PinValueEvent event = new PinValueEvent(this, valueStr.toString(), isOk);
+		for (int i = 0; i < listeners.size(); i++) {
+			((PinValueListener) listeners.elementAt(i)).pinValueChanged(event);
+		}
 	}
 
 	/**
@@ -397,19 +365,38 @@ public class BinaryComponent extends JPanel implements MouseListener, KeyListene
 	}
 
 	/**
-	 * Implementing the action of pressing the cancel button.
+	 * Un-registers the given PinValueListener from being a listener to this
+	 * component.
 	 */
-	public void cancelButton_actionPerformed(ActionEvent e) {
-		hideBinary();
+	public void removeListener(PinValueListener listener) {
+		listeners.removeElement(listener);
 	}
 
 	/**
-	 * Hides the binary component as though the cancel button was pressed
+	 * Sets the number of bits of this component.
 	 */
-	public void hideBinary() {
-		isOk = false;
-		notifyListeners();
-		setVisible(false);
+	public void setNumOfBits(int num) {
+		numberOfBits = num;
+		for (int i = 0; i < bits.length; i++) {
+			if (i < bits.length - num) {
+				bits[i].setText("");
+				bits[i].setBackground(Color.darkGray);
+				bits[i].setEnabled(false);
+			} else {
+				bits[i].setBackground(Color.white);
+				bits[i].setEnabled(true);
+			}
+		}
+	}
+
+	/**
+	 * Sets the value of this component.
+	 */
+	public void setValue(short value) {
+		valueStr = new StringBuffer(Conversions.decimalToBinary(value, 16));
+		for (int i = 0; i < bits.length; i++) {
+			bits[i].setText(String.valueOf(valueStr.charAt(i)));
+		}
 	}
 
 	/**
@@ -418,5 +405,18 @@ public class BinaryComponent extends JPanel implements MouseListener, KeyListene
 	public void showBinary() {
 		setVisible(true);
 		bits[16 - numberOfBits].grabFocus();
+	}
+
+	// Updates the value of this component.
+	private void updateValue() {
+		valueStr = new StringBuffer(16);
+		char currentChar;
+		for (int i = 0; i < bits.length; i++) {
+			if (bits[i].getText().equals(""))
+				currentChar = '0';
+			else
+				currentChar = bits[i].getText().charAt(0);
+			valueStr.append(currentChar);
+		}
 	}
 }

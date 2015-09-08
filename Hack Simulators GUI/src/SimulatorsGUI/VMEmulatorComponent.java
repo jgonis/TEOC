@@ -110,19 +110,15 @@ public class VMEmulatorComponent extends HackSimulatorComponent implements VMEmu
 		workingStack.setTopLevelLocation(this);
 	}
 
-	public void setWorkingDir(File file) {
-		program.setWorkingDir(file);
-	}
-
-	public void loadProgram() {
-		program.loadProgram();
+	public Point getAdditionalDisplayLocation() {
+		return new Point(492, 10);
 	}
 
 	/**
-	 * Returns the calculator GUI component.
+	 * Returns the arg memory segment component.
 	 */
-	public CalculatorGUI getCalculator() {
-		return calculator;
+	public MemorySegmentGUI getArgSegment() {
+		return segments.getArgSegment();
 	}
 
 	/**
@@ -133,10 +129,17 @@ public class VMEmulatorComponent extends HackSimulatorComponent implements VMEmu
 	}
 
 	/**
-	 * Returns the screen GUI component.
+	 * Returns the calculator GUI component.
 	 */
-	public ScreenGUI getScreen() {
-		return screen;
+	public CalculatorGUI getCalculator() {
+		return calculator;
+	}
+
+	/**
+	 * Returns the call stack GUI component.
+	 */
+	public CallStackGUI getCallStack() {
+		return callStack;
 	}
 
 	/**
@@ -147,10 +150,10 @@ public class VMEmulatorComponent extends HackSimulatorComponent implements VMEmu
 	}
 
 	/**
-	 * Returns the RAM GUI component.
+	 * Returns the local memory segment component.
 	 */
-	public LabeledPointedMemoryGUI getRAM() {
-		return ram;
+	public MemorySegmentGUI getLocalSegment() {
+		return segments.getLocalSegment();
 	}
 
 	/**
@@ -161,10 +164,17 @@ public class VMEmulatorComponent extends HackSimulatorComponent implements VMEmu
 	}
 
 	/**
-	 * Returns the call stack GUI component.
+	 * Returns the RAM GUI component.
 	 */
-	public CallStackGUI getCallStack() {
-		return callStack;
+	public LabeledPointedMemoryGUI getRAM() {
+		return ram;
+	}
+
+	/**
+	 * Returns the screen GUI component.
+	 */
+	public ScreenGUI getScreen() {
+		return screen;
 	}
 
 	/**
@@ -182,24 +192,10 @@ public class VMEmulatorComponent extends HackSimulatorComponent implements VMEmu
 	}
 
 	/**
-	 * Returns the local memory segment component.
+	 * Returns the temp memory segment component.
 	 */
-	public MemorySegmentGUI getLocalSegment() {
-		return segments.getLocalSegment();
-	}
-
-	/**
-	 * Returns the arg memory segment component.
-	 */
-	public MemorySegmentGUI getArgSegment() {
-		return segments.getArgSegment();
-	}
-
-	/**
-	 * Returns the this memory segment component.
-	 */
-	public MemorySegmentGUI getThisSegment() {
-		return segments.getThisSegment();
+	public MemorySegmentGUI getTempSegment() {
+		return segments.getTempSegment();
 	}
 
 	/**
@@ -210,10 +206,10 @@ public class VMEmulatorComponent extends HackSimulatorComponent implements VMEmu
 	}
 
 	/**
-	 * Returns the temp memory segment component.
+	 * Returns the this memory segment component.
 	 */
-	public MemorySegmentGUI getTempSegment() {
-		return segments.getTempSegment();
+	public MemorySegmentGUI getThisSegment() {
+		return segments.getThisSegment();
 	}
 
 	/**
@@ -221,37 +217,6 @@ public class VMEmulatorComponent extends HackSimulatorComponent implements VMEmu
 	 */
 	public PointedMemorySegmentGUI getWorkingStack() {
 		return workingStack;
-	}
-
-	public Point getAdditionalDisplayLocation() {
-		return new Point(492, 10);
-	}
-
-	// Sets the memory component of the memory segments with the current RAM.
-	private void setSegmentsRam() {
-		// Setting the memory of the segments.
-		segments.getStaticSegment().setMemoryComponent(ram);
-		segments.getLocalSegment().setMemoryComponent(ram);
-		segments.getArgSegment().setMemoryComponent(ram);
-		segments.getThisSegment().setMemoryComponent(ram);
-		segments.getThatSegment().setMemoryComponent(ram);
-		segments.getTempSegment().setMemoryComponent(ram);
-		stack.setMemoryComponent(ram);
-		workingStack.setMemoryComponent(ram);
-		// registers the segments to listen to the repain event of the ram.
-		ram.addChangeListener(segments.getStaticSegment());
-		ram.addChangeListener(segments.getLocalSegment());
-		ram.addChangeListener(segments.getArgSegment());
-		ram.addChangeListener(segments.getThisSegment());
-		ram.addChangeListener(segments.getThatSegment());
-		ram.addChangeListener(segments.getTempSegment());
-		ram.addChangeListener(stack);
-		ram.addChangeListener(workingStack);
-	}
-
-	// Sets the name of the stack.
-	private void setStackName() {
-		stack.setSegmentName("Global Stack");
 	}
 
 	// Initialization of this component.
@@ -292,5 +257,40 @@ public class VMEmulatorComponent extends HackSimulatorComponent implements VMEmu
 		this.add(segments.getSplitPane(), null);
 
 		setSize(WIDTH, HEIGHT);
+	}
+
+	public void loadProgram() {
+		program.loadProgram();
+	}
+
+	// Sets the memory component of the memory segments with the current RAM.
+	private void setSegmentsRam() {
+		// Setting the memory of the segments.
+		segments.getStaticSegment().setMemoryComponent(ram);
+		segments.getLocalSegment().setMemoryComponent(ram);
+		segments.getArgSegment().setMemoryComponent(ram);
+		segments.getThisSegment().setMemoryComponent(ram);
+		segments.getThatSegment().setMemoryComponent(ram);
+		segments.getTempSegment().setMemoryComponent(ram);
+		stack.setMemoryComponent(ram);
+		workingStack.setMemoryComponent(ram);
+		// registers the segments to listen to the repain event of the ram.
+		ram.addChangeListener(segments.getStaticSegment());
+		ram.addChangeListener(segments.getLocalSegment());
+		ram.addChangeListener(segments.getArgSegment());
+		ram.addChangeListener(segments.getThisSegment());
+		ram.addChangeListener(segments.getThatSegment());
+		ram.addChangeListener(segments.getTempSegment());
+		ram.addChangeListener(stack);
+		ram.addChangeListener(workingStack);
+	}
+
+	// Sets the name of the stack.
+	private void setStackName() {
+		stack.setSegmentName("Global Stack");
+	}
+
+	public void setWorkingDir(File file) {
+		program.setWorkingDir(file);
 	}
 }

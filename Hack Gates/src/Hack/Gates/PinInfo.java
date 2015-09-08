@@ -56,6 +56,14 @@ public class PinInfo {
 		initialized = new boolean[width];
 	}
 
+	public boolean equals(Object other) {
+		return (other instanceof PinInfo) && name.equals(((PinInfo) other).name);
+	}
+
+	public int hashCode() {
+		return name.hashCode();
+	}
+
 	/**
 	 * Marks the given sub bus as initialized. If subBus is null, all the pin is
 	 * initialized.
@@ -95,13 +103,5 @@ public class PinInfo {
 			found = initialized[i];
 
 		return found;
-	}
-
-	public int hashCode() {
-		return name.hashCode();
-	}
-
-	public boolean equals(Object other) {
-		return (other instanceof PinInfo) && name.equals(((PinInfo) other).name);
 	}
 }

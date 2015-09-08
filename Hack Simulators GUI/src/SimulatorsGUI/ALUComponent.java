@@ -111,35 +111,12 @@ public class ALUComponent extends JPanel implements ALUGUI {
 	}
 
 	/**
-	 * Sets the null value.
+	 * Starts the alu's flashing.
 	 */
-	public void setNullValue(short value, boolean hideNullValue) {
-		nullValue = value;
-		this.hideNullValue = hideNullValue;
-	}
-
-	/**
-	 * Translates a given short to a string according to the current format.
-	 */
-	protected String translateValueToString(short value) {
-		if (hideNullValue) {
-			if (value == nullValue)
-				return "";
-			else
-				return Format.translateValueToString(value, dataFormat);
-		} else
-			return Format.translateValueToString(value, dataFormat);
-
-	}
-
-	/**
-	 * Enabling and diabling user inputs. those methods aren't implemented
-	 * because in the ALU the text fields are always disabled.
-	 */
-	public void disableUserInput() {
-	}
-
-	public void enableUserInput() {
+	public void bodyFlash() {
+		aluColor = Color.red;
+		commandLbl.setBackground(Color.red);
+		repaint();
 	}
 
 	/**
@@ -151,29 +128,13 @@ public class ALUComponent extends JPanel implements ALUGUI {
 	}
 
 	/**
-	 * Hides the ALU's command flash.
+	 * Enabling and diabling user inputs. those methods aren't implemented
+	 * because in the ALU the text fields are always disabled.
 	 */
-	public void hideCommandFlash() {
-		commandLbl.setBackground(new Color(107, 194, 46));
-		repaint();
+	public void disableUserInput() {
 	}
 
-	/**
-	 * Starts the alu's flashing.
-	 */
-	public void bodyFlash() {
-		aluColor = Color.red;
-		commandLbl.setBackground(Color.red);
-		repaint();
-	}
-
-	/**
-	 * Stops the alu's flashing.
-	 */
-	public void hideBodyFlash() {
-		aluColor = new Color(107, 194, 46);
-		commandLbl.setBackground(new Color(107, 194, 46));
-		repaint();
+	public void enableUserInput() {
 	}
 
 	/**
@@ -191,44 +152,6 @@ public class ALUComponent extends JPanel implements ALUGUI {
 			location2.setBackground(Color.orange);
 			break;
 		}
-	}
-
-	/**
-	 * hides the existing flash.
-	 */
-	public void hideFlash() {
-		location0.setBackground(null);
-		location1.setBackground(null);
-		location2.setBackground(null);
-	}
-
-	/**
-	 * Hides all highlightes.
-	 */
-	public void hideHighlight() {
-		location0.setDisabledTextColor(Color.black);
-		location1.setDisabledTextColor(Color.black);
-		location2.setDisabledTextColor(Color.black);
-		repaint();
-	}
-
-	/**
-	 * Highlights the value at the given index.
-	 */
-	public void highlight(int index) {
-
-		switch (index) {
-		case 0:
-			location0.setDisabledTextColor(Color.blue);
-			break;
-		case 1:
-			location1.setDisabledTextColor(Color.blue);
-			break;
-		case 2:
-			location2.setDisabledTextColor(Color.blue);
-			break;
-		}
-		repaint();
 	}
 
 	/**
@@ -270,93 +193,58 @@ public class ALUComponent extends JPanel implements ALUGUI {
 	}
 
 	/**
-	 * Resets the contents of this ALUComponent.
+	 * Stops the alu's flashing.
 	 */
-	public void reset() {
-		location0.setText(Format.translateValueToString(nullValue, dataFormat));
-		location1.setText(Format.translateValueToString(nullValue, dataFormat));
-		location2.setText(Format.translateValueToString(nullValue, dataFormat));
-		setCommand("");
-		hideFlash();
-		hideHighlight();
+	public void hideBodyFlash() {
+		aluColor = new Color(107, 194, 46);
+		commandLbl.setBackground(new Color(107, 194, 46));
+		repaint();
 	}
 
 	/**
-	 * Sets the element at the given index with the given value.
+	 * Hides the ALU's command flash.
 	 */
-	public void setValueAt(int index, short value) {
+	public void hideCommandFlash() {
+		commandLbl.setBackground(new Color(107, 194, 46));
+		repaint();
+	}
 
-		String data = Format.translateValueToString(value, dataFormat);
+	/**
+	 * hides the existing flash.
+	 */
+	public void hideFlash() {
+		location0.setBackground(null);
+		location1.setBackground(null);
+		location2.setBackground(null);
+	}
+
+	/**
+	 * Hides all highlightes.
+	 */
+	public void hideHighlight() {
+		location0.setDisabledTextColor(Color.black);
+		location1.setDisabledTextColor(Color.black);
+		location2.setDisabledTextColor(Color.black);
+		repaint();
+	}
+
+	/**
+	 * Highlights the value at the given index.
+	 */
+	public void highlight(int index) {
+
 		switch (index) {
 		case 0:
-			this.location0Value = value;
-			location0.setText(data);
+			location0.setDisabledTextColor(Color.blue);
 			break;
 		case 1:
-			this.location1Value = value;
-			location1.setText(data);
+			location1.setDisabledTextColor(Color.blue);
 			break;
 		case 2:
-			this.location2Value = value;
-			location2.setText(data);
+			location2.setDisabledTextColor(Color.blue);
 			break;
 		}
-	}
-
-	/**
-	 * Sets the command with the given one.
-	 */
-	public void setCommand(String command) {
-		commandLbl.setText(command);
-	}
-
-	/**
-	 * Paint this ALUComponent.
-	 */
-	public void paintComponent(Graphics g) {
-
-		Graphics2D g2 = (Graphics2D) g;
-		g2.setPaint(Color.black);
-
-		// fill and stroke GeneralPath
-		int x4Points[] = { START_ALU_X, FINISH_ALU_X, FINISH_ALU_X, START_ALU_X };
-		int y4Points[] = { 23, 56, 83, 116 };
-
-		GeneralPath filledPolygon = new GeneralPath(GeneralPath.WIND_EVEN_ODD, x4Points.length);
-		filledPolygon.moveTo(x4Points[0], y4Points[0]);
-
-		for (int index = 1; index < x4Points.length; index++) {
-			filledPolygon.lineTo(x4Points[index], y4Points[index]);
-
-		}
-		;
-		filledPolygon.closePath();
-		g2.setPaint(aluColor);
-		g2.fill(filledPolygon);
-		g2.setStroke(wideStroke);
-		g2.setPaint(Color.black);
-		g2.draw(filledPolygon);
-		g2.setStroke(regularStroke);
-
-		// Drawing the lines.
-		g2.draw(new Line2D.Double(START_LOCATION_ZERO_X + LOCATION_WIDTH, START_LOCATION_ZERO_Y + (LOCATION_HEIGHT / 2),
-				START_ALU_X, START_LOCATION_ZERO_Y + (LOCATION_HEIGHT / 2)));
-		g2.draw(new Line2D.Double(START_LOCATION_ZERO_X + LOCATION_WIDTH, START_LOCATION_ONE_Y + (LOCATION_HEIGHT / 2),
-				START_ALU_X, START_LOCATION_ONE_Y + (LOCATION_HEIGHT / 2)));
-		g2.draw(new Line2D.Double(FINISH_ALU_X, START_LOCATION_TWO_Y + (LOCATION_HEIGHT / 2), START_LOCATION_TWO_X - 1,
-				START_LOCATION_TWO_Y + (LOCATION_HEIGHT / 2)));
-
-	}
-
-	/**
-	 * Sets the numeric format with the given code (out of the format constants
-	 * in HackController).
-	 */
-	public void setNumericFormat(int formatCode) {
-		dataFormat = formatCode;
-		location0.setText(Format.translateValueToString(location0Value, formatCode));
-		location1.setText(Format.translateValueToString(location1Value, formatCode));
-		location2.setText(Format.translateValueToString(location2Value, formatCode));
+		repaint();
 	}
 
 	// Initializes this component.
@@ -426,5 +314,117 @@ public class ALUComponent extends JPanel implements ALUGUI {
 		setBorder(BorderFactory.createEtchedBorder());
 		setPreferredSize(new Dimension(368, 122));
 		setSize(368, 122);
+	}
+
+	/**
+	 * Paint this ALUComponent.
+	 */
+	public void paintComponent(Graphics g) {
+
+		Graphics2D g2 = (Graphics2D) g;
+		g2.setPaint(Color.black);
+
+		// fill and stroke GeneralPath
+		int x4Points[] = { START_ALU_X, FINISH_ALU_X, FINISH_ALU_X, START_ALU_X };
+		int y4Points[] = { 23, 56, 83, 116 };
+
+		GeneralPath filledPolygon = new GeneralPath(GeneralPath.WIND_EVEN_ODD, x4Points.length);
+		filledPolygon.moveTo(x4Points[0], y4Points[0]);
+
+		for (int index = 1; index < x4Points.length; index++) {
+			filledPolygon.lineTo(x4Points[index], y4Points[index]);
+
+		}
+		;
+		filledPolygon.closePath();
+		g2.setPaint(aluColor);
+		g2.fill(filledPolygon);
+		g2.setStroke(wideStroke);
+		g2.setPaint(Color.black);
+		g2.draw(filledPolygon);
+		g2.setStroke(regularStroke);
+
+		// Drawing the lines.
+		g2.draw(new Line2D.Double(START_LOCATION_ZERO_X + LOCATION_WIDTH, START_LOCATION_ZERO_Y + (LOCATION_HEIGHT / 2),
+				START_ALU_X, START_LOCATION_ZERO_Y + (LOCATION_HEIGHT / 2)));
+		g2.draw(new Line2D.Double(START_LOCATION_ZERO_X + LOCATION_WIDTH, START_LOCATION_ONE_Y + (LOCATION_HEIGHT / 2),
+				START_ALU_X, START_LOCATION_ONE_Y + (LOCATION_HEIGHT / 2)));
+		g2.draw(new Line2D.Double(FINISH_ALU_X, START_LOCATION_TWO_Y + (LOCATION_HEIGHT / 2), START_LOCATION_TWO_X - 1,
+				START_LOCATION_TWO_Y + (LOCATION_HEIGHT / 2)));
+
+	}
+
+	/**
+	 * Resets the contents of this ALUComponent.
+	 */
+	public void reset() {
+		location0.setText(Format.translateValueToString(nullValue, dataFormat));
+		location1.setText(Format.translateValueToString(nullValue, dataFormat));
+		location2.setText(Format.translateValueToString(nullValue, dataFormat));
+		setCommand("");
+		hideFlash();
+		hideHighlight();
+	}
+
+	/**
+	 * Sets the command with the given one.
+	 */
+	public void setCommand(String command) {
+		commandLbl.setText(command);
+	}
+
+	/**
+	 * Sets the null value.
+	 */
+	public void setNullValue(short value, boolean hideNullValue) {
+		nullValue = value;
+		this.hideNullValue = hideNullValue;
+	}
+
+	/**
+	 * Sets the numeric format with the given code (out of the format constants
+	 * in HackController).
+	 */
+	public void setNumericFormat(int formatCode) {
+		dataFormat = formatCode;
+		location0.setText(Format.translateValueToString(location0Value, formatCode));
+		location1.setText(Format.translateValueToString(location1Value, formatCode));
+		location2.setText(Format.translateValueToString(location2Value, formatCode));
+	}
+
+	/**
+	 * Sets the element at the given index with the given value.
+	 */
+	public void setValueAt(int index, short value) {
+
+		String data = Format.translateValueToString(value, dataFormat);
+		switch (index) {
+		case 0:
+			this.location0Value = value;
+			location0.setText(data);
+			break;
+		case 1:
+			this.location1Value = value;
+			location1.setText(data);
+			break;
+		case 2:
+			this.location2Value = value;
+			location2.setText(data);
+			break;
+		}
+	}
+
+	/**
+	 * Translates a given short to a string according to the current format.
+	 */
+	protected String translateValueToString(short value) {
+		if (hideNullValue) {
+			if (value == nullValue)
+				return "";
+			else
+				return Format.translateValueToString(value, dataFormat);
+		} else
+			return Format.translateValueToString(value, dataFormat);
+
 	}
 }

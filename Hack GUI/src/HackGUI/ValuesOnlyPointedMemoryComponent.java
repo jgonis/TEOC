@@ -26,28 +26,6 @@ import javax.swing.table.TableModel;
  */
 public class ValuesOnlyPointedMemoryComponent extends PointedMemoryComponent {
 
-	/**
-	 * Returns the table model of this component.
-	 */
-	protected TableModel getTableModel() {
-		return new ValuesOnlyPointedMemoryTableModel();
-	}
-
-	protected DefaultTableCellRenderer getCellRenderer() {
-		return new ValuesOnlyPointedTableCellRenderer();
-	}
-
-	/**
-	 * Returns the index of the values column.
-	 */
-	protected int getValueColumnIndex() {
-		return 0;
-	}
-
-	// Determines the width of each column in the table.
-	protected void determineColumnWidth() {
-	}
-
 	// An inner class representing the model of the table.
 	public class ValuesOnlyPointedMemoryTableModel extends MemoryTableModel {
 
@@ -79,5 +57,27 @@ public class ValuesOnlyPointedMemoryComponent extends PointedMemoryComponent {
 		public void setRenderer(int row, int column) {
 			super.setRenderer(row, column + 1);
 		}
+	}
+
+	// Determines the width of each column in the table.
+	protected void determineColumnWidth() {
+	}
+
+	protected DefaultTableCellRenderer getCellRenderer() {
+		return new ValuesOnlyPointedTableCellRenderer();
+	}
+
+	/**
+	 * Returns the table model of this component.
+	 */
+	protected TableModel getTableModel() {
+		return new ValuesOnlyPointedMemoryTableModel();
+	}
+
+	/**
+	 * Returns the index of the values column.
+	 */
+	protected int getValueColumnIndex() {
+		return 0;
 	}
 }

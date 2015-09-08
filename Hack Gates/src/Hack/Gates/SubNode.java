@@ -24,6 +24,21 @@ import Hack.Utilities.Shifter;
  */
 public class SubNode extends Node {
 
+	/**
+	 * Returns a mask according to the given low & high bit indice.
+	 */
+	public static short getMask(byte low, byte high) {
+		short mask = 0;
+
+		short bitHolder = Shifter.powersOf2[low];
+		for (byte i = low; i <= high; i++) {
+			mask |= bitHolder;
+			bitHolder = (short) (bitHolder << 1);
+		}
+
+		return mask;
+	}
+
 	// The mask which filters out the non-relevant part of the sub-node
 	private short mask;
 
@@ -43,20 +58,5 @@ public class SubNode extends Node {
 	 */
 	public short get() {
 		return Shifter.unsignedShiftRight((short) (value & mask), shiftRight);
-	}
-
-	/**
-	 * Returns a mask according to the given low & high bit indice.
-	 */
-	public static short getMask(byte low, byte high) {
-		short mask = 0;
-
-		short bitHolder = Shifter.powersOf2[low];
-		for (byte i = low; i <= high; i++) {
-			mask |= bitHolder;
-			bitHolder = (short) (bitHolder << 1);
-		}
-
-		return mask;
 	}
 }

@@ -25,14 +25,19 @@ import Hack.ComputerParts.ComputerPartGUI;
 public interface GateInfoGUI extends ComputerPartGUI {
 
 	/**
-	 * Sets the current time.
+	 * Disables the time display.
 	 */
-	public void setTime(int time);
+	public void disableTime();
 
 	/**
-	 * Sets the clocked flag - whether the chip is clocked or not clocked.
+	 * Enables the time display.
 	 */
-	public void setClocked(boolean clocked);
+	public void enableTime();
+
+	/**
+	 * Sets the current chip name with the given name.
+	 */
+	public void setChip(String chipName);
 
 	/**
 	 * If up is true, sets the clock to be up. otherwise, sets the clock to be
@@ -41,17 +46,12 @@ public interface GateInfoGUI extends ComputerPartGUI {
 	public void setClock(boolean up);
 
 	/**
-	 * Sets the current chip name with the given name.
+	 * Sets the clocked flag - whether the chip is clocked or not clocked.
 	 */
-	public void setChip(String chipName);
+	public void setClocked(boolean clocked);
 
 	/**
-	 * Enables the time display.
+	 * Sets the current time.
 	 */
-	public void enableTime();
-
-	/**
-	 * Disables the time display.
-	 */
-	public void disableTime();
+	public void setTime(int time);
 }

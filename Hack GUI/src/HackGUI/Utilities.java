@@ -90,6 +90,13 @@ public class Utilities {
 	public static final Font statusLineFont = new FontUIResource(LABEL_FONT_NAME, 1, 16);
 
 	/**
+	 * Returns the number of visible rows in the given table.
+	 */
+	public static double computeVisibleRowsCount(JTable table) {
+		return table.getParent().getBounds().getHeight() / table.getRowHeight();
+	}
+
+	/**
 	 * Returns the location of the given bottom component relative to its given
 	 * top level ancestor.
 	 */
@@ -133,12 +140,5 @@ public class Utilities {
 			table.scrollRectToVisible(newRectangle);
 			panel.repaint();
 		}
-	}
-
-	/**
-	 * Returns the number of visible rows in the given table.
-	 */
-	public static double computeVisibleRowsCount(JTable table) {
-		return table.getParent().getBounds().getHeight() / table.getRowHeight();
 	}
 }

@@ -30,13 +30,6 @@ import Hack.Utilities.Definitions;
  */
 public class BuiltInFunctionsRunner implements Runnable {
 
-	// Message types between threads
-	private static final int CALL_REQUEST = 0;
-	private static final int RETURN_REQUEST = 1;
-	private static final int END_PROGRAM_REQUEST = 2; // program => built-in
-	private static final int THROW_PROGRAM_EXCEPTION_REQUEST = 3; // b.i.=>prog
-	private static final int INFINITE_LOOP_REQUEST = 4; // b.i.=>prog
-
 	// objects for communication between the threads
 	private class BuiltInToProgramRequest {
 		int request;
@@ -44,13 +37,20 @@ public class BuiltInFunctionsRunner implements Runnable {
 		short[] params;
 		short returnValue;
 	}
-
 	private class ProgramToBuiltInRequest {
 		int request;
 		Method functionObject;
 		Object[] params;
 		short returnValue;
-	};
+	}
+	// Message types between threads
+	private static final int CALL_REQUEST = 0;
+	private static final int RETURN_REQUEST = 1;
+	private static final int END_PROGRAM_REQUEST = 2; // program => built-in
+
+	private static final int THROW_PROGRAM_EXCEPTION_REQUEST = 3; // b.i.=>prog
+
+	private static final int INFINITE_LOOP_REQUEST = 4; // b.i.=>prog;
 
 	private BuiltInToProgramRequest builtInToProgram;
 	private ProgramToBuiltInRequest programToBuiltIn;
@@ -65,24 +65,6 @@ public class BuiltInFunctionsRunner implements Runnable {
 	private File builtInDir;
 
 	/********************** Code common to both threads *****/
-
-	/**
-	 * Relinquises control to the other thread until it relinquishes back.
-	 * Invariant: at any given time one of the threads is waiting here.
-	 */
-	private synchronized void continueOtherThread() {
-		notify();
-		while (true) {
-			try {
-				wait();
-			} catch (InterruptedException e) {
-				continue;
-			}
-			return;
-		}
-	}
-
-	/********************** Code run by the VM Emulator thread *****/
 
 	/**
 	 * Constructs a new BuiltInFunctionsRunner, which will read memory and issue
@@ -102,25 +84,99 @@ public class BuiltInFunctionsRunner implements Runnable {
 		}
 	}
 
+	/********************** Code run by the VM Emulator thread *****/
+
 	/**
-	 * Called by the VM emulator. Tells the built-in code runner thread to exit
-	 * all currently running built-in functions. Returns after this was
-	 * completed.
+	 * Called by a built-in function through the BuiltInVMClass class. Requests
+	 * that the VM Emulator run a function (either built-in or not). Once the
+	 * function completes, the function's return value is returned. If due to a
+	 * user's request or due to an error the VM program is required to
+	 * terminate, a TerminateVMProgramThrowable object is thrown. The calling
+	 * built-in function may catch this object, perform any necessary cleanups,
+	 * and rethrow it.
 	 */
-	public void killAllRunningBuiltInFunctions() {
-		programToBuiltIn.request = END_PROGRAM_REQUEST;
-		continueOtherThread();
+	public short builtInFunctionRequestsCall(String functionName, short[] params) throws TerminateVMProgramThrowable {
+		builtInToProgram.request = CALL_REQUEST;
+		builtInToProgram.details = functionName;
+		builtInToProgram.params = params;
+		// Wait for a command and loop while we're getting call commands
+		for (continueOtherThread(); programToBuiltIn.request == CALL_REQUEST; continueOtherThread()) {
+			try { // Try to run the built-in implementation
+					// programToBuiltIn might be overwritten until the return
+					// from the call. Save what's needed.
+				Class returnType = programToBuiltIn.functionObject.getReturnType();
+				functionName = programToBuiltIn.functionObject.getName();
+				// Execute
+				Object returnValue = programToBuiltIn.functionObject.invoke(null, programToBuiltIn.params);
+				builtInToProgram.request = RETURN_REQUEST;
+				if (returnType == short.class) {
+					builtInToProgram.returnValue = ((Short) returnValue).shortValue();
+				} else if (returnType == char.class) {
+					builtInToProgram.returnValue = (short) ((Character) returnValue).charValue();
+				} else if (returnType == boolean.class) {
+					if (((Boolean) returnValue).booleanValue()) {
+						builtInToProgram.returnValue = (short) -1;
+					} else {
+						builtInToProgram.returnValue = 0;
+					}
+				} else { // returnType == void.class
+					builtInToProgram.returnValue = 0;
+				}
+			} catch (IllegalAccessException iae) {
+				// Error running - abort VM program
+				builtInToProgram.request = THROW_PROGRAM_EXCEPTION_REQUEST;
+				builtInToProgram.details = "Error trying to run the built-in implementation of " + functionName;
+			} catch (InvocationTargetException ita) {
+				// Rethrow a TerminateVMProgramThrowable object that was thrown
+				try {
+					throw (TerminateVMProgramThrowable) ita.getTargetException();
+				} catch (ClassCastException cce) {
+					// Error in the built-in function - abort VM program
+					builtInToProgram.request = THROW_PROGRAM_EXCEPTION_REQUEST;
+					builtInToProgram.details = "The built-in implementation of " + functionName
+							+ " caused an exception: " + ita.getTargetException().toString();
+				}
+			}
+		}
+		if (programToBuiltIn.request == RETURN_REQUEST) {
+			return programToBuiltIn.returnValue;
+		} else { // END_PROGRAM_REQUEST
+			throw new TerminateVMProgramThrowable();
+		}
 	}
 
 	/**
-	 * Called by the VM emulator. Tells the built-in code runner thread to
-	 * resume an already-running built-in function which was waiting for a
-	 * return value from another function.
+	 * Called by a built-in functio through the BuiltInVMClass class. Enters an
+	 * infinite loop, de-facto halting the program. Important so that tests and
+	 * other scripts finish counting (since a built-in infinite loop doesn't
+	 * count as steps). Also needed because there is no good way to use the stop
+	 * button to stop an infinite loop in a built-in Jack class. A message
+	 * containing information may be provided (can be null).
 	 */
-	public void returnToBuiltInFunction(short returnValue) throws ProgramException {
-		programToBuiltIn.request = RETURN_REQUEST;
-		programToBuiltIn.returnValue = returnValue;
-		sendBuiltInRequestAndWaitForAnswer();
+	public void builtInFunctionRequestsInfiniteLoop(String message) throws TerminateVMProgramThrowable {
+		builtInToProgram.request = INFINITE_LOOP_REQUEST;
+		builtInToProgram.details = message;
+		continueOtherThread();
+		// now programToBuiltIn.request == END_PROGRAM_REQUEST
+		throw new TerminateVMProgramThrowable();
+	}
+
+	/**
+	 * Called by a built-in function through the BuiltInVMClass class. Returns
+	 * the contents of the given address in the VM memory.
+	 */
+	public short builtInFunctionRequestsMemoryRead(short address) throws TerminateVMProgramThrowable {
+		checkMemoryAddress(address);
+		return cpu.getRAM().getValueAt(address);
+	}
+
+	/**
+	 * Called by a built-in function through the BuiltInVMClass class. Writes
+	 * the given value top the given address in the VM memory.
+	 */
+	public void builtInFunctionRequestsMemoryWrite(short address, short value) throws TerminateVMProgramThrowable {
+		checkMemoryAddress(address);
+		cpu.getRAM().setValueAt(address, value, false);
 	}
 
 	/**
@@ -195,34 +251,62 @@ public class BuiltInFunctionsRunner implements Runnable {
 		sendBuiltInRequestAndWaitForAnswer();
 	}
 
+	/********************** Code run by the Built In Code Runner thread *****/
+
 	/**
-	 * Sends a request to the built-in thread (the request is a data-member) and
-	 * waits for an answer from the built-in thread and passes it to the VM
-	 * Emulator. If a built-in function finished, calls
-	 * cpu.returnFromBuiltInFunction with the return value. If the function
-	 * requested another function call, calls cpu.callFunctionFromBuiltIn with
-	 * the function name and parameters. If an exception was thrown by a
-	 * built-in function, throws a ProgramException.
+	 * Makes sure an address that a built-in function requested to write/read
+	 * from is legal. If not - notifies the vm emulator Thread that an exception
+	 * occured, waits for a signal from it and throws a
+	 * TerminateVMProgramThrowable.
 	 */
-	private void sendBuiltInRequestAndWaitForAnswer() throws ProgramException {
-		continueOtherThread();
-		switch (builtInToProgram.request) {
-		case CALL_REQUEST:
-			cpu.callFunctionFromBuiltIn(builtInToProgram.details, builtInToProgram.params);
-			break;
-		case RETURN_REQUEST:
-			cpu.returnFromBuiltInFunction(builtInToProgram.returnValue);
-			break;
-		case INFINITE_LOOP_REQUEST:
-			cpu.infiniteLoopFromBuiltIn(builtInToProgram.details);
-			break;
-		case THROW_PROGRAM_EXCEPTION_REQUEST:
-			throw new ProgramException(builtInToProgram.details);
-			// break - unreachable
+	private void checkMemoryAddress(short address) throws TerminateVMProgramThrowable {
+		if (!((address >= Definitions.HEAP_START_ADDRESS && address <= Definitions.HEAP_END_ADDRESS)
+				|| (address >= Definitions.SCREEN_START_ADDRESS && address <= Definitions.SCREEN_END_ADDRESS)
+				|| address == 0)) {
+			builtInToProgram.request = THROW_PROGRAM_EXCEPTION_REQUEST;
+			builtInToProgram.details = "A built-in function tried to access memory outside the Heap or Screen range";
+			continueOtherThread();
+			// now programToBuiltIn.request == END_PROGRAM_REQUEST
+			throw new TerminateVMProgramThrowable();
 		}
 	}
 
-	/********************** Code run by the Built In Code Runner thread *****/
+	/**
+	 * Relinquises control to the other thread until it relinquishes back.
+	 * Invariant: at any given time one of the threads is waiting here.
+	 */
+	private synchronized void continueOtherThread() {
+		notify();
+		while (true) {
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				continue;
+			}
+			return;
+		}
+	}
+
+	/**
+	 * Called by the VM emulator. Tells the built-in code runner thread to exit
+	 * all currently running built-in functions. Returns after this was
+	 * completed.
+	 */
+	public void killAllRunningBuiltInFunctions() {
+		programToBuiltIn.request = END_PROGRAM_REQUEST;
+		continueOtherThread();
+	}
+
+	/**
+	 * Called by the VM emulator. Tells the built-in code runner thread to
+	 * resume an already-running built-in function which was waiting for a
+	 * return value from another function.
+	 */
+	public void returnToBuiltInFunction(short returnValue) throws ProgramException {
+		programToBuiltIn.request = RETURN_REQUEST;
+		programToBuiltIn.returnValue = returnValue;
+		sendBuiltInRequestAndWaitForAnswer();
+	}
 
 	/**
 	 * Runs the built-in code runner thread
@@ -252,113 +336,29 @@ public class BuiltInFunctionsRunner implements Runnable {
 	}
 
 	/**
-	 * Called by a built-in function through the BuiltInVMClass class. Requests
-	 * that the VM Emulator run a function (either built-in or not). Once the
-	 * function completes, the function's return value is returned. If due to a
-	 * user's request or due to an error the VM program is required to
-	 * terminate, a TerminateVMProgramThrowable object is thrown. The calling
-	 * built-in function may catch this object, perform any necessary cleanups,
-	 * and rethrow it.
+	 * Sends a request to the built-in thread (the request is a data-member) and
+	 * waits for an answer from the built-in thread and passes it to the VM
+	 * Emulator. If a built-in function finished, calls
+	 * cpu.returnFromBuiltInFunction with the return value. If the function
+	 * requested another function call, calls cpu.callFunctionFromBuiltIn with
+	 * the function name and parameters. If an exception was thrown by a
+	 * built-in function, throws a ProgramException.
 	 */
-	public short builtInFunctionRequestsCall(String functionName, short[] params) throws TerminateVMProgramThrowable {
-		builtInToProgram.request = CALL_REQUEST;
-		builtInToProgram.details = functionName;
-		builtInToProgram.params = params;
-		// Wait for a command and loop while we're getting call commands
-		for (continueOtherThread(); programToBuiltIn.request == CALL_REQUEST; continueOtherThread()) {
-			try { // Try to run the built-in implementation
-					// programToBuiltIn might be overwritten until the return
-					// from the call. Save what's needed.
-				Class returnType = programToBuiltIn.functionObject.getReturnType();
-				functionName = programToBuiltIn.functionObject.getName();
-				// Execute
-				Object returnValue = programToBuiltIn.functionObject.invoke(null, programToBuiltIn.params);
-				builtInToProgram.request = RETURN_REQUEST;
-				if (returnType == short.class) {
-					builtInToProgram.returnValue = ((Short) returnValue).shortValue();
-				} else if (returnType == char.class) {
-					builtInToProgram.returnValue = (short) ((Character) returnValue).charValue();
-				} else if (returnType == boolean.class) {
-					if (((Boolean) returnValue).booleanValue()) {
-						builtInToProgram.returnValue = (short) -1;
-					} else {
-						builtInToProgram.returnValue = 0;
-					}
-				} else { // returnType == void.class
-					builtInToProgram.returnValue = 0;
-				}
-			} catch (IllegalAccessException iae) {
-				// Error running - abort VM program
-				builtInToProgram.request = THROW_PROGRAM_EXCEPTION_REQUEST;
-				builtInToProgram.details = "Error trying to run the built-in implementation of " + functionName;
-			} catch (InvocationTargetException ita) {
-				// Rethrow a TerminateVMProgramThrowable object that was thrown
-				try {
-					throw (TerminateVMProgramThrowable) ita.getTargetException();
-				} catch (ClassCastException cce) {
-					// Error in the built-in function - abort VM program
-					builtInToProgram.request = THROW_PROGRAM_EXCEPTION_REQUEST;
-					builtInToProgram.details = "The built-in implementation of " + functionName
-							+ " caused an exception: " + ita.getTargetException().toString();
-				}
-			}
-		}
-		if (programToBuiltIn.request == RETURN_REQUEST) {
-			return programToBuiltIn.returnValue;
-		} else { // END_PROGRAM_REQUEST
-			throw new TerminateVMProgramThrowable();
-		}
-	}
-
-	/**
-	 * Makes sure an address that a built-in function requested to write/read
-	 * from is legal. If not - notifies the vm emulator Thread that an exception
-	 * occured, waits for a signal from it and throws a
-	 * TerminateVMProgramThrowable.
-	 */
-	private void checkMemoryAddress(short address) throws TerminateVMProgramThrowable {
-		if (!((address >= Definitions.HEAP_START_ADDRESS && address <= Definitions.HEAP_END_ADDRESS)
-				|| (address >= Definitions.SCREEN_START_ADDRESS && address <= Definitions.SCREEN_END_ADDRESS)
-				|| address == 0)) {
-			builtInToProgram.request = THROW_PROGRAM_EXCEPTION_REQUEST;
-			builtInToProgram.details = "A built-in function tried to access memory outside the Heap or Screen range";
-			continueOtherThread();
-			// now programToBuiltIn.request == END_PROGRAM_REQUEST
-			throw new TerminateVMProgramThrowable();
-		}
-	}
-
-	/**
-	 * Called by a built-in functio through the BuiltInVMClass class. Enters an
-	 * infinite loop, de-facto halting the program. Important so that tests and
-	 * other scripts finish counting (since a built-in infinite loop doesn't
-	 * count as steps). Also needed because there is no good way to use the stop
-	 * button to stop an infinite loop in a built-in Jack class. A message
-	 * containing information may be provided (can be null).
-	 */
-	public void builtInFunctionRequestsInfiniteLoop(String message) throws TerminateVMProgramThrowable {
-		builtInToProgram.request = INFINITE_LOOP_REQUEST;
-		builtInToProgram.details = message;
+	private void sendBuiltInRequestAndWaitForAnswer() throws ProgramException {
 		continueOtherThread();
-		// now programToBuiltIn.request == END_PROGRAM_REQUEST
-		throw new TerminateVMProgramThrowable();
-	}
-
-	/**
-	 * Called by a built-in function through the BuiltInVMClass class. Writes
-	 * the given value top the given address in the VM memory.
-	 */
-	public void builtInFunctionRequestsMemoryWrite(short address, short value) throws TerminateVMProgramThrowable {
-		checkMemoryAddress(address);
-		cpu.getRAM().setValueAt(address, value, false);
-	}
-
-	/**
-	 * Called by a built-in function through the BuiltInVMClass class. Returns
-	 * the contents of the given address in the VM memory.
-	 */
-	public short builtInFunctionRequestsMemoryRead(short address) throws TerminateVMProgramThrowable {
-		checkMemoryAddress(address);
-		return cpu.getRAM().getValueAt(address);
+		switch (builtInToProgram.request) {
+		case CALL_REQUEST:
+			cpu.callFunctionFromBuiltIn(builtInToProgram.details, builtInToProgram.params);
+			break;
+		case RETURN_REQUEST:
+			cpu.returnFromBuiltInFunction(builtInToProgram.returnValue);
+			break;
+		case INFINITE_LOOP_REQUEST:
+			cpu.infiniteLoopFromBuiltIn(builtInToProgram.details);
+			break;
+		case THROW_PROGRAM_EXCEPTION_REQUEST:
+			throw new ProgramException(builtInToProgram.details);
+			// break - unreachable
+		}
 	}
 }

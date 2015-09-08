@@ -35,81 +35,26 @@ public interface VirtualMachine {
 	public abstract void add();
 
 	/**
-	 * 2's complement integer substraction (binary operation)
+	 * Bit wise "AND" (binary operation).
 	 */
-	public abstract void substract();
+	public abstract void and();
 
 	/**
-	 * 2's complement negation (unary operation)
+	 * Calls a function according to the given function number stating that the
+	 * given number of arguments have been pushed onto the stack
+	 * 
+	 * @param functionName
+	 *            The function name
+	 * @param numberOfArguments
+	 *            The number of arguments of the function
 	 */
-	public abstract void negate();
+	public abstract void callFunction(String functionName, short numberOfArguments);
 
 	/**
 	 * Equalaty operation (binary operation). Returns(to the stack) 0xFFFF as
 	 * true,0x000 as false
 	 */
 	public abstract void equal();
-
-	/**
-	 * Greater than operation (binary operation). Returns(to the stack) 0xFFFF
-	 * as true,0x0000 as false
-	 */
-	public abstract void greaterThan();
-
-	/**
-	 * Less than operation (binary operation). Returns(to the stack) 0xFFFF as
-	 * true,0x0000 as false
-	 */
-	public abstract void lessThan();
-
-	/**
-	 * Bit wise "AND" (binary operation).
-	 */
-	public abstract void and();
-
-	/**
-	 * Bit wise "OR" (binary operation).
-	 */
-	public abstract void or();
-
-	/**
-	 * Bit wise "NOT" (unary operation).
-	 */
-	public abstract void not();
-
-	// ---- Memory access commands ---//
-
-	/**
-	 * Pushes the value of the given segment in the given entry to the stack
-	 */
-	public abstract void push(String segment, short entry);
-
-	/**
-	 * Pops an item from the stack into the given segment in the given entry
-	 */
-	public abstract void pop(String segment, short entry);
-
-	// ---- Program flow commands ---//
-
-	/**
-	 * Labels the current location in the function code. Only labeled location
-	 * can be jumped to from other parts of the function. The label - l is 8
-	 * bits and is local to the function
-	 */
-	public abstract void label(String l);
-
-	/**
-	 * Goes to the label l The label - l is 8 bits and is local to the function
-	 */
-	public abstract void goTo(String l);
-
-	/**
-	 * Pops a value from the stack and goes to the label l if the value is not
-	 * zero. The label - l is 8 bits and is local to the function
-	 */
-	public abstract void ifGoTo(String l);
-
-	// ---- Function calls commands ---//
 
 	/**
 	 * Here Starts the code of a function according to the given function name
@@ -123,18 +68,73 @@ public interface VirtualMachine {
 	public abstract void function(String functionName, short numberOfLocals);
 
 	/**
+	 * Goes to the label l The label - l is 8 bits and is local to the function
+	 */
+	public abstract void goTo(String l);
+
+	/**
+	 * Greater than operation (binary operation). Returns(to the stack) 0xFFFF
+	 * as true,0x0000 as false
+	 */
+	public abstract void greaterThan();
+
+	/**
+	 * Pops a value from the stack and goes to the label l if the value is not
+	 * zero. The label - l is 8 bits and is local to the function
+	 */
+	public abstract void ifGoTo(String l);
+
+	/**
+	 * Labels the current location in the function code. Only labeled location
+	 * can be jumped to from other parts of the function. The label - l is 8
+	 * bits and is local to the function
+	 */
+	public abstract void label(String l);
+
+	// ---- Memory access commands ---//
+
+	/**
+	 * Less than operation (binary operation). Returns(to the stack) 0xFFFF as
+	 * true,0x0000 as false
+	 */
+	public abstract void lessThan();
+
+	/**
+	 * 2's complement negation (unary operation)
+	 */
+	public abstract void negate();
+
+	// ---- Program flow commands ---//
+
+	/**
+	 * Bit wise "NOT" (unary operation).
+	 */
+	public abstract void not();
+
+	/**
+	 * Bit wise "OR" (binary operation).
+	 */
+	public abstract void or();
+
+	/**
+	 * Pops an item from the stack into the given segment in the given entry
+	 */
+	public abstract void pop(String segment, short entry);
+
+	// ---- Function calls commands ---//
+
+	/**
+	 * Pushes the value of the given segment in the given entry to the stack
+	 */
+	public abstract void push(String segment, short entry);
+
+	/**
 	 * Returns the value of the function to the top of the stack.
 	 */
 	public abstract void returnFromFunction();
 
 	/**
-	 * Calls a function according to the given function number stating that the
-	 * given number of arguments have been pushed onto the stack
-	 * 
-	 * @param functionName
-	 *            The function name
-	 * @param numberOfArguments
-	 *            The number of arguments of the function
+	 * 2's complement integer substraction (binary operation)
 	 */
-	public abstract void callFunction(String functionName, short numberOfArguments);
+	public abstract void substract();
 }

@@ -28,17 +28,14 @@ public interface InteractiveValueComputerPartGUI extends ValueComputerPartGUI, I
 	public void addListener(ComputerPartEventListener listener);
 
 	/**
-	 * Un-registers the given ComputerPartEventListener from being a listener to
-	 * this GUI.
+	 * Disables user input into the computer part.
 	 */
-	public void removeListener(ComputerPartEventListener listener);
+	public void disableUserInput();
 
 	/**
-	 * Notifies all the ComputerPartEventListeners on a change in the computer
-	 * part by creating a ComputerPartEvent (with the changed index and value)
-	 * and sending it using the valueChanged method to all the listeners.
+	 * Enables user input into the computer part.
 	 */
-	public void notifyListeners(int index, short value);
+	public void enableUserInput();
 
 	/**
 	 * Notifies all the ComputerPartEventListeners that the gui gained focus by
@@ -48,14 +45,17 @@ public interface InteractiveValueComputerPartGUI extends ValueComputerPartGUI, I
 	public void notifyListeners();
 
 	/**
-	 * Enables user input into the computer part.
+	 * Notifies all the ComputerPartEventListeners on a change in the computer
+	 * part by creating a ComputerPartEvent (with the changed index and value)
+	 * and sending it using the valueChanged method to all the listeners.
 	 */
-	public void enableUserInput();
+	public void notifyListeners(int index, short value);
 
 	/**
-	 * Disables user input into the computer part.
+	 * Un-registers the given ComputerPartEventListener from being a listener to
+	 * this GUI.
 	 */
-	public void disableUserInput();
+	public void removeListener(ComputerPartEventListener listener);
 
 	/**
 	 * Sets the enabled range of this segment. Any address outside this range

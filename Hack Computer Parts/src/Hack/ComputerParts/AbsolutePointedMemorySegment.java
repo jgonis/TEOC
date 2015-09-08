@@ -41,12 +41,12 @@ public class AbsolutePointedMemorySegment extends PointedMemorySegment {
 		super(mainMemory, gui, minValue, maxValue);
 	}
 
-	public void setValueAt(int index, short value, boolean quiet) {
-		super.setValueAt(index - startAddress, value, quiet);
-	}
-
 	public short getValueAt(int index) {
 		return mainMemory.getValueAt(index);
+	}
+
+	public void setValueAt(int index, short value, boolean quiet) {
+		super.setValueAt(index - startAddress, value, quiet);
 	}
 
 	public void valueChanged(ComputerPartEvent event) {

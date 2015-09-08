@@ -22,14 +22,14 @@ package Hack.ComputerParts;
  */
 public interface LabeledPointedMemoryGUI extends PointedMemoryGUI {
 	/**
-	 * Sets a name for the label at the given address
-	 */
-	public void setLabel(int address, String name);
-
-	/**
 	 * Clears all labels.
 	 */
 	public void clearLabels();
+
+	/**
+	 * Hides the existing flash.
+	 */
+	public void hideLabelFlash();
 
 	/**
 	 * Flashes the label at the given address.
@@ -37,7 +37,7 @@ public interface LabeledPointedMemoryGUI extends PointedMemoryGUI {
 	public void labelFlash(int address);
 
 	/**
-	 * Hides the existing flash.
+	 * Sets a name for the label at the given address
 	 */
-	public void hideLabelFlash();
+	public void setLabel(int address, String name);
 }

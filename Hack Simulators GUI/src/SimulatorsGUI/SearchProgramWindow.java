@@ -69,10 +69,10 @@ public class SearchProgramWindow extends JFrame {
 	}
 
 	/**
-	 * Sets the array of instructions of this search window.
+	 * Implementing the action of pressing the cancel button.
 	 */
-	public void setInstructions(HVMInstruction[] instructions) {
-		this.instructions = instructions;
+	public void cancelButton_actionPerformed(ActionEvent e) {
+		setVisible(false);
 	}
 
 	/**
@@ -129,11 +129,10 @@ public class SearchProgramWindow extends JFrame {
 	}
 
 	/**
-	 * Shows the search window.
+	 * Implementing the action of pressing 'enter' on the text field.
 	 */
-	public void showWindow() {
-		setVisible(true);
-		instruction.requestFocus();
+	public void instruction_actionPerformed(ActionEvent e) {
+		okButton_actionPerformed(e);
 	}
 
 	// Initialization of this component.
@@ -191,16 +190,17 @@ public class SearchProgramWindow extends JFrame {
 	}
 
 	/**
-	 * Implementing the action of pressing the cancel button.
+	 * Sets the array of instructions of this search window.
 	 */
-	public void cancelButton_actionPerformed(ActionEvent e) {
-		setVisible(false);
+	public void setInstructions(HVMInstruction[] instructions) {
+		this.instructions = instructions;
 	}
 
 	/**
-	 * Implementing the action of pressing 'enter' on the text field.
+	 * Shows the search window.
 	 */
-	public void instruction_actionPerformed(ActionEvent e) {
-		okButton_actionPerformed(e);
+	public void showWindow() {
+		setVisible(true);
+		instruction.requestFocus();
 	}
 }

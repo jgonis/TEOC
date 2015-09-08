@@ -39,16 +39,16 @@ public class GateClassSet extends HashSet {
 	}
 
 	/**
-	 * Removes the given GateClass from the set.
-	 */
-	public boolean remove(GateClass gateClass) {
-		return super.remove(gateClass);
-	}
-
-	/**
 	 * Returns true if this set contains the given GateClass.
 	 */
 	public boolean contains(GateClass gateClass) {
 		return super.contains(gateClass);
+	}
+
+	/**
+	 * Removes the given GateClass from the set.
+	 */
+	public boolean remove(GateClass gateClass) {
+		return super.remove(gateClass);
 	}
 }

@@ -51,24 +51,13 @@ public class MemorySegment extends InteractiveValueComputerPart {
 		init(mainMemory, gui);
 	}
 
-	// Initializes the memory segment
-	private void init(Memory mainMemory, MemorySegmentGUI gui) {
-		this.mainMemory = mainMemory;
-		this.gui = gui;
-
-		if (hasGUI) {
-			gui.addListener(this);
-			gui.addErrorListener(this);
-		}
+	public void doSetValueAt(int index, short value) {
+		if (mainMemory.getValueAt(startAddress + index) != value)
+			mainMemory.setValueAt(startAddress + index, value, true);
 	}
 
-	/**
-	 * Sets the start address with the given one.
-	 */
-	public void setStartAddress(int startAddress) {
-		this.startAddress = startAddress;
-		if (displayChanges)
-			gui.setStartAddress(startAddress);
+	public ComputerPartGUI getGUI() {
+		return gui;
 	}
 
 	/**
@@ -78,17 +67,27 @@ public class MemorySegment extends InteractiveValueComputerPart {
 		return startAddress;
 	}
 
-	public void doSetValueAt(int index, short value) {
-		if (mainMemory.getValueAt(startAddress + index) != value)
-			mainMemory.setValueAt(startAddress + index, value, true);
-	}
-
 	public short getValueAt(int index) {
 		return mainMemory.getValueAt(startAddress + index);
 	}
 
-	public ComputerPartGUI getGUI() {
-		return gui;
+	/**
+	 * Hides all selections.
+	 */
+	public void hideSelect() {
+		if (displayChanges)
+			gui.hideSelect();
+	}
+
+	// Initializes the memory segment
+	private void init(Memory mainMemory, MemorySegmentGUI gui) {
+		this.mainMemory = mainMemory;
+		this.gui = gui;
+
+		if (hasGUI) {
+			gui.addListener(this);
+			gui.addErrorListener(this);
+		}
 	}
 
 	public void refreshGUI() {
@@ -108,10 +107,11 @@ public class MemorySegment extends InteractiveValueComputerPart {
 	}
 
 	/**
-	 * Hides all selections.
+	 * Sets the start address with the given one.
 	 */
-	public void hideSelect() {
+	public void setStartAddress(int startAddress) {
+		this.startAddress = startAddress;
 		if (displayChanges)
-			gui.hideSelect();
+			gui.setStartAddress(startAddress);
 	}
 }

@@ -25,15 +25,15 @@ import java.awt.Point;
 public interface ValueComputerPartGUI extends ComputerPartGUI {
 
 	/**
+	 * flashes the value at the given index.
+	 */
+	public void flash(int index);
+
+	/**
 	 * Returns the coordinates of the top left corner of the value at the given
 	 * index.
 	 */
 	public Point getCoordinates(int index);
-
-	/**
-	 * Sets the element at the given index with the given value.
-	 */
-	public void setValueAt(int index, short value);
 
 	/**
 	 * Returns the value at the given index in its string representation.
@@ -41,9 +41,9 @@ public interface ValueComputerPartGUI extends ComputerPartGUI {
 	public String getValueAsString(int index);
 
 	/**
-	 * Highlights the value at the given index.
+	 * hides the existing flash.
 	 */
-	public void highlight(int index);
+	public void hideFlash();
 
 	/**
 	 * Hides all highlightes.
@@ -51,14 +51,16 @@ public interface ValueComputerPartGUI extends ComputerPartGUI {
 	public void hideHighlight();
 
 	/**
-	 * flashes the value at the given index.
+	 * Highlights the value at the given index.
 	 */
-	public void flash(int index);
+	public void highlight(int index);
 
 	/**
-	 * hides the existing flash.
+	 * Sets the null value (default value) of this computer part with the given
+	 * value. If hideNullValue is true, values which are equal to the null value
+	 * will be hidden.
 	 */
-	public void hideFlash();
+	public void setNullValue(short value, boolean hideNullValue);
 
 	/**
 	 * Sets the numeric format with the given code (out of the format constants
@@ -67,9 +69,7 @@ public interface ValueComputerPartGUI extends ComputerPartGUI {
 	public void setNumericFormat(int formatCode);
 
 	/**
-	 * Sets the null value (default value) of this computer part with the given
-	 * value. If hideNullValue is true, values which are equal to the null value
-	 * will be hidden.
+	 * Sets the element at the given index with the given value.
 	 */
-	public void setNullValue(short value, boolean hideNullValue);
+	public void setValueAt(int index, short value);
 }

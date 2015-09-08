@@ -31,34 +31,14 @@ import Hack.Controller.HackSimulatorGUI;
 public interface VMEmulatorGUI extends HackSimulatorGUI {
 
 	/**
+	 * Returns the arg memory segment component.
+	 */
+	public MemorySegmentGUI getArgSegment();
+
+	/**
 	 * Returns the bus GUI component.
 	 */
 	public BusGUI getBus();
-
-	/**
-	 * Returns the screen GUI component.
-	 */
-	public ScreenGUI getScreen();
-
-	/**
-	 * Returns the keyboard GUI component.
-	 */
-	public KeyboardGUI getKeyboard();
-
-	/**
-	 * Returns the RAM GUI component.
-	 */
-	public LabeledPointedMemoryGUI getRAM();
-
-	/**
-	 * Returns the Program GUI component.
-	 */
-	public VMProgramGUI getProgram();
-
-	/**
-	 * Returns the call stack GUI component.
-	 */
-	public CallStackGUI getCallStack();
 
 	/**
 	 * Returns the calculator GUI component.
@@ -66,9 +46,34 @@ public interface VMEmulatorGUI extends HackSimulatorGUI {
 	public CalculatorGUI getCalculator();
 
 	/**
-	 * Returns the method stack GUI component.
+	 * Returns the call stack GUI component.
 	 */
-	public PointedMemorySegmentGUI getWorkingStack();
+	public CallStackGUI getCallStack();
+
+	/**
+	 * Returns the keyboard GUI component.
+	 */
+	public KeyboardGUI getKeyboard();
+
+	/**
+	 * Returns the local memory segment component.
+	 */
+	public MemorySegmentGUI getLocalSegment();
+
+	/**
+	 * Returns the Program GUI component.
+	 */
+	public VMProgramGUI getProgram();
+
+	/**
+	 * Returns the RAM GUI component.
+	 */
+	public LabeledPointedMemoryGUI getRAM();
+
+	/**
+	 * Returns the screen GUI component.
+	 */
+	public ScreenGUI getScreen();
 
 	/**
 	 * Returns the Stack GUI component.
@@ -81,19 +86,9 @@ public interface VMEmulatorGUI extends HackSimulatorGUI {
 	public MemorySegmentGUI getStaticSegment();
 
 	/**
-	 * Returns the local memory segment component.
+	 * Returns the temp memory segment component.
 	 */
-	public MemorySegmentGUI getLocalSegment();
-
-	/**
-	 * Returns the arg memory segment component.
-	 */
-	public MemorySegmentGUI getArgSegment();
-
-	/**
-	 * Returns the this memory segment component.
-	 */
-	public MemorySegmentGUI getThisSegment();
+	public MemorySegmentGUI getTempSegment();
 
 	/**
 	 * Returns the that memory segment component.
@@ -101,9 +96,14 @@ public interface VMEmulatorGUI extends HackSimulatorGUI {
 	public MemorySegmentGUI getThatSegment();
 
 	/**
-	 * Returns the temp memory segment component.
+	 * Returns the this memory segment component.
 	 */
-	public MemorySegmentGUI getTempSegment();
+	public MemorySegmentGUI getThisSegment();
+
+	/**
+	 * Returns the method stack GUI component.
+	 */
+	public PointedMemorySegmentGUI getWorkingStack();
 
 	/**
 	 * Sets the focus on the VMEmulator's frame.

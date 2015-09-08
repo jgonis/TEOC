@@ -37,6 +37,12 @@ public class MouseOverJButton extends JButton implements MouseListener {
 	}
 
 	/**
+	 * Empty implementation.
+	 */
+	public void mouseClicked(MouseEvent e) {
+	}
+
+	/**
 	 * Called just after the cursor enters the bounds of the listened-to
 	 * component.
 	 */
@@ -50,12 +56,6 @@ public class MouseOverJButton extends JButton implements MouseListener {
 	 */
 	public void mouseExited(MouseEvent e) {
 		setBorder(null);
-	}
-
-	/**
-	 * Empty implementation.
-	 */
-	public void mouseClicked(MouseEvent e) {
 	}
 
 	/**

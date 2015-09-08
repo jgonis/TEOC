@@ -42,6 +42,13 @@ public class Breakpoint {
 	}
 
 	/**
+	 * Returns the breakpoint value.
+	 */
+	public String getValue() {
+		return value;
+	}
+
+	/**
 	 * Returns the variable name.
 	 */
 	public String getVarName() {
@@ -49,10 +56,10 @@ public class Breakpoint {
 	}
 
 	/**
-	 * Returns the breakpoint value.
+	 * Returns true if the breakpoint is reached.
 	 */
-	public String getValue() {
-		return value;
+	public boolean isReached() {
+		return reached;
 	}
 
 	/**
@@ -67,12 +74,5 @@ public class Breakpoint {
 	 */
 	public void on() {
 		reached = true;
-	}
-
-	/**
-	 * Returns true if the breakpoint is reached.
-	 */
-	public boolean isReached() {
-		return reached;
 	}
 }

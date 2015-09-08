@@ -37,13 +37,7 @@ public class Bus extends ComputerPart {
 		return gui;
 	}
 
-	/**
-	 * Sets the animation speed with the given speed. (in the range
-	 * 1..HackController.NUMBER_OF_SPEED_UNITS)
-	 */
-	public void setAnimationSpeed(int speed) {
-		if (hasGUI)
-			gui.setSpeed(speed);
+	public void refreshGUI() {
 	}
 
 	/**
@@ -67,6 +61,12 @@ public class Bus extends ComputerPart {
 		targetPart.setValueAt(targetIndex, sourcePart.getValueAt(sourceIndex), false);
 	}
 
-	public void refreshGUI() {
+	/**
+	 * Sets the animation speed with the given speed. (in the range
+	 * 1..HackController.NUMBER_OF_SPEED_UNITS)
+	 */
+	public void setAnimationSpeed(int speed) {
+		if (hasGUI)
+			gui.setSpeed(speed);
 	}
 }

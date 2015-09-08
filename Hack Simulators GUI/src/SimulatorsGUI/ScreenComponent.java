@@ -88,58 +88,6 @@ public class ScreenComponent extends JPanel implements ScreenGUI, ActionListener
 	}
 
 	/**
-	 * Updates the screen at the given index with the given value (Assumes legal
-	 * index)
-	 */
-	public void setValueAt(int index, short value) {
-		data[index] = value;
-		redraw = true;
-	}
-
-	/**
-	 * Updates the screen's contents with the given values array. (Assumes that
-	 * the length of the values array equals the screen memory size.
-	 */
-	public void setContents(short[] values) {
-		data = values;
-		redraw = true;
-	}
-
-	/**
-	 * Resets the content of this component.
-	 */
-	public void reset() {
-		for (int i = 0; i < data.length; i++)
-			data[i] = 0;
-
-		redraw = true;
-	}
-
-	/**
-	 * Refreshes this component.
-	 */
-	public void refresh() {
-		if (redraw) {
-			repaint();
-			redraw = false;
-		}
-	}
-
-	/**
-	 * Starts the animation.
-	 */
-	public void startAnimation() {
-		timer.setDelay(ANIMATION_CLOCK_INTERVALS);
-	}
-
-	/**
-	 * Stops the animation.
-	 */
-	public void stopAnimation() {
-		timer.setDelay(STATIC_CLOCK_INTERVALS);
-	}
-
-	/**
 	 * Called at constant intervals
 	 */
 	public void actionPerformed(ActionEvent e) {
@@ -173,5 +121,57 @@ public class ScreenComponent extends JPanel implements ScreenGUI, ActionListener
 				}
 			}
 		}
+	}
+
+	/**
+	 * Refreshes this component.
+	 */
+	public void refresh() {
+		if (redraw) {
+			repaint();
+			redraw = false;
+		}
+	}
+
+	/**
+	 * Resets the content of this component.
+	 */
+	public void reset() {
+		for (int i = 0; i < data.length; i++)
+			data[i] = 0;
+
+		redraw = true;
+	}
+
+	/**
+	 * Updates the screen's contents with the given values array. (Assumes that
+	 * the length of the values array equals the screen memory size.
+	 */
+	public void setContents(short[] values) {
+		data = values;
+		redraw = true;
+	}
+
+	/**
+	 * Updates the screen at the given index with the given value (Assumes legal
+	 * index)
+	 */
+	public void setValueAt(int index, short value) {
+		data[index] = value;
+		redraw = true;
+	}
+
+	/**
+	 * Starts the animation.
+	 */
+	public void startAnimation() {
+		timer.setDelay(ANIMATION_CLOCK_INTERVALS);
+	}
+
+	/**
+	 * Stops the animation.
+	 */
+	public void stopAnimation() {
+		timer.setDelay(STATIC_CLOCK_INTERVALS);
 	}
 }

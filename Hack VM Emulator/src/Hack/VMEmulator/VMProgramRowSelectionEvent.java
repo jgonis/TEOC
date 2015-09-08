@@ -44,16 +44,16 @@ public class VMProgramRowSelectionEvent extends EventObject {
 	}
 
 	/**
-	 * Returns the selected row instruction.
-	 */
-	public HVMInstruction getRowInstruction() {
-		return rowInstruction;
-	}
-
-	/**
 	 * Returns the selected row index.
 	 */
 	public int getRowIndex() {
 		return rowIndex;
+	}
+
+	/**
+	 * Returns the selected row instruction.
+	 */
+	public HVMInstruction getRowInstruction() {
+		return rowInstruction;
 	}
 }

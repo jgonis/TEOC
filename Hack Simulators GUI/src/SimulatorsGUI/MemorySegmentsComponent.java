@@ -113,6 +113,20 @@ public class MemorySegmentsComponent extends JPanel {
 	}
 
 	/**
+	 * Returns arg memory segment.
+	 */
+	public MemorySegmentComponent getArgSegment() {
+		return argSegment;
+	}
+
+	/**
+	 * Returns local memory segment.
+	 */
+	public MemorySegmentComponent getLocalSegment() {
+		return localSegment;
+	}
+
+	/**
 	 * Returns the split pane which contains all of the other split peanes.
 	 */
 	public JSplitPane getSplitPane() {
@@ -127,24 +141,10 @@ public class MemorySegmentsComponent extends JPanel {
 	}
 
 	/**
-	 * Returns local memory segment.
+	 * Returns temp memory segment.
 	 */
-	public MemorySegmentComponent getLocalSegment() {
-		return localSegment;
-	}
-
-	/**
-	 * Returns arg memory segment.
-	 */
-	public MemorySegmentComponent getArgSegment() {
-		return argSegment;
-	}
-
-	/**
-	 * Returns this memory segment.
-	 */
-	public MemorySegmentComponent getThisSegment() {
-		return thisSegment;
+	public MemorySegmentComponent getTempSegment() {
+		return tempSegment;
 	}
 
 	/**
@@ -155,9 +155,9 @@ public class MemorySegmentsComponent extends JPanel {
 	}
 
 	/**
-	 * Returns temp memory segment.
+	 * Returns this memory segment.
 	 */
-	public MemorySegmentComponent getTempSegment() {
-		return tempSegment;
+	public MemorySegmentComponent getThisSegment() {
+		return thisSegment;
 	}
 }

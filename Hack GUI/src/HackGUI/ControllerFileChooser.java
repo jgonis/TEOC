@@ -63,12 +63,6 @@ public class ControllerFileChooser extends JFrame {
 		comparisonFileChooser.setName("Comparison File :");
 	}
 
-	// Shows the controller's file chooser
-	public void showWindow() {
-		setVisible(true);
-		scriptFileChooser.getTextField().requestFocus();
-	}
-
 	/**
 	 * Registers the given FilesTypeListener as a listener to this component.
 	 */
@@ -77,55 +71,13 @@ public class ControllerFileChooser extends JFrame {
 	}
 
 	/**
-	 * Un-registers the given FilesTypeListener from being a listener to this
-	 * component.
+	 * Implementing the action of pressing the cancel button.
 	 */
-	public void removeListener(FilesTypeListener listener) {
-		listeners.removeElement(listener);
-	}
-
-	/**
-	 * Notify all the FilesTypeListeners on actions taken in it, by creating a
-	 * FilesTypeEvent and sending it using the filesNamesChanged method to all
-	 * of the listeners.
-	 */
-	public void notifyListeners(String script, String output, String comparison) {
-		FilesTypeEvent event = new FilesTypeEvent(this, script, output, comparison);
-
-		for (int i = 0; i < listeners.size(); i++) {
-			((FilesTypeListener) listeners.elementAt(i)).filesNamesChanged(event);
-		}
-	}
-
-	/**
-	 * Sets the directory of the script files.
-	 */
-	public void setScriptDir(String dir) {
-		scriptFileChooser.setScriptDir(dir);
-	}
-
-	/**
-	 * Sets the script file.
-	 */
-	public void setScriptFile(String fileName) {
-		scriptFileChooser.setCurrentFileName(fileName);
+	public void cancelButton_actionPerformed(ActionEvent e) {
 		scriptFileChooser.showCurrentFileName();
-	}
-
-	/**
-	 * Sets the output file.
-	 */
-	public void setOutputFile(String fileName) {
-		outputFileChooser.setCurrentFileName(fileName);
 		outputFileChooser.showCurrentFileName();
-	}
-
-	/**
-	 * Sets the comparison file.
-	 */
-	public void setComparisonFile(String fileName) {
-		comparisonFileChooser.setCurrentFileName(fileName);
 		comparisonFileChooser.showCurrentFileName();
+		setVisible(false);
 	}
 
 	// Initialization this component
@@ -161,13 +113,16 @@ public class ControllerFileChooser extends JFrame {
 	}
 
 	/**
-	 * Implementing the action of pressing the cancel button.
+	 * Notify all the FilesTypeListeners on actions taken in it, by creating a
+	 * FilesTypeEvent and sending it using the filesNamesChanged method to all
+	 * of the listeners.
 	 */
-	public void cancelButton_actionPerformed(ActionEvent e) {
-		scriptFileChooser.showCurrentFileName();
-		outputFileChooser.showCurrentFileName();
-		comparisonFileChooser.showCurrentFileName();
-		setVisible(false);
+	public void notifyListeners(String script, String output, String comparison) {
+		FilesTypeEvent event = new FilesTypeEvent(this, script, output, comparison);
+
+		for (int i = 0; i < listeners.size(); i++) {
+			((FilesTypeListener) listeners.elementAt(i)).filesNamesChanged(event);
+		}
 	}
 
 	/**
@@ -200,5 +155,50 @@ public class ControllerFileChooser extends JFrame {
 			notifyListeners(script, output, comparison);
 		}
 		setVisible(false);
+	}
+
+	/**
+	 * Un-registers the given FilesTypeListener from being a listener to this
+	 * component.
+	 */
+	public void removeListener(FilesTypeListener listener) {
+		listeners.removeElement(listener);
+	}
+
+	/**
+	 * Sets the comparison file.
+	 */
+	public void setComparisonFile(String fileName) {
+		comparisonFileChooser.setCurrentFileName(fileName);
+		comparisonFileChooser.showCurrentFileName();
+	}
+
+	/**
+	 * Sets the output file.
+	 */
+	public void setOutputFile(String fileName) {
+		outputFileChooser.setCurrentFileName(fileName);
+		outputFileChooser.showCurrentFileName();
+	}
+
+	/**
+	 * Sets the directory of the script files.
+	 */
+	public void setScriptDir(String dir) {
+		scriptFileChooser.setScriptDir(dir);
+	}
+
+	/**
+	 * Sets the script file.
+	 */
+	public void setScriptFile(String fileName) {
+		scriptFileChooser.setCurrentFileName(fileName);
+		scriptFileChooser.showCurrentFileName();
+	}
+
+	// Shows the controller's file chooser
+	public void showWindow() {
+		setVisible(true);
+		scriptFileChooser.getTextField().requestFocus();
 	}
 }

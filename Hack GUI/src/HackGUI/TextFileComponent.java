@@ -48,8 +48,76 @@ import Hack.ComputerParts.TextFileGUI;
  */
 public class TextFileComponent extends JPanel implements TextFileGUI {
 
+	// An inner class representing the cell renderer of the table.
+	public class TextFileCellRenderer extends DefaultTableCellRenderer {
+
+		public Component getTableCellRendererComponent(JTable table, Object value, boolean selected, boolean focused,
+				int row, int column) {
+			setForeground(null);
+			setBackground(null);
+
+			setRenderer(row, column);
+			super.getTableCellRendererComponent(table, value, selected, focused, row, column);
+
+			return this;
+		}
+
+		public void setRenderer(int row, int column) {
+			if (highlightedLines.contains(new Integer(row)))
+				setBackground(Color.yellow);
+			else
+				setBackground(null);
+
+			if (emphasizedLines.contains(new Integer(row)))
+				setForeground(Color.red);
+			else
+				setForeground(null);
+		}
+	}
+	// An inner class representing the model of the breakpoint table.
+	class TextFileTableModel extends AbstractTableModel {
+
+		/**
+		 * Returns the number of columns.
+		 */
+		public int getColumnCount() {
+			return 1;
+		}
+
+		/**
+		 * Returns the names of the columns.
+		 */
+		public String getColumnName(int col) {
+			return "";
+		}
+
+		/**
+		 * Returns the number of rows.
+		 */
+		public int getRowCount() {
+			// return rows.length;
+			return rowsVector.size();
+		}
+
+		/**
+		 * Returns the value at a specific row and column.
+		 */
+		public Object getValueAt(int row, int col) {
+			// return rows[row];
+			return rowsVector.elementAt(row);
+		}
+
+		/**
+		 * Returns true of this table cells are editable, false - otherwise.
+		 */
+		public boolean isCellEditable(int row, int col) {
+			return false;
+		}
+	}
+
 	// A vector containing the listeners to this component.
 	private Vector listeners;
+
 	private Vector rowsVector;
 
 	// The model of the table
@@ -88,33 +156,9 @@ public class TextFileComponent extends JPanel implements TextFileGUI {
 		jbInit();
 	}
 
-	/**
-	 * Enables user input to the component.
-	 */
-	public void enableUserInput() {
-		textFileTable.setRowSelectionAllowed(true);
-		isEnabled = true;
-	}
-
-	/**
-	 * Disables user input to the component.
-	 */
-	public void disableUserInput() {
-		textFileTable.setRowSelectionAllowed(false);
-		isEnabled = false;
-	}
-
-	public void hideSelect() {
-		textFileTable.clearSelection();
-	}
-
-	public void select(int from, int to) {
-		textFileTable.setRowSelectionInterval(from, to);
-		Utilities.tableCenterScroll(this, textFileTable, from);
-	}
-
-	public void setName(String name) {
-		nameLbl.setText(name);
+	public void addEmphasis(int index) {
+		emphasizedLines.add(new Integer(index));
+		repaint();
 	}
 
 	public void addHighlight(int index, boolean clear) {
@@ -126,19 +170,43 @@ public class TextFileComponent extends JPanel implements TextFileGUI {
 		repaint();
 	}
 
+	public void addLine(String line) {
+		rowsVector.addElement(line);
+		textFileTable.revalidate();
+		repaint();
+		addHighlight(rowsVector.size() - 1, false);
+	}
+
+	public void addTextFileListener(TextFileEventListener listener) {
+		listeners.addElement(listener);
+	}
+
 	public void clearHighlights() {
 		highlightedLines.clear();
 		repaint();
 	}
 
-	public void addEmphasis(int index) {
-		emphasizedLines.add(new Integer(index));
-		repaint();
+	/**
+	 * Disables user input to the component.
+	 */
+	public void disableUserInput() {
+		textFileTable.setRowSelectionAllowed(false);
+		isEnabled = false;
 	}
 
-	public void removeEmphasis(int index) {
-		emphasizedLines.remove(new Integer(index));
-		repaint();
+	/**
+	 * Enables user input to the component.
+	 */
+	public void enableUserInput() {
+		textFileTable.setRowSelectionAllowed(true);
+		isEnabled = true;
+	}
+
+	/**
+	 * Returns the cell renderer of this component.
+	 */
+	protected DefaultTableCellRenderer getCellRenderer() {
+		return new TextFileCellRenderer();
 	}
 
 	public String getLineAt(int index) {
@@ -150,92 +218,14 @@ public class TextFileComponent extends JPanel implements TextFileGUI {
 	}
 
 	/**
-	 * Returns the cell renderer of this component.
-	 */
-	protected DefaultTableCellRenderer getCellRenderer() {
-		return new TextFileCellRenderer();
-	}
-
-	public void addTextFileListener(TextFileEventListener listener) {
-		listeners.addElement(listener);
-	}
-
-	public void removeTextFileListener(TextFileEventListener listener) {
-		listeners.removeElement(listener);
-	}
-
-	public void notifyTextFileListeners(String row, int rowNum) {
-		TextFileEvent event = new TextFileEvent(this, row, rowNum);
-		for (int i = 0; i < listeners.size(); i++) {
-			((TextFileEventListener) listeners.elementAt(i)).rowSelected(event);
-		}
-	}
-
-	public void addLine(String line) {
-		rowsVector.addElement(line);
-		textFileTable.revalidate();
-		repaint();
-		addHighlight(rowsVector.size() - 1, false);
-	}
-
-	public void setLineAt(int index, String line) {
-		rowsVector.setElementAt(line, index);
-		addHighlight(index, false);
-	}
-
-	public void setContents(String[] lines) {
-		rowsVector.removeAllElements();
-		for (int i = 0; i < lines.length; i++) {
-			rowsVector.addElement(lines[i]);
-		}
-		textFileTable.revalidate();
-		repaint();
-	}
-
-	public void setContents(String fileName) {
-		BufferedReader reader;
-		rowsVector.removeAllElements();
-		try {
-			reader = new BufferedReader(new FileReader(fileName));
-			String line;
-			while ((line = reader.readLine()) != null) {
-				rowsVector.addElement(line);
-			}
-			reader.close();
-		} catch (IOException ioe) {
-		}
-		textFileTable.clearSelection();
-		textFileTable.revalidate();
-		repaint();
-	}
-
-	/**
-	 * Resets the content of this component.
-	 */
-	public void reset() {
-		highlightedLines.clear();
-		rowsVector.removeAllElements();
-		textFileTable.revalidate();
-		textFileTable.clearSelection();
-		repaint();
-	}
-
-	/**
-	 * Sets the number of visible rows.
-	 */
-	public void setVisibleRows(int num) {
-		int tableHeight = num * textFileTable.getRowHeight();
-		scrollPane.setSize(getTableWidth(), tableHeight + 3);
-		setPreferredSize(new Dimension(getTableWidth(), tableHeight + 30));
-		setSize(getTableWidth(), tableHeight + 30);
-		textFileTable.getParent().setSize(new Dimension(1000, tableHeight));
-	}
-
-	/**
 	 * Returns the width of the table.
 	 */
 	public int getTableWidth() {
 		return 241;
+	}
+
+	public void hideSelect() {
+		textFileTable.clearSelection();
 	}
 
 	// The initialization of this component.
@@ -271,71 +261,81 @@ public class TextFileComponent extends JPanel implements TextFileGUI {
 
 	}
 
-	// An inner class representing the model of the breakpoint table.
-	class TextFileTableModel extends AbstractTableModel {
-
-		/**
-		 * Returns the number of columns.
-		 */
-		public int getColumnCount() {
-			return 1;
-		}
-
-		/**
-		 * Returns the number of rows.
-		 */
-		public int getRowCount() {
-			// return rows.length;
-			return rowsVector.size();
-		}
-
-		/**
-		 * Returns the names of the columns.
-		 */
-		public String getColumnName(int col) {
-			return "";
-		}
-
-		/**
-		 * Returns the value at a specific row and column.
-		 */
-		public Object getValueAt(int row, int col) {
-			// return rows[row];
-			return rowsVector.elementAt(row);
-		}
-
-		/**
-		 * Returns true of this table cells are editable, false - otherwise.
-		 */
-		public boolean isCellEditable(int row, int col) {
-			return false;
+	public void notifyTextFileListeners(String row, int rowNum) {
+		TextFileEvent event = new TextFileEvent(this, row, rowNum);
+		for (int i = 0; i < listeners.size(); i++) {
+			((TextFileEventListener) listeners.elementAt(i)).rowSelected(event);
 		}
 	}
 
-	// An inner class representing the cell renderer of the table.
-	public class TextFileCellRenderer extends DefaultTableCellRenderer {
+	public void removeEmphasis(int index) {
+		emphasizedLines.remove(new Integer(index));
+		repaint();
+	}
 
-		public Component getTableCellRendererComponent(JTable table, Object value, boolean selected, boolean focused,
-				int row, int column) {
-			setForeground(null);
-			setBackground(null);
+	public void removeTextFileListener(TextFileEventListener listener) {
+		listeners.removeElement(listener);
+	}
 
-			setRenderer(row, column);
-			super.getTableCellRendererComponent(table, value, selected, focused, row, column);
+	/**
+	 * Resets the content of this component.
+	 */
+	public void reset() {
+		highlightedLines.clear();
+		rowsVector.removeAllElements();
+		textFileTable.revalidate();
+		textFileTable.clearSelection();
+		repaint();
+	}
 
-			return this;
+	public void select(int from, int to) {
+		textFileTable.setRowSelectionInterval(from, to);
+		Utilities.tableCenterScroll(this, textFileTable, from);
+	}
+
+	public void setContents(String fileName) {
+		BufferedReader reader;
+		rowsVector.removeAllElements();
+		try {
+			reader = new BufferedReader(new FileReader(fileName));
+			String line;
+			while ((line = reader.readLine()) != null) {
+				rowsVector.addElement(line);
+			}
+			reader.close();
+		} catch (IOException ioe) {
 		}
+		textFileTable.clearSelection();
+		textFileTable.revalidate();
+		repaint();
+	}
 
-		public void setRenderer(int row, int column) {
-			if (highlightedLines.contains(new Integer(row)))
-				setBackground(Color.yellow);
-			else
-				setBackground(null);
-
-			if (emphasizedLines.contains(new Integer(row)))
-				setForeground(Color.red);
-			else
-				setForeground(null);
+	public void setContents(String[] lines) {
+		rowsVector.removeAllElements();
+		for (int i = 0; i < lines.length; i++) {
+			rowsVector.addElement(lines[i]);
 		}
+		textFileTable.revalidate();
+		repaint();
+	}
+
+	public void setLineAt(int index, String line) {
+		rowsVector.setElementAt(line, index);
+		addHighlight(index, false);
+	}
+
+	public void setName(String name) {
+		nameLbl.setText(name);
+	}
+
+	/**
+	 * Sets the number of visible rows.
+	 */
+	public void setVisibleRows(int num) {
+		int tableHeight = num * textFileTable.getRowHeight();
+		scrollPane.setSize(getTableWidth(), tableHeight + 3);
+		setPreferredSize(new Dimension(getTableWidth(), tableHeight + 30));
+		setSize(getTableWidth(), tableHeight + 30);
+		textFileTable.getParent().setSize(new Dimension(1000, tableHeight));
 	}
 }

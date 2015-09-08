@@ -45,48 +45,11 @@ public abstract class BuiltInGateWithGUI extends BuiltInGate implements ErrorEve
 	}
 
 	/**
-	 * Sets the gate parent of this gate. The given gate will be re-evaluated
-	 * when the output of this gate changes.
-	 */
-	protected void setParent(Gate gate) {
-		parent = gate;
-	}
-
-	/**
-	 * Evaluates the parent of this gate. Should be executed whenever a change
-	 * is done to the gate through its gui (after the gate's outputs were set).
-	 */
-	protected void evalParent() {
-		parent.setDirty();
-		parent.eval();
-	}
-
-	/**
 	 * Registers the given GateErrorEventListener as a listener to this
 	 * simulator.
 	 */
 	public void addErrorListener(GateErrorEventListener listener) {
 		errorListeners.addElement(listener);
-	}
-
-	/**
-	 * Un-registers the given GateErrorEventListener from being a listener to
-	 * this GUI.
-	 */
-	public void removeErrorListener(GateErrorEventListener listener) {
-		errorListeners.removeElement(listener);
-	}
-
-	/**
-	 * Notifies all the GateErrorEventListeners on an error that occured in the
-	 * computer part by creating a GateErrorEvent (with the error message) and
-	 * sending it using the gateErrorOccured method to all the listeners.
-	 */
-	public void notifyErrorListeners(String errorMessage) {
-		GateErrorEvent event = new GateErrorEvent(this, errorMessage);
-
-		for (int i = 0; i < errorListeners.size(); i++)
-			((GateErrorEventListener) errorListeners.elementAt(i)).gateErrorOccured(event);
 	}
 
 	/**
@@ -100,11 +63,28 @@ public abstract class BuiltInGateWithGUI extends BuiltInGate implements ErrorEve
 	}
 
 	/**
+	 * Executes the given command, given in args[] style. Subclasses may
+	 * override this method to implement commands.
+	 */
+	public void doCommand(String[] command) throws GateException {
+		throw new GateException("This chip supports no commands");
+	}
+
+	/**
 	 * Called when an error occured in the GUI. The event contains the source
 	 * object and the error message.
 	 */
 	public void errorOccured(ErrorEvent event) {
 		notifyErrorListeners(event.getErrorMessage());
+	}
+
+	/**
+	 * Evaluates the parent of this gate. Should be executed whenever a change
+	 * is done to the gate through its gui (after the gate's outputs were set).
+	 */
+	protected void evalParent() {
+		parent.setDirty();
+		parent.eval();
 	}
 
 	/**
@@ -119,15 +99,35 @@ public abstract class BuiltInGateWithGUI extends BuiltInGate implements ErrorEve
 	public abstract short getValueAt(int index) throws GateException;
 
 	/**
+	 * Notifies all the GateErrorEventListeners on an error that occured in the
+	 * computer part by creating a GateErrorEvent (with the error message) and
+	 * sending it using the gateErrorOccured method to all the listeners.
+	 */
+	public void notifyErrorListeners(String errorMessage) {
+		GateErrorEvent event = new GateErrorEvent(this, errorMessage);
+
+		for (int i = 0; i < errorListeners.size(); i++)
+			((GateErrorEventListener) errorListeners.elementAt(i)).gateErrorOccured(event);
+	}
+
+	/**
+	 * Un-registers the given GateErrorEventListener from being a listener to
+	 * this GUI.
+	 */
+	public void removeErrorListener(GateErrorEventListener listener) {
+		errorListeners.removeElement(listener);
+	}
+
+	/**
+	 * Sets the gate parent of this gate. The given gate will be re-evaluated
+	 * when the output of this gate changes.
+	 */
+	protected void setParent(Gate gate) {
+		parent = gate;
+	}
+
+	/**
 	 * Sets the value at the given index with the value.
 	 */
 	public abstract void setValueAt(int index, short value) throws GateException;
-
-	/**
-	 * Executes the given command, given in args[] style. Subclasses may
-	 * override this method to implement commands.
-	 */
-	public void doCommand(String[] command) throws GateException {
-		throw new GateException("This chip supports no commands");
-	}
 }

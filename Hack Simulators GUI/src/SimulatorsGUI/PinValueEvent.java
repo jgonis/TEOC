@@ -42,17 +42,17 @@ public class PinValueEvent extends EventObject {
 	}
 
 	/**
-	 * Returns the pin value on a string representation.
-	 */
-	public String getValueStr() {
-		return valueStr;
-	}
-
-	/**
 	 * Returns the boolean value which is true when the user pressed the 'ok'
 	 * button and false if the user pressed the 'cancel' button.
 	 */
 	public boolean getIsOk() {
 		return isOk;
+	}
+
+	/**
+	 * Returns the pin value on a string representation.
+	 */
+	public String getValueStr() {
+		return valueStr;
 	}
 }

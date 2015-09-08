@@ -187,6 +187,20 @@ public class Calculator extends ValueComputerPart {
 		setValueAt(2, result, true);
 	}
 
+	public void doSetValueAt(int index, short value) {
+		switch (index) {
+		case 0:
+			input0 = value;
+			break;
+		case 1:
+			input1 = value;
+			break;
+		case 2:
+			output = value;
+			break;
+		}
+	}
+
 	public ComputerPartGUI getGUI() {
 		return gui;
 	}
@@ -209,18 +223,18 @@ public class Calculator extends ValueComputerPart {
 		return result;
 	}
 
-	public void doSetValueAt(int index, short value) {
-		switch (index) {
-		case 0:
-			input0 = value;
-			break;
-		case 1:
-			input1 = value;
-			break;
-		case 2:
-			output = value;
-			break;
-		}
+	/**
+	 * Hides the calculator GUI.
+	 */
+	public void hideCalculator() {
+		if (animate)
+			gui.hideCalculator();
+	}
+
+	public void refreshGUI() {
+		quietUpdateGUI(0, input0);
+		quietUpdateGUI(1, input1);
+		quietUpdateGUI(2, output);
 	}
 
 	public void reset() {
@@ -228,12 +242,6 @@ public class Calculator extends ValueComputerPart {
 		input0 = nullValue;
 		input1 = nullValue;
 		output = nullValue;
-	}
-
-	public void refreshGUI() {
-		quietUpdateGUI(0, input0);
-		quietUpdateGUI(1, input1);
-		quietUpdateGUI(2, output);
 	}
 
 	/**
@@ -250,13 +258,5 @@ public class Calculator extends ValueComputerPart {
 			gui.setOperator(operators[operator]);
 			gui.showCalculator();
 		}
-	}
-
-	/**
-	 * Hides the calculator GUI.
-	 */
-	public void hideCalculator() {
-		if (animate)
-			gui.hideCalculator();
 	}
 }

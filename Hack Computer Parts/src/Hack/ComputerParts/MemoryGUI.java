@@ -32,10 +32,9 @@ public interface MemoryGUI extends InteractiveValueComputerPartGUI {
 	public void addClearListener(ClearEventListener listener);
 
 	/**
-	 * Un-registers the given ClearEventListener from being a listener to this
-	 * GUI.
+	 * Hides all selections.
 	 */
-	public void removeClearListener(ClearEventListener listener);
+	public void hideSelect();
 
 	/**
 	 * Notifies all the ClearEventListeners on a a request for clear by creating
@@ -45,9 +44,15 @@ public interface MemoryGUI extends InteractiveValueComputerPartGUI {
 	public void notifyClearListeners();
 
 	/**
-	 * Sets the memory contents with the given values array.
+	 * Un-registers the given ClearEventListener from being a listener to this
+	 * GUI.
 	 */
-	public void setContents(short[] values);
+	public void removeClearListener(ClearEventListener listener);
+
+	/**
+	 * Scrolls the memory such that the given address will be on top.
+	 */
+	public void scrollTo(int address);
 
 	/**
 	 * Selects the commands in the range fromIndex..toIndex
@@ -55,12 +60,7 @@ public interface MemoryGUI extends InteractiveValueComputerPartGUI {
 	public void select(int fromIndex, int toIndex);
 
 	/**
-	 * Hides all selections.
+	 * Sets the memory contents with the given values array.
 	 */
-	public void hideSelect();
-
-	/**
-	 * Scrolls the memory such that the given address will be on top.
-	 */
-	public void scrollTo(int address);
+	public void setContents(short[] values);
 }

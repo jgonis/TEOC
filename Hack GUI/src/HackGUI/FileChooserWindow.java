@@ -60,11 +60,18 @@ public class FileChooserWindow extends JFrame implements EnterPressedListener {
 	}
 
 	/**
-	 * Shows the file chooser window.
+	 * Registers the given FilesTypeListener as a listener to this component.
 	 */
-	public void showWindow() {
-		setVisible(true);
-		fileChooser.getTextField().requestFocus();
+	public void addListener(FilesTypeListener listener) {
+		listeners.addElement(listener);
+	}
+
+	/**
+	 * Implementing the action of pressing the cancel button.
+	 */
+	public void cancelButton_actionPerformed(ActionEvent e) {
+		fileChooser.showCurrentFileName();
+		setVisible(false);
 	}
 
 	/**
@@ -77,21 +84,6 @@ public class FileChooserWindow extends JFrame implements EnterPressedListener {
 		if (!(file == null))
 			notifyListeners(file);
 		setVisible(false);
-	}
-
-	/**
-	 * Sets the file name (which is written inside the text field).
-	 */
-	public void setFileName(String name) {
-		fileChooser.setCurrentFileName(name);
-		fileChooser.showCurrentFileName();
-	}
-
-	/**
-	 * Sets the name of the file chooser.
-	 */
-	public void setName(String name) {
-		fileChooser.setName(name);
 	}
 
 	/**
@@ -132,21 +124,6 @@ public class FileChooserWindow extends JFrame implements EnterPressedListener {
 	}
 
 	/**
-	 * Registers the given FilesTypeListener as a listener to this component.
-	 */
-	public void addListener(FilesTypeListener listener) {
-		listeners.addElement(listener);
-	}
-
-	/**
-	 * Un-registers the given FilesTypeListener from being a listener to this
-	 * component.
-	 */
-	public void removeListener(FilesTypeListener listener) {
-		listeners.removeElement(listener);
-	}
-
-	/**
 	 * Notify all the FilesTypeListeners on actions taken in it, by creating a
 	 * FilesTypeEvent and sending it using the filesNamesChanged method to all
 	 * of the listeners.
@@ -157,14 +134,6 @@ public class FileChooserWindow extends JFrame implements EnterPressedListener {
 		for (int i = 0; i < listeners.size(); i++) {
 			((FilesTypeListener) listeners.elementAt(i)).filesNamesChanged(event);
 		}
-	}
-
-	/**
-	 * Implementing the action of pressing the cancel button.
-	 */
-	public void cancelButton_actionPerformed(ActionEvent e) {
-		fileChooser.showCurrentFileName();
-		setVisible(false);
 	}
 
 	/**
@@ -179,5 +148,36 @@ public class FileChooserWindow extends JFrame implements EnterPressedListener {
 		if (!(file == null)) {
 			notifyListeners(file);
 		}
+	}
+
+	/**
+	 * Un-registers the given FilesTypeListener from being a listener to this
+	 * component.
+	 */
+	public void removeListener(FilesTypeListener listener) {
+		listeners.removeElement(listener);
+	}
+
+	/**
+	 * Sets the file name (which is written inside the text field).
+	 */
+	public void setFileName(String name) {
+		fileChooser.setCurrentFileName(name);
+		fileChooser.showCurrentFileName();
+	}
+
+	/**
+	 * Sets the name of the file chooser.
+	 */
+	public void setName(String name) {
+		fileChooser.setName(name);
+	}
+
+	/**
+	 * Shows the file chooser window.
+	 */
+	public void showWindow() {
+		setVisible(true);
+		fileChooser.getTextField().requestFocus();
 	}
 }

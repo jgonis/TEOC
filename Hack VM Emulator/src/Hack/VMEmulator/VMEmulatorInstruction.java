@@ -28,11 +28,10 @@ public class VMEmulatorInstruction extends HVMInstruction {
 	private short indexInFunction;
 
 	/**
-	 * Constructs a new instruction with two arguments and the index in
-	 * function.
+	 * Constructs a new instruction with no arguments and the index in function.
 	 */
-	public VMEmulatorInstruction(byte opCode, short arg0, short arg1, short indexInFunction) {
-		super(opCode, arg0, arg1);
+	public VMEmulatorInstruction(byte opCode, short indexInFunction) {
+		super(opCode);
 		this.indexInFunction = indexInFunction;
 	}
 
@@ -45,10 +44,11 @@ public class VMEmulatorInstruction extends HVMInstruction {
 	}
 
 	/**
-	 * Constructs a new instruction with no arguments and the index in function.
+	 * Constructs a new instruction with two arguments and the index in
+	 * function.
 	 */
-	public VMEmulatorInstruction(byte opCode, short indexInFunction) {
-		super(opCode);
+	public VMEmulatorInstruction(byte opCode, short arg0, short arg1, short indexInFunction) {
+		super(opCode, arg0, arg1);
 		this.indexInFunction = indexInFunction;
 	}
 

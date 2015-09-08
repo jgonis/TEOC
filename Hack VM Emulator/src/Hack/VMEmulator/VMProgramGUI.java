@@ -37,10 +37,20 @@ public interface VMProgramGUI extends InteractiveComputerPartGUI {
 	public void addProgramListener(ProgramEventListener listener);
 
 	/**
-	 * Un-registers the given ProgramEventListener from being a listener to this
-	 * GUI.
+	 * Displays a confirmation window asking the user permission to use built-in
+	 * vm functions
 	 */
-	public void removeProgramListener(ProgramEventListener listener);
+	public boolean confirmBuiltInAccess();
+
+	/**
+	 * Hides the displayed message.
+	 */
+	public void hideMessage();
+
+	/**
+	 * Displays a notification window with the given message.
+	 */
+	public void notify(String message);
 
 	/**
 	 * Notifies all the ProgramEventListeners on a change in the program by
@@ -49,6 +59,12 @@ public interface VMProgramGUI extends InteractiveComputerPartGUI {
 	 * all the listeners.
 	 */
 	public void notifyProgramListeners(byte eventType, String programFileName);
+
+	/**
+	 * Un-registers the given ProgramEventListener from being a listener to this
+	 * GUI.
+	 */
+	public void removeProgramListener(ProgramEventListener listener);
 
 	/**
 	 * Sets the contents of the gui with the first instructionsLength
@@ -65,20 +81,4 @@ public interface VMProgramGUI extends InteractiveComputerPartGUI {
 	 * Displays the given message.
 	 */
 	public void showMessage(String message);
-
-	/**
-	 * Hides the displayed message.
-	 */
-	public void hideMessage();
-
-	/**
-	 * Displays a confirmation window asking the user permission to use built-in
-	 * vm functions
-	 */
-	public boolean confirmBuiltInAccess();
-
-	/**
-	 * Displays a notification window with the given message.
-	 */
-	public void notify(String message);
 }

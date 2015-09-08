@@ -111,123 +111,6 @@ public class HardwareSimulatorComponent extends HackSimulatorComponent implement
 		hdlView.setName("HDL");
 	}
 
-	public void loadProgram() {
-	}
-
-	/**
-	 * Returns the Gates panel.
-	 */
-	public GatesPanelGUI getGatesPanel() {
-		return this;
-	}
-
-	/**
-	 * Returns the HDLView.
-	 */
-	public TextFileGUI getHDLView() {
-		return hdlView;
-	}
-
-	/**
-	 * Returns the input pins table.
-	 */
-	public PinsGUI getInputPins() {
-		return inputPins;
-	}
-
-	/**
-	 * Returns the output pins table.
-	 */
-	public PinsGUI getOutputPins() {
-		return outputPins;
-	}
-
-	/**
-	 * Returns the internal pins table.
-	 */
-	public PinsGUI getInternalPins() {
-		return internalPins;
-	}
-
-	public GateInfoGUI getGateInfo() {
-		return gateInfo;
-	}
-
-	/**
-	 * Returns the part pins table.
-	 */
-	public PartPinsGUI getPartPins() {
-		return partPins;
-	}
-
-	/**
-	 * Returns the parts table.
-	 */
-	public PartsGUI getParts() {
-		return parts;
-	}
-
-	/**
-	 * Displays the Internal pins table.
-	 */
-	public void showInternalPins() {
-		internalPins.setVisible(true);
-	}
-
-	/**
-	 * Hides the Internal pins table.
-	 */
-	public void hideInternalPins() {
-		internalPins.setVisible(false);
-	}
-
-	/**
-	 * Displays the Part pins table.
-	 */
-	public void showPartPins() {
-		partPins.setVisible(true);
-	}
-
-	/**
-	 * Hides the Part pins table.
-	 */
-	public void hidePartPins() {
-		partPins.setVisible(false);
-	}
-
-	/**
-	 * Displays the Parts table.
-	 */
-	public void showParts() {
-		parts.setVisible(true);
-	}
-
-	/**
-	 * Hides the Parts table.
-	 */
-	public void hideParts() {
-		parts.setVisible(false);
-	}
-
-	/**
-	 * Displays the given message. The display color is chosen according to the
-	 * 'error' parameter.
-	 */
-	public void displayMessage(String message, boolean error) {
-		if (error)
-			messageLbl.setForeground(Color.red);
-		else
-			messageLbl.setForeground(UIManager.getColor("Label.foreground"));
-		messageLbl.setText(message);
-	}
-
-	public Point getAdditionalDisplayLocation() {
-		return new Point(496, 13);
-	}
-
-	public void setWorkingDir(File file) {
-	}
-
 	/**
 	 * Adds the given gate component to the gates panel.
 	 */
@@ -271,33 +154,93 @@ public class HardwareSimulatorComponent extends HackSimulatorComponent implement
 	}
 
 	/**
-	 * Removes the given gate component from the gates panel.
+	 * Displays the given message. The display color is chosen according to the
+	 * 'error' parameter.
 	 */
-	public void removeGateComponent(Component gateComponent) {
-		nullLayoutGatesPanel.remove(gateComponent);
-		flowLayoutGatesPanel.remove(gateComponent);
-		nullLayoutGatesPanel.revalidate();
-		flowLayoutGatesPanel.revalidate();
-		nullLayoutGatesPanel.repaint();
-		flowLayoutGatesPanel.repaint();
+	public void displayMessage(String message, boolean error) {
+		if (error)
+			messageLbl.setForeground(Color.red);
+		else
+			messageLbl.setForeground(UIManager.getColor("Label.foreground"));
+		messageLbl.setText(message);
+	}
+
+	public Point getAdditionalDisplayLocation() {
+		return new Point(496, 13);
+	}
+
+	public GateInfoGUI getGateInfo() {
+		return gateInfo;
 	}
 
 	/**
-	 * Removes all the gate components from the gates panel.
+	 * Returns the Gates panel.
 	 */
-	public void removeAllGateComponents() {
-		nullLayoutGatesPanel.removeAll();
-		flowLayoutGatesPanel.removeAll();
-		nullLayoutGatesPanel.revalidate();
-		flowLayoutGatesPanel.revalidate();
-		nullLayoutGatesPanel.repaint();
-		flowLayoutGatesPanel.repaint();
+	public GatesPanelGUI getGatesPanel() {
+		return this;
+	}
 
-		flowLayout = false;
-		if (currentAdditionalDisplay == null) {
-			nullLayoutGatesPanel.setVisible(true);
-			flowLayoutGatesPanel.setVisible(false);
-		}
+	/**
+	 * Returns the HDLView.
+	 */
+	public TextFileGUI getHDLView() {
+		return hdlView;
+	}
+
+	/**
+	 * Returns the input pins table.
+	 */
+	public PinsGUI getInputPins() {
+		return inputPins;
+	}
+
+	/**
+	 * Returns the internal pins table.
+	 */
+	public PinsGUI getInternalPins() {
+		return internalPins;
+	}
+
+	/**
+	 * Returns the output pins table.
+	 */
+	public PinsGUI getOutputPins() {
+		return outputPins;
+	}
+
+	/**
+	 * Returns the part pins table.
+	 */
+	public PartPinsGUI getPartPins() {
+		return partPins;
+	}
+
+	/**
+	 * Returns the parts table.
+	 */
+	public PartsGUI getParts() {
+		return parts;
+	}
+
+	/**
+	 * Hides the Internal pins table.
+	 */
+	public void hideInternalPins() {
+		internalPins.setVisible(false);
+	}
+
+	/**
+	 * Hides the Part pins table.
+	 */
+	public void hidePartPins() {
+		partPins.setVisible(false);
+	}
+
+	/**
+	 * Hides the Parts table.
+	 */
+	public void hideParts() {
+		parts.setVisible(false);
 	}
 
 	// Initialization of this component.
@@ -350,6 +293,39 @@ public class HardwareSimulatorComponent extends HackSimulatorComponent implement
 		setSize(WIDTH, HEIGHT);
 	}
 
+	public void loadProgram() {
+	}
+
+	/**
+	 * Removes all the gate components from the gates panel.
+	 */
+	public void removeAllGateComponents() {
+		nullLayoutGatesPanel.removeAll();
+		flowLayoutGatesPanel.removeAll();
+		nullLayoutGatesPanel.revalidate();
+		flowLayoutGatesPanel.revalidate();
+		nullLayoutGatesPanel.repaint();
+		flowLayoutGatesPanel.repaint();
+
+		flowLayout = false;
+		if (currentAdditionalDisplay == null) {
+			nullLayoutGatesPanel.setVisible(true);
+			flowLayoutGatesPanel.setVisible(false);
+		}
+	}
+
+	/**
+	 * Removes the given gate component from the gates panel.
+	 */
+	public void removeGateComponent(Component gateComponent) {
+		nullLayoutGatesPanel.remove(gateComponent);
+		flowLayoutGatesPanel.remove(gateComponent);
+		nullLayoutGatesPanel.revalidate();
+		flowLayoutGatesPanel.revalidate();
+		nullLayoutGatesPanel.repaint();
+		flowLayoutGatesPanel.repaint();
+	}
+
 	public void setAdditionalDisplay(JComponent additionalComponent) {
 		if (currentAdditionalDisplay == null && additionalComponent != null) {
 			if (flowLayout)
@@ -364,5 +340,29 @@ public class HardwareSimulatorComponent extends HackSimulatorComponent implement
 		}
 
 		super.setAdditionalDisplay(additionalComponent);
+	}
+
+	public void setWorkingDir(File file) {
+	}
+
+	/**
+	 * Displays the Internal pins table.
+	 */
+	public void showInternalPins() {
+		internalPins.setVisible(true);
+	}
+
+	/**
+	 * Displays the Part pins table.
+	 */
+	public void showPartPins() {
+		partPins.setVisible(true);
+	}
+
+	/**
+	 * Displays the Parts table.
+	 */
+	public void showParts() {
+		parts.setVisible(true);
 	}
 }

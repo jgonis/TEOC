@@ -53,11 +53,21 @@ public abstract class InteractiveComputerPart extends ComputerPart implements Er
 	}
 
 	/**
-	 * Un-registers the given ComputerPartErrorEventListener from being a
-	 * listener to this ComputerPart.
+	 * Clears all the ComputerPartErrorEventListeners from errors.
 	 */
-	public void removeErrorListener(ComputerPartErrorEventListener listener) {
-		errorListeners.removeElement(listener);
+	public void clearErrorListeners() {
+		ComputerPartErrorEvent event = new ComputerPartErrorEvent(this, null);
+
+		for (int i = 0; i < errorListeners.size(); i++)
+			((ComputerPartErrorEventListener) errorListeners.elementAt(i)).computerPartErrorOccured(event);
+	}
+
+	/**
+	 * Called when an error occured in the GUI. The event contains the source
+	 * object and the error message.
+	 */
+	public void errorOccured(ErrorEvent event) {
+		notifyErrorListeners(event.getErrorMessage());
 	}
 
 	/**
@@ -74,20 +84,10 @@ public abstract class InteractiveComputerPart extends ComputerPart implements Er
 	}
 
 	/**
-	 * Clears all the ComputerPartErrorEventListeners from errors.
+	 * Un-registers the given ComputerPartErrorEventListener from being a
+	 * listener to this ComputerPart.
 	 */
-	public void clearErrorListeners() {
-		ComputerPartErrorEvent event = new ComputerPartErrorEvent(this, null);
-
-		for (int i = 0; i < errorListeners.size(); i++)
-			((ComputerPartErrorEventListener) errorListeners.elementAt(i)).computerPartErrorOccured(event);
-	}
-
-	/**
-	 * Called when an error occured in the GUI. The event contains the source
-	 * object and the error message.
-	 */
-	public void errorOccured(ErrorEvent event) {
-		notifyErrorListeners(event.getErrorMessage());
+	public void removeErrorListener(ComputerPartErrorEventListener listener) {
+		errorListeners.removeElement(listener);
 	}
 }

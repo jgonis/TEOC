@@ -41,6 +41,73 @@ import HackGUI.Utilities;
  */
 public class CallStackComponent extends JPanel implements CallStackGUI {
 
+	/**
+	 * The Cell Renderer for the call stack's table.
+	 */
+	public class callStackTableCellRenderer extends DefaultTableCellRenderer {
+
+		/**
+		 * Returns the cell renderer component.
+		 */
+		public Component getTableCellRendererComponent(JTable table, Object value, boolean selected, boolean focused,
+				int row, int column) {
+			setForeground(null);
+			setBackground(null);
+
+			setRenderer(row, column);
+			super.getTableCellRendererComponent(table, value, selected, focused, row, column);
+
+			return this;
+		}
+
+		/**
+		 * Sets a new cell renderer.
+		 */
+		public void setRenderer(int row, int column) {
+			if (row == (methodNames.size() - 1))
+				setForeground(Color.blue);
+		}
+	}
+
+	// An inner class representing the model of the CallStack table.
+	class CallStackTableModel extends AbstractTableModel {
+
+		/**
+		 * Returns the number of columns.
+		 */
+		public int getColumnCount() {
+			return 1;
+		}
+
+		/**
+		 * Returns the names of the columns.
+		 */
+		public String getColumnName(int col) {
+			return "";
+		}
+
+		/**
+		 * Returns the number of rows.
+		 */
+		public int getRowCount() {
+			return methodNames.size();
+		}
+
+		/**
+		 * Returns the value at a specific row and column.
+		 */
+		public Object getValueAt(int row, int col) {
+			return methodNames.elementAt(row);
+		}
+
+		/**
+		 * Returns true of this table cells are editable, false - otherwise.
+		 */
+		public boolean isCellEditable(int row, int col) {
+			return false;
+		}
+	}
+
 	// Default number of visible rows
 	protected static final int DEFAULT_VISIBLE_ROWS = 10;
 
@@ -71,35 +138,23 @@ public class CallStackComponent extends JPanel implements CallStackGUI {
 	}
 
 	/**
-	 * Sets the call stack with the given vector of method names.
+	 * The action of the table gaining focus (empty implementation).
 	 */
-	public void setContents(Vector newMethodNames) {
-		methodNames = (Vector) newMethodNames.clone();
-		callStackTable.revalidate();
-
-		Rectangle r = callStackTable.getCellRect(newMethodNames.size() - 1, 0, true);
-		callStackTable.scrollRectToVisible(r);
-		repaint();
+	public void callStackTable_focusGained(FocusEvent e) {
 	}
 
 	/**
-	 * Resets the contents of this CallStackComponent.
+	 * The action of the table loosing focus
 	 */
-	public void reset() {
-		methodNames.removeAllElements();
-		callStackTable.revalidate();
+	public void callStackTable_focusLost(FocusEvent e) {
 		callStackTable.clearSelection();
-
 	}
 
 	/**
-	 * Sets the number of visible rows.
+	 * Returns the cell renderer of this component.
 	 */
-	public void setVisibleRows(int num) {
-		int tableHeight = num * callStackTable.getRowHeight();
-		scrollPane.setSize(getTableWidth(), tableHeight + 3);
-		setPreferredSize(new Dimension(getTableWidth(), tableHeight + 30));
-		setSize(getTableWidth(), tableHeight + 30);
+	protected DefaultTableCellRenderer getCellRenderer() {
+		return new callStackTableCellRenderer();
 	}
 
 	/**
@@ -135,89 +190,34 @@ public class CallStackComponent extends JPanel implements CallStackGUI {
 	}
 
 	/**
-	 * The action of the table gaining focus (empty implementation).
+	 * Resets the contents of this CallStackComponent.
 	 */
-	public void callStackTable_focusGained(FocusEvent e) {
-	}
-
-	/**
-	 * The action of the table loosing focus
-	 */
-	public void callStackTable_focusLost(FocusEvent e) {
+	public void reset() {
+		methodNames.removeAllElements();
+		callStackTable.revalidate();
 		callStackTable.clearSelection();
+
 	}
 
 	/**
-	 * Returns the cell renderer of this component.
+	 * Sets the call stack with the given vector of method names.
 	 */
-	protected DefaultTableCellRenderer getCellRenderer() {
-		return new callStackTableCellRenderer();
-	}
+	public void setContents(Vector newMethodNames) {
+		methodNames = (Vector) newMethodNames.clone();
+		callStackTable.revalidate();
 
-	// An inner class representing the model of the CallStack table.
-	class CallStackTableModel extends AbstractTableModel {
-
-		/**
-		 * Returns the number of columns.
-		 */
-		public int getColumnCount() {
-			return 1;
-		}
-
-		/**
-		 * Returns the number of rows.
-		 */
-		public int getRowCount() {
-			return methodNames.size();
-		}
-
-		/**
-		 * Returns the names of the columns.
-		 */
-		public String getColumnName(int col) {
-			return "";
-		}
-
-		/**
-		 * Returns the value at a specific row and column.
-		 */
-		public Object getValueAt(int row, int col) {
-			return methodNames.elementAt(row);
-		}
-
-		/**
-		 * Returns true of this table cells are editable, false - otherwise.
-		 */
-		public boolean isCellEditable(int row, int col) {
-			return false;
-		}
+		Rectangle r = callStackTable.getCellRect(newMethodNames.size() - 1, 0, true);
+		callStackTable.scrollRectToVisible(r);
+		repaint();
 	}
 
 	/**
-	 * The Cell Renderer for the call stack's table.
+	 * Sets the number of visible rows.
 	 */
-	public class callStackTableCellRenderer extends DefaultTableCellRenderer {
-
-		/**
-		 * Returns the cell renderer component.
-		 */
-		public Component getTableCellRendererComponent(JTable table, Object value, boolean selected, boolean focused,
-				int row, int column) {
-			setForeground(null);
-			setBackground(null);
-
-			setRenderer(row, column);
-			super.getTableCellRendererComponent(table, value, selected, focused, row, column);
-
-			return this;
-		}
-
-		/**
-		 * Sets a new cell renderer.
-		 */
-		public void setRenderer(int row, int column) {
-			if (row == (methodNames.size() - 1))
-				setForeground(Color.blue);
-		}
+	public void setVisibleRows(int num) {
+		int tableHeight = num * callStackTable.getRowHeight();
+		scrollPane.setSize(getTableWidth(), tableHeight + 3);
+		setPreferredSize(new Dimension(getTableWidth(), tableHeight + 30));
+		setSize(getTableWidth(), tableHeight + 30);
 	}
 }

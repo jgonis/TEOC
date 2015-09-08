@@ -128,15 +128,6 @@ public class Command {
 	private byte terminatorType;
 
 	/**
-	 * Constructs a new command with the given command code and an argument.
-	 */
-	public Command(byte code, Object arg) {
-		this.code = code;
-		this.arg = arg;
-		this.terminatorType = NO_TERMINATOR;
-	}
-
-	/**
 	 * Constructs a new command with the given command code and no argument.
 	 */
 	public Command(byte code) {
@@ -145,10 +136,12 @@ public class Command {
 	}
 
 	/**
-	 * Returns the command code
+	 * Constructs a new command with the given command code and an argument.
 	 */
-	public byte getCode() {
-		return code;
+	public Command(byte code, Object arg) {
+		this.code = code;
+		this.arg = arg;
+		this.terminatorType = NO_TERMINATOR;
 	}
 
 	/**
@@ -159,10 +152,10 @@ public class Command {
 	}
 
 	/**
-	 * Sets the terminator type with the given type. (Assumes legal type).
+	 * Returns the command code
 	 */
-	public void setTerminator(byte type) {
-		terminatorType = type;
+	public byte getCode() {
+		return code;
 	}
 
 	/**
@@ -170,5 +163,12 @@ public class Command {
 	 */
 	public byte getTerminator() {
 		return terminatorType;
+	}
+
+	/**
+	 * Sets the terminator type with the given type. (Assumes legal type).
+	 */
+	public void setTerminator(byte type) {
+		terminatorType = type;
 	}
 }

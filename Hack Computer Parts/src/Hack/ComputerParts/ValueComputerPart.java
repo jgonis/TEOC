@@ -38,6 +38,56 @@ public abstract class ValueComputerPart extends ComputerPart {
 	}
 
 	/**
+	 * Sets the element at the given index with the given value.
+	 */
+	public abstract void doSetValueAt(int index, short value);
+
+	/**
+	 * Returns the element at the given index.
+	 */
+	public abstract short getValueAt(int index);
+
+	/**
+	 * Hides all highlightes.
+	 */
+	public void hideHighlight() {
+		if (displayChanges)
+			((ValueComputerPartGUI) getGUI()).hideHighlight();
+	}
+
+	/**
+	 * Updates the GUI of this computer part at the given location with the
+	 * given value quietly - no flashing will be done
+	 */
+	public void quietUpdateGUI(int index, short value) {
+		if (displayChanges)
+			((ValueComputerPartGUI) getGUI()).setValueAt(index, value);
+	}
+
+	/**
+	 * Sets the null value (default value) of this computer part with the given
+	 * value. If hideNullValue is true, values which are equal to the null value
+	 * will be hidden.
+	 */
+	public void setNullValue(short value, boolean hideNullValue) {
+		nullValue = value;
+
+		if (hasGUI) {
+			ValueComputerPartGUI gui = (ValueComputerPartGUI) getGUI();
+			gui.setNullValue(value, hideNullValue);
+		}
+	}
+
+	/**
+	 * Sets the numeric format with the given code (out of the format constants
+	 * in HackController).
+	 */
+	public void setNumericFormat(int formatCode) {
+		if (displayChanges)
+			((ValueComputerPartGUI) getGUI()).setNumericFormat(formatCode);
+	}
+
+	/**
 	 * Sets the element at the given index with the given value and updates the
 	 * gui.
 	 */
@@ -50,16 +100,6 @@ public abstract class ValueComputerPart extends ComputerPart {
 				updateGUI(index, value);
 		}
 	}
-
-	/**
-	 * Sets the element at the given index with the given value.
-	 */
-	public abstract void doSetValueAt(int index, short value);
-
-	/**
-	 * Returns the element at the given index.
-	 */
-	public abstract short getValueAt(int index);
 
 	/**
 	 * Updates the GUI of this computer part at the given location with the
@@ -80,46 +120,6 @@ public abstract class ValueComputerPart extends ComputerPart {
 			}
 
 			gui.highlight(index);
-		}
-	}
-
-	/**
-	 * Updates the GUI of this computer part at the given location with the
-	 * given value quietly - no flashing will be done
-	 */
-	public void quietUpdateGUI(int index, short value) {
-		if (displayChanges)
-			((ValueComputerPartGUI) getGUI()).setValueAt(index, value);
-	}
-
-	/**
-	 * Hides all highlightes.
-	 */
-	public void hideHighlight() {
-		if (displayChanges)
-			((ValueComputerPartGUI) getGUI()).hideHighlight();
-	}
-
-	/**
-	 * Sets the numeric format with the given code (out of the format constants
-	 * in HackController).
-	 */
-	public void setNumericFormat(int formatCode) {
-		if (displayChanges)
-			((ValueComputerPartGUI) getGUI()).setNumericFormat(formatCode);
-	}
-
-	/**
-	 * Sets the null value (default value) of this computer part with the given
-	 * value. If hideNullValue is true, values which are equal to the null value
-	 * will be hidden.
-	 */
-	public void setNullValue(short value, boolean hideNullValue) {
-		nullValue = value;
-
-		if (hasGUI) {
-			ValueComputerPartGUI gui = (ValueComputerPartGUI) getGUI();
-			gui.setNullValue(value, hideNullValue);
 		}
 	}
 }

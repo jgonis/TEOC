@@ -51,6 +51,44 @@ public class Memory extends InteractiveValueComputerPart implements ClearEventLi
 		init(size, gui);
 	}
 
+	public void clearRequested(ClearEvent event) {
+		reset();
+	}
+
+	public void doSetValueAt(int address, short value) {
+		mem[address] = value;
+	}
+
+	/**
+	 * Returns the contents of the memory as a an array.
+	 */
+	public short[] getContents() {
+		return mem;
+	}
+
+	public ComputerPartGUI getGUI() {
+		return gui;
+	}
+
+	/**
+	 * Returns the size of the memory.
+	 */
+	public int getSize() {
+		return size;
+	}
+
+	public short getValueAt(int address) {
+		return mem[address];
+	}
+
+	/**
+	 * Hides all selections.
+	 */
+	public void hideSelect() {
+		if (displayChanges)
+			gui.hideSelect();
+	}
+
 	// Initializes the memory
 	private void init(int size, MemoryGUI gui) {
 		this.size = size;
@@ -65,35 +103,11 @@ public class Memory extends InteractiveValueComputerPart implements ClearEventLi
 		}
 	}
 
-	public short getValueAt(int address) {
-		return mem[address];
-	}
+	public void refreshGUI() {
+		super.refreshGUI();
 
-	public void doSetValueAt(int address, short value) {
-		mem[address] = value;
-	}
-
-	/**
-	 * Returns the contents of the memory as a an array.
-	 */
-	public short[] getContents() {
-		return mem;
-	}
-
-	/**
-	 * Puts the given contents array in the memory, starting from the given
-	 * address. (Assumes that the contents fits)
-	 */
-	public void setContents(short[] contents, int startAddress) {
-		System.arraycopy(contents, 0, mem, startAddress, contents.length);
-		refreshGUI();
-	}
-
-	/**
-	 * Returns the size of the memory.
-	 */
-	public int getSize() {
-		return size;
+		if (displayChanges)
+			gui.setContents(mem);
 	}
 
 	/**
@@ -105,17 +119,6 @@ public class Memory extends InteractiveValueComputerPart implements ClearEventLi
 			mem[i] = nullValue;
 	}
 
-	public ComputerPartGUI getGUI() {
-		return gui;
-	}
-
-	public void refreshGUI() {
-		super.refreshGUI();
-
-		if (displayChanges)
-			gui.setContents(mem);
-	}
-
 	/**
 	 * Scrolls the memory such that the given address will be on top. (assumes
 	 * legal address).
@@ -123,10 +126,6 @@ public class Memory extends InteractiveValueComputerPart implements ClearEventLi
 	public void scrollTo(int address) {
 		if (displayChanges)
 			gui.scrollTo(address);
-	}
-
-	public void clearRequested(ClearEvent event) {
-		reset();
 	}
 
 	/**
@@ -138,10 +137,11 @@ public class Memory extends InteractiveValueComputerPart implements ClearEventLi
 	}
 
 	/**
-	 * Hides all selections.
+	 * Puts the given contents array in the memory, starting from the given
+	 * address. (Assumes that the contents fits)
 	 */
-	public void hideSelect() {
-		if (displayChanges)
-			gui.hideSelect();
+	public void setContents(short[] contents, int startAddress) {
+		System.arraycopy(contents, 0, mem, startAddress, contents.length);
+		refreshGUI();
 	}
 }

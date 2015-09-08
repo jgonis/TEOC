@@ -26,6 +26,21 @@ import Hack.ComputerParts.PointedMemorySegmentGUI;
 
 public class PointedMemorySegmentComponent extends MemorySegmentComponent implements PointedMemorySegmentGUI {
 
+	// An inner class which implemets the cell renderer of the program table,
+	// giving
+	// the feature of coloring the background of a specific cell.
+	public class PointedMemorySegmentTableCellRenderer extends MemorySegmentTableCellRenderer {
+
+		public void setRenderer(int row, int column) {
+			if (row == pointerAddress - startAddress)
+				setBackground(Color.yellow);
+			else
+				setBackground(null);
+
+			super.setRenderer(row, column);
+		}
+	}
+
 	// The pointer address
 	protected short pointerAddress = -1;
 
@@ -37,22 +52,6 @@ public class PointedMemorySegmentComponent extends MemorySegmentComponent implem
 	 */
 	public PointedMemorySegmentComponent() {
 		super();
-	}
-
-	/**
-	 * Sets the start address.
-	 */
-	public void setStartAddress(int address) {
-		super.setStartAddress(address);
-		scrollToPointer();
-	}
-
-	/**
-	 * Sets the pointer with the given pointer address (absolute address).
-	 */
-	public void setPointer(int pointerAddress) {
-		this.pointerAddress = (short) pointerAddress;
-		scrollToPointer();
 	}
 
 	protected DefaultTableCellRenderer getCellRenderer() {
@@ -84,18 +83,19 @@ public class PointedMemorySegmentComponent extends MemorySegmentComponent implem
 		hasFocus = false;
 	}
 
-	// An inner class which implemets the cell renderer of the program table,
-	// giving
-	// the feature of coloring the background of a specific cell.
-	public class PointedMemorySegmentTableCellRenderer extends MemorySegmentTableCellRenderer {
+	/**
+	 * Sets the pointer with the given pointer address (absolute address).
+	 */
+	public void setPointer(int pointerAddress) {
+		this.pointerAddress = (short) pointerAddress;
+		scrollToPointer();
+	}
 
-		public void setRenderer(int row, int column) {
-			if (row == pointerAddress - startAddress)
-				setBackground(Color.yellow);
-			else
-				setBackground(null);
-
-			super.setRenderer(row, column);
-		}
+	/**
+	 * Sets the start address.
+	 */
+	public void setStartAddress(int address) {
+		super.setStartAddress(address);
+		scrollToPointer();
 	}
 }

@@ -25,21 +25,23 @@ public class CompositeGate extends Gate {
 	// The contained parts (Gates), sorted in topological order.
 	protected Gate[] parts;
 
-	protected void clockUp() {
-		if (gateClass.isClocked)
-			for (int i = 0; i < parts.length; i++)
-				parts[i].tick();
-	}
-
 	protected void clockDown() {
 		if (gateClass.isClocked)
 			for (int i = 0; i < parts.length; i++)
 				parts[i].tock();
 	}
 
-	protected void reCompute() {
-		for (int i = 0; i < parts.length; i++)
-			parts[i].eval();
+	protected void clockUp() {
+		if (gateClass.isClocked)
+			for (int i = 0; i < parts.length; i++)
+				parts[i].tick();
+	}
+
+	/**
+	 * Returns the internal pins.
+	 */
+	public Node[] getInternalNodes() {
+		return internalPins;
 	}
 
 	/**
@@ -60,13 +62,6 @@ public class CompositeGate extends Gate {
 	}
 
 	/**
-	 * Returns the internal pins.
-	 */
-	public Node[] getInternalNodes() {
-		return internalPins;
-	}
-
-	/**
 	 * Returns the parts (internal gates) of this gate, sorted in topological
 	 * order.
 	 */
@@ -84,6 +79,11 @@ public class CompositeGate extends Gate {
 		this.parts = parts;
 		this.gateClass = gateClass;
 		setDirty();
+	}
+
+	protected void reCompute() {
+		for (int i = 0; i < parts.length; i++)
+			parts[i].eval();
 	}
 
 }

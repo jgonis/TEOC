@@ -299,6 +299,15 @@ public class HVMInstructionSet {
 	// the single instance
 	private static HVMInstructionSet instance;
 
+	/**
+	 * Returns the single instance of the instruction set.
+	 */
+	public static HVMInstructionSet getInstance() {
+		if (instance == null)
+			new HVMInstructionSet();
+		return instance;
+	}
+
 	// the translation table from instruction strings to codes.
 	private Hashtable instructionToCode;
 
@@ -320,15 +329,6 @@ public class HVMInstructionSet {
 		initInstructions();
 		initSegmentStrings();
 		initSegmentCodes();
-	}
-
-	/**
-	 * Returns the single instance of the instruction set.
-	 */
-	public static HVMInstructionSet getInstance() {
-		if (instance == null)
-			new HVMInstructionSet();
-		return instance;
 	}
 
 	// initializes the instructions table
@@ -372,6 +372,19 @@ public class HVMInstructionSet {
 		instructionToString.put(new Byte(CALL_CODE), CALL_STRING);
 	}
 
+	// initializes the segment codes table
+	private void initSegmentCodes() {
+		segmentCodes = new Hashtable();
+		segmentCodes.put(STATIC_SEGMENT_VM_STRING, new Byte(STATIC_SEGMENT_CODE));
+		segmentCodes.put(LOCAL_SEGMENT_VM_STRING, new Byte(LOCAL_SEGMENT_CODE));
+		segmentCodes.put(ARG_SEGMENT_VM_STRING, new Byte(ARG_SEGMENT_CODE));
+		segmentCodes.put(THIS_SEGMENT_VM_STRING, new Byte(THIS_SEGMENT_CODE));
+		segmentCodes.put(THAT_SEGMENT_VM_STRING, new Byte(THAT_SEGMENT_CODE));
+		segmentCodes.put(TEMP_SEGMENT_VM_STRING, new Byte(TEMP_SEGMENT_CODE));
+		segmentCodes.put(CONST_SEGMENT_VM_STRING, new Byte(CONST_SEGMENT_CODE));
+		segmentCodes.put(POINTER_SEGMENT_VM_STRING, new Byte(POINTER_SEGMENT_CODE));
+	}
+
 	// initializes the segment strings table
 	private void initSegmentStrings() {
 		segmentPointerStrings = new Hashtable();
@@ -391,17 +404,12 @@ public class HVMInstructionSet {
 		segmentStrings.put(new Byte(POINTER_SEGMENT_CODE), POINTER_SEGMENT_VM_STRING);
 	}
 
-	// initializes the segment codes table
-	private void initSegmentCodes() {
-		segmentCodes = new Hashtable();
-		segmentCodes.put(STATIC_SEGMENT_VM_STRING, new Byte(STATIC_SEGMENT_CODE));
-		segmentCodes.put(LOCAL_SEGMENT_VM_STRING, new Byte(LOCAL_SEGMENT_CODE));
-		segmentCodes.put(ARG_SEGMENT_VM_STRING, new Byte(ARG_SEGMENT_CODE));
-		segmentCodes.put(THIS_SEGMENT_VM_STRING, new Byte(THIS_SEGMENT_CODE));
-		segmentCodes.put(THAT_SEGMENT_VM_STRING, new Byte(THAT_SEGMENT_CODE));
-		segmentCodes.put(TEMP_SEGMENT_VM_STRING, new Byte(TEMP_SEGMENT_CODE));
-		segmentCodes.put(CONST_SEGMENT_VM_STRING, new Byte(CONST_SEGMENT_CODE));
-		segmentCodes.put(POINTER_SEGMENT_VM_STRING, new Byte(POINTER_SEGMENT_CODE));
+	/**
+	 * Returns the string of the given instruction code. If not exists, returns
+	 * null.
+	 */
+	public String instructionCodeToString(byte code) {
+		return (String) instructionToString.get(new Byte(code));
 	}
 
 	/**
@@ -414,14 +422,6 @@ public class HVMInstructionSet {
 	}
 
 	/**
-	 * Returns the string of the given instruction code. If not exists, returns
-	 * null.
-	 */
-	public String instructionCodeToString(byte code) {
-		return (String) instructionToString.get(new Byte(code));
-	}
-
-	/**
 	 * Returns true if the given segment VM string is a legal segment string.
 	 */
 	public boolean isLegalVMSegment(String segment) {
@@ -430,11 +430,10 @@ public class HVMInstructionSet {
 
 	/**
 	 * Returns the code of the given segment VM string. If not exists, returns
-	 * UNKNOWN_SEGMENT.
+	 * null.
 	 */
-	public byte segmentVMStringToCode(String segment) {
-		Byte result = (Byte) segmentCodes.get(segment);
-		return (result != null ? result.byteValue() : UNKNOWN_SEGMENT);
+	public String segmentCodeToVMString(byte code) {
+		return (String) segmentStrings.get(new Byte(code));
 	}
 
 	/**
@@ -447,9 +446,10 @@ public class HVMInstructionSet {
 
 	/**
 	 * Returns the code of the given segment VM string. If not exists, returns
-	 * null.
+	 * UNKNOWN_SEGMENT.
 	 */
-	public String segmentCodeToVMString(byte code) {
-		return (String) segmentStrings.get(new Byte(code));
+	public byte segmentVMStringToCode(String segment) {
+		Byte result = (Byte) segmentCodes.get(segment);
+		return (result != null ? result.byteValue() : UNKNOWN_SEGMENT);
 	}
 }

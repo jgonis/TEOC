@@ -81,27 +81,21 @@ public class FileChooserComponent extends JPanel {
 	}
 
 	/**
-	 * Un-registers the given EnterPressedListener as a listener to this GUI.
+	 * Implementing the action of pressing the browse button.
 	 */
-	public void removeListener(EnterPressedListener listener) {
-		listeners.removeElement(listener);
-	}
-
-	/**
-	 * Notifies all the EnterPressedListeners on an event of pressing the enter
-	 * button by calling the enterPressed method to all the listeners.
-	 */
-	public void notifyListeners() {
-		for (int i = 0; i < listeners.size(); i++) {
-			((EnterPressedListener) listeners.elementAt(i)).enterPressed();
+	public void browseButton_actionPerformed(ActionEvent e) {
+		int returnVal = fc.showDialog(FileChooserComponent.this, "Select file");
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			File file = fc.getSelectedFile();
+			fileName.setText(file.getAbsolutePath());
 		}
 	}
 
 	/**
-	 * Sets the name of the file chooser.
+	 * Implementing the action of pressing 'enter' on the file name text field.
 	 */
-	public void setName(String name) {
-		fileTypeName.setText(name);
+	public void fileName_actionPerformed(ActionEvent e) {
+		notifyListeners();
 	}
 
 	/**
@@ -109,41 +103,6 @@ public class FileChooserComponent extends JPanel {
 	 */
 	public String getCurrentFileName() {
 		return currentFileName;
-	}
-
-	/**
-	 * Sets the selection of the file chooser to directories only.
-	 */
-	public void setSelectionToDirectories() {
-		fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-	}
-
-	/**
-	 * Sets the current file name.
-	 */
-	public void setCurrentFileName(String currentName) {
-		currentFileName = currentName;
-	}
-
-	/**
-	 * Sets the textfield with the current file name.
-	 */
-	public void showCurrentFileName() {
-		fileName.setText(currentFileName);
-	}
-
-	/**
-	 * Sets the filter of the FileChooser component.
-	 */
-	public void setFilter(FileFilter filter) {
-		fc.setFileFilter(filter);
-	}
-
-	/**
-	 * Returns true if the file name was changed by the user, false - otherwise.
-	 */
-	public boolean isFileNameChanged() {
-		return !currentFileName.equals(fileName.getText());
 	}
 
 	/**
@@ -161,10 +120,10 @@ public class FileChooserComponent extends JPanel {
 	}
 
 	/**
-	 * Sets the directory of the script files.
+	 * Returns true if the file name was changed by the user, false - otherwise.
 	 */
-	public void setScriptDir(String dir) {
-		fc.setCurrentDirectory(new File(dir));
+	public boolean isFileNameChanged() {
+		return !currentFileName.equals(fileName.getText());
 	}
 
 	// Initialization of this component.
@@ -196,20 +155,61 @@ public class FileChooserComponent extends JPanel {
 	}
 
 	/**
-	 * Implementing the action of pressing the browse button.
+	 * Notifies all the EnterPressedListeners on an event of pressing the enter
+	 * button by calling the enterPressed method to all the listeners.
 	 */
-	public void browseButton_actionPerformed(ActionEvent e) {
-		int returnVal = fc.showDialog(FileChooserComponent.this, "Select file");
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			File file = fc.getSelectedFile();
-			fileName.setText(file.getAbsolutePath());
+	public void notifyListeners() {
+		for (int i = 0; i < listeners.size(); i++) {
+			((EnterPressedListener) listeners.elementAt(i)).enterPressed();
 		}
 	}
 
 	/**
-	 * Implementing the action of pressing 'enter' on the file name text field.
+	 * Un-registers the given EnterPressedListener as a listener to this GUI.
 	 */
-	public void fileName_actionPerformed(ActionEvent e) {
-		notifyListeners();
+	public void removeListener(EnterPressedListener listener) {
+		listeners.removeElement(listener);
+	}
+
+	/**
+	 * Sets the current file name.
+	 */
+	public void setCurrentFileName(String currentName) {
+		currentFileName = currentName;
+	}
+
+	/**
+	 * Sets the filter of the FileChooser component.
+	 */
+	public void setFilter(FileFilter filter) {
+		fc.setFileFilter(filter);
+	}
+
+	/**
+	 * Sets the name of the file chooser.
+	 */
+	public void setName(String name) {
+		fileTypeName.setText(name);
+	}
+
+	/**
+	 * Sets the directory of the script files.
+	 */
+	public void setScriptDir(String dir) {
+		fc.setCurrentDirectory(new File(dir));
+	}
+
+	/**
+	 * Sets the selection of the file chooser to directories only.
+	 */
+	public void setSelectionToDirectories() {
+		fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+	}
+
+	/**
+	 * Sets the textfield with the current file name.
+	 */
+	public void showCurrentFileName() {
+		fileName.setText(currentFileName);
 	}
 }

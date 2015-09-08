@@ -42,16 +42,16 @@ public class TextFileEvent extends EventObject {
 	}
 
 	/**
-	 * Returns the selected row String.
-	 */
-	public String getRowString() {
-		return rowString;
-	}
-
-	/**
 	 * Returns the selected row index.
 	 */
 	public int getRowIndex() {
 		return rowIndex;
+	}
+
+	/**
+	 * Returns the selected row String.
+	 */
+	public String getRowString() {
+		return rowString;
 	}
 }

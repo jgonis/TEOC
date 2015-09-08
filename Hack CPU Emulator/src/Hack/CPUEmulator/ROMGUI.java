@@ -36,10 +36,9 @@ public interface ROMGUI extends PointedMemoryGUI {
 	public void addProgramListener(ProgramEventListener listener);
 
 	/**
-	 * Un-registers the given ProgramEventListener from being a listener to this
-	 * GUI.
+	 * Hides the displayed message.
 	 */
-	public void removeProgramListener(ProgramEventListener listener);
+	public void hideMessage();
 
 	/**
 	 * Notifies all the ProgramEventListeners on a change in the ROM's program
@@ -50,6 +49,12 @@ public interface ROMGUI extends PointedMemoryGUI {
 	public void notifyProgramListeners(byte eventType, String programFileName);
 
 	/**
+	 * Un-registers the given ProgramEventListener from being a listener to this
+	 * GUI.
+	 */
+	public void removeProgramListener(ProgramEventListener listener);
+
+	/**
 	 * Sets the current program file name with the given name.
 	 */
 	public void setProgram(String programFileName);
@@ -58,9 +63,4 @@ public interface ROMGUI extends PointedMemoryGUI {
 	 * Displays the given message.
 	 */
 	public void showMessage(String message);
-
-	/**
-	 * Hides the displayed message.
-	 */
-	public void hideMessage();
 }

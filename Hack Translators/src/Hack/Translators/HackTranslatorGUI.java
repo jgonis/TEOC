@@ -33,10 +33,99 @@ public interface HackTranslatorGUI {
 	public void addHackTranslatorListener(HackTranslatorEventListener listener);
 
 	/**
-	 * Un-registers the given HackTranslatorEventListener from being a listener
-	 * to this GUI.
+	 * Disables the fast forward action.
 	 */
-	public void removeHackTranslatorListener(HackTranslatorEventListener listener);
+	public void disableFastForward();
+
+	/**
+	 * Disables the full compilation action.
+	 */
+	public void disableFullCompilation();
+
+	/**
+	 * Disables loading a new source file.
+	 */
+	public void disableLoadSource();
+
+	/**
+	 * Disables the rewind action.
+	 */
+	public void disableRewind();
+
+	/**
+	 * Disables the save action.
+	 */
+	public void disableSave();
+
+	/**
+	 * Disables the single step action.
+	 */
+	public void disableSingleStep();
+
+	/**
+	 * Disables selecting a row in the source.
+	 */
+	public void disableSourceRowSelection();
+
+	/**
+	 * Disables the stop action.
+	 */
+	public void disableStop();
+
+	/**
+	 * Displays the given message, according to the given type.
+	 */
+	public void displayMessage(String message, boolean error);
+
+	/**
+	 * Enables the fast forward action.
+	 */
+	public void enableFastForward();
+
+	/**
+	 * Enables the full compilation action.
+	 */
+	public void enableFullCompilation();
+
+	/**
+	 * Enables loading a new source file.
+	 */
+	public void enableLoadSource();
+
+	/**
+	 * Enables the rewind action.
+	 */
+	public void enableRewind();
+
+	/**
+	 * Enables the save action.
+	 */
+	public void enableSave();
+
+	/**
+	 * Enables the single step action.
+	 */
+	public void enableSingleStep();
+
+	/**
+	 * Enables selecting a row in the source.
+	 */
+	public void enableSourceRowSelection();
+
+	/**
+	 * Enables the stop action.
+	 */
+	public void enableStop();
+
+	/**
+	 * Returns the GUI of the Destination file.
+	 */
+	public TextFileGUI getDestination();
+
+	/**
+	 * Returns the GUI of the Source file.
+	 */
+	public TextFileGUI getSource();
 
 	/**
 	 * Notify all the HackTranslatorEventListeners on actions taken in it, by
@@ -46,44 +135,10 @@ public interface HackTranslatorGUI {
 	public void notifyHackTranslatorListeners(byte action, Object data);
 
 	/**
-	 * Displays the given message, according to the given type.
+	 * Un-registers the given HackTranslatorEventListener from being a listener
+	 * to this GUI.
 	 */
-	public void displayMessage(String message, boolean error);
-
-	/**
-	 * Sets the title of the translator with the given title.
-	 */
-	public void setTitle(String title);
-
-	/**
-	 * Returns the GUI of the Source file.
-	 */
-	public TextFileGUI getSource();
-
-	/**
-	 * Returns the GUI of the Destination file.
-	 */
-	public TextFileGUI getDestination();
-
-	/**
-	 * Sets the name of the Source file with the given name.
-	 */
-	public void setSourceName(String name);
-
-	/**
-	 * Sets the name of the Destination file with the given name.
-	 */
-	public void setDestinationName(String name);
-
-	/**
-	 * Sets the working dir name with the given one.
-	 */
-	public void setWorkingDir(File file);
-
-	/**
-	 * Sets the name of the html file that contains the help usage.
-	 */
-	public void setUsageFileName(String fileName);
+	public void removeHackTranslatorListener(HackTranslatorEventListener listener);
 
 	/**
 	 * Sets the name of the html file that contains the "about" information.
@@ -91,82 +146,27 @@ public interface HackTranslatorGUI {
 	public void setAboutFileName(String fileName);
 
 	/**
-	 * Enables the single step action.
+	 * Sets the name of the Destination file with the given name.
 	 */
-	public void enableSingleStep();
+	public void setDestinationName(String name);
 
 	/**
-	 * Disables the single step action.
+	 * Sets the name of the Source file with the given name.
 	 */
-	public void disableSingleStep();
+	public void setSourceName(String name);
 
 	/**
-	 * Enables the fast forward action.
+	 * Sets the title of the translator with the given title.
 	 */
-	public void enableFastForward();
+	public void setTitle(String title);
 
 	/**
-	 * Disables the fast forward action.
+	 * Sets the name of the html file that contains the help usage.
 	 */
-	public void disableFastForward();
+	public void setUsageFileName(String fileName);
 
 	/**
-	 * Enables the stop action.
+	 * Sets the working dir name with the given one.
 	 */
-	public void enableStop();
-
-	/**
-	 * Disables the stop action.
-	 */
-	public void disableStop();
-
-	/**
-	 * Enables the rewind action.
-	 */
-	public void enableRewind();
-
-	/**
-	 * Disables the rewind action.
-	 */
-	public void disableRewind();
-
-	/**
-	 * Enables the full compilation action.
-	 */
-	public void enableFullCompilation();
-
-	/**
-	 * Disables the full compilation action.
-	 */
-	public void disableFullCompilation();
-
-	/**
-	 * Enables the save action.
-	 */
-	public void enableSave();
-
-	/**
-	 * Disables the save action.
-	 */
-	public void disableSave();
-
-	/**
-	 * Enables loading a new source file.
-	 */
-	public void enableLoadSource();
-
-	/**
-	 * Disables loading a new source file.
-	 */
-	public void disableLoadSource();
-
-	/**
-	 * Enables selecting a row in the source.
-	 */
-	public void enableSourceRowSelection();
-
-	/**
-	 * Disables selecting a row in the source.
-	 */
-	public void disableSourceRowSelection();
+	public void setWorkingDir(File file);
 }

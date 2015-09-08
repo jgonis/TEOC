@@ -60,22 +60,19 @@ public class Pins extends InteractiveValueComputerPart {
 		}
 	}
 
+	public void doSetValueAt(int index, short value) {
+		nodes[index].set(value);
+	}
+
 	/**
-	 * Sets the nodes with the given nodes array according to the given
-	 * GateClass.
+	 * Returns the number of pins.
 	 */
-	public void setNodes(Node[] nodes, GateClass gateClass) {
-		this.nodes = nodes;
-		pins = new PinInfo[nodes.length];
-		for (int i = 0; i < pins.length; i++) {
-			pins[i] = gateClass.getPinInfo(type, i);
-			pins[i].value = (short) nodes[i].get();
+	public int getCount() {
+		return nodes.length;
+	}
 
-			nodes[i].addListener(new NodePinsAdapter(this, i));
-		}
-
-		if (hasGUI)
-			gui.setContents(pins);
+	public ComputerPartGUI getGUI() {
+		return gui;
 	}
 
 	/**
@@ -85,16 +82,18 @@ public class Pins extends InteractiveValueComputerPart {
 		return pins[index];
 	}
 
-	public ComputerPartGUI getGUI() {
-		return gui;
-	}
-
-	public void doSetValueAt(int index, short value) {
-		nodes[index].set(value);
-	}
-
 	public short getValueAt(int index) {
 		return (short) nodes[index].get();
+	}
+
+	/**
+	 * Returns true if the width of the given value is less or equal to the
+	 * width of the pin at the given index.
+	 */
+	public boolean isLegalWidth(int pinIndex, short value) {
+		int maxWidth = pins[pinIndex].width;
+		int width = value > 0 ? (int) (Math.log(value) / Math.log(2)) + 1 : 1;
+		return (width <= maxWidth);
 	}
 
 	public void refreshGUI() {
@@ -113,20 +112,21 @@ public class Pins extends InteractiveValueComputerPart {
 	}
 
 	/**
-	 * Returns the number of pins.
+	 * Sets the nodes with the given nodes array according to the given
+	 * GateClass.
 	 */
-	public int getCount() {
-		return nodes.length;
-	}
+	public void setNodes(Node[] nodes, GateClass gateClass) {
+		this.nodes = nodes;
+		pins = new PinInfo[nodes.length];
+		for (int i = 0; i < pins.length; i++) {
+			pins[i] = gateClass.getPinInfo(type, i);
+			pins[i].value = (short) nodes[i].get();
 
-	/**
-	 * Returns true if the width of the given value is less or equal to the
-	 * width of the pin at the given index.
-	 */
-	public boolean isLegalWidth(int pinIndex, short value) {
-		int maxWidth = pins[pinIndex].width;
-		int width = value > 0 ? (int) (Math.log(value) / Math.log(2)) + 1 : 1;
-		return (width <= maxWidth);
+			nodes[i].addListener(new NodePinsAdapter(this, i));
+		}
+
+		if (hasGUI)
+			gui.setContents(pins);
 	}
 
 	/**

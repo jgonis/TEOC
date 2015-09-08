@@ -69,8 +69,80 @@ public class ALU extends ValueComputerPart {
 		this.gui = gui;
 	}
 
+	/**
+	 * Computes the value of the ALU's output according to the inputs and the
+	 * current command.
+	 */
+	public synchronized void compute() {
+
+		if (animate) {
+			gui.bodyFlash();
+			try {
+				wait(BODY_FLASH_TIME);
+			} catch (InterruptedException ie) {
+			}
+			gui.hideBodyFlash();
+		}
+
+		short result = Definitions.computeALU(input0, input1, zero0, negate0, zero1, negate1, ADDorAND, negateOutput);
+
+		setValueAt(2, result, false);
+	}
+
+	public void doSetValueAt(int index, short value) {
+		switch (index) {
+		case 0:
+			input0 = value;
+			break;
+		case 1:
+			input1 = value;
+			break;
+		case 2:
+			output = value;
+			break;
+		}
+	}
+
 	public ComputerPartGUI getGUI() {
 		return gui;
+	}
+
+	/**
+	 * Returns the output of the ALU.
+	 */
+	public short getOutput() {
+		return getValueAt(2);
+	}
+
+	public short getValueAt(int index) {
+		short result = 0;
+
+		switch (index) {
+		case 0:
+			result = input0;
+			break;
+		case 1:
+			result = input1;
+			break;
+		case 2:
+			result = output;
+			break;
+		}
+
+		return result;
+	}
+
+	public void refreshGUI() {
+		quietUpdateGUI(0, input0);
+		quietUpdateGUI(1, input1);
+		quietUpdateGUI(2, output);
+	}
+
+	public void reset() {
+		super.reset();
+		input0 = nullValue;
+		input1 = nullValue;
+		output = nullValue;
 	}
 
 	/**
@@ -105,26 +177,6 @@ public class ALU extends ValueComputerPart {
 	}
 
 	/**
-	 * Computes the value of the ALU's output according to the inputs and the
-	 * current command.
-	 */
-	public synchronized void compute() {
-
-		if (animate) {
-			gui.bodyFlash();
-			try {
-				wait(BODY_FLASH_TIME);
-			} catch (InterruptedException ie) {
-			}
-			gui.hideBodyFlash();
-		}
-
-		short result = Definitions.computeALU(input0, input1, zero0, negate0, zero1, negate1, ADDorAND, negateOutput);
-
-		setValueAt(2, result, false);
-	}
-
-	/**
 	 * Sets the first input of the ALU with the given value.
 	 */
 	public void setInput0(short value) {
@@ -136,57 +188,5 @@ public class ALU extends ValueComputerPart {
 	 */
 	public void setInput1(short value) {
 		setValueAt(1, value, false);
-	}
-
-	/**
-	 * Returns the output of the ALU.
-	 */
-	public short getOutput() {
-		return getValueAt(2);
-	}
-
-	public short getValueAt(int index) {
-		short result = 0;
-
-		switch (index) {
-		case 0:
-			result = input0;
-			break;
-		case 1:
-			result = input1;
-			break;
-		case 2:
-			result = output;
-			break;
-		}
-
-		return result;
-	}
-
-	public void doSetValueAt(int index, short value) {
-		switch (index) {
-		case 0:
-			input0 = value;
-			break;
-		case 1:
-			input1 = value;
-			break;
-		case 2:
-			output = value;
-			break;
-		}
-	}
-
-	public void reset() {
-		super.reset();
-		input0 = nullValue;
-		input1 = nullValue;
-		output = nullValue;
-	}
-
-	public void refreshGUI() {
-		quietUpdateGUI(0, input0);
-		quietUpdateGUI(1, input1);
-		quietUpdateGUI(2, output);
 	}
 }

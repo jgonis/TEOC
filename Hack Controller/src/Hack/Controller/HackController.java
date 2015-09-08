@@ -43,6 +43,89 @@ import Hack.Utilities.Definitions;
  */
 public class HackController implements ControllerEventListener, ActionListener, ProgramEventListener {
 
+	// Performs the fast forward task
+	class FastForwardTask implements Runnable {
+		public synchronized void run() {
+			try {
+				System.runFinalization();
+				System.gc();
+				wait(300);
+			} catch (InterruptedException ie) {
+			}
+
+			int count = 0;
+			int rounds = FASTFORWARD_SPEED_FUNCTION[currentSpeedUnit - 1];
+
+			while (fastForwardRunning) {
+				singleStep();
+
+				// waits for 1 ms each constant amount of commands
+				if (count == rounds) {
+					count = 0;
+					try {
+						wait(1);
+					} catch (InterruptedException ie) {
+					}
+				}
+
+				count++;
+			}
+		}
+	}
+
+	// Sets the animation mode
+	class SetAnimationModeTask implements Runnable {
+
+		private int animationMode;
+
+		public void run() {
+			setAnimationMode(animationMode);
+		}
+
+		public void setMode(int animationMode) {
+			this.animationMode = animationMode;
+		}
+	}
+
+	// Sets the numeric format
+	class SetNumericFormatTask implements Runnable {
+
+		private int numericFormat;
+
+		public void run() {
+			setNumericFormat(numericFormat);
+		}
+
+		public void setFormat(int numericFormat) {
+			this.numericFormat = numericFormat;
+		}
+	}
+
+	// ANIMATION MODES:
+
+	// Performs the single step task
+	class SingleStepTask implements Runnable {
+
+		public void run() {
+			singleStep();
+
+			if (!fastForwardRunning) {
+				if (!scriptEnded && !programHalted) {
+					gui.enableSingleStep();
+					gui.enableFastForward();
+					gui.disableStop();
+				}
+				gui.enableScript();
+				gui.enableRewind();
+			}
+
+			if (animationMode == NO_DISPLAY_CHANGES) {
+				refreshSimulator();
+				gui.setCurrentScriptLine(script.getLineNumberAt(currentCommandIndex));
+			}
+		}
+	}
+
 	/**
 	 * The number of speed units.
 	 */
@@ -53,12 +136,12 @@ public class HackController implements ControllerEventListener, ActionListener, 
 	 */
 	public static final float[] SPEED_FUNCTION = { 0f, 0.35f, 0.63f, 0.87f, 1f };
 
+	// NUMERIC FORMATS:
+
 	/**
 	 * The speed function for fast forward mode.
 	 */
 	public static final int[] FASTFORWARD_SPEED_FUNCTION = { 500, 1000, 2000, 4000, 15000 };
-
-	// ANIMATION MODES:
 
 	/**
 	 * Animation mode: Specifies using static display changes - displays value
@@ -72,13 +155,13 @@ public class HackController implements ControllerEventListener, ActionListener, 
 	 */
 	public static final int ANIMATION = 1;
 
+	// ADDITIONAL DISPLAYS
+
 	/**
 	 * Animation mode: Specifies using no display changes. In this mode, the
 	 * speed has no meening.
 	 */
 	public static final int NO_DISPLAY_CHANGES = 2;
-
-	// NUMERIC FORMATS:
 
 	/**
 	 * Decimal numeric format
@@ -95,8 +178,6 @@ public class HackController implements ControllerEventListener, ActionListener, 
 	 */
 	public static final int BINARY_FORMAT = 2;
 
-	// ADDITIONAL DISPLAYS
-
 	/**
 	 * Specifies the additional display of the script file component.
 	 */
@@ -106,7 +187,6 @@ public class HackController implements ControllerEventListener, ActionListener, 
 	 * Specifies the additional display of the output file component.
 	 */
 	public static final int OUTPUT_ADDITIONAL_DISPLAY = 1;
-
 	/**
 	 * Specifies the additional display of the comparison file component.
 	 */
@@ -122,13 +202,35 @@ public class HackController implements ControllerEventListener, ActionListener, 
 
 	// Minimum and maximum mili-seconds per script command execution
 	private static final int MAX_MS = 2500;
+
 	private static final int MIN_MS = 25;
 
 	// Initial speed unit
 	private static final int INITIAL_SPEED_UNIT = 3;
-
 	// A helper string with spaces
 	private static final String SPACES = "                                        ";
+
+	// Compares an output line with a template line from a compare file.
+	// The template must match exactly except for '*' which may match any
+	// single character.
+	private static boolean compareLineWithTemplate(String out, String cmp) {
+		if (out.length() != cmp.length()) {
+			return false;
+		}
+		StringCharacterIterator outi = new StringCharacterIterator(out);
+		StringCharacterIterator cmpi = new StringCharacterIterator(cmp);
+		for (outi.first(), cmpi.first(); outi.current() != CharacterIterator.DONE; outi.next(), cmpi.next()) {
+			if (cmpi.current() != '*' && outi.current() != cmpi.current()) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	// Returns the version string
+	private static String getVersionString() {
+		return " (" + Definitions.version + ")";
+	}
 
 	// The contorller's GUI
 	protected ControllerGUI gui;
@@ -138,6 +240,7 @@ public class HackController implements ControllerEventListener, ActionListener, 
 
 	// The names of the output and comparison files
 	private String currentOutputName;
+
 	private String currentComparisonName;
 
 	// The script commands
@@ -226,36 +329,6 @@ public class HackController implements ControllerEventListener, ActionListener, 
 	private File defaultScriptFile;
 
 	/**
-	 * Constructs a new HackController with the given script file name. The
-	 * script will be executed and the final result will be printed.
-	 */
-	public HackController(HackSimulator simulator, String scriptFileName) {
-		File file = new File(scriptFileName);
-		if (!file.exists())
-			displayMessage(scriptFileName + " doesn't exist", true);
-
-		this.simulator = simulator;
-		animationMode = NO_DISPLAY_CHANGES;
-		simulator.setAnimationMode(animationMode);
-		simulator.addListener(this);
-		breakpoints = new Vector();
-
-		try {
-			loadNewScript(file, false);
-			saveWorkingDir(file);
-		} catch (ScriptException se) {
-			displayMessage(se.getMessage(), true);
-		} catch (ControllerException ce) {
-			displayMessage(ce.getMessage(), true);
-		}
-
-		fastForwardRunning = true;
-
-		while (fastForwardRunning)
-			singleStep();
-	}
-
-	/**
 	 * Constructs a new HackController with the given GUI component, hack
 	 * simulator and the default script file for this simulator.
 	 */
@@ -307,645 +380,40 @@ public class HackController implements ControllerEventListener, ActionListener, 
 		simulator.prepareGUI(); // prepares the gui after it is displayed
 	}
 
-	// Restarts the current script from the beginning.
-	private void rewind() {
-		try {
-			if (scriptEnded || programHalted) {
-				gui.enableSingleStep();
-				gui.enableFastForward();
-			}
-			scriptEnded = false;
-			programHalted = false;
-
-			int oldAnimationMode = animationMode;
-			setAnimationMode(DISPLAY_CHANGES);
-			simulator.restart();
-			refreshSimulator();
-			setAnimationMode(oldAnimationMode);
-
-			if (output != null)
-				resetOutputFile();
-			if (comparisonFile != null)
-				resetComparisonFile();
-
-			lastEcho = "";
-			currentCommandIndex = 0;
-			gui.setCurrentScriptLine(script.getLineNumberAt(0));
-
-		} catch (ControllerException e) {
-			displayMessage(e.getMessage(), true);
-		}
-	}
-
-	// Puts the controller into stop mode
-	private void stopMode() {
-		if (fastForwardRunning) {
-			if (gui != null) {
-				timer.stop();
-				gui.enableLoadProgram();
-				gui.enableSpeedSlider();
-			}
-			fastForwardRunning = false;
-		}
-		singleStepRunning = false;
-
-		if (gui != null) {
-			gui.enableSingleStep();
-			gui.enableFastForward();
-			gui.enableScript();
-			gui.enableRewind();
-			gui.disableStop();
-			gui.enableAnimationModes();
-
-			if (animationMode == NO_DISPLAY_CHANGES)
-				gui.setCurrentScriptLine(script.getLineNumberAt(currentCommandIndex));
-
-			refreshSimulator();
-		}
-	}
-
-	// Executes all the script unless a breakpoint, comparison failure, stop
-	// flag
-	private void fastForward() {
-		gui.enableStop();
-		gui.disableSingleStep();
-		gui.disableRewind();
-		gui.disableScript();
-		gui.disableFastForward();
-		gui.disableAnimationModes();
-		gui.disableLoadProgram();
-
-		fastForwardRunning = true;
-		simulator.prepareFastForward();
-
-		if (animationMode != NO_DISPLAY_CHANGES)
-			timer.start();
-		else {
-			displayMessage("Running...", false);
-			gui.disableSpeedSlider();
-			Thread t = new Thread(fastForwardTask);
-			t.start();
-		}
-	}
-
-	// Executes a single step from the script, checks for a breakpoint and
-	// sets the status of the system accordingly.
-	private synchronized void singleStep() {
-
-		singleStepLocked = true;
-
-		try {
-			byte terminatorType;
-			singleStepRunning = true;
-
-			do {
-				terminatorType = miniStep();
-			} while (terminatorType == Command.MINI_STEP_TERMINATOR && singleStepRunning);
-
-			singleStepRunning = false;
-
-			if (terminatorType == Command.STOP_TERMINATOR) {
-				displayMessage("Script reached a '!' terminator", false);
-				stopMode();
-			}
-
-			// Check Breakpoints
-			for (int i = 0; i < breakpoints.size(); i++) {
-				Breakpoint breakpoint = (Breakpoint) breakpoints.elementAt(i);
-				String currentValue = simulator.getValue(breakpoint.getVarName());
-				if (currentValue.equals(breakpoint.getValue())) {
-					// if value is equal and the breakpoint wasn't reached
-					// before, turn it on
-					if (!breakpoint.isReached()) {
-						breakpoint.on();
-						gui.setBreakpoints(breakpoints);
-						displayMessage("Breakpoint reached", false);
-						gui.showBreakpoints();
-						stopMode();
-					}
-				}
-				// if the value is not equal and the breakpoint was reached
-				// before, turn it off
-				else if (breakpoint.isReached()) {
-					breakpoint.off();
-					gui.setBreakpoints(breakpoints);
-				}
-			}
-		} catch (ControllerException ce) {
-			stopWithError(ce);
-		} catch (ProgramException pe) {
-			stopWithError(pe);
-		} catch (CommandException ce) {
-			stopWithError(ce);
-		} catch (VariableException ve) {
-			stopWithError(ve);
-		}
-
-		singleStepLocked = false;
-		notifyAll();
-	}
-
-	// Displays the message of the given exception and stops the script's
-	// execution.
-	private void stopWithError(Exception e) {
-		displayMessage(e.getMessage(), true);
-		stopMode();
-	}
-
-	// Executes one command from the script and advances to the next.
-	// Returns the command's terminator.
-	private byte miniStep() throws ControllerException, ProgramException, CommandException, VariableException {
-		Command command;
-		boolean redo;
-
-		do {
-			command = script.getCommandAt(currentCommandIndex);
-			redo = false;
-
-			switch (command.getCode()) {
-			case Command.SIMULATOR_COMMAND:
-				simulator.doCommand((String[]) command.getArg());
-				break;
-			case Command.OUTPUT_FILE_COMMAND:
-				doOutputFileCommand(command);
-				break;
-			case Command.COMPARE_TO_COMMAND:
-				doCompareToCommand(command);
-				break;
-			case Command.OUTPUT_LIST_COMMAND:
-				doOutputListCommand(command);
-				break;
-			case Command.OUTPUT_COMMAND:
-				doOutputCommand(command);
-				break;
-			case Command.ECHO_COMMAND:
-				doEchoCommand(command);
-				break;
-			case Command.CLEAR_ECHO_COMMAND:
-				doClearEchoCommand(command);
-				break;
-			case Command.BREAKPOINT_COMMAND:
-				doBreakpointCommand(command);
-				break;
-			case Command.CLEAR_BREAKPOINTS_COMMAND:
-				doClearBreakpointsCommand(command);
-				break;
-			case Command.REPEAT_COMMAND:
-				repeatCounter = ((Integer) command.getArg()).intValue();
-				loopCommandIndex = currentCommandIndex + 1;
-				redo = true;
-				break;
-			case Command.WHILE_COMMAND:
-				whileCondititon = (ScriptCondition) command.getArg();
-				loopCommandIndex = currentCommandIndex + 1;
-				if (!whileCondititon.compare(simulator)) {
-					// advance till the nearest end while command.
-					for (; script.getCommandAt(currentCommandIndex)
-							.getCode() != Command.END_WHILE_COMMAND; currentCommandIndex++)
-						;
-				}
-				redo = true; // whether the test was successful or not,
-								// the while command doesn't count
-				break;
-			case Command.END_SCRIPT_COMMAND:
-				scriptEnded = true;
-				stopMode();
-
-				if (gui != null) {
-					gui.disableSingleStep();
-					gui.disableFastForward();
-				}
-
-				try {
-					if (output != null)
-						output.close();
-
-					if (comparisonFile != null) {
-						if (comparisonFailed)
-							displayMessage("End of script - Comparison failure at line " + comparisonFailureLine, true);
-						else
-							displayMessage("End of script - Comparison ended successfully", false);
-
-						comparisonFile.close();
-					} else
-						displayMessage("End of script", false);
-				} catch (IOException ioe) {
-					throw new ControllerException("Could not read comparison file");
-				}
-
-				break;
-			}
-
-			// advance script line pointer
-			if (command.getCode() != Command.END_SCRIPT_COMMAND) {
-				currentCommandIndex++;
-				Command nextCommand = script.getCommandAt(currentCommandIndex);
-				if (nextCommand.getCode() == Command.END_REPEAT_COMMAND) {
-					if (repeatCounter == 0 || --repeatCounter > 0)
-						currentCommandIndex = loopCommandIndex;
-					else
-						currentCommandIndex++;
-				} else if (nextCommand.getCode() == Command.END_WHILE_COMMAND) {
-					if (whileCondititon.compare(simulator))
-						currentCommandIndex = loopCommandIndex;
-					else
-						currentCommandIndex++;
-				}
-
-				if (animationMode != NO_DISPLAY_CHANGES)
-					gui.setCurrentScriptLine(script.getLineNumberAt(currentCommandIndex));
-			}
-
-		} while (redo);
-
-		return command.getTerminator();
-	}
-
-	// Executes the controller's output-file command.
-	private void doOutputFileCommand(Command command) throws ControllerException {
-		currentOutputName = currentScriptFile.getParent() + "/" + (String) command.getArg();
-		resetOutputFile();
-		if (gui != null)
-			gui.setOutputFile(currentOutputName);
-	}
-
-	// Executes the controller's compare-to command.
-	private void doCompareToCommand(Command command) throws ControllerException {
-		currentComparisonName = currentScriptFile.getParent() + "/" + (String) command.getArg();
-		resetComparisonFile();
-		if (gui != null)
-			gui.setComparisonFile(currentComparisonName);
-	}
-
-	// Executes the controller's output-list command.
-	private void doOutputListCommand(Command command) throws ControllerException {
-		if (output == null)
-			throw new ControllerException("No output file specified");
-
-		varList = (VariableFormat[]) command.getArg();
-		StringBuffer line = new StringBuffer("|");
-
-		for (int i = 0; i < varList.length; i++) {
-			int space = varList[i].padL + varList[i].padR + varList[i].len;
-			String varName = varList[i].varName.length() > space ? varList[i].varName.substring(0, space)
-					: varList[i].varName;
-			int leftSpace = (int) ((space - varName.length()) / 2);
-			int rightSpace = space - leftSpace - varName.length();
-
-			line.append(SPACES.substring(0, leftSpace) + varName + SPACES.substring(0, rightSpace) + '|');
-		}
-
-		outputAndCompare(line.toString());
-	}
-
-	// Executes the controller's output command.
-	private void doOutputCommand(Command command) throws ControllerException, VariableException {
-		if (output == null)
-			throw new ControllerException("No output file specified");
-
-		StringBuffer line = new StringBuffer("|");
-
-		for (int i = 0; i < varList.length; i++) {
-			// find value string (convert to require format if necessary)
-			String value = simulator.getValue(varList[i].varName);
-			if (varList[i].format != VariableFormat.STRING_FORMAT) {
-				int numValue;
-				try {
-					numValue = Integer.parseInt(value);
-				} catch (NumberFormatException nfe) {
-					throw new VariableException("Variable is not numeric", varList[i].varName);
-				}
-				if (varList[i].format == VariableFormat.HEX_FORMAT)
-					value = Conversions.decimalToHex(numValue, 4);
-				else if (varList[i].format == VariableFormat.BINARY_FORMAT)
-					value = Conversions.decimalToBinary(numValue, 16);
-			}
-
-			if (value.length() > varList[i].len)
-				value = value.substring(value.length() - varList[i].len);
-
-			int leftSpace = varList[i].padL
-					+ (varList[i].format == VariableFormat.STRING_FORMAT ? 0 : (varList[i].len - value.length()));
-			int rightSpace = varList[i].padR
-					+ (varList[i].format == VariableFormat.STRING_FORMAT ? (varList[i].len - value.length()) : 0);
-			line.append(SPACES.substring(0, leftSpace) + value + SPACES.substring(0, rightSpace) + '|');
-		}
-
-		outputAndCompare(line.toString());
-	}
-
-	// Executes the controller's echo command.
-	private void doEchoCommand(Command command) throws ControllerException {
-		lastEcho = (String) command.getArg();
-		if (gui != null)
-			gui.displayMessage(lastEcho, false);
-	}
-
-	// Executes the controller's Clear-echo command.
-	private void doClearEchoCommand(Command command) throws ControllerException {
-		lastEcho = "";
-		if (gui != null)
-			gui.displayMessage("", false);
-	}
-
-	// Executes the controller's breakpoint command.
-	private void doBreakpointCommand(Command command) throws ControllerException {
-		Breakpoint breakpoint = (Breakpoint) command.getArg();
-
-		if (!breakpointExists(breakpoints, breakpoint)) {
-			breakpoints.addElement(breakpoint);
-
-			gui.setBreakpoints(breakpoints);
-		}
-	}
-
-	// Executes the controller's clear-breakpoints command.
-	private void doClearBreakpointsCommand(Command command) throws ControllerException {
-		breakpoints.removeAllElements();
-		gui.setBreakpoints(breakpoints);
-	}
-
-	// Compares an output line with a template line from a compare file.
-	// The template must match exactly except for '*' which may match any
-	// single character.
-	private static boolean compareLineWithTemplate(String out, String cmp) {
-		if (out.length() != cmp.length()) {
-			return false;
-		}
-		StringCharacterIterator outi = new StringCharacterIterator(out);
-		StringCharacterIterator cmpi = new StringCharacterIterator(cmp);
-		for (outi.first(), cmpi.first(); outi.current() != CharacterIterator.DONE; outi.next(), cmpi.next()) {
-			if (cmpi.current() != '*' && outi.current() != cmpi.current()) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	// Ouputs the given line into the output file and compares it to the current
-	// compare file (if exists)
-	private void outputAndCompare(String line) throws ControllerException {
-		output.println(line);
-		output.flush();
-
-		if (gui != null) {
-			gui.outputFileUpdated();
-			gui.setCurrentOutputLine(outputLinesCounter);
-		}
-
-		outputLinesCounter++;
-
-		if (comparisonFile != null) {
-			try {
-				String compareLine = comparisonFile.readLine();
-
-				if (gui != null)
-					gui.setCurrentComparisonLine(compareLinesCounter);
-
-				compareLinesCounter++;
-
-				if (!compareLineWithTemplate(line, compareLine)) {
-					comparisonFailed = true;
-					comparisonFailureLine = compareLinesCounter;
-					displayMessage("Comparison failure at line " + comparisonFailureLine, true);
-					stopMode();
-				}
-			} catch (IOException ioe) {
-				throw new ControllerException("Could not read comparison file");
-			}
-		}
-	}
-
-	// loads the given script file and restarts the GUI.
-	protected void loadNewScript(File file, boolean displayMessage) throws ControllerException, ScriptException {
-		currentScriptFile = file;
-		script = new Script(file.getPath());
-		breakpoints.removeAllElements();
-		currentCommandIndex = 0;
-		output = null;
-		currentOutputName = "";
-		comparisonFile = null;
-		currentComparisonName = "";
-
-		if (gui != null) {
-			gui.setOutputFile("");
-			gui.setComparisonFile("");
-			gui.setBreakpoints(breakpoints);
-			gui.setScriptFile(file.getPath());
-			gui.setCurrentScriptLine(script.getLineNumberAt(0));
-		}
-
-		if (displayMessage)
-			displayMessage("New script loaded: " + file.getPath(), false);
-	}
-
-	// Resets the output file.
-	private void resetOutputFile() throws ControllerException {
-		try {
-			output = new PrintWriter(new FileWriter(currentOutputName));
-			outputLinesCounter = 0;
-			if (gui != null)
-				gui.setCurrentOutputLine(-1);
-		} catch (IOException ioe) {
-			throw new ControllerException("Could not create output file " + currentOutputName);
-		}
-
-		if (gui != null)
-			gui.setOutputFile(currentOutputName);
-	}
-
-	// Resets the comparison file.
-	private void resetComparisonFile() throws ControllerException {
-		try {
-			comparisonFile = new BufferedReader(new FileReader(currentComparisonName));
-			compareLinesCounter = 0;
-			comparisonFailed = false;
-			if (gui != null)
-				gui.setCurrentComparisonLine(-1);
-		} catch (IOException ioe) {
-			throw new ControllerException("Could not open comparison file " + currentComparisonName);
-		}
-	}
-
-	// Sets the speed delay according to the given speed unit.
-	private void setSpeed(int newSpeedUnit) {
-		currentSpeedUnit = newSpeedUnit;
-		timer.setDelay(delays[currentSpeedUnit - 1]);
-		simulator.setAnimationSpeed(newSpeedUnit);
-	}
-
-	// Sets the animation mode with the given one.
-	private void setAnimationMode(int newAnimationMode) {
-		simulator.setAnimationMode(newAnimationMode);
-
-		if (animationMode == NO_DISPLAY_CHANGES && newAnimationMode != NO_DISPLAY_CHANGES) {
-			simulator.refresh();
-			gui.setCurrentScriptLine(script.getLineNumberAt(currentCommandIndex));
-		}
-
-		gui.setAnimationMode(newAnimationMode);
-		animationMode = newAnimationMode;
-	}
-
-	// Sets the numeric format with the given code.
-	private void setNumericFormat(int formatCode) {
-		simulator.setNumericFormat(formatCode);
-		gui.setNumericFormat(formatCode);
-	}
-
-	// Sets the additional display with the given code.
-	private void setAdditionalDisplay(int additionalDisplayCode) {
-
-		switch (additionalDisplayCode) {
-		case NO_ADDITIONAL_DISPLAY:
-			simulator.getGUI().setAdditionalDisplay(null);
-			break;
-		case SCRIPT_ADDITIONAL_DISPLAY:
-			simulator.getGUI().setAdditionalDisplay(gui.getScriptComponent());
-			break;
-		case OUTPUT_ADDITIONAL_DISPLAY:
-			simulator.getGUI().setAdditionalDisplay(gui.getOutputComponent());
-			break;
-		case COMPARISON_ADDITIONAL_DISPLAY:
-			simulator.getGUI().setAdditionalDisplay(gui.getComparisonComponent());
-			break;
-		}
-
-		gui.setAdditionalDisplay(additionalDisplayCode);
-	}
-
-	// Sets the breakpoints list with the given one.
-	private void setBreakpoints(Vector newBreakpoints) {
+	/**
+	 * Constructs a new HackController with the given script file name. The
+	 * script will be executed and the final result will be printed.
+	 */
+	public HackController(HackSimulator simulator, String scriptFileName) {
+		File file = new File(scriptFileName);
+		if (!file.exists())
+			displayMessage(scriptFileName + " doesn't exist", true);
+
+		this.simulator = simulator;
+		animationMode = NO_DISPLAY_CHANGES;
+		simulator.setAnimationMode(animationMode);
+		simulator.addListener(this);
 		breakpoints = new Vector();
 
-		// Make sure there's no duplicate breakpoints
-		for (int i = 0; i < newBreakpoints.size(); i++) {
-			Breakpoint currentBreakpoint = (Breakpoint) newBreakpoints.elementAt(i);
-
-			if (!breakpointExists(breakpoints, currentBreakpoint))
-				breakpoints.addElement(currentBreakpoint);
-		}
-	}
-
-	// Returns true if the given breakpoint exists in the given breakpoints
-	// vector.
-	private boolean breakpointExists(Vector breakpoints, Breakpoint breakpoint) {
-		boolean found = false;
-		for (int j = 0; j < breakpoints.size() && !found; j++) {
-			Breakpoint scannedBreakpoint = (Breakpoint) breakpoints.elementAt(j);
-			if (breakpoint.getVarName().equals(scannedBreakpoint.getVarName())
-					&& breakpoint.getValue().equals(scannedBreakpoint.getValue()))
-				found = true;
-		}
-
-		return found;
-	}
-
-	// Refreshes the simulator display
-	private void refreshSimulator() {
-		if (animationMode == NO_DISPLAY_CHANGES) {
-			simulator.setAnimationMode(DISPLAY_CHANGES);
-			simulator.refresh();
-			simulator.setAnimationMode(NO_DISPLAY_CHANGES);
-		}
-	}
-
-	// Displays the given message with the given type (error or not)
-	private void displayMessage(String message, boolean error) {
-		if (gui != null)
-			gui.displayMessage(message, error);
-		else {
-			if (error) {
-				System.err.println(message);
-				System.exit(-1);
-			} else {
-				System.out.println(message);
-			}
-		}
-	}
-
-	// Returns the working dir that is saved in the data file, or "" if data
-	// file doesn't exist.
-	protected File loadWorkingDir() {
-		String dir = ".";
-
 		try {
-			BufferedReader r = new BufferedReader(new FileReader("bin/" + simulator.getName() + ".dat"));
-			dir = r.readLine();
-			r.close();
-		} catch (IOException ioe) {
+			loadNewScript(file, false);
+			saveWorkingDir(file);
+		} catch (ScriptException se) {
+			displayMessage(se.getMessage(), true);
+		} catch (ControllerException ce) {
+			displayMessage(ce.getMessage(), true);
 		}
 
-		return new File(dir);
-	}
+		fastForwardRunning = true;
 
-	// Saves the given working dir into the data file and gui's.
-	protected void saveWorkingDir(File file) {
-		File parent = file.getParentFile();
-
-		if (gui != null)
-			gui.setWorkingDir(parent);
-
-		simulator.setWorkingDir(file);
-
-		File dir = file.isDirectory() ? file : parent;
-
-		try {
-			PrintWriter r = new PrintWriter(new FileWriter("bin/" + simulator.getName() + ".dat"));
-			r.println(dir.getAbsolutePath());
-			r.close();
-		} catch (IOException ioe) {
-		}
-	}
-
-	// Returns the version string
-	private static String getVersionString() {
-		return " (" + Definitions.version + ")";
-	}
-
-	// load default script file (if not already loaded)
-	// and switches to Screen display
-	protected void reloadDefaultScript() {
-		if (!currentScriptFile.equals(defaultScriptFile)) {
-			gui.setAdditionalDisplay(NO_ADDITIONAL_DISPLAY);
-			try {
-				loadNewScript(defaultScriptFile, false);
-				rewind();
-			} catch (ScriptException se) {
-			} catch (ControllerException ce) {
-			}
-		}
-	}
-
-	// Updates the current program file name in the gui's title and saves its
-	// dir
-	// as the current working dir.
-	protected void updateProgramFile(String programFileName) {
-		gui.setTitle(simulator.getName() + getVersionString() + " - " + programFileName);
-		File file = new File(programFileName);
-		saveWorkingDir(file);
+		while (fastForwardRunning)
+			singleStep();
 	}
 
 	public void actionPerformed(ActionEvent e) {
 		if (!singleStepLocked) {
 			Thread t = new Thread(singleStepTask);
 			t.start();
-		}
-	}
-
-	public void programChanged(ProgramEvent event) {
-		switch (event.getType()) {
-		case ProgramEvent.SAVE:
-			updateProgramFile(event.getProgramFileName());
-			break;
-		case ProgramEvent.LOAD:
-			updateProgramFile(event.getProgramFileName());
-			if (!singleStepLocked) // new program was loaded manually
-				reloadDefaultScript();
-			break;
-		case ProgramEvent.CLEAR:
-			gui.setTitle(simulator.getName() + getVersionString());
-			break;
 		}
 	}
 
@@ -1068,90 +536,622 @@ public class HackController implements ControllerEventListener, ActionListener, 
 		}
 	}
 
+	// Returns true if the given breakpoint exists in the given breakpoints
+	// vector.
+	private boolean breakpointExists(Vector breakpoints, Breakpoint breakpoint) {
+		boolean found = false;
+		for (int j = 0; j < breakpoints.size() && !found; j++) {
+			Breakpoint scannedBreakpoint = (Breakpoint) breakpoints.elementAt(j);
+			if (breakpoint.getVarName().equals(scannedBreakpoint.getVarName())
+					&& breakpoint.getValue().equals(scannedBreakpoint.getValue()))
+				found = true;
+		}
+
+		return found;
+	}
+
+	// Displays the given message with the given type (error or not)
+	private void displayMessage(String message, boolean error) {
+		if (gui != null)
+			gui.displayMessage(message, error);
+		else {
+			if (error) {
+				System.err.println(message);
+				System.exit(-1);
+			} else {
+				System.out.println(message);
+			}
+		}
+	}
+
+	// Executes the controller's breakpoint command.
+	private void doBreakpointCommand(Command command) throws ControllerException {
+		Breakpoint breakpoint = (Breakpoint) command.getArg();
+
+		if (!breakpointExists(breakpoints, breakpoint)) {
+			breakpoints.addElement(breakpoint);
+
+			gui.setBreakpoints(breakpoints);
+		}
+	}
+
+	// Executes the controller's clear-breakpoints command.
+	private void doClearBreakpointsCommand(Command command) throws ControllerException {
+		breakpoints.removeAllElements();
+		gui.setBreakpoints(breakpoints);
+	}
+
+	// Executes the controller's Clear-echo command.
+	private void doClearEchoCommand(Command command) throws ControllerException {
+		lastEcho = "";
+		if (gui != null)
+			gui.displayMessage("", false);
+	}
+
+	// Executes the controller's compare-to command.
+	private void doCompareToCommand(Command command) throws ControllerException {
+		currentComparisonName = currentScriptFile.getParent() + "/" + (String) command.getArg();
+		resetComparisonFile();
+		if (gui != null)
+			gui.setComparisonFile(currentComparisonName);
+	}
+
+	// Executes the controller's echo command.
+	private void doEchoCommand(Command command) throws ControllerException {
+		lastEcho = (String) command.getArg();
+		if (gui != null)
+			gui.displayMessage(lastEcho, false);
+	}
+
+	// Executes the controller's output command.
+	private void doOutputCommand(Command command) throws ControllerException, VariableException {
+		if (output == null)
+			throw new ControllerException("No output file specified");
+
+		StringBuffer line = new StringBuffer("|");
+
+		for (int i = 0; i < varList.length; i++) {
+			// find value string (convert to require format if necessary)
+			String value = simulator.getValue(varList[i].varName);
+			if (varList[i].format != VariableFormat.STRING_FORMAT) {
+				int numValue;
+				try {
+					numValue = Integer.parseInt(value);
+				} catch (NumberFormatException nfe) {
+					throw new VariableException("Variable is not numeric", varList[i].varName);
+				}
+				if (varList[i].format == VariableFormat.HEX_FORMAT)
+					value = Conversions.decimalToHex(numValue, 4);
+				else if (varList[i].format == VariableFormat.BINARY_FORMAT)
+					value = Conversions.decimalToBinary(numValue, 16);
+			}
+
+			if (value.length() > varList[i].len)
+				value = value.substring(value.length() - varList[i].len);
+
+			int leftSpace = varList[i].padL
+					+ (varList[i].format == VariableFormat.STRING_FORMAT ? 0 : (varList[i].len - value.length()));
+			int rightSpace = varList[i].padR
+					+ (varList[i].format == VariableFormat.STRING_FORMAT ? (varList[i].len - value.length()) : 0);
+			line.append(SPACES.substring(0, leftSpace) + value + SPACES.substring(0, rightSpace) + '|');
+		}
+
+		outputAndCompare(line.toString());
+	}
+
+	// Executes the controller's output-file command.
+	private void doOutputFileCommand(Command command) throws ControllerException {
+		currentOutputName = currentScriptFile.getParent() + "/" + (String) command.getArg();
+		resetOutputFile();
+		if (gui != null)
+			gui.setOutputFile(currentOutputName);
+	}
+
+	// Executes the controller's output-list command.
+	private void doOutputListCommand(Command command) throws ControllerException {
+		if (output == null)
+			throw new ControllerException("No output file specified");
+
+		varList = (VariableFormat[]) command.getArg();
+		StringBuffer line = new StringBuffer("|");
+
+		for (int i = 0; i < varList.length; i++) {
+			int space = varList[i].padL + varList[i].padR + varList[i].len;
+			String varName = varList[i].varName.length() > space ? varList[i].varName.substring(0, space)
+					: varList[i].varName;
+			int leftSpace = (int) ((space - varName.length()) / 2);
+			int rightSpace = space - leftSpace - varName.length();
+
+			line.append(SPACES.substring(0, leftSpace) + varName + SPACES.substring(0, rightSpace) + '|');
+		}
+
+		outputAndCompare(line.toString());
+	}
+
 	/**
 	 * Executes an unknown controller action event.
 	 */
 	protected void doUnknownAction(byte action, Object data) throws ControllerException {
 	}
 
-	// Performs the single step task
-	class SingleStepTask implements Runnable {
+	// Executes all the script unless a breakpoint, comparison failure, stop
+	// flag
+	private void fastForward() {
+		gui.enableStop();
+		gui.disableSingleStep();
+		gui.disableRewind();
+		gui.disableScript();
+		gui.disableFastForward();
+		gui.disableAnimationModes();
+		gui.disableLoadProgram();
 
-		public void run() {
-			singleStep();
+		fastForwardRunning = true;
+		simulator.prepareFastForward();
 
-			if (!fastForwardRunning) {
-				if (!scriptEnded && !programHalted) {
-					gui.enableSingleStep();
-					gui.enableFastForward();
-					gui.disableStop();
+		if (animationMode != NO_DISPLAY_CHANGES)
+			timer.start();
+		else {
+			displayMessage("Running...", false);
+			gui.disableSpeedSlider();
+			Thread t = new Thread(fastForwardTask);
+			t.start();
+		}
+	}
+
+	// loads the given script file and restarts the GUI.
+	protected void loadNewScript(File file, boolean displayMessage) throws ControllerException, ScriptException {
+		currentScriptFile = file;
+		script = new Script(file.getPath());
+		breakpoints.removeAllElements();
+		currentCommandIndex = 0;
+		output = null;
+		currentOutputName = "";
+		comparisonFile = null;
+		currentComparisonName = "";
+
+		if (gui != null) {
+			gui.setOutputFile("");
+			gui.setComparisonFile("");
+			gui.setBreakpoints(breakpoints);
+			gui.setScriptFile(file.getPath());
+			gui.setCurrentScriptLine(script.getLineNumberAt(0));
+		}
+
+		if (displayMessage)
+			displayMessage("New script loaded: " + file.getPath(), false);
+	}
+
+	// Returns the working dir that is saved in the data file, or "" if data
+	// file doesn't exist.
+	protected File loadWorkingDir() {
+		String dir = ".";
+
+		try {
+			BufferedReader r = new BufferedReader(new FileReader("bin/" + simulator.getName() + ".dat"));
+			dir = r.readLine();
+			r.close();
+		} catch (IOException ioe) {
+		}
+
+		return new File(dir);
+	}
+
+	// Executes one command from the script and advances to the next.
+	// Returns the command's terminator.
+	private byte miniStep() throws ControllerException, ProgramException, CommandException, VariableException {
+		Command command;
+		boolean redo;
+
+		do {
+			command = script.getCommandAt(currentCommandIndex);
+			redo = false;
+
+			switch (command.getCode()) {
+			case Command.SIMULATOR_COMMAND:
+				simulator.doCommand((String[]) command.getArg());
+				break;
+			case Command.OUTPUT_FILE_COMMAND:
+				doOutputFileCommand(command);
+				break;
+			case Command.COMPARE_TO_COMMAND:
+				doCompareToCommand(command);
+				break;
+			case Command.OUTPUT_LIST_COMMAND:
+				doOutputListCommand(command);
+				break;
+			case Command.OUTPUT_COMMAND:
+				doOutputCommand(command);
+				break;
+			case Command.ECHO_COMMAND:
+				doEchoCommand(command);
+				break;
+			case Command.CLEAR_ECHO_COMMAND:
+				doClearEchoCommand(command);
+				break;
+			case Command.BREAKPOINT_COMMAND:
+				doBreakpointCommand(command);
+				break;
+			case Command.CLEAR_BREAKPOINTS_COMMAND:
+				doClearBreakpointsCommand(command);
+				break;
+			case Command.REPEAT_COMMAND:
+				repeatCounter = ((Integer) command.getArg()).intValue();
+				loopCommandIndex = currentCommandIndex + 1;
+				redo = true;
+				break;
+			case Command.WHILE_COMMAND:
+				whileCondititon = (ScriptCondition) command.getArg();
+				loopCommandIndex = currentCommandIndex + 1;
+				if (!whileCondititon.compare(simulator)) {
+					// advance till the nearest end while command.
+					for (; script.getCommandAt(currentCommandIndex)
+							.getCode() != Command.END_WHILE_COMMAND; currentCommandIndex++)
+						;
 				}
-				gui.enableScript();
-				gui.enableRewind();
+				redo = true; // whether the test was successful or not,
+								// the while command doesn't count
+				break;
+			case Command.END_SCRIPT_COMMAND:
+				scriptEnded = true;
+				stopMode();
+
+				if (gui != null) {
+					gui.disableSingleStep();
+					gui.disableFastForward();
+				}
+
+				try {
+					if (output != null)
+						output.close();
+
+					if (comparisonFile != null) {
+						if (comparisonFailed)
+							displayMessage("End of script - Comparison failure at line " + comparisonFailureLine, true);
+						else
+							displayMessage("End of script - Comparison ended successfully", false);
+
+						comparisonFile.close();
+					} else
+						displayMessage("End of script", false);
+				} catch (IOException ioe) {
+					throw new ControllerException("Could not read comparison file");
+				}
+
+				break;
 			}
 
-			if (animationMode == NO_DISPLAY_CHANGES) {
-				refreshSimulator();
-				gui.setCurrentScriptLine(script.getLineNumberAt(currentCommandIndex));
+			// advance script line pointer
+			if (command.getCode() != Command.END_SCRIPT_COMMAND) {
+				currentCommandIndex++;
+				Command nextCommand = script.getCommandAt(currentCommandIndex);
+				if (nextCommand.getCode() == Command.END_REPEAT_COMMAND) {
+					if (repeatCounter == 0 || --repeatCounter > 0)
+						currentCommandIndex = loopCommandIndex;
+					else
+						currentCommandIndex++;
+				} else if (nextCommand.getCode() == Command.END_WHILE_COMMAND) {
+					if (whileCondititon.compare(simulator))
+						currentCommandIndex = loopCommandIndex;
+					else
+						currentCommandIndex++;
+				}
+
+				if (animationMode != NO_DISPLAY_CHANGES)
+					gui.setCurrentScriptLine(script.getLineNumberAt(currentCommandIndex));
+			}
+
+		} while (redo);
+
+		return command.getTerminator();
+	}
+
+	// Ouputs the given line into the output file and compares it to the current
+	// compare file (if exists)
+	private void outputAndCompare(String line) throws ControllerException {
+		output.println(line);
+		output.flush();
+
+		if (gui != null) {
+			gui.outputFileUpdated();
+			gui.setCurrentOutputLine(outputLinesCounter);
+		}
+
+		outputLinesCounter++;
+
+		if (comparisonFile != null) {
+			try {
+				String compareLine = comparisonFile.readLine();
+
+				if (gui != null)
+					gui.setCurrentComparisonLine(compareLinesCounter);
+
+				compareLinesCounter++;
+
+				if (!compareLineWithTemplate(line, compareLine)) {
+					comparisonFailed = true;
+					comparisonFailureLine = compareLinesCounter;
+					displayMessage("Comparison failure at line " + comparisonFailureLine, true);
+					stopMode();
+				}
+			} catch (IOException ioe) {
+				throw new ControllerException("Could not read comparison file");
 			}
 		}
 	}
 
-	// Performs the fast forward task
-	class FastForwardTask implements Runnable {
-		public synchronized void run() {
+	public void programChanged(ProgramEvent event) {
+		switch (event.getType()) {
+		case ProgramEvent.SAVE:
+			updateProgramFile(event.getProgramFileName());
+			break;
+		case ProgramEvent.LOAD:
+			updateProgramFile(event.getProgramFileName());
+			if (!singleStepLocked) // new program was loaded manually
+				reloadDefaultScript();
+			break;
+		case ProgramEvent.CLEAR:
+			gui.setTitle(simulator.getName() + getVersionString());
+			break;
+		}
+	}
+
+	// Refreshes the simulator display
+	private void refreshSimulator() {
+		if (animationMode == NO_DISPLAY_CHANGES) {
+			simulator.setAnimationMode(DISPLAY_CHANGES);
+			simulator.refresh();
+			simulator.setAnimationMode(NO_DISPLAY_CHANGES);
+		}
+	}
+
+	// load default script file (if not already loaded)
+	// and switches to Screen display
+	protected void reloadDefaultScript() {
+		if (!currentScriptFile.equals(defaultScriptFile)) {
+			gui.setAdditionalDisplay(NO_ADDITIONAL_DISPLAY);
 			try {
-				System.runFinalization();
-				System.gc();
-				wait(300);
-			} catch (InterruptedException ie) {
+				loadNewScript(defaultScriptFile, false);
+				rewind();
+			} catch (ScriptException se) {
+			} catch (ControllerException ce) {
+			}
+		}
+	}
+
+	// Resets the comparison file.
+	private void resetComparisonFile() throws ControllerException {
+		try {
+			comparisonFile = new BufferedReader(new FileReader(currentComparisonName));
+			compareLinesCounter = 0;
+			comparisonFailed = false;
+			if (gui != null)
+				gui.setCurrentComparisonLine(-1);
+		} catch (IOException ioe) {
+			throw new ControllerException("Could not open comparison file " + currentComparisonName);
+		}
+	}
+
+	// Resets the output file.
+	private void resetOutputFile() throws ControllerException {
+		try {
+			output = new PrintWriter(new FileWriter(currentOutputName));
+			outputLinesCounter = 0;
+			if (gui != null)
+				gui.setCurrentOutputLine(-1);
+		} catch (IOException ioe) {
+			throw new ControllerException("Could not create output file " + currentOutputName);
+		}
+
+		if (gui != null)
+			gui.setOutputFile(currentOutputName);
+	}
+
+	// Restarts the current script from the beginning.
+	private void rewind() {
+		try {
+			if (scriptEnded || programHalted) {
+				gui.enableSingleStep();
+				gui.enableFastForward();
+			}
+			scriptEnded = false;
+			programHalted = false;
+
+			int oldAnimationMode = animationMode;
+			setAnimationMode(DISPLAY_CHANGES);
+			simulator.restart();
+			refreshSimulator();
+			setAnimationMode(oldAnimationMode);
+
+			if (output != null)
+				resetOutputFile();
+			if (comparisonFile != null)
+				resetComparisonFile();
+
+			lastEcho = "";
+			currentCommandIndex = 0;
+			gui.setCurrentScriptLine(script.getLineNumberAt(0));
+
+		} catch (ControllerException e) {
+			displayMessage(e.getMessage(), true);
+		}
+	}
+
+	// Saves the given working dir into the data file and gui's.
+	protected void saveWorkingDir(File file) {
+		File parent = file.getParentFile();
+
+		if (gui != null)
+			gui.setWorkingDir(parent);
+
+		simulator.setWorkingDir(file);
+
+		File dir = file.isDirectory() ? file : parent;
+
+		try {
+			PrintWriter r = new PrintWriter(new FileWriter("bin/" + simulator.getName() + ".dat"));
+			r.println(dir.getAbsolutePath());
+			r.close();
+		} catch (IOException ioe) {
+		}
+	}
+
+	// Sets the additional display with the given code.
+	private void setAdditionalDisplay(int additionalDisplayCode) {
+
+		switch (additionalDisplayCode) {
+		case NO_ADDITIONAL_DISPLAY:
+			simulator.getGUI().setAdditionalDisplay(null);
+			break;
+		case SCRIPT_ADDITIONAL_DISPLAY:
+			simulator.getGUI().setAdditionalDisplay(gui.getScriptComponent());
+			break;
+		case OUTPUT_ADDITIONAL_DISPLAY:
+			simulator.getGUI().setAdditionalDisplay(gui.getOutputComponent());
+			break;
+		case COMPARISON_ADDITIONAL_DISPLAY:
+			simulator.getGUI().setAdditionalDisplay(gui.getComparisonComponent());
+			break;
+		}
+
+		gui.setAdditionalDisplay(additionalDisplayCode);
+	}
+
+	// Sets the animation mode with the given one.
+	private void setAnimationMode(int newAnimationMode) {
+		simulator.setAnimationMode(newAnimationMode);
+
+		if (animationMode == NO_DISPLAY_CHANGES && newAnimationMode != NO_DISPLAY_CHANGES) {
+			simulator.refresh();
+			gui.setCurrentScriptLine(script.getLineNumberAt(currentCommandIndex));
+		}
+
+		gui.setAnimationMode(newAnimationMode);
+		animationMode = newAnimationMode;
+	}
+
+	// Sets the breakpoints list with the given one.
+	private void setBreakpoints(Vector newBreakpoints) {
+		breakpoints = new Vector();
+
+		// Make sure there's no duplicate breakpoints
+		for (int i = 0; i < newBreakpoints.size(); i++) {
+			Breakpoint currentBreakpoint = (Breakpoint) newBreakpoints.elementAt(i);
+
+			if (!breakpointExists(breakpoints, currentBreakpoint))
+				breakpoints.addElement(currentBreakpoint);
+		}
+	}
+
+	// Sets the numeric format with the given code.
+	private void setNumericFormat(int formatCode) {
+		simulator.setNumericFormat(formatCode);
+		gui.setNumericFormat(formatCode);
+	}
+
+	// Sets the speed delay according to the given speed unit.
+	private void setSpeed(int newSpeedUnit) {
+		currentSpeedUnit = newSpeedUnit;
+		timer.setDelay(delays[currentSpeedUnit - 1]);
+		simulator.setAnimationSpeed(newSpeedUnit);
+	}
+
+	// Executes a single step from the script, checks for a breakpoint and
+	// sets the status of the system accordingly.
+	private synchronized void singleStep() {
+
+		singleStepLocked = true;
+
+		try {
+			byte terminatorType;
+			singleStepRunning = true;
+
+			do {
+				terminatorType = miniStep();
+			} while (terminatorType == Command.MINI_STEP_TERMINATOR && singleStepRunning);
+
+			singleStepRunning = false;
+
+			if (terminatorType == Command.STOP_TERMINATOR) {
+				displayMessage("Script reached a '!' terminator", false);
+				stopMode();
 			}
 
-			int count = 0;
-			int rounds = FASTFORWARD_SPEED_FUNCTION[currentSpeedUnit - 1];
-
-			while (fastForwardRunning) {
-				singleStep();
-
-				// waits for 1 ms each constant amount of commands
-				if (count == rounds) {
-					count = 0;
-					try {
-						wait(1);
-					} catch (InterruptedException ie) {
+			// Check Breakpoints
+			for (int i = 0; i < breakpoints.size(); i++) {
+				Breakpoint breakpoint = (Breakpoint) breakpoints.elementAt(i);
+				String currentValue = simulator.getValue(breakpoint.getVarName());
+				if (currentValue.equals(breakpoint.getValue())) {
+					// if value is equal and the breakpoint wasn't reached
+					// before, turn it on
+					if (!breakpoint.isReached()) {
+						breakpoint.on();
+						gui.setBreakpoints(breakpoints);
+						displayMessage("Breakpoint reached", false);
+						gui.showBreakpoints();
+						stopMode();
 					}
 				}
-
-				count++;
+				// if the value is not equal and the breakpoint was reached
+				// before, turn it off
+				else if (breakpoint.isReached()) {
+					breakpoint.off();
+					gui.setBreakpoints(breakpoints);
+				}
 			}
+		} catch (ControllerException ce) {
+			stopWithError(ce);
+		} catch (ProgramException pe) {
+			stopWithError(pe);
+		} catch (CommandException ce) {
+			stopWithError(ce);
+		} catch (VariableException ve) {
+			stopWithError(ve);
+		}
+
+		singleStepLocked = false;
+		notifyAll();
+	}
+
+	// Puts the controller into stop mode
+	private void stopMode() {
+		if (fastForwardRunning) {
+			if (gui != null) {
+				timer.stop();
+				gui.enableLoadProgram();
+				gui.enableSpeedSlider();
+			}
+			fastForwardRunning = false;
+		}
+		singleStepRunning = false;
+
+		if (gui != null) {
+			gui.enableSingleStep();
+			gui.enableFastForward();
+			gui.enableScript();
+			gui.enableRewind();
+			gui.disableStop();
+			gui.enableAnimationModes();
+
+			if (animationMode == NO_DISPLAY_CHANGES)
+				gui.setCurrentScriptLine(script.getLineNumberAt(currentCommandIndex));
+
+			refreshSimulator();
 		}
 	}
 
-	// Sets the animation mode
-	class SetAnimationModeTask implements Runnable {
-
-		private int animationMode;
-
-		public void setMode(int animationMode) {
-			this.animationMode = animationMode;
-		}
-
-		public void run() {
-			setAnimationMode(animationMode);
-		}
+	// Displays the message of the given exception and stops the script's
+	// execution.
+	private void stopWithError(Exception e) {
+		displayMessage(e.getMessage(), true);
+		stopMode();
 	}
 
-	// Sets the numeric format
-	class SetNumericFormatTask implements Runnable {
-
-		private int numericFormat;
-
-		public void setFormat(int numericFormat) {
-			this.numericFormat = numericFormat;
-		}
-
-		public void run() {
-			setNumericFormat(numericFormat);
-		}
+	// Updates the current program file name in the gui's title and saves its
+	// dir
+	// as the current working dir.
+	protected void updateProgramFile(String programFileName) {
+		gui.setTitle(simulator.getName() + getVersionString() + " - " + programFileName);
+		File file = new File(programFileName);
+		saveWorkingDir(file);
 	}
 }

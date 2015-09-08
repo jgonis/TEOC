@@ -38,13 +38,11 @@ public class HVMInstruction {
 	private short numberOfArgs;
 
 	/**
-	 * Constructs a new instruction with two arguments.
+	 * Constructs a new instruction with no arguments.
 	 */
-	public HVMInstruction(byte opCode, short arg0, short arg1) {
+	public HVMInstruction(byte opCode) {
 		this.opCode = opCode;
-		this.arg0 = arg0;
-		this.arg1 = arg1;
-		numberOfArgs = 2;
+		numberOfArgs = 0;
 	}
 
 	/**
@@ -57,18 +55,13 @@ public class HVMInstruction {
 	}
 
 	/**
-	 * Constructs a new instruction with no arguments.
+	 * Constructs a new instruction with two arguments.
 	 */
-	public HVMInstruction(byte opCode) {
+	public HVMInstruction(byte opCode, short arg0, short arg1) {
 		this.opCode = opCode;
-		numberOfArgs = 0;
-	}
-
-	/**
-	 * Returns the operation code
-	 */
-	public short getOpCode() {
-		return opCode;
+		this.arg0 = arg0;
+		this.arg1 = arg1;
+		numberOfArgs = 2;
 	}
 
 	/**
@@ -83,27 +76,6 @@ public class HVMInstruction {
 	 */
 	public short getArg1() {
 		return arg1;
-	}
-
-	/**
-	 * Sets the string argument with the given string.
-	 */
-	public void setStringArg(String arg) {
-		stringArg = arg;
-	}
-
-	/**
-	 * Returns the string argument
-	 */
-	public String getStringArg() {
-		return stringArg;
-	}
-
-	/**
-	 * Returns the number of arguments.
-	 */
-	public short getNumberOfArgs() {
-		return numberOfArgs;
 	}
 
 	/**
@@ -151,6 +123,34 @@ public class HVMInstruction {
 		}
 
 		return result;
+	}
+
+	/**
+	 * Returns the number of arguments.
+	 */
+	public short getNumberOfArgs() {
+		return numberOfArgs;
+	}
+
+	/**
+	 * Returns the operation code
+	 */
+	public short getOpCode() {
+		return opCode;
+	}
+
+	/**
+	 * Returns the string argument
+	 */
+	public String getStringArg() {
+		return stringArg;
+	}
+
+	/**
+	 * Sets the string argument with the given string.
+	 */
+	public void setStringArg(String arg) {
+		stringArg = arg;
 	}
 
 	public String toString() {

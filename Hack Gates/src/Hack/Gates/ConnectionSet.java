@@ -39,16 +39,16 @@ public class ConnectionSet extends HashSet {
 	}
 
 	/**
-	 * Removes the given connection from the set.
-	 */
-	public boolean remove(Connection connection) {
-		return super.remove(connection);
-	}
-
-	/**
 	 * Returns true if this set contains the given connection.
 	 */
 	public boolean contains(Connection connection) {
 		return super.contains(connection);
+	}
+
+	/**
+	 * Removes the given connection from the set.
+	 */
+	public boolean remove(Connection connection) {
+		return super.remove(connection);
 	}
 }

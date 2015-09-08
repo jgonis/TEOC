@@ -64,14 +64,6 @@ public class ChipLoaderFileChooser extends JFrame {
 	}
 
 	/**
-	 * Shows the file chooser.
-	 */
-	public void showWindow() {
-		setVisible(true);
-		workingDir.getTextField().requestFocus();
-	}
-
-	/**
 	 * Registers the given FilesTypeListener as a listener to this component.
 	 */
 	public void addListener(FilesTypeListener listener) {
@@ -79,53 +71,12 @@ public class ChipLoaderFileChooser extends JFrame {
 	}
 
 	/**
-	 * Un-registers the given FilesTypeListener from being a listener to this
-	 * component.
+	 * Implementing the action of pressing the cancel button.
 	 */
-	public void removeListener(FilesTypeListener listener) {
-		listeners.removeElement(listener);
-	}
-
-	/**
-	 * Notify all the FilesTypeListeners on actions taken in it, by creating a
-	 * FilesTypeEvent and sending it using the filesNamesChanged method to all
-	 * of the listeners.
-	 */
-	public void notifyListeners(String working,
-			String builtIn/* , String composite */) {
-		FilesTypeEvent event = new FilesTypeEvent(this, working, builtIn, null/* , composite */);
-
-		for (int i = 0; i < listeners.size(); i++) {
-			((FilesTypeListener) listeners.elementAt(i)).filesNamesChanged(event);
-		}
-	}
-
-	/**
-	 * Sets the current HDL directory.
-	 */
-	public void setWorkingDir(File file) {
-		workingDir.setCurrentFileName(file.getName());
+	public void cancelButton_actionPerformed(ActionEvent e) {
 		workingDir.showCurrentFileName();
-	}
-
-	/**
-	 * Sets the BuiltIn HDL directory.
-	 */
-	public void setBuiltInDir(File file) {
-		builtInDir.setCurrentFileName(file.getName());
 		builtInDir.showCurrentFileName();
-	}
-
-	// Sets the selection mode to directories only.
-	private void setSelectionToDirectory() {
-		workingDir.setSelectionToDirectories();
-		builtInDir.setSelectionToDirectories();
-	}
-
-	// sets the names of the file choosers.
-	private void setNames() {
-		workingDir.setName("Working Dir :");
-		builtInDir.setName("BuiltIn Dir :");
+		setVisible(false);
 	}
 
 	// Initializes this component.
@@ -159,6 +110,20 @@ public class ChipLoaderFileChooser extends JFrame {
 	}
 
 	/**
+	 * Notify all the FilesTypeListeners on actions taken in it, by creating a
+	 * FilesTypeEvent and sending it using the filesNamesChanged method to all
+	 * of the listeners.
+	 */
+	public void notifyListeners(String working,
+			String builtIn/* , String composite */) {
+		FilesTypeEvent event = new FilesTypeEvent(this, working, builtIn, null/* , composite */);
+
+		for (int i = 0; i < listeners.size(); i++) {
+			((FilesTypeListener) listeners.elementAt(i)).filesNamesChanged(event);
+		}
+	}
+
+	/**
 	 * Implementing the action of pressing the ok button.
 	 */
 	public void okButton_actionPerformed(ActionEvent e) {
@@ -185,11 +150,46 @@ public class ChipLoaderFileChooser extends JFrame {
 	}
 
 	/**
-	 * Implementing the action of pressing the cancel button.
+	 * Un-registers the given FilesTypeListener from being a listener to this
+	 * component.
 	 */
-	public void cancelButton_actionPerformed(ActionEvent e) {
-		workingDir.showCurrentFileName();
+	public void removeListener(FilesTypeListener listener) {
+		listeners.removeElement(listener);
+	}
+
+	/**
+	 * Sets the BuiltIn HDL directory.
+	 */
+	public void setBuiltInDir(File file) {
+		builtInDir.setCurrentFileName(file.getName());
 		builtInDir.showCurrentFileName();
-		setVisible(false);
+	}
+
+	// sets the names of the file choosers.
+	private void setNames() {
+		workingDir.setName("Working Dir :");
+		builtInDir.setName("BuiltIn Dir :");
+	}
+
+	// Sets the selection mode to directories only.
+	private void setSelectionToDirectory() {
+		workingDir.setSelectionToDirectories();
+		builtInDir.setSelectionToDirectories();
+	}
+
+	/**
+	 * Sets the current HDL directory.
+	 */
+	public void setWorkingDir(File file) {
+		workingDir.setCurrentFileName(file.getName());
+		workingDir.showCurrentFileName();
+	}
+
+	/**
+	 * Shows the file chooser.
+	 */
+	public void showWindow() {
+		setVisible(true);
+		workingDir.getTextField().requestFocus();
 	}
 }

@@ -47,35 +47,16 @@ public abstract class BuiltInVMClass {
 	/* Methods */
 
 	/**
-	 * Writes a value to the VM memory. The arguments are ints so that literals
-	 * and chars (for the value) may be passed to them without conversion for
-	 * convenience however they are truncated to shorts.
+	 * The following function should not be called by an implementing class:
+	 *
+	 * Called by a BuiltInFunctionsRunner to request that all calls from
+	 * built-in functions executed from this thread be forwarded to it. This is
+	 * used instead of instatiating each implementing class as needed with a
+	 * data member of the BuiltInFunctionsRunner because logically all
+	 * implementing classes should implement only static methods.
 	 */
-	protected static void writeMemory(int address, int value) throws TerminateVMProgramThrowable {
-		((BuiltInFunctionsRunner) builtInFunctionsRunnerByThread.get(Thread.currentThread()))
-				.builtInFunctionRequestsMemoryWrite((short) address, (short) value);
-	}
-
-	/**
-	 * Reads a value from the VM memory. The argument is an int so that literals
-	 * may be passed to it without conversion for convenience however it is
-	 * truncated to a short.
-	 */
-	protected static short readMemory(int address) throws TerminateVMProgramThrowable {
-		return ((BuiltInFunctionsRunner) builtInFunctionsRunnerByThread.get(Thread.currentThread()))
-				.builtInFunctionRequestsMemoryRead((short) address);
-	}
-
-	/**
-	 * The following functions call a VM function. The first version is the
-	 * general version for all numbers of parameters. After it, specialized 0-4
-	 * params syntactic-sugar versions are provided. These accept ints for
-	 * convenience - so that integer literals and characters may be passed to
-	 * them. Note however that all their arguments are truncated to shorts.
-	 */
-	protected static short callFunction(String functionName, short[] params) throws TerminateVMProgramThrowable {
-		return ((BuiltInFunctionsRunner) builtInFunctionsRunnerByThread.get(Thread.currentThread()))
-				.builtInFunctionRequestsCall(functionName, params);
+	static final void associateForThread(BuiltInFunctionsRunner bifr) {
+		builtInFunctionsRunnerByThread.put(Thread.currentThread(), bifr);
 	}
 
 	protected static short callFunction(String functionName) throws TerminateVMProgramThrowable {
@@ -103,6 +84,18 @@ public abstract class BuiltInVMClass {
 	}
 
 	/**
+	 * The following functions call a VM function. The first version is the
+	 * general version for all numbers of parameters. After it, specialized 0-4
+	 * params syntactic-sugar versions are provided. These accept ints for
+	 * convenience - so that integer literals and characters may be passed to
+	 * them. Note however that all their arguments are truncated to shorts.
+	 */
+	protected static short callFunction(String functionName, short[] params) throws TerminateVMProgramThrowable {
+		return ((BuiltInFunctionsRunner) builtInFunctionsRunnerByThread.get(Thread.currentThread()))
+				.builtInFunctionRequestsCall(functionName, params);
+	}
+
+	/**
 	 * Should be called only by Sys.halt (or an equivalent routine in an
 	 * alternative hack operating system). Enters an infinite loop, de-facto
 	 * halting the program. Important so that tests and other scripts finish
@@ -116,19 +109,26 @@ public abstract class BuiltInVMClass {
 				.builtInFunctionRequestsInfiniteLoop(message);
 	}
 
+	/**
+	 * Reads a value from the VM memory. The argument is an int so that literals
+	 * may be passed to it without conversion for convenience however it is
+	 * truncated to a short.
+	 */
+	protected static short readMemory(int address) throws TerminateVMProgramThrowable {
+		return ((BuiltInFunctionsRunner) builtInFunctionsRunnerByThread.get(Thread.currentThread()))
+				.builtInFunctionRequestsMemoryRead((short) address);
+	}
+
 	/* Methods for internal use: */
 
 	/**
-	 * The following function should not be called by an implementing class:
-	 *
-	 * Called by a BuiltInFunctionsRunner to request that all calls from
-	 * built-in functions executed from this thread be forwarded to it. This is
-	 * used instead of instatiating each implementing class as needed with a
-	 * data member of the BuiltInFunctionsRunner because logically all
-	 * implementing classes should implement only static methods.
+	 * Writes a value to the VM memory. The arguments are ints so that literals
+	 * and chars (for the value) may be passed to them without conversion for
+	 * convenience however they are truncated to shorts.
 	 */
-	static final void associateForThread(BuiltInFunctionsRunner bifr) {
-		builtInFunctionsRunnerByThread.put(Thread.currentThread(), bifr);
+	protected static void writeMemory(int address, int value) throws TerminateVMProgramThrowable {
+		((BuiltInFunctionsRunner) builtInFunctionsRunnerByThread.get(Thread.currentThread()))
+				.builtInFunctionRequestsMemoryWrite((short) address, (short) value);
 	}
 
 }

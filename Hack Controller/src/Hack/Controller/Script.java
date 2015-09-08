@@ -158,20 +158,65 @@ public class Script {
 		lineNumbers.addElement(new Integer(lineNumber));
 	}
 
-	// creates and returns a simulator command.
-	// called when the current token is an unrecognized command name.
-	// Holds a String array (of simulator command an arguments) as an argument.
-	private Command createSimulatorCommand() throws ControllerException, ScriptException {
-		String[] args = readArgs(MAX_SIMULATOR_COMMAND_ARGUMENTS);
+	// Checks that the current token is a terminator symbol. If not, an
+	// exception is thrown.
+	private void checkTerminator() throws ScriptException {
+		if (input.getTokenType() != ScriptTokenizer.TYPE_SYMBOL) {
+			if (input.hasMoreTokens())
+				scriptError("too many arguments");
+			else
+				scriptError("Script ends without a terminator");
+		} else if (input.getSymbol() != ',' && input.getSymbol() != ';' && input.getSymbol() != '!')
+			scriptError("Illegal terminator: '" + input.getSymbol() + "'");
+	}
+
+	// creates and returns a controller breakpoint command.
+	// Holds a Breakpoint object as an argument.
+	private Command createBreakpointCommand() throws ControllerException, ScriptException {
+		input.advance();
+		String[] args = readArgs(2);
 
 		// count args
 		int count;
 		for (count = 0; count < args.length && args[count] != null; count++)
 			;
 
-		String[] trimmedArgs = new String[count];
-		System.arraycopy(args, 0, trimmedArgs, 0, count);
-		return new Command(Command.SIMULATOR_COMMAND, trimmedArgs);
+		if (count < 2)
+			scriptError("Not enough arguments");
+
+		String value = args[1];
+		if (value.startsWith("%S"))
+			value = value.substring(2);
+		else if (args[1].startsWith("%"))
+			value = Conversions.toDecimalForm(value);
+
+		Breakpoint breakpoint = new Breakpoint(args[0], value);
+
+		return new Command(Command.BREAKPOINT_COMMAND, breakpoint);
+	}
+
+	// creates and returns a controller clear-breakpoints command.
+	// Holds no argument.
+	private Command createClearBreakpointsCommand() throws ControllerException, ScriptException {
+		input.advance();
+		checkTerminator();
+		return new Command(Command.CLEAR_BREAKPOINTS_COMMAND);
+	}
+
+	// creates and returns a controller Clear-echo command.
+	// Holds no argument.
+	private Command createClearEchoCommand() throws ControllerException, ScriptException {
+		input.advance();
+		checkTerminator();
+		return new Command(Command.CLEAR_ECHO_COMMAND);
+	}
+
+	// creates and returns a controller compare-to command.
+	// Holds the comparison file name (String) as an argument.
+	private Command createCompareToCommand() throws ControllerException, ScriptException {
+		input.advance();
+		String[] args = readArgs(1);
+		return new Command(Command.COMPARE_TO_COMMAND, args[0]);
 	}
 
 	// creates and returns a controller command.
@@ -216,20 +261,28 @@ public class Script {
 		return command;
 	}
 
+	// creates and returns a controller echo command.
+	// Holds the echoed string as an argument.
+	private Command createEchoCommand() throws ControllerException, ScriptException {
+		input.advance();
+		String[] args = readArgs(1);
+		return new Command(Command.ECHO_COMMAND, args[0]);
+	}
+
+	// creates and returns a controller output command.
+	// Holds no argument.
+	private Command createOutputCommand() throws ControllerException, ScriptException {
+		input.advance();
+		checkTerminator();
+		return new Command(Command.OUTPUT_COMMAND);
+	}
+
 	// creates and returns a controller output-file command.
 	// Holds the output file name (String) as an argument.
 	private Command createOutputFileCommand() throws ControllerException, ScriptException {
 		input.advance();
 		String[] args = readArgs(1);
 		return new Command(Command.OUTPUT_FILE_COMMAND, args[0]);
-	}
-
-	// creates and returns a controller compare-to command.
-	// Holds the comparison file name (String) as an argument.
-	private Command createCompareToCommand() throws ControllerException, ScriptException {
-		input.advance();
-		String[] args = readArgs(1);
-		return new Command(Command.COMPARE_TO_COMMAND, args[0]);
 	}
 
 	// creates and returns a controller output-list command.
@@ -303,63 +356,6 @@ public class Script {
 		return new Command(Command.OUTPUT_LIST_COMMAND, vars);
 	}
 
-	// creates and returns a controller output command.
-	// Holds no argument.
-	private Command createOutputCommand() throws ControllerException, ScriptException {
-		input.advance();
-		checkTerminator();
-		return new Command(Command.OUTPUT_COMMAND);
-	}
-
-	// creates and returns a controller echo command.
-	// Holds the echoed string as an argument.
-	private Command createEchoCommand() throws ControllerException, ScriptException {
-		input.advance();
-		String[] args = readArgs(1);
-		return new Command(Command.ECHO_COMMAND, args[0]);
-	}
-
-	// creates and returns a controller Clear-echo command.
-	// Holds no argument.
-	private Command createClearEchoCommand() throws ControllerException, ScriptException {
-		input.advance();
-		checkTerminator();
-		return new Command(Command.CLEAR_ECHO_COMMAND);
-	}
-
-	// creates and returns a controller breakpoint command.
-	// Holds a Breakpoint object as an argument.
-	private Command createBreakpointCommand() throws ControllerException, ScriptException {
-		input.advance();
-		String[] args = readArgs(2);
-
-		// count args
-		int count;
-		for (count = 0; count < args.length && args[count] != null; count++)
-			;
-
-		if (count < 2)
-			scriptError("Not enough arguments");
-
-		String value = args[1];
-		if (value.startsWith("%S"))
-			value = value.substring(2);
-		else if (args[1].startsWith("%"))
-			value = Conversions.toDecimalForm(value);
-
-		Breakpoint breakpoint = new Breakpoint(args[0], value);
-
-		return new Command(Command.BREAKPOINT_COMMAND, breakpoint);
-	}
-
-	// creates and returns a controller clear-breakpoints command.
-	// Holds no argument.
-	private Command createClearBreakpointsCommand() throws ControllerException, ScriptException {
-		input.advance();
-		checkTerminator();
-		return new Command(Command.CLEAR_BREAKPOINTS_COMMAND);
-	}
-
 	// creates and returns a controller repeat command.
 	// Holds the repeat quantity (Integer) as an argument.
 	private Command createRepeatCommand() throws ScriptException, ControllerException {
@@ -379,6 +375,22 @@ public class Script {
 		return new Command(Command.REPEAT_COMMAND, new Integer(repeatNum));
 	}
 
+	// creates and returns a simulator command.
+	// called when the current token is an unrecognized command name.
+	// Holds a String array (of simulator command an arguments) as an argument.
+	private Command createSimulatorCommand() throws ControllerException, ScriptException {
+		String[] args = readArgs(MAX_SIMULATOR_COMMAND_ARGUMENTS);
+
+		// count args
+		int count;
+		for (count = 0; count < args.length && args[count] != null; count++)
+			;
+
+		String[] trimmedArgs = new String[count];
+		System.arraycopy(args, 0, trimmedArgs, 0, count);
+		return new Command(Command.SIMULATOR_COMMAND, trimmedArgs);
+	}
+
 	// creates and returns a controller While command.
 	// Holds a ScriptCondition object as an argument.
 	private Command createWhileCommand() throws ScriptException, ControllerException {
@@ -395,6 +407,28 @@ public class Script {
 			scriptError("Missing '{' in while command");
 
 		return new Command(Command.WHILE_COMMAND, condition);
+	}
+
+	/**
+	 * Returns the command at the given index. Assumes a legal index.
+	 */
+	public Command getCommandAt(int index) {
+		return (Command) commands.elementAt(index);
+	}
+
+	/**
+	 * Returns the number of commands in the script.
+	 */
+	public int getLength() {
+		return commands.size();
+	}
+
+	/**
+	 * Returns the script line number of the command at the given index. Assumes
+	 * a legal index.
+	 */
+	public int getLineNumberAt(int index) {
+		return ((Integer) lineNumbers.elementAt(index)).intValue();
 	}
 
 	// Reads string arguments from the given input and returns them as a string
@@ -418,42 +452,8 @@ public class Script {
 		return args;
 	}
 
-	// Checks that the current token is a terminator symbol. If not, an
-	// exception is thrown.
-	private void checkTerminator() throws ScriptException {
-		if (input.getTokenType() != ScriptTokenizer.TYPE_SYMBOL) {
-			if (input.hasMoreTokens())
-				scriptError("too many arguments");
-			else
-				scriptError("Script ends without a terminator");
-		} else if (input.getSymbol() != ',' && input.getSymbol() != ';' && input.getSymbol() != '!')
-			scriptError("Illegal terminator: '" + input.getSymbol() + "'");
-	}
-
 	// Throws a script exception with the given message.
 	private void scriptError(String message) throws ScriptException {
 		throw new ScriptException(message, scriptName, input.getLineNumber());
-	}
-
-	/**
-	 * Returns the command at the given index. Assumes a legal index.
-	 */
-	public Command getCommandAt(int index) {
-		return (Command) commands.elementAt(index);
-	}
-
-	/**
-	 * Returns the script line number of the command at the given index. Assumes
-	 * a legal index.
-	 */
-	public int getLineNumberAt(int index) {
-		return ((Integer) lineNumbers.elementAt(index)).intValue();
-	}
-
-	/**
-	 * Returns the number of commands in the script.
-	 */
-	public int getLength() {
-		return commands.size();
 	}
 }

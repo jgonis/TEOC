@@ -30,19 +30,39 @@ import Hack.Controller.HackSimulatorGUI;
 public interface CPUEmulatorGUI extends HackSimulatorGUI {
 
 	/**
+	 * Registers the given listener to listen to key events.
+	 */
+	public void addKeyListener(KeyListener listener);
+
+	/**
+	 * Returns the A register GUI component.
+	 */
+	public RegisterGUI getA();
+
+	/**
+	 * Returns the ALU GUI component.
+	 */
+	public ALUGUI getALU();
+
+	/**
 	 * Returns the bus GUI component.
 	 */
 	public BusGUI getBus();
 
 	/**
-	 * Returns the screen GUI component.
+	 * Returns the D register GUI component.
 	 */
-	public ScreenGUI getScreen();
+	public RegisterGUI getD();
 
 	/**
 	 * Returns the keyboard GUI component.
 	 */
 	public KeyboardGUI getKeyboard();
+
+	/**
+	 * Returns the PC register GUI component.
+	 */
+	public RegisterGUI getPC();
 
 	/**
 	 * Returns the RAM GUI component.
@@ -55,29 +75,9 @@ public interface CPUEmulatorGUI extends HackSimulatorGUI {
 	public ROMGUI getROM();
 
 	/**
-	 * Returns the A register GUI component.
+	 * Returns the screen GUI component.
 	 */
-	public RegisterGUI getA();
-
-	/**
-	 * Returns the D register GUI component.
-	 */
-	public RegisterGUI getD();
-
-	/**
-	 * Returns the PC register GUI component.
-	 */
-	public RegisterGUI getPC();
-
-	/**
-	 * Returns the ALU GUI component.
-	 */
-	public ALUGUI getALU();
-
-	/**
-	 * Registers the given listener to listen to key events.
-	 */
-	public void addKeyListener(KeyListener listener);
+	public ScreenGUI getScreen();
 
 	/**
 	 * Sets the focus on the CPUEmulator's frame

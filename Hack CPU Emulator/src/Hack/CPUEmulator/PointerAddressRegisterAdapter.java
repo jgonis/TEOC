@@ -44,6 +44,30 @@ public class PointerAddressRegisterAdapter extends Register {
 		updatePointer = true;
 	}
 
+	public void refreshGUI() {
+		quietUpdateGUI(0, value);
+		if (updatePointer)
+			memory.setPointerAddress(value);
+	}
+
+	public void reset() {
+		super.reset();
+
+		if (updatePointer)
+			memory.setPointerAddress(0);
+	}
+
+	/**
+	 * If updatePointer is true, changes in the register's value will set the
+	 * ram pointer accordingly. Otherwise, changes in the value will not affect
+	 * the ram's pointer.
+	 */
+	public void setUpdatePointer(boolean updatePointer) {
+		this.updatePointer = updatePointer;
+		if (updatePointer)
+			memory.setPointerAddress(value);
+	}
+
 	public void setValueAt(int index, short value, boolean quiet) {
 		super.setValueAt(0, value, quiet);
 		if (updatePointer)
@@ -57,29 +81,5 @@ public class PointerAddressRegisterAdapter extends Register {
 		super.valueChanged(event);
 		if (updatePointer)
 			memory.setPointerAddress(event.getValue());
-	}
-
-	public void reset() {
-		super.reset();
-
-		if (updatePointer)
-			memory.setPointerAddress(0);
-	}
-
-	public void refreshGUI() {
-		quietUpdateGUI(0, value);
-		if (updatePointer)
-			memory.setPointerAddress(value);
-	}
-
-	/**
-	 * If updatePointer is true, changes in the register's value will set the
-	 * ram pointer accordingly. Otherwise, changes in the value will not affect
-	 * the ram's pointer.
-	 */
-	public void setUpdatePointer(boolean updatePointer) {
-		this.updatePointer = updatePointer;
-		if (updatePointer)
-			memory.setPointerAddress(value);
 	}
 }
