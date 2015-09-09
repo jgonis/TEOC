@@ -61,9 +61,9 @@ public class HardwareSimulatorControllerComponent extends ControllerComponent
 	 * Constructs a new HardwareSimulatorControllerComponent.
 	 */
 	public HardwareSimulatorControllerComponent() {
-		scriptComponent.updateSize(516, 592);
-		outputComponent.updateSize(516, 592);
-		comparisonComponent.updateSize(516, 592);
+		m_scriptComponent.updateSize(516, 592);
+		m_outputComponent.updateSize(516, 592);
+		m_comparisonComponent.updateSize(516, 592);
 	}
 
 	/**
@@ -74,34 +74,34 @@ public class HardwareSimulatorControllerComponent extends ControllerComponent
 
 		super.arrangeMenu();
 
-		fileMenu.removeAll();
+		m_fileMenu.removeAll();
 
 		loadChipMenuItem = new JMenuItem("Load Chip", KeyEvent.VK_L);
 		loadChipMenuItem.addActionListener(e -> loadChipMenuItem_actionPerformed(e));
-		fileMenu.add(loadChipMenuItem);
+		m_fileMenu.add(loadChipMenuItem);
 
-		fileMenu.add(scriptMenuItem);
+		m_fileMenu.add(m_scriptMenuItem);
 
-		fileMenu.addSeparator();
-		fileMenu.add(exitMenuItem);
+		m_fileMenu.addSeparator();
+		m_fileMenu.add(m_exitMenuItem);
 
-		runMenu.removeAll();
-		runMenu.add(singleStepMenuItem);
-		runMenu.add(ffwdMenuItem);
-		runMenu.add(stopMenuItem);
-		runMenu.add(rewindMenuItem);
-		runMenu.addSeparator();
+		m_runMenu.removeAll();
+		m_runMenu.add(m_singleStepMenuItem);
+		m_runMenu.add(m_ffwdMenuItem);
+		m_runMenu.add(m_stopMenuItem);
+		m_runMenu.add(m_rewindMenuItem);
+		m_runMenu.addSeparator();
 
 		evalMenuItem = new JMenuItem("Eval", KeyEvent.VK_E);
 		evalMenuItem.addActionListener(e -> evalMenuItem_actionPerformed(e));
-		runMenu.add(evalMenuItem);
+		m_runMenu.add(evalMenuItem);
 
 		tickTockMenuItem = new JMenuItem("Tick Tock", KeyEvent.VK_C);
 		tickTockMenuItem.addActionListener(e -> tickTockMenuItem_actionPerformed(e));
 
-		runMenu.add(tickTockMenuItem);
-		runMenu.addSeparator();
-		runMenu.add(breakpointsMenuItem);
+		m_runMenu.add(tickTockMenuItem);
+		m_runMenu.addSeparator();
+		m_runMenu.add(m_breakpointsMenuItem);
 	}
 
 	/**
@@ -109,25 +109,25 @@ public class HardwareSimulatorControllerComponent extends ControllerComponent
 	 */
 	@Override
 	protected void arrangeToolBar() {
-		toolBar.setSize(TOOLBAR_WIDTH, TOOLBAR_HEIGHT);
-		toolBar.add(loadChipButton);
-		toolBar.addSeparator(separatorDimension);
-		toolBar.add(singleStepButton);
-		toolBar.add(ffwdButton);
-		toolBar.add(stopButton);
-		toolBar.add(rewindButton);
-		toolBar.addSeparator(separatorDimension);
-		toolBar.add(evalButton);
-		toolBar.add(tickTockButton);
-		toolBar.addSeparator(separatorDimension);
-		toolBar.add(scriptButton);
-		toolBar.add(breakButton);
-		toolBar.addSeparator(separatorDimension);
-		toolBar.add(speedSlider);
-		toolBar.addSeparator(separatorDimension);
-		toolBar.add(animationCombo);
-		toolBar.add(formatCombo);
-		toolBar.add(additionalDisplayCombo);
+		m_toolBar.setSize(TOOLBAR_WIDTH, TOOLBAR_HEIGHT);
+		m_toolBar.add(loadChipButton);
+		m_toolBar.addSeparator(separatorDimension);
+		m_toolBar.add(m_singleStepButton);
+		m_toolBar.add(m_ffwdButton);
+		m_toolBar.add(m_stopButton);
+		m_toolBar.add(m_rewindButton);
+		m_toolBar.addSeparator(separatorDimension);
+		m_toolBar.add(evalButton);
+		m_toolBar.add(tickTockButton);
+		m_toolBar.addSeparator(separatorDimension);
+		m_toolBar.add(m_scriptButton);
+		m_toolBar.add(m_breakButton);
+		m_toolBar.addSeparator(separatorDimension);
+		m_toolBar.add(m_speedSlider);
+		m_toolBar.addSeparator(separatorDimension);
+		m_toolBar.add(m_animationCombo);
+		m_toolBar.add(m_formatCombo);
+		m_toolBar.add(m_additionalDisplayCombo);
 	}
 
 	@Override
