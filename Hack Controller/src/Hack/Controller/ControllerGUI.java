@@ -165,7 +165,7 @@ public interface ControllerGUI {
 	/**
 	 * Sets the breakpoints list with the given one.
 	 */
-	public void setBreakpoints(Vector breakpoints);
+	public void setBreakpoints(Vector<Breakpoint> breakpoints);
 
 	/**
 	 * Sets the comparison file name with the given one.

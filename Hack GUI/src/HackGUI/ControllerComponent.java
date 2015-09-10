@@ -46,6 +46,7 @@ import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 
+import Hack.Controller.Breakpoint;
 import Hack.Controller.ControllerEvent;
 import Hack.Controller.ControllerEventListener;
 import Hack.Controller.ControllerGUI;
@@ -1007,7 +1008,7 @@ public class ControllerComponent extends JFrame
 	 * Sets the breakpoints list with the given one.
 	 */
 	@Override
-	public void setBreakpoints(Vector breakpoints) {
+	public void setBreakpoints(Vector<Breakpoint> breakpoints) {
 		// sending the given Vector to the breakpoint panel.
 		m_breakpointWindow.setBreakpoints(breakpoints);
 	}
