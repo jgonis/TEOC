@@ -38,6 +38,7 @@ import HackGUI.Utilities;
 public class HardwareSimulatorControllerComponent extends ControllerComponent
 		implements HardwareSimulatorControllerGUI/* , ChipNameListener */ {
 
+	private static final long serialVersionUID = -6483469225807068246L;
 	// The buttons of this component.
 	private MouseOverJButton loadChipButton;
 	private MouseOverJButton tickTockButton;
