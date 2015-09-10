@@ -43,16 +43,20 @@ import Hack.Controller.Breakpoint;
  */
 public class BreakpointWindow extends JFrame implements MouseListener, BreakpointChangedListener {
 
+	private static final long serialVersionUID = -8333628702063043709L;
+
 	// An inner class representing the model of the breakpoint table.
 	class BreakpointTableModel extends AbstractTableModel {
-		String[] columnNames = { "Variable Name", "Value" };
+		
+		private static final long serialVersionUID = -2915405766410292378L;
+		private String[] m_columnNames = { "Variable Name", "Value" };
 
 		/**
 		 * Returns the number of columns.
 		 */
 		@Override
 		public int getColumnCount() {
-			return columnNames.length;
+			return m_columnNames.length;
 		}
 
 		/**
@@ -60,7 +64,7 @@ public class BreakpointWindow extends JFrame implements MouseListener, Breakpoin
 		 */
 		@Override
 		public String getColumnName(int col) {
-			return columnNames[col];
+			return m_columnNames[col];
 		}
 
 		/**
@@ -68,7 +72,7 @@ public class BreakpointWindow extends JFrame implements MouseListener, Breakpoin
 		 */
 		@Override
 		public int getRowCount() {
-			return breakpoints.size();
+			return m_breakpoints.size();
 		}
 
 		/**
@@ -76,7 +80,7 @@ public class BreakpointWindow extends JFrame implements MouseListener, Breakpoin
 		 */
 		@Override
 		public Object getValueAt(int row, int col) {
-			Breakpoint breakpoint = (Breakpoint) breakpoints.elementAt(row);
+			Breakpoint breakpoint = (Breakpoint) m_breakpoints.elementAt(row);
 
 			if (col == 0) {
 				return breakpoint.getVarName();
@@ -97,8 +101,8 @@ public class BreakpointWindow extends JFrame implements MouseListener, Breakpoin
 		 * Removes a row from this table.
 		 */
 		public void removeRow(int index) {
-			if (breakpoints.size() > 0) {
-				breakpoints.removeElementAt(index);
+			if (m_breakpoints.size() > 0) {
+				m_breakpoints.removeElementAt(index);
 			}
 		}
 	}
@@ -108,11 +112,13 @@ public class BreakpointWindow extends JFrame implements MouseListener, Breakpoin
 	// the feature of coloring the background of a specific cell.
 	class ColoredTableCellRenderer extends DefaultTableCellRenderer {
 
+		private static final long serialVersionUID = -2354977458846732061L;
+
 		@Override
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean selected, boolean focused,
 				int row, int column) {
 			setEnabled((table == null) || table.isEnabled());
-			if (((Breakpoint) breakpoints.elementAt(row)).isReached()) {
+			if (((Breakpoint) m_breakpoints.elementAt(row)).isReached()) {
 				setBackground(Color.red);
 			} else {
 				setBackground(null);
@@ -124,49 +130,49 @@ public class BreakpointWindow extends JFrame implements MouseListener, Breakpoin
 	}
 
 	// The table of breakpoints.
-	private JTable breakpointTable;
+	private JTable m_breakpointTable;
 
 	// The vector of breakpoints.
-	private Vector breakpoints;
+	private Vector<Breakpoint> m_breakpoints;
 
 	// The model of this table.
-	private BreakpointTableModel model;
+	private BreakpointTableModel m_model;
 
 	// A vector containing the listeners to this object.
-	private Vector listeners;
+	private Vector<BreakpointsChangedListener> m_listeners;
 	// The layout of this component.
-	private FlowLayout flowLayout = new FlowLayout();
+	private FlowLayout m_flowLayout = new FlowLayout();
 	// The add remove and ok buttons.
-	private JButton addButton = new JButton();
+	private JButton m_addButton = new JButton();
 
-	private JButton removeButton = new JButton();
+	private JButton m_removeButton = new JButton();
 
-	private JButton okButton = new JButton();
+	private JButton m_okButton = new JButton();
 	// The cell renderer of the table.
-	private ColoredTableCellRenderer coloredRenderer = new ColoredTableCellRenderer();
+	private ColoredTableCellRenderer m_coloredRenderer = new ColoredTableCellRenderer();
 	// Creating icons.
-	private ImageIcon addIcon = new ImageIcon(Utilities.imagesDir + "smallplus.gif");
+	private ImageIcon m_addIcon = new ImageIcon(Utilities.imagesDir + "smallplus.gif");
 
-	private ImageIcon removeIcon = new ImageIcon(Utilities.imagesDir + "smallminus.gif");
+	private ImageIcon m_removeIcon = new ImageIcon(Utilities.imagesDir + "smallminus.gif");
 
-	private ImageIcon okIcon = new ImageIcon(Utilities.imagesDir + "ok2.gif");
+	private ImageIcon m_okIcon = new ImageIcon(Utilities.imagesDir + "ok2.gif");
 
 	// Creating the window which allows adding and editing a given breakpoint.
-	private BreakpointVariablesWindow variables = new BreakpointVariablesWindow();
+	private BreakpointVariablesWindow m_variables = new BreakpointVariablesWindow();
 
 	// The selected row in the breakpoint table.
-	private int selectedRowIndex = -1;
+	private int m_selectedRowIndex = -1;
 
 	/**
 	 * Constructs a new BreakpointWindow.
 	 */
 	public BreakpointWindow() {
 		super("Breakpoint Panel");
-		breakpoints = new Vector();
-		model = new BreakpointTableModel();
-		breakpointTable = new JTable(model);
-		breakpointTable.setDefaultRenderer(breakpointTable.getColumnClass(0), coloredRenderer);
-		listeners = new Vector();
+		m_breakpoints = new Vector<Breakpoint>();
+		m_model = new BreakpointTableModel();
+		m_breakpointTable = new JTable(m_model);
+		m_breakpointTable.setDefaultRenderer(m_breakpointTable.getColumnClass(0), m_coloredRenderer);
+		m_listeners = new Vector<BreakpointsChangedListener>();
 		setResizable(false);
 
 		jbInit();
@@ -177,19 +183,19 @@ public class BreakpointWindow extends JFrame implements MouseListener, Breakpoin
 	 * component.
 	 */
 	public void addBreakpointListener(BreakpointsChangedListener listener) {
-		listeners.addElement(listener);
+		m_listeners.addElement(listener);
 	}
 
 	/**
 	 * Implementing the action of pressing the add button.
 	 */
 	public void addButton_actionPerformed(ActionEvent e) {
-		breakpointTable.clearSelection();
-		selectedRowIndex = -1;
-		variables.setNameCombo(0);
-		variables.setBreakpointName("");
-		variables.setBreakpointValue("");
-		variables.showWindow();
+		m_breakpointTable.clearSelection();
+		m_selectedRowIndex = -1;
+		m_variables.setNameCombo(0);
+		m_variables.setBreakpointName("");
+		m_variables.setBreakpointValue("");
+		m_variables.showWindow();
 	}
 
 	/**
@@ -199,12 +205,12 @@ public class BreakpointWindow extends JFrame implements MouseListener, Breakpoin
 	@Override
 	public void breakpointChanged(BreakpointChangedEvent event) {
 		Breakpoint p = event.getBreakpoint();
-		if (selectedRowIndex == -1) {
-			breakpoints.addElement(p);
+		if (m_selectedRowIndex == -1) {
+			m_breakpoints.addElement(p);
 		} else {
-			breakpoints.setElementAt(p, selectedRowIndex);
+			m_breakpoints.setElementAt(p, m_selectedRowIndex);
 		}
-		breakpointTable.revalidate();
+		m_breakpointTable.revalidate();
 		repaint();
 		notifyListeners();
 	}
@@ -213,34 +219,34 @@ public class BreakpointWindow extends JFrame implements MouseListener, Breakpoin
 	 * Returns the breakpoints table.
 	 */
 	public JTable getTable() {
-		return breakpointTable;
+		return m_breakpointTable;
 	}
 
 	// Initializes this window.
 	private void jbInit() {
-		variables.addListener(this);
-		this.getContentPane().setLayout(flowLayout);
-		breakpointTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		breakpointTable.addMouseListener(this);
-		breakpointTable.getSelectionModel();
-		JScrollPane scrollPane = new JScrollPane(breakpointTable);
+		m_variables.addListener(this);
+		this.getContentPane().setLayout(m_flowLayout);
+		m_breakpointTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		m_breakpointTable.addMouseListener(this);
+		m_breakpointTable.getSelectionModel();
+		JScrollPane scrollPane = new JScrollPane(m_breakpointTable);
 		scrollPane.setPreferredSize(new Dimension(190, 330));
-		addButton.setPreferredSize(new Dimension(35, 25));
-		addButton.setToolTipText("Add breakpoint");
-		addButton.setIcon(addIcon);
-		addButton.addActionListener(e -> addButton_actionPerformed(e));
-		removeButton.setPreferredSize(new Dimension(35, 25));
-		removeButton.setToolTipText("Remove breakpoint");
-		removeButton.setIcon(removeIcon);
-		removeButton.addActionListener(e -> removeButton_actionPerformed(e));
-		okButton.setPreferredSize(new Dimension(35, 25));
-		okButton.setToolTipText("OK");
-		okButton.setIcon(okIcon);
-		okButton.addActionListener(e -> okButton_actionPerformed(e));
+		m_addButton.setPreferredSize(new Dimension(35, 25));
+		m_addButton.setToolTipText("Add breakpoint");
+		m_addButton.setIcon(m_addIcon);
+		m_addButton.addActionListener(e -> addButton_actionPerformed(e));
+		m_removeButton.setPreferredSize(new Dimension(35, 25));
+		m_removeButton.setToolTipText("Remove breakpoint");
+		m_removeButton.setIcon(m_removeIcon);
+		m_removeButton.addActionListener(e -> removeButton_actionPerformed(e));
+		m_okButton.setPreferredSize(new Dimension(35, 25));
+		m_okButton.setToolTipText("OK");
+		m_okButton.setIcon(m_okIcon);
+		m_okButton.addActionListener(e -> okButton_actionPerformed(e));
 		this.getContentPane().add(scrollPane, null);
-		this.getContentPane().add(addButton, null);
-		this.getContentPane().add(removeButton, null);
-		this.getContentPane().add(okButton, null);
+		this.getContentPane().add(m_addButton, null);
+		this.getContentPane().add(m_removeButton, null);
+		this.getContentPane().add(m_okButton, null);
 		setSize(210, 410);
 		setLocation(250, 250);
 	}
@@ -251,12 +257,12 @@ public class BreakpointWindow extends JFrame implements MouseListener, Breakpoin
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		if (e.getClickCount() == 2) {
-			int row = breakpointTable.getSelectedRow();
-			selectedRowIndex = row;
-			variables.setBreakpointName(((Breakpoint) breakpoints.elementAt(row)).getVarName());
-			variables.setBreakpointValue(((Breakpoint) breakpoints.elementAt(row)).getValue());
+			int row = m_breakpointTable.getSelectedRow();
+			m_selectedRowIndex = row;
+			m_variables.setBreakpointName(((Breakpoint) m_breakpoints.elementAt(row)).getVarName());
+			m_variables.setBreakpointValue(((Breakpoint) m_breakpoints.elementAt(row)).getValue());
 			// variables.setVisible(true);
-			variables.showWindow();
+			m_variables.showWindow();
 		}
 
 	}
@@ -295,9 +301,9 @@ public class BreakpointWindow extends JFrame implements MouseListener, Breakpoin
 	 * breakpointChanged method to all of the listeners.
 	 */
 	public void notifyListeners() {
-		BreakpointsChangedEvent event = new BreakpointsChangedEvent(this, breakpoints);
-		for (int i = 0; i < listeners.size(); i++) {
-			((BreakpointsChangedListener) listeners.elementAt(i)).breakpointsChanged(event);
+		BreakpointsChangedEvent event = new BreakpointsChangedEvent(this, m_breakpoints);
+		for (int i = 0; i < m_listeners.size(); i++) {
+			((BreakpointsChangedListener) m_listeners.elementAt(i)).breakpointsChanged(event);
 		}
 	}
 
@@ -313,17 +319,17 @@ public class BreakpointWindow extends JFrame implements MouseListener, Breakpoin
 	 * this component.
 	 */
 	public void removeBreakpointListener(BreakpointsChangedListener listener) {
-		listeners.removeElement(listener);
+		m_listeners.removeElement(listener);
 	}
 
 	/**
 	 * Implementing the action of pressing the remove button.
 	 */
 	public void removeButton_actionPerformed(ActionEvent e) {
-		int selectedRow = breakpointTable.getSelectedRow();
-		if ((selectedRow >= 0) && (selectedRow < breakpointTable.getRowCount())) {
-			model.removeRow(breakpointTable.getSelectedRow());
-			breakpointTable.revalidate();
+		int selectedRow = m_breakpointTable.getSelectedRow();
+		if ((selectedRow >= 0) && (selectedRow < m_breakpointTable.getRowCount())) {
+			m_model.removeRow(m_breakpointTable.getSelectedRow());
+			m_breakpointTable.revalidate();
 			notifyListeners();
 		}
 	}
@@ -331,15 +337,16 @@ public class BreakpointWindow extends JFrame implements MouseListener, Breakpoin
 	/**
 	 * Sets the breakpoints list with the given one.
 	 */
-	public void setBreakpoints(Vector breakpoints) {
-		this.breakpoints = (Vector) breakpoints.clone();
-		breakpointTable.revalidate();
+	@SuppressWarnings("unchecked")
+	public void setBreakpoints(Vector<Breakpoint> breakpoints) {
+		this.m_breakpoints = (Vector<Breakpoint>) breakpoints.clone();
+		m_breakpointTable.revalidate();
 	}
 
 	/**
 	 * Sets the list of recognized variables with the given one.
 	 */
 	public void setVariables(String[] newVars) {
-		variables.setVariables(newVars);
+		m_variables.setVariables(newVars);
 	}
 }
