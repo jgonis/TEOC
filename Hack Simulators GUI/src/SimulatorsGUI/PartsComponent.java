@@ -204,7 +204,7 @@ public class PartsComponent extends JPanel implements PartsGUI {
 	}
 
 	/**
-	 * Resets the contents of this parts compoennt.
+	 * Resets the contents of this parts component.
 	 */
 	@Override
 	public void reset() {
