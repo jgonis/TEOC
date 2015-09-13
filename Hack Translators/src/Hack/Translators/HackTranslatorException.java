@@ -19,6 +19,8 @@ package Hack.Translators;
 
 public class HackTranslatorException extends Exception {
 
+	private static final long serialVersionUID = -313707791887674347L;
+
 	/**
 	 * Constructs a new HackTranslatorException with the given message.
 	 */

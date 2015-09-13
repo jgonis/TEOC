@@ -25,6 +25,8 @@ import java.util.EventObject;
  */
 public class HackTranslatorEvent extends EventObject {
 
+	private static final long serialVersionUID = -4268168837178092819L;
+
 	/**
 	 * Action code for performing the single step operation. supplied data =
 	 * null
@@ -66,10 +68,10 @@ public class HackTranslatorEvent extends EventObject {
 	public static final byte SOURCE_LOAD = 7;
 
 	// the action code
-	private byte action;
+	private byte m_action;
 
 	// the supplied data
-	private Object data;
+	private Object m_data;
 
 	/**
 	 * Constructs a new HackTranslatorEvent with given source, the action code
@@ -77,21 +79,21 @@ public class HackTranslatorEvent extends EventObject {
 	 */
 	public HackTranslatorEvent(Object source, byte action, Object data) {
 		super(source);
-		this.action = action;
-		this.data = data;
+		this.m_action = action;
+		this.m_data = data;
 	}
 
 	/**
 	 * Returns the event's action code.
 	 */
 	public byte getAction() {
-		return action;
+		return m_action;
 	}
 
 	/**
 	 * Returns the event's supplied data.
 	 */
 	public Object getData() {
-		return data;
+		return m_data;
 	}
 }

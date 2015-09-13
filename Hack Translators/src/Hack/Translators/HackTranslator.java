@@ -52,15 +52,15 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
 
 		@Override
 		public void run() {
-			gui.displayMessage("Please wait...", false);
+			m_gui.displayMessage("Please wait...", false);
 
 			try {
 				restartCompilation();
 				fullCompilation();
 			} catch (HackTranslatorException ae) {
 				end(false);
-				gui.getSource().addHighlight(sourcePC, true);
-				gui.displayMessage(ae.getMessage(), true);
+				m_gui.getSource().addHighlight(m_sourcePC, true);
+				m_gui.displayMessage(ae.getMessage(), true);
 			}
 		}
 	}
@@ -74,8 +74,8 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
 			try {
 				loadSource(fileName);
 			} catch (HackTranslatorException ae) {
-				gui.setSourceName("");
-				gui.displayMessage(ae.getMessage(), true);
+				m_gui.setSourceName("");
+				m_gui.displayMessage(ae.getMessage(), true);
 			}
 		}
 
@@ -88,7 +88,7 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
 	class SingleStepTask implements Runnable {
 		@Override
 		public void run() {
-			if (!singleStepLocked) {
+			if (!m_singleStepLocked) {
 				singleStep();
 			}
 		}
@@ -103,55 +103,55 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
 	}
 
 	// the writer of the destination file
-	private PrintWriter writer;
+	private PrintWriter m_writer;
 
 	// the name of the source file
-	protected String sourceFileName;
+	protected String m_sourceFileName;
 
 	// the name of the destination file
-	protected String destFileName;
+	protected String m_destFileName;
 
 	// The size of the program.
-	protected int programSize;
+	protected int m_programSize;
 
 	// The program array
-	protected short[] program;
+	protected short[] m_program;
 
 	// The source code array
-	protected String[] source;
+	protected String[] m_source;
 
 	// The gui of the HackTranslator
-	protected HackTranslatorGUI gui;
+	protected HackTranslatorGUI m_gui;
 
 	// times the fast forward process
-	private Timer timer;
+	private Timer m_timer;
 
 	// locked when single step in process
-	private boolean singleStepLocked;
+	private boolean m_singleStepLocked;
 
 	// The Single Step task object
-	private SingleStepTask singleStepTask;
+	private SingleStepTask m_singleStepTask;
 
 	// The full compilation task object
-	private FullCompilationTask fullCompilationTask;
+	private FullCompilationTask m_fullCompilationTask;
 
 	// The fast forward task object
-	private FastForwardTask fastForwardTask;
+	private FastForwardTask m_fastForwardTask;
 
 	// The load source task object
-	private LoadSourceTask loadSourceTask;
+	private LoadSourceTask m_loadSourceTask;
 
 	// True when compilation started already with singlestep or fastforward
-	protected boolean compilationStarted;
+	protected boolean m_compilationStarted;
 
 	// The index of the next location to compile into in the destination file.
-	protected int destPC;
+	protected int m_destPC;
 
 	// The index of the next location to compile in the source file.
-	protected int sourcePC;
+	protected int m_sourcePC;
 
 	// If true, change to the translator will be displayed in its GUI.
-	private boolean updateGUI;
+	private boolean m_updateGUI;
 
 	// Maps between lines in the source files and their corresponding compiled
 	// lines
@@ -159,13 +159,13 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
 	// the value is an int array of length 2, containing start and end pc of the
 	// destination
 	// file.
-	protected Hashtable compilationMap;
+	protected Hashtable<Integer, int[]> m_compilationMap;
 
 	// true only in the process of full compilation
-	protected boolean inFullCompilation;
+	protected boolean m_inFullCompilation;
 
 	// true only in the process of Fast Forward
-	protected boolean inFastForward;
+	protected boolean m_inFastForward;
 
 	/**
 	 * Constructs a new HackTranslator with the size of the program memory. The
@@ -175,15 +175,15 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
 	 */
 	public HackTranslator(HackTranslatorGUI gui, int size, short nullValue, String sourceFileName)
 			throws HackTranslatorException {
-		this.gui = gui;
+		this.m_gui = gui;
 		gui.addHackTranslatorListener(this);
 		gui.getSource().addTextFileListener(this);
 		gui.setTitle(getName() + getVersionString());
-		singleStepTask = new SingleStepTask();
-		fullCompilationTask = new FullCompilationTask();
-		fastForwardTask = new FastForwardTask();
-		loadSourceTask = new LoadSourceTask();
-		timer = new Timer(FAST_FORWARD_DELAY, this);
+		m_singleStepTask = new SingleStepTask();
+		m_fullCompilationTask = new FullCompilationTask();
+		m_fastForwardTask = new FastForwardTask();
+		m_loadSourceTask = new LoadSourceTask();
+		m_timer = new Timer(FAST_FORWARD_DELAY, this);
 		init(size, nullValue);
 
 		File workingDir = loadWorkingDir();
@@ -219,7 +219,7 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
 
 		checkSourceFile(fileName);
 
-		source = new String[0];
+		m_source = new String[0];
 		init(size, nullValue);
 
 		loadSource(fileName);
@@ -235,7 +235,7 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (!singleStepLocked) {
+		if (!m_singleStepLocked) {
 			singleStep();
 		}
 	}
@@ -249,9 +249,9 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
 			String fileName = (String) event.getData();
 			File file = new File(fileName);
 			saveWorkingDir(file);
-			gui.setTitle(getName() + getVersionString() + " - " + fileName);
-			loadSourceTask.setFileName(fileName);
-			t = new Thread(loadSourceTask);
+			m_gui.setTitle(getName() + getVersionString() + " - " + fileName);
+			m_loadSourceTask.setFileName(fileName);
+			t = new Thread(m_loadSourceTask);
 			t.start();
 			break;
 
@@ -260,32 +260,32 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
 			fileName = (String) event.getData();
 			try {
 				checkDestinationFile(fileName);
-				destFileName = fileName;
+				m_destFileName = fileName;
 				file = new File(fileName);
 				saveWorkingDir(file);
-				gui.setTitle(getName() + getVersionString() + " - " + fileName);
+				m_gui.setTitle(getName() + getVersionString() + " - " + fileName);
 				save();
 			} catch (HackTranslatorException ae) {
-				gui.setDestinationName("");
-				gui.displayMessage(ae.getMessage(), true);
+				m_gui.setDestinationName("");
+				m_gui.displayMessage(ae.getMessage(), true);
 			}
 			break;
 
 		case HackTranslatorEvent.SINGLE_STEP:
 			clearMessage();
-			if (sourceFileName == null) {
-				gui.displayMessage("No source file specified", true);
-			} else if (destFileName == null) {
-				gui.displayMessage("No destination file specified", true);
+			if (m_sourceFileName == null) {
+				m_gui.displayMessage("No source file specified", true);
+			} else if (m_destFileName == null) {
+				m_gui.displayMessage("No destination file specified", true);
 			} else {
-				t = new Thread(singleStepTask);
+				t = new Thread(m_singleStepTask);
 				t.start();
 			}
 			break;
 
 		case HackTranslatorEvent.FAST_FORWARD:
 			clearMessage();
-			t = new Thread(fastForwardTask);
+			t = new Thread(m_fastForwardTask);
 			t.start();
 			break;
 
@@ -300,7 +300,7 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
 
 		case HackTranslatorEvent.FULL_COMPILATION:
 			clearMessage();
-			t = new Thread(fullCompilationTask);
+			t = new Thread(m_fullCompilationTask);
 			t.start();
 			break;
 
@@ -312,13 +312,13 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
 	 * HackTranslatorException if the program is too large
 	 */
 	protected void addCommand(short command) throws HackTranslatorException {
-		if (destPC >= program.length) {
+		if (m_destPC >= m_program.length) {
 			throw new HackTranslatorException("Program too large");
 		}
 
-		program[destPC++] = command;
-		if (updateGUI) {
-			gui.getDestination().addLine(getCodeString(command, destPC - 1, true));
+		m_program[m_destPC++] = command;
+		if (m_updateGUI) {
+			m_gui.getDestination().addLine(getCodeString(command, m_destPC - 1, true));
 		}
 	}
 
@@ -346,7 +346,7 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
 
 	// Clears the message display.
 	protected void clearMessage() {
-		gui.displayMessage("", false);
+		m_gui.displayMessage("", false);
 	}
 
 	/**
@@ -365,12 +365,12 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
 	protected int[] compileLineAndCount(String line) throws HackTranslatorException {
 		int[] result = null;
 
-		int startPC = destPC;
+		int startPC = m_destPC;
 		compileLine(line);
-		int length = destPC - startPC;
+		int length = m_destPC - startPC;
 
 		if (length > 0) {
-			result = new int[] { startPC, destPC - 1 };
+			result = new int[] { startPC, m_destPC - 1 };
 		}
 
 		return result;
@@ -380,10 +380,10 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
 	 * Dumps the contents of the translated program into the destination file
 	 */
 	private void dumpToFile() {
-		for (short i = 0; i < programSize; i++) {
-			writer.println(getCodeString(program[i], i, false));
+		for (short i = 0; i < m_programSize; i++) {
+			m_writer.println(getCodeString(m_program[i], i, false));
 		}
-		writer.close();
+		m_writer.close();
 	}
 
 	/**
@@ -391,15 +391,15 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
 	 * the compiler after this), with an option to hide the pointers as well.
 	 */
 	protected void end(boolean hidePointers) {
-		timer.stop();
-		gui.disableSingleStep();
-		gui.disableFastForward();
-		gui.disableStop();
-		gui.enableRewind();
-		gui.disableFullCompilation();
-		gui.enableLoadSource();
+		m_timer.stop();
+		m_gui.disableSingleStep();
+		m_gui.disableFastForward();
+		m_gui.disableStop();
+		m_gui.enableRewind();
+		m_gui.disableFullCompilation();
+		m_gui.enableLoadSource();
 
-		inFastForward = false;
+		m_inFastForward = false;
 
 		if (hidePointers) {
 			hidePointers();
@@ -411,23 +411,23 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
 	 * line number.
 	 */
 	protected void error(String message) throws HackTranslatorException {
-		throw new HackTranslatorException(message, sourcePC);
+		throw new HackTranslatorException(message, m_sourcePC);
 	}
 
 	/**
 	 * starts the fast forward mode.
 	 */
 	protected void fastForward() {
-		gui.disableSingleStep();
-		gui.disableFastForward();
-		gui.enableStop();
-		gui.disableRewind();
-		gui.disableFullCompilation();
-		gui.disableLoadSource();
+		m_gui.disableSingleStep();
+		m_gui.disableFastForward();
+		m_gui.enableStop();
+		m_gui.disableRewind();
+		m_gui.disableFullCompilation();
+		m_gui.disableLoadSource();
 
-		inFastForward = true;
+		m_inFastForward = true;
 
-		timer.start();
+		m_timer.start();
 	}
 
 	/**
@@ -439,48 +439,48 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
 	private void fullCompilation() throws HackTranslatorException {
 
 		try {
-			inFullCompilation = true;
+			m_inFullCompilation = true;
 			initCompilation();
 
-			if (gui != null) {
-				gui.disableSingleStep();
-				gui.disableFastForward();
-				gui.disableRewind();
-				gui.disableFullCompilation();
-				gui.disableLoadSource();
+			if (m_gui != null) {
+				m_gui.disableSingleStep();
+				m_gui.disableFastForward();
+				m_gui.disableRewind();
+				m_gui.disableFullCompilation();
+				m_gui.disableLoadSource();
 
-				gui.getSource().setContents(sourceFileName);
+				m_gui.getSource().setContents(m_sourceFileName);
 			}
 
-			updateGUI = false;
+			m_updateGUI = false;
 
-			while (sourcePC < source.length) {
-				int[] compiledRange = compileLineAndCount(source[sourcePC]);
+			while (m_sourcePC < m_source.length) {
+				int[] compiledRange = compileLineAndCount(m_source[m_sourcePC]);
 				if (compiledRange != null) {
-					compilationMap.put(new Integer(sourcePC), compiledRange);
+					m_compilationMap.put(new Integer(m_sourcePC), compiledRange);
 				}
 
-				sourcePC++;
+				m_sourcePC++;
 			}
 
 			successfulCompilation();
 			finalizeCompilation();
 
-			programSize = destPC;
+			m_programSize = m_destPC;
 
-			if (gui != null) {
-				showProgram(programSize);
-				gui.getDestination().clearHighlights();
-				gui.enableRewind();
-				gui.enableLoadSource();
-				gui.enableSave();
-				gui.enableSourceRowSelection();
+			if (m_gui != null) {
+				showProgram(m_programSize);
+				m_gui.getDestination().clearHighlights();
+				m_gui.enableRewind();
+				m_gui.enableLoadSource();
+				m_gui.enableSave();
+				m_gui.enableSourceRowSelection();
 			}
 
-			inFullCompilation = false;
+			m_inFullCompilation = false;
 
 		} catch (HackTranslatorException hte) {
-			inFullCompilation = false;
+			m_inFullCompilation = false;
 			throw new HackTranslatorException(hte.getMessage());
 		}
 	}
@@ -506,7 +506,7 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
 	 * Returns the translated machine code program array
 	 */
 	public short[] getProgram() {
-		return program;
+		return m_program;
 	}
 
 	/**
@@ -518,21 +518,21 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
 	 * Hides all the pointers.
 	 */
 	protected void hidePointers() {
-		gui.getSource().clearHighlights();
-		gui.getDestination().clearHighlights();
-		gui.getSource().hideSelect();
-		gui.getDestination().hideSelect();
+		m_gui.getSource().clearHighlights();
+		m_gui.getDestination().clearHighlights();
+		m_gui.getSource().hideSelect();
+		m_gui.getDestination().hideSelect();
 	}
 
 	/**
 	 * initializes the HackTranslator.
 	 */
 	protected void init(int size, short nullValue) {
-		program = new short[size];
+		m_program = new short[size];
 		for (int i = 0; i < size; i++) {
-			program[i] = nullValue;
+			m_program[i] = nullValue;
 		}
-		programSize = 0;
+		m_programSize = 0;
 	}
 
 	/**
@@ -549,69 +549,69 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
 	// Loads the given source file and displays it in the Source GUI
 	private void loadSource(String fileName) throws HackTranslatorException {
 		String line;
-		Vector formattedLines = new Vector();
-		Vector lines = null;
+		Vector<String> formattedLines = new Vector<String>();
+		Vector<String> lines = null;
 		String errorMessage = null;
 
 		try {
-			if (gui != null) {
-				gui.disableSingleStep();
-				gui.disableFastForward();
-				gui.disableStop();
-				gui.disableRewind();
-				gui.disableFullCompilation();
-				gui.disableSave();
-				gui.disableLoadSource();
-				gui.disableSourceRowSelection();
+			if (m_gui != null) {
+				m_gui.disableSingleStep();
+				m_gui.disableFastForward();
+				m_gui.disableStop();
+				m_gui.disableRewind();
+				m_gui.disableFullCompilation();
+				m_gui.disableSave();
+				m_gui.disableLoadSource();
+				m_gui.disableSourceRowSelection();
 
-				gui.displayMessage("Please wait...", false);
+				m_gui.displayMessage("Please wait...", false);
 			}
 
 			checkSourceFile(fileName);
-			sourceFileName = fileName;
+			m_sourceFileName = fileName;
 
-			lines = new Vector();
-			BufferedReader sourceReader = new BufferedReader(new FileReader(sourceFileName));
+			lines = new Vector<String>();
+			BufferedReader sourceReader = new BufferedReader(new FileReader(m_sourceFileName));
 
 			while ((line = sourceReader.readLine()) != null) {
 				formattedLines.addElement(line);
 
-				if (gui != null) {
+				if (m_gui != null) {
 					lines.addElement(line);
 				}
 			}
 
 			sourceReader.close();
 
-			source = new String[formattedLines.size()];
-			formattedLines.toArray(source);
+			m_source = new String[formattedLines.size()];
+			formattedLines.toArray(m_source);
 
-			if (gui != null) {
+			if (m_gui != null) {
 				String[] linesArray = new String[lines.size()];
 				lines.toArray(linesArray);
-				gui.getSource().setContents(linesArray);
+				m_gui.getSource().setContents(linesArray);
 			}
 
-			destFileName = sourceFileName.substring(0, sourceFileName.indexOf('.')) + "." + getDestinationExtension();
+			m_destFileName = m_sourceFileName.substring(0, m_sourceFileName.indexOf('.')) + "." + getDestinationExtension();
 
 			initSource();
 			restartCompilation();
 			resetProgram();
 
-			if (gui != null) {
-				gui.setDestinationName(destFileName);
-				gui.displayMessage("", false);
+			if (m_gui != null) {
+				m_gui.setDestinationName(m_destFileName);
+				m_gui.displayMessage("", false);
 			}
 
 		} catch (HackTranslatorException hte) {
 			errorMessage = hte.getMessage();
 		} catch (IOException ioe) {
-			errorMessage = "error reading from file " + sourceFileName;
+			errorMessage = "error reading from file " + m_sourceFileName;
 		}
 
 		if (errorMessage != null) {
-			if (gui != null) {
-				gui.enableLoadSource();
+			if (m_gui != null) {
+				m_gui.enableLoadSource();
 			}
 
 			throw new HackTranslatorException(errorMessage);
@@ -637,9 +637,9 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
 	 * Replaces the command in program location pc with the given command.
 	 */
 	protected void replaceCommand(int pc, short command) {
-		program[pc] = command;
-		if (updateGUI) {
-			gui.getDestination().setLineAt(pc, getCodeString(command, pc, true));
+		m_program[pc] = command;
+		if (m_updateGUI) {
+			m_gui.getDestination().setLineAt(pc, getCodeString(command, pc, true));
 		}
 	}
 
@@ -647,9 +647,9 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
 	 * Resets the program
 	 */
 	protected void resetProgram() {
-		programSize = 0;
-		if (gui != null) {
-			gui.getDestination().reset();
+		m_programSize = 0;
+		if (m_gui != null) {
+			m_gui.getDestination().reset();
 		}
 	}
 
@@ -657,23 +657,23 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
 	 * Restarts the compilation from the beginning of the source.
 	 */
 	protected void restartCompilation() {
-		compilationMap = new Hashtable();
-		sourcePC = 0;
-		destPC = 0;
+		m_compilationMap = new Hashtable<Integer, int[]>();
+		m_sourcePC = 0;
+		m_destPC = 0;
 
-		if (gui != null) {
-			compilationStarted = false;
-			gui.getDestination().reset();
+		if (m_gui != null) {
+			m_compilationStarted = false;
+			m_gui.getDestination().reset();
 			hidePointers();
 
-			gui.enableSingleStep();
-			gui.enableFastForward();
-			gui.disableStop();
-			gui.enableRewind();
-			gui.enableFullCompilation();
-			gui.disableSave();
-			gui.enableLoadSource();
-			gui.disableSourceRowSelection();
+			m_gui.enableSingleStep();
+			m_gui.enableFastForward();
+			m_gui.disableStop();
+			m_gui.enableRewind();
+			m_gui.enableFullCompilation();
+			m_gui.disableSave();
+			m_gui.enableLoadSource();
+			m_gui.disableSourceRowSelection();
 		}
 	}
 
@@ -691,7 +691,7 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
 	 */
 	protected int[] rowIndexToRange(int rowIndex) {
 		Integer key = new Integer(rowIndex);
-		return (int[]) compilationMap.get(key);
+		return (int[]) m_compilationMap.get(key);
 	}
 
 	/**
@@ -701,26 +701,26 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
 	public void rowSelected(TextFileEvent event) {
 		int index = event.getRowIndex();
 		int[] range = rowIndexToRange(index);
-		gui.getSource().addHighlight(index, true);
-		gui.getSource().hideSelect();
+		m_gui.getSource().addHighlight(index, true);
+		m_gui.getSource().hideSelect();
 		if (range != null) {
-			gui.getDestination().clearHighlights();
+			m_gui.getDestination().clearHighlights();
 			for (int i = range[0]; i <= range[1]; i++) {
-				gui.getDestination().addHighlight(i, false);
+				m_gui.getDestination().addHighlight(i, false);
 			}
 		} else {
-			gui.getDestination().clearHighlights();
+			m_gui.getDestination().clearHighlights();
 		}
 	}
 
 	// Saves the program into the given dest file name.
 	private void save() throws HackTranslatorException {
 		try {
-			writer = new PrintWriter(new FileWriter(destFileName));
+			m_writer = new PrintWriter(new FileWriter(m_destFileName));
 			dumpToFile();
-			writer.close();
+			m_writer.close();
 		} catch (IOException ioe) {
-			throw new HackTranslatorException("could not create file " + destFileName);
+			throw new HackTranslatorException("could not create file " + m_destFileName);
 		}
 	}
 
@@ -735,7 +735,7 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
 		} catch (IOException ioe) {
 		}
 
-		gui.setWorkingDir(file);
+		m_gui.setWorkingDir(file);
 	}
 
 	/**
@@ -743,80 +743,80 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
 	 * window.
 	 */
 	protected void showProgram(int numOfCommands) {
-		gui.getDestination().reset();
+		m_gui.getDestination().reset();
 
 		String[] lines = new String[numOfCommands];
 
 		for (int i = 0; i < numOfCommands; i++) {
-			lines[i] = getCodeString(program[i], i, true);
+			lines[i] = getCodeString(m_program[i], i, true);
 		}
 
-		gui.getDestination().setContents(lines);
+		m_gui.getDestination().setContents(lines);
 	}
 
 	// Reads a single line from the source, compiles it and writes the result to
 	// the
 	// detination.
 	private void singleStep() {
-		singleStepLocked = true;
+		m_singleStepLocked = true;
 
 		try {
 			initCompilation();
 
-			if (!compilationStarted) {
-				compilationStarted = true;
+			if (!m_compilationStarted) {
+				m_compilationStarted = true;
 			}
 
-			gui.getSource().addHighlight(sourcePC, true);
-			gui.getDestination().clearHighlights();
-			updateGUI = true;
-			int[] compiledRange = compileLineAndCount(source[sourcePC]);
+			m_gui.getSource().addHighlight(m_sourcePC, true);
+			m_gui.getDestination().clearHighlights();
+			m_updateGUI = true;
+			int[] compiledRange = compileLineAndCount(m_source[m_sourcePC]);
 
 			if (compiledRange != null) {
-				compilationMap.put(new Integer(sourcePC), compiledRange);
+				m_compilationMap.put(new Integer(m_sourcePC), compiledRange);
 			}
 
-			sourcePC++;
+			m_sourcePC++;
 
-			if (sourcePC == source.length) {
+			if (m_sourcePC == m_source.length) {
 				successfulCompilation();
-				programSize = destPC;
-				gui.enableSave();
-				gui.enableSourceRowSelection();
+				m_programSize = m_destPC;
+				m_gui.enableSave();
+				m_gui.enableSourceRowSelection();
 				end(false);
 			}
 
 			finalizeCompilation();
 
 		} catch (HackTranslatorException ae) {
-			gui.displayMessage(ae.getMessage(), true);
+			m_gui.displayMessage(ae.getMessage(), true);
 			end(false);
 		}
 
-		singleStepLocked = false;
+		m_singleStepLocked = false;
 	}
 
 	/**
 	 * Stops the fast forward mode.
 	 */
 	protected void stop() {
-		timer.stop();
-		gui.enableSingleStep();
-		gui.enableFastForward();
-		gui.disableStop();
-		gui.enableRewind();
-		gui.enableLoadSource();
-		gui.enableFullCompilation();
+		m_timer.stop();
+		m_gui.enableSingleStep();
+		m_gui.enableFastForward();
+		m_gui.disableStop();
+		m_gui.enableRewind();
+		m_gui.enableLoadSource();
+		m_gui.enableFullCompilation();
 
-		inFastForward = false;
+		m_inFastForward = false;
 	}
 
 	/**
 	 * Executed when a compilation is successful.
 	 */
 	protected void successfulCompilation() throws HackTranslatorException {
-		if (gui != null) {
-			gui.displayMessage("File compilation succeeded", false);
+		if (m_gui != null) {
+			m_gui.displayMessage("File compilation succeeded", false);
 		}
 	}
 }
