@@ -23,6 +23,7 @@ import java.awt.Rectangle;
 import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.util.Arrays;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
@@ -50,11 +51,15 @@ import HackGUI.Utilities;
  */
 public class ROMComponent extends PointedMemoryComponent implements ROMGUI {
 
+	private static final long serialVersionUID = 4704137661485714096L;
+
 	/**
 	 * An inner class which implemets the cell renderer of the rom table, giving
 	 * the feature of coloring the background of a specific cell.
 	 */
 	public class ROMTableCellRenderer extends PointedMemoryTableCellRenderer {
+
+		private static final long serialVersionUID = -1063111905556674224L;
 
 		@Override
 		public void setRenderer(int row, int column) {
@@ -70,41 +75,42 @@ public class ROMComponent extends PointedMemoryComponent implements ROMGUI {
 	private final static int ASM_FORMAT = ROM.ASM_FORMAT;
 
 	// A vector containing the listeners to this object.
-	private Vector programEventListeners;
+	private Vector<ProgramEventListener> m_programEventListeners;
 
 	// The load file button.
-	protected MouseOverJButton loadButton = new MouseOverJButton();
+	protected MouseOverJButton m_loadButton = new MouseOverJButton();
 
 	// The icon on the load file button.
-	private ImageIcon loadIcon = new ImageIcon(Utilities.imagesDir + "open2.gif");
+	private ImageIcon m_loadIcon = new ImageIcon(Utilities.imagesDir + "open2.gif");
 
 	// The file filter of this component.
-	private FileFilter filter;
+	private FileFilter m_filter;
 
 	// The file chooser component.
-	private JFileChooser fileChooser;
+	private JFileChooser m_fileChooser;
 
 	// The hack assembler translator.
-	private HackAssemblerTranslator translator = HackAssemblerTranslator.getInstance();
+	private HackAssemblerTranslator m_translator = HackAssemblerTranslator.getInstance();
 
 	// The text field containing the message (for example "Loading...").
-	private JTextField messageTxt = new JTextField();
+	private JTextField m_messageTxt = new JTextField();
 
 	// The possible numeric formats.
-	private String[] format = { "Asm", "Dec", "Hex", "Bin" };
+	//String[] format = { "Asm", "Dec", "Hex", "Bin" };
+	private Vector<String> m_format = new Vector<String>(Arrays.asList("Asm", "Dec", "Hex", "Bin"));
 
 	// The combo box for choosing the numeric format.
-	protected JComboBox romFormat = new JComboBox(format);
+	protected JComboBox<String> m_romFormat = new JComboBox<String>(m_format);
 
 	/**
 	 * Constructs a new ROMComponent.
 	 */
 	public ROMComponent() {
 		dataFormat = ASM_FORMAT;
-		programEventListeners = new Vector();
-		filter = new ROMFileFilter();
-		fileChooser = new JFileChooser();
-		fileChooser.setFileFilter(filter);
+		m_programEventListeners = new Vector<ProgramEventListener>();
+		m_filter = new ROMFileFilter();
+		m_fileChooser = new JFileChooser();
+		m_fileChooser.setFileFilter(m_filter);
 		jbInit();
 	}
 
@@ -113,7 +119,7 @@ public class ROMComponent extends PointedMemoryComponent implements ROMGUI {
 	 */
 	@Override
 	public void addProgramListener(ProgramEventListener listener) {
-		programEventListeners.addElement(listener);
+		m_programEventListeners.addElement(listener);
 	}
 
 	@Override
@@ -138,36 +144,36 @@ public class ROMComponent extends PointedMemoryComponent implements ROMGUI {
 	 */
 	@Override
 	public void hideMessage() {
-		messageTxt.setText("");
-		messageTxt.setVisible(false);
-		loadButton.setVisible(true);
+		m_messageTxt.setText("");
+		m_messageTxt.setVisible(false);
+		m_loadButton.setVisible(true);
 		searchButton.setVisible(true);
-		romFormat.setVisible(true);
+		m_romFormat.setVisible(true);
 	}
 
 	// Initializes this rom.
 	private void jbInit() {
-		loadButton.setIcon(loadIcon);
-		loadButton.setBounds(new Rectangle(97, 2, 31, 25));
-		loadButton.setToolTipText("Load Program");
-		loadButton.addActionListener(e -> loadButton_actionPerformed(e));
-		messageTxt.setBackground(SystemColor.info);
-		messageTxt.setEnabled(false);
-		messageTxt.setFont(Utilities.labelsFont);
-		messageTxt.setPreferredSize(new Dimension(70, 20));
-		messageTxt.setDisabledTextColor(Color.red);
-		messageTxt.setEditable(false);
-		messageTxt.setHorizontalAlignment(SwingConstants.CENTER);
-		messageTxt.setBounds(new Rectangle(37, 3, 154, 22));
-		messageTxt.setVisible(false);
-		romFormat.setPreferredSize(new Dimension(125, 23));
-		romFormat.setBounds(new Rectangle(39, 3, 56, 23));
-		romFormat.setFont(Utilities.thinLabelsFont);
-		romFormat.setToolTipText("Display Format");
-		romFormat.addActionListener(e -> romFormat_actionPerformed(e));
-		this.add(messageTxt, null);
-		this.add(loadButton);
-		this.add(romFormat, null);
+		m_loadButton.setIcon(m_loadIcon);
+		m_loadButton.setBounds(new Rectangle(97, 2, 31, 25));
+		m_loadButton.setToolTipText("Load Program");
+		m_loadButton.addActionListener(e -> loadButton_actionPerformed(e));
+		m_messageTxt.setBackground(SystemColor.info);
+		m_messageTxt.setEnabled(false);
+		m_messageTxt.setFont(Utilities.labelsFont);
+		m_messageTxt.setPreferredSize(new Dimension(70, 20));
+		m_messageTxt.setDisabledTextColor(Color.red);
+		m_messageTxt.setEditable(false);
+		m_messageTxt.setHorizontalAlignment(SwingConstants.CENTER);
+		m_messageTxt.setBounds(new Rectangle(37, 3, 154, 22));
+		m_messageTxt.setVisible(false);
+		m_romFormat.setPreferredSize(new Dimension(125, 23));
+		m_romFormat.setBounds(new Rectangle(39, 3, 56, 23));
+		m_romFormat.setFont(Utilities.thinLabelsFont);
+		m_romFormat.setToolTipText("Display Format");
+		m_romFormat.addActionListener(e -> romFormat_actionPerformed(e));
+		this.add(m_messageTxt, null);
+		this.add(m_loadButton);
+		this.add(m_romFormat, null);
 	}
 
 	/**
@@ -181,9 +187,9 @@ public class ROMComponent extends PointedMemoryComponent implements ROMGUI {
 	 * Opens the file chooser for loading a new program.
 	 */
 	public void loadProgram() {
-		int returnVal = fileChooser.showDialog(this, "Load ROM");
+		int returnVal = m_fileChooser.showDialog(this, "Load ROM");
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			notifyProgramListeners(ProgramEvent.LOAD, fileChooser.getSelectedFile().getAbsolutePath());
+			notifyProgramListeners(ProgramEvent.LOAD, m_fileChooser.getSelectedFile().getAbsolutePath());
 		}
 	}
 
@@ -205,8 +211,8 @@ public class ROMComponent extends PointedMemoryComponent implements ROMGUI {
 	@Override
 	public void notifyProgramListeners(byte eventType, String programFileName) {
 		ProgramEvent event = new ProgramEvent(this, eventType, programFileName);
-		for (int i = 0; i < programEventListeners.size(); i++) {
-			((ProgramEventListener) programEventListeners.elementAt(i)).programChanged(event);
+		for (int i = 0; i < m_programEventListeners.size(); i++) {
+			((ProgramEventListener) m_programEventListeners.elementAt(i)).programChanged(event);
 		}
 	}
 
@@ -216,21 +222,21 @@ public class ROMComponent extends PointedMemoryComponent implements ROMGUI {
 	 */
 	@Override
 	public void removeProgramListener(ProgramEventListener listener) {
-		programEventListeners.removeElement(listener);
+		m_programEventListeners.removeElement(listener);
 	}
 
 	/**
 	 * Implemeting the action of changing the selected item in the combo box
 	 */
 	public void romFormat_actionPerformed(ActionEvent e) {
-		String newFormat = (String) romFormat.getSelectedItem();
-		if (newFormat.equals(format[0])) {
+		String newFormat = (String) m_romFormat.getSelectedItem();
+		if (newFormat.equals(m_format.get(0))) {
 			setNumericFormat(ASM_FORMAT);
-		} else if (newFormat.equals(format[1])) {
+		} else if (newFormat.equals(m_format.get(1))) {
 			setNumericFormat(Format.DEC_FORMAT);
-		} else if (newFormat.equals(format[2])) {
+		} else if (newFormat.equals(m_format.get(2))) {
 			setNumericFormat(Format.HEX_FORMAT);
-		} else if (newFormat.equals(format[3])) {
+		} else if (newFormat.equals(m_format.get(3))) {
 			setNumericFormat(Format.BIN_FORMAT);
 		}
 	}
@@ -240,16 +246,16 @@ public class ROMComponent extends PointedMemoryComponent implements ROMGUI {
 		super.setNumericFormat(formatCode);
 		switch (formatCode) {
 		case ASM_FORMAT:
-			romFormat.setSelectedIndex(0);
+			m_romFormat.setSelectedIndex(0);
 			break;
 		case Format.DEC_FORMAT:
-			romFormat.setSelectedIndex(1);
+			m_romFormat.setSelectedIndex(1);
 			break;
 		case Format.HEX_FORMAT:
-			romFormat.setSelectedIndex(2);
+			m_romFormat.setSelectedIndex(2);
 			break;
 		case Format.BIN_FORMAT:
-			romFormat.setSelectedIndex(3);
+			m_romFormat.setSelectedIndex(3);
 			break;
 		}
 	}
@@ -265,7 +271,7 @@ public class ROMComponent extends PointedMemoryComponent implements ROMGUI {
 	 * Sets the current working dir.
 	 */
 	public void setWorkingDir(File file) {
-		fileChooser.setCurrentDirectory(file);
+		m_fileChooser.setCurrentDirectory(file);
 	}
 
 	/**
@@ -273,11 +279,11 @@ public class ROMComponent extends PointedMemoryComponent implements ROMGUI {
 	 */
 	@Override
 	public void showMessage(String message) {
-		messageTxt.setText(message);
-		loadButton.setVisible(false);
+		m_messageTxt.setText(message);
+		m_loadButton.setVisible(false);
 		searchButton.setVisible(false);
-		romFormat.setVisible(false);
-		messageTxt.setVisible(true);
+		m_romFormat.setVisible(false);
+		m_messageTxt.setVisible(true);
 	}
 
 	/**
@@ -290,7 +296,7 @@ public class ROMComponent extends PointedMemoryComponent implements ROMGUI {
 			result = super.translateValueToShort(data);
 		} else {
 			try {
-				result = translator.textToCode(data);
+				result = m_translator.textToCode(data);
 			} catch (AssemblerException ae) {
 				throw new TranslationException(ae.getMessage());
 			}
@@ -308,7 +314,7 @@ public class ROMComponent extends PointedMemoryComponent implements ROMGUI {
 			result = super.translateValueToString(value);
 		} else {
 			try {
-				result = translator.codeToText(value);
+				result = m_translator.codeToText(value);
 			} catch (AssemblerException ae) {
 			}
 		}
