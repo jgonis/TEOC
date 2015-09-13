@@ -41,14 +41,16 @@ import HackGUI.Utilities;
  */
 public class KeyboardComponent extends JPanel implements KeyboardGUI {
 
+	private static final long serialVersionUID = -3357924013065805531L;
+
 	// The icon of the keyboard.
-	private ImageIcon keyboardIcon = new ImageIcon(Utilities.imagesDir + "keyboard.gif");
+	private ImageIcon m_keyboardIcon = new ImageIcon(Utilities.imagesDir + "keyboard.gif");
 
 	// The text field on which the letter are appearing.
-	private JTextField keyNameText = new JTextField();
+	private JTextField m_keyNameText = new JTextField();
 
 	// The keyboard's button.
-	private JButton keyButton = new JButton();
+	private JButton m_keyButton = new JButton();
 
 	/**
 	 * Constructs a new keyboard component.
@@ -62,7 +64,7 @@ public class KeyboardComponent extends JPanel implements KeyboardGUI {
 	 */
 	@Override
 	public void clearKey() {
-		keyNameText.setText("");
+		m_keyNameText.setText("");
 	}
 
 	/**
@@ -70,22 +72,22 @@ public class KeyboardComponent extends JPanel implements KeyboardGUI {
 	 */
 	@Override
 	public JComponent getKeyEventHandler() {
-		return keyButton;
+		return m_keyButton;
 	}
 
 	// Initializes this component.
 	private void jbInit() {
-		keyNameText.setBounds(new Rectangle(258, 0, 258, 27));
-		keyNameText.setEnabled(false);
-		keyNameText.setFont(new Font("Times New Roman", 1, 14));
-		keyNameText.setDisabledTextColor(Color.black);
-		keyNameText.setEditable(false);
-		keyNameText.setHorizontalAlignment(SwingConstants.CENTER);
-		keyNameText.setBackground(SystemColor.info);
+		m_keyNameText.setBounds(new Rectangle(258, 0, 258, 27));
+		m_keyNameText.setEnabled(false);
+		m_keyNameText.setFont(new Font("Times New Roman", 1, 14));
+		m_keyNameText.setDisabledTextColor(Color.black);
+		m_keyNameText.setEditable(false);
+		m_keyNameText.setHorizontalAlignment(SwingConstants.CENTER);
+		m_keyNameText.setBackground(SystemColor.info);
 		this.setLayout(null);
-		keyButton.setIcon(keyboardIcon);
-		keyButton.setBounds(new Rectangle(0, 0, 258, 27));
-		keyButton.addFocusListener(new FocusListener() {
+		m_keyButton.setIcon(m_keyboardIcon);
+		m_keyButton.setBounds(new Rectangle(0, 0, 258, 27));
+		m_keyButton.addFocusListener(new FocusListener() {
 			@Override
 			public void focusGained(FocusEvent e) {
 				keyButton_focusGained(e);
@@ -96,8 +98,8 @@ public class KeyboardComponent extends JPanel implements KeyboardGUI {
 				keyButton_focusLost(e);
 			}
 		});
-		this.add(keyButton, null);
-		this.add(keyNameText, null);
+		this.add(m_keyButton, null);
+		this.add(m_keyNameText, null);
 
 		setPreferredSize(new Dimension(516, 27));
 		setSize(516, 27);
@@ -108,7 +110,7 @@ public class KeyboardComponent extends JPanel implements KeyboardGUI {
 	 * this component).
 	 */
 	public void keyButton_focusGained(FocusEvent e) {
-		keyButton.setBackground(UIManager.getColor("TextField.selectionBackground"));
+		m_keyButton.setBackground(UIManager.getColor("TextField.selectionBackground"));
 	}
 
 	/**
@@ -116,7 +118,7 @@ public class KeyboardComponent extends JPanel implements KeyboardGUI {
 	 * this component back to the original color).
 	 */
 	public void keyButton_focusLost(FocusEvent e) {
-		keyButton.setBackground(UIManager.getColor("Button.background"));
+		m_keyButton.setBackground(UIManager.getColor("Button.background"));
 	}
 
 	/**
@@ -131,6 +133,6 @@ public class KeyboardComponent extends JPanel implements KeyboardGUI {
 	 */
 	@Override
 	public void setKey(String keyName) {
-		keyNameText.setText(keyName);
+		m_keyNameText.setText(keyName);
 	}
 }

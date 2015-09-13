@@ -48,6 +48,8 @@ public class PartPinsComponent extends PinsComponent implements PartPinsGUI {
 	// the feature of alignment, flashing and highlighting.
 	class PartPinsTableCellRenderer extends DefaultTableCellRenderer {
 
+		private static final long serialVersionUID = 8930217591078561285L;
+
 		@Override
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean selected, boolean focused,
 				int row, int column) {
@@ -59,15 +61,15 @@ public class PartPinsComponent extends PinsComponent implements PartPinsGUI {
 				setBackground(null);
 			} else {
 				setHorizontalAlignment(SwingConstants.RIGHT);
-				for (int i = 0; i < highlightIndex.size(); i++) {
-					if (row == ((Integer) highlightIndex.elementAt(i)).intValue()) {
+				for (int i = 0; i < m_highlightIndex.size(); i++) {
+					if (row == m_highlightIndex.elementAt(i).intValue()) {
 						setForeground(Color.blue);
 						break;
 					} else {
 						setForeground(null);
 					}
 				}
-				if (row == flashIndex) {
+				if (row == m_flashIndex) {
 					setBackground(Color.orange);
 				} else {
 					setBackground(null);
@@ -83,14 +85,15 @@ public class PartPinsComponent extends PinsComponent implements PartPinsGUI {
 	// An inner class representing the model of the breakpoint table.
 	class PartPinsTableModel extends AbstractTableModel {
 
-		String[] columnNames = { "Part pin", "Gate pin", "Value" };
+		private static final long serialVersionUID = 4733873696207503375L;
+		String[] m_columnNames = { "Part pin", "Gate pin", "Value" };
 
 		/**
 		 * Returns the number of columns.
 		 */
 		@Override
 		public int getColumnCount() {
-			return columnNames.length;
+			return m_columnNames.length;
 		}
 
 		/**
@@ -98,7 +101,7 @@ public class PartPinsComponent extends PinsComponent implements PartPinsGUI {
 		 */
 		@Override
 		public String getColumnName(int col) {
-			return columnNames[col];
+			return m_columnNames[col];
 		}
 
 		/**
@@ -106,10 +109,10 @@ public class PartPinsComponent extends PinsComponent implements PartPinsGUI {
 		 */
 		@Override
 		public int getRowCount() {
-			if (partPins == null) {
+			if (m_partPins == null) {
 				return 0;
 			} else {
-				return partPins.length;
+				return m_partPins.length;
 			}
 		}
 
@@ -120,11 +123,11 @@ public class PartPinsComponent extends PinsComponent implements PartPinsGUI {
 		public Object getValueAt(int row, int col) {
 			String result = "";
 			if (col == 0) {
-				result = HardwareSimulator.getFullPinName(partPins[row].partPinName, partPins[row].partPinSubBus);
+				result = HardwareSimulator.getFullPinName(m_partPins[row].partPinName, m_partPins[row].partPinSubBus);
 			} else if (col == 1) {
-				result = HardwareSimulator.getFullPinName(partPins[row].gatePinName, partPins[row].gatePinSubBus);
+				result = HardwareSimulator.getFullPinName(m_partPins[row].gatePinName, m_partPins[row].gatePinSubBus);
 			} else if (col == 2) {
-				result = valuesStr[row];
+				result = m_valuesStr[row];
 			}
 			return result;
 		}
@@ -145,37 +148,39 @@ public class PartPinsComponent extends PinsComponent implements PartPinsGUI {
 
 			String data = ((String) value).trim();
 			try {
-				valuesStr[row] = data;
-				partPins[row].value = Format.translateValueToShort(data, dataFormat);
-				notifyListeners((short) row, partPins[row].value);
+				m_valuesStr[row] = data;
+				m_partPins[row].value = Format.translateValueToShort(data, m_dataFormat);
+				notifyListeners((short) row, m_partPins[row].value);
 			} catch (NumberFormatException nfe) {
 				notifyErrorListeners("Illegal value");
-				valuesStr[row] = Format.translateValueToString(partPins[row].value, dataFormat);
+				m_valuesStr[row] = Format.translateValueToString(m_partPins[row].value, m_dataFormat);
 			}
 			repaint();
 		}
 	}
 
+	private static final long serialVersionUID = -657885299146971871L;
+
 	// An array containing the info of the part pins.
-	private PartPinInfo[] partPins;
+	private PartPinInfo[] m_partPins;
 
 	// The values of the pins in a String representation.
-	private String[] valuesStr;
+	private String[] m_valuesStr;
 
 	// The renderer of the pins table.
-	private PartPinsTableCellRenderer renderer = new PartPinsTableCellRenderer();
+	private PartPinsTableCellRenderer m_renderer = new PartPinsTableCellRenderer();
 
 	// The part name
-	private JLabel partNameLbl = new JLabel();
+	private JLabel m_partNameLbl = new JLabel();
 
 	/**
 	 * Constructs a new PartPinsComponent.
 	 */
 	public PartPinsComponent() {
 		super();
-		partPins = new PartPinInfo[0];
-		valuesStr = new String[0];
-		pinsTable.setDefaultRenderer(pinsTable.getColumnClass(0), renderer);
+		m_partPins = new PartPinInfo[0];
+		m_valuesStr = new String[0];
+		m_pinsTable.setDefaultRenderer(m_pinsTable.getColumnClass(0), m_renderer);
 
 		jbInit();
 
@@ -186,7 +191,7 @@ public class PartPinsComponent extends PinsComponent implements PartPinsGUI {
 	protected void determineColumnWidth() {
 		TableColumn column = null;
 		for (int i = 0; i < 2; i++) {
-			column = pinsTable.getColumnModel().getColumn(i);
+			column = m_pinsTable.getColumnModel().getColumn(i);
 			if (i == 0) {
 				column.setPreferredWidth(20);
 			} else if (i == 1) {
@@ -217,11 +222,11 @@ public class PartPinsComponent extends PinsComponent implements PartPinsGUI {
 	 */
 	@Override
 	public Point getCoordinates(int index) {
-		JScrollBar bar = scrollPane.getVerticalScrollBar();
-		Rectangle r = pinsTable.getCellRect(index, 2, true);
-		pinsTable.scrollRectToVisible(r);
-		return new Point((int) (r.getX() + topLevelLocation.getX()),
-				(int) ((r.getY() + topLevelLocation.getY()) - bar.getValue()));
+		JScrollBar bar = m_scrollPane.getVerticalScrollBar();
+		Rectangle r = m_pinsTable.getCellRect(index, 2, true);
+		m_pinsTable.scrollRectToVisible(r);
+		return new Point((int) (r.getX() + m_topLevelLocation.getX()),
+				(int) ((r.getY() + m_topLevelLocation.getY()) - bar.getValue()));
 	}
 
 	/**
@@ -237,7 +242,7 @@ public class PartPinsComponent extends PinsComponent implements PartPinsGUI {
 	 */
 	@Override
 	public String getValueAsString(int index) {
-		return valuesStr[index];
+		return m_valuesStr[index];
 	}
 
 	/**
@@ -250,12 +255,12 @@ public class PartPinsComponent extends PinsComponent implements PartPinsGUI {
 
 	// Initializes this component
 	private void jbInit() {
-		partNameLbl.setFont(Utilities.bigLabelsFont);
-		partNameLbl.setHorizontalAlignment(SwingConstants.CENTER);
-		partNameLbl.setText("keyboard");
-		partNameLbl.setForeground(Color.black);
-		partNameLbl.setBounds(new Rectangle(62, 10, 102, 21));
-		this.add(partNameLbl, null);
+		m_partNameLbl.setFont(Utilities.bigLabelsFont);
+		m_partNameLbl.setHorizontalAlignment(SwingConstants.CENTER);
+		m_partNameLbl.setText("keyboard");
+		m_partNameLbl.setForeground(Color.black);
+		m_partNameLbl.setBounds(new Rectangle(62, 10, 102, 21));
+		this.add(m_partNameLbl, null);
 	}
 
 	/**
@@ -266,12 +271,13 @@ public class PartPinsComponent extends PinsComponent implements PartPinsGUI {
 	 */
 	@Override
 	public void pinValueChanged(PinValueEvent e) {
-		pinsTable.setEnabled(true);
+		m_pinsTable.setEnabled(true);
 		if (e.getIsOk()) {
-			valuesStr[pinsTable.getSelectedRow()] = e.getValueStr();
-			partPins[pinsTable.getSelectedRow()].value = Format.translateValueToShort(e.getValueStr(), dataFormat);
+			m_valuesStr[m_pinsTable.getSelectedRow()] = e.getValueStr();
+			m_partPins[m_pinsTable.getSelectedRow()].value = Format.translateValueToShort(e.getValueStr(),
+					m_dataFormat);
 		}
-		notifyListeners(pinsTable.getSelectedRow(), Format.translateValueToShort(e.getValueStr(), dataFormat));
+		notifyListeners(m_pinsTable.getSelectedRow(), Format.translateValueToShort(e.getValueStr(), m_dataFormat));
 	}
 
 	/**
@@ -279,7 +285,7 @@ public class PartPinsComponent extends PinsComponent implements PartPinsGUI {
 	 */
 	@Override
 	public void reset() {
-		pinsTable.clearSelection();
+		m_pinsTable.clearSelection();
 		repaint();
 		// resetting the flash and highlight
 		hideFlash();
@@ -291,15 +297,15 @@ public class PartPinsComponent extends PinsComponent implements PartPinsGUI {
 	 * objects.
 	 */
 	@Override
-	public void setContents(Vector newPins) {
-		partPins = new PartPinInfo[newPins.size()];
-		valuesStr = new String[newPins.size()];
-		newPins.toArray(partPins);
-		for (int i = 0; i < partPins.length; i++) {
-			valuesStr[i] = Format.translateValueToString(partPins[i].value, dataFormat);
+	public void setContents(Vector<PartPinInfo> newPins) {
+		m_partPins = new PartPinInfo[newPins.size()];
+		m_valuesStr = new String[newPins.size()];
+		newPins.toArray(m_partPins);
+		for (int i = 0; i < m_partPins.length; i++) {
+			m_valuesStr[i] = Format.translateValueToString(m_partPins[i].value, m_dataFormat);
 		}
-		pinsTable.clearSelection();
-		pinsTable.revalidate();
+		m_pinsTable.clearSelection();
+		m_pinsTable.revalidate();
 		repaint();
 	}
 
@@ -308,7 +314,7 @@ public class PartPinsComponent extends PinsComponent implements PartPinsGUI {
 	 */
 	@Override
 	public void setPartName(String partName) {
-		partNameLbl.setText(partName);
+		m_partNameLbl.setText(partName);
 	}
 
 	/**
@@ -316,8 +322,8 @@ public class PartPinsComponent extends PinsComponent implements PartPinsGUI {
 	 */
 	@Override
 	public void setValueAt(int index, short value) {
-		partPins[index].value = value;
-		valuesStr[index] = Format.translateValueToString(value, dataFormat);
+		m_partPins[index].value = value;
+		m_valuesStr[index] = Format.translateValueToString(value, m_dataFormat);
 		repaint();
 	}
 }

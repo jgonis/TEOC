@@ -41,9 +41,12 @@ import HackGUI.Utilities;
  */
 public class PartsComponent extends JPanel implements PartsGUI {
 
+	private static final long serialVersionUID = 2167548443728732840L;
+
 	// An inner class representing the model of the parts table.
 	class PartsTableModel extends AbstractTableModel {
 
+		private static final long serialVersionUID = -7035425722364238863L;
 		String[] columnNames = { "Chip Name", "Type", "Clocked" };
 
 		/**
@@ -75,7 +78,7 @@ public class PartsComponent extends JPanel implements PartsGUI {
 		 */
 		@Override
 		public int getRowCount() {
-			return parts.length;
+			return m_parts.length;
 		}
 
 		/**
@@ -85,15 +88,15 @@ public class PartsComponent extends JPanel implements PartsGUI {
 		public Object getValueAt(int row, int col) {
 			Object result = null;
 			if (col == 0) {
-				result = parts[row].getGateClass().getName();
+				result = m_parts[row].getGateClass().getName();
 			} else if (col == 1) {
-				if (parts[row] instanceof CompositeGate) {
+				if (m_parts[row] instanceof CompositeGate) {
 					result = COMPOSITE_GATE;
-				} else if (parts[row] instanceof BuiltInGate) {
+				} else if (m_parts[row] instanceof BuiltInGate) {
 					result = BUILTIN_GATE;
 				}
 			} else if (col == 2) {
-				result = new Boolean(parts[row].getGateClass().isClocked());
+				result = new Boolean(m_parts[row].getGateClass().isClocked());
 			}
 			return result;
 		}
@@ -113,27 +116,27 @@ public class PartsComponent extends JPanel implements PartsGUI {
 	private final static String COMPOSITE_GATE = "Composite";
 
 	// The table containing the parts data
-	private JTable partsTable;
+	private JTable m_partsTable;
 
 	// The array of gates
-	private Gate[] parts;
+	private Gate[] m_parts;
 
 	// The scroll pane in which the table is placed.
-	private JScrollPane scrollPane;
+	private JScrollPane m_scrollPane;
 
 	// The model of this table.
-	private PartsTableModel model;
+	private PartsTableModel m_model;
 
 	// The name of this component.
-	private JLabel nameLbl = new JLabel();
+	private JLabel m_nameLbl = new JLabel();
 
 	/**
 	 * Constructs a new PartsComponent.
 	 */
 	public PartsComponent() {
-		parts = new Gate[0];
-		model = new PartsTableModel();
-		partsTable = new JTable(model);
+		m_parts = new Gate[0];
+		m_model = new PartsTableModel();
+		m_partsTable = new JTable(m_model);
 		jbInit();
 	}
 
@@ -141,7 +144,7 @@ public class PartsComponent extends JPanel implements PartsGUI {
 	private void determineColumnWidth() {
 		TableColumn column = null;
 		for (int i = 0; i < 3; i++) {
-			column = partsTable.getColumnModel().getColumn(i);
+			column = m_partsTable.getColumnModel().getColumn(i);
 			if (i == 0) {
 				column.setPreferredWidth(110);
 			} else if (i == 1) {
@@ -162,11 +165,11 @@ public class PartsComponent extends JPanel implements PartsGUI {
 	// Initialization of this component.
 	private void jbInit() {
 		this.setLayout(null);
-		partsTable.setFont(Utilities.valueFont);
-		partsTable.getTableHeader().setReorderingAllowed(false);
-		partsTable.getTableHeader().setResizingAllowed(false);
+		m_partsTable.setFont(Utilities.valueFont);
+		m_partsTable.getTableHeader().setReorderingAllowed(false);
+		m_partsTable.getTableHeader().setResizingAllowed(false);
 
-		partsTable.addFocusListener(new FocusListener() {
+		m_partsTable.addFocusListener(new FocusListener() {
 			@Override
 			public void focusGained(FocusEvent e) {
 				partsTable_focusGained(e);
@@ -179,13 +182,13 @@ public class PartsComponent extends JPanel implements PartsGUI {
 		});
 
 		setBorder(BorderFactory.createEtchedBorder());
-		scrollPane = new JScrollPane(partsTable);
-		scrollPane.setLocation(0, 27);
-		nameLbl.setText("Name :");
-		nameLbl.setBounds(new Rectangle(3, 3, 102, 21));
-		nameLbl.setFont(Utilities.labelsFont);
-		this.add(scrollPane, null);
-		this.add(nameLbl, null);
+		m_scrollPane = new JScrollPane(m_partsTable);
+		m_scrollPane.setLocation(0, 27);
+		m_nameLbl.setText("Name :");
+		m_nameLbl.setBounds(new Rectangle(3, 3, 102, 21));
+		m_nameLbl.setFont(Utilities.labelsFont);
+		this.add(m_scrollPane, null);
+		this.add(m_nameLbl, null);
 		determineColumnWidth();
 	}
 
@@ -197,7 +200,7 @@ public class PartsComponent extends JPanel implements PartsGUI {
 
 	// The action of the table loosing focus
 	public void partsTable_focusLost(FocusEvent e) {
-		partsTable.clearSelection();
+		m_partsTable.clearSelection();
 	}
 
 	/**
@@ -205,7 +208,7 @@ public class PartsComponent extends JPanel implements PartsGUI {
 	 */
 	@Override
 	public void reset() {
-		partsTable.clearSelection();
+		m_partsTable.clearSelection();
 		repaint();
 	}
 
@@ -214,10 +217,10 @@ public class PartsComponent extends JPanel implements PartsGUI {
 	 */
 	@Override
 	public void setContents(Gate[] newParts) {
-		parts = new Gate[newParts.length];
-		System.arraycopy(newParts, 0, parts, 0, newParts.length);
-		partsTable.clearSelection();
-		partsTable.revalidate();
+		m_parts = new Gate[newParts.length];
+		System.arraycopy(newParts, 0, m_parts, 0, newParts.length);
+		m_partsTable.clearSelection();
+		m_partsTable.revalidate();
 	}
 
 	/**
@@ -225,15 +228,15 @@ public class PartsComponent extends JPanel implements PartsGUI {
 	 */
 	@Override
 	public void setName(String name) {
-		nameLbl.setText(name);
+		m_nameLbl.setText(name);
 	}
 
 	/**
 	 * Sets the number of visible rows.
 	 */
 	public void setVisibleRows(int num) {
-		int tableHeight = num * partsTable.getRowHeight();
-		scrollPane.setSize(getTableWidth(), tableHeight + 3);
+		int tableHeight = num * m_partsTable.getRowHeight();
+		m_scrollPane.setSize(getTableWidth(), tableHeight + 3);
 		setPreferredSize(new Dimension(getTableWidth(), tableHeight + 30));
 		setSize(getTableWidth(), tableHeight + 30);
 	}

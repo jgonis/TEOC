@@ -55,10 +55,14 @@ import HackGUI.Utilities;
  */
 public class ProgramComponent extends JPanel implements VMProgramGUI {
 
+	private static final long serialVersionUID = 2365635652188891777L;
+
 	// An inner class which implemets the cell renderer of the program table,
 	// giving
 	// the feature of coloring the background of a specific cell.
 	class ColoredTableCellRenderer extends DefaultTableCellRenderer {
+
+		private static final long serialVersionUID = 3308953547155138893L;
 
 		@Override
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean selected, boolean focused,
@@ -72,10 +76,10 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
 			} else {
 				setHorizontalAlignment(SwingConstants.LEFT);
 			}
-			if (row == instructionIndex) {
+			if (row == m_instructionIndex) {
 				setBackground(Color.yellow);
 			} else {
-				HVMInstruction currentInstruction = instructions[row];
+				HVMInstruction currentInstruction = m_instructions[row];
 				String op = (currentInstruction.getFormattedStrings())[0];
 				if (op.equals("function") && ((column == 1) || (column == 2))) {
 					setBackground(new Color(190, 171, 210));
@@ -90,6 +94,8 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
 
 	// An inner class representing the model of the CallStack table.
 	class ProgramTableModel extends AbstractTableModel {
+
+		private static final long serialVersionUID = 8847588244074393662L;
 
 		/**
 		 * Returns the number of columns.
@@ -112,7 +118,7 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
 		 */
 		@Override
 		public int getRowCount() {
-			return instructions.length;
+			return m_instructions.length;
 		}
 
 		/**
@@ -121,11 +127,11 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
 		@Override
 		public Object getValueAt(int row, int col) {
 
-			String[] formattedString = instructions[row].getFormattedStrings();
+			String[] formattedString = m_instructions[row].getFormattedStrings();
 
 			switch (col) {
 			case 0:
-				short index = instructions[row].getIndexInFunction();
+				short index = m_instructions[row].getIndexInFunction();
 				if (index >= 0) {
 					return new Short(index);
 				} else {
@@ -151,71 +157,71 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
 	}
 
 	// A vector containing the listeners to this object.
-	private Vector listeners;
+	private Vector<ProgramEventListener> m_listeners;
 
 	// A vector containing the error listeners to this object.
-	private Vector errorEventListeners;
+	private Vector<ErrorEventListener> m_errorEventListeners;
 
 	// The table representing this program
-	protected JTable programTable;
+	protected JTable m_programTable;
 
 	// The model of the table;
-	private ProgramTableModel model;
+	private ProgramTableModel m_model;
 
 	// The HVMInstructions of this program.
-	protected VMEmulatorInstruction[] instructions;
+	protected VMEmulatorInstruction[] m_instructions;
 
 	// Creating the browse button.
-	protected MouseOverJButton browseButton = new MouseOverJButton();
+	protected MouseOverJButton m_browseButton = new MouseOverJButton();
 
 	// Creating the icon of the button.
-	private ImageIcon browseIcon = new ImageIcon(Utilities.imagesDir + "open2.gif");
+	private ImageIcon m_browseIcon = new ImageIcon(Utilities.imagesDir + "open2.gif");
 
 	// The file chooser window.
 	// private FileChooserWindow fileChooser = new FileChooserWindow(null);
-	private JFileChooser fileChooser = new JFileChooser();
+	private JFileChooser m_fileChooser = new JFileChooser();
 
 	// The current instruction index (yellow background).
-	private int instructionIndex;
+	private int m_instructionIndex;
 
 	// The text field with the message (for example "Loading...").
-	private JTextField messageTxt = new JTextField();
+	private JTextField m_messageTxt = new JTextField();
 
 	// The cell renderer of this table.
-	private ColoredTableCellRenderer coloredRenderer = new ColoredTableCellRenderer();
+	private ColoredTableCellRenderer m_coloredRenderer = new ColoredTableCellRenderer();
 
 	// Creating the search button.
-	private MouseOverJButton searchButton = new MouseOverJButton();
+	private MouseOverJButton m_searchButton = new MouseOverJButton();
 
 	// Creating the icon for the search button.
-	private ImageIcon searchIcon = new ImageIcon(Utilities.imagesDir + "find.gif");
+	private ImageIcon m_searchIcon = new ImageIcon(Utilities.imagesDir + "find.gif");
 
 	// The window of searching a specific location in memory.
-	private SearchProgramWindow searchWindow;
+	private SearchProgramWindow m_searchWindow;
 
 	// The scroll pane on which the table is placed.
-	private JScrollPane scrollPane;
+	private JScrollPane m_scrollPane;
 
 	// The name of this component ("Program :").
-	private JLabel nameLbl = new JLabel();
+	private JLabel m_nameLbl = new JLabel();
 
 	// Creating the clear button.
-	protected MouseOverJButton clearButton = new MouseOverJButton();
+	protected MouseOverJButton m_clearButton = new MouseOverJButton();
 
 	// Creating the icon for the clear button.
-	private ImageIcon clearIcon = new ImageIcon(Utilities.imagesDir + "smallnew.gif");
+	private ImageIcon m_clearIcon = new ImageIcon(Utilities.imagesDir + "smallnew.gif");
 
 	/**
 	 * Constructs a new ProgramComponent.
 	 */
 	public ProgramComponent() {
-		listeners = new Vector();
-		errorEventListeners = new Vector();
-		instructions = new VMEmulatorInstruction[0];
-		model = new ProgramTableModel();
-		programTable = new JTable(model);
-		programTable.setDefaultRenderer(programTable.getColumnClass(0), coloredRenderer);
-		searchWindow = new SearchProgramWindow(programTable, instructions);
+		m_listeners = new Vector<ProgramEventListener>();
+		m_errorEventListeners = new Vector<ErrorEventListener>();
+		m_instructions = new VMEmulatorInstruction[0];
+		m_model = new ProgramTableModel();
+		m_programTable = new JTable(m_model);
+		m_programTable.setDefaultRenderer(m_programTable.getColumnClass(0), m_coloredRenderer);
+		m_searchWindow = new SearchProgramWindow(m_programTable, m_instructions);
 
 		jbInit();
 
@@ -226,7 +232,7 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
 	 */
 	@Override
 	public void addErrorListener(ErrorEventListener listener) {
-		errorEventListeners.addElement(listener);
+		m_errorEventListeners.addElement(listener);
 	}
 
 	/**
@@ -234,7 +240,7 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
 	 */
 	@Override
 	public void addProgramListener(ProgramEventListener listener) {
-		listeners.addElement(listener);
+		m_listeners.addElement(listener);
 	}
 
 	/**
@@ -275,7 +281,7 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
 	private void determineColumnWidth() {
 		TableColumn column = null;
 		for (int i = 0; i < 3; i++) {
-			column = programTable.getColumnModel().getColumn(i);
+			column = m_programTable.getColumnModel().getColumn(i);
 			if (i == 0) {
 				column.setPreferredWidth(30);
 			} else if (i == 1) {
@@ -298,56 +304,56 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
 	 */
 	@Override
 	public void hideMessage() {
-		messageTxt.setText("");
-		messageTxt.setVisible(false);
-		searchButton.setVisible(true);
-		clearButton.setVisible(true);
-		browseButton.setVisible(true);
+		m_messageTxt.setText("");
+		m_messageTxt.setVisible(false);
+		m_searchButton.setVisible(true);
+		m_clearButton.setVisible(true);
+		m_browseButton.setVisible(true);
 	}
 
 	// Initialization of this component.
 	private void jbInit() {
-		fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-		fileChooser.setFileFilter(new VMFileFilter());
-		programTable.getTableHeader().setReorderingAllowed(false);
-		programTable.getTableHeader().setResizingAllowed(false);
-		scrollPane = new JScrollPane(programTable);
-		scrollPane.setLocation(0, 27);
-		browseButton.setToolTipText("Load Program");
-		browseButton.setIcon(browseIcon);
-		browseButton.setBounds(new Rectangle(119, 2, 31, 24));
-		browseButton.addActionListener(e -> browseButton_actionPerformed(e));
-		messageTxt.setBackground(SystemColor.info);
-		messageTxt.setEnabled(false);
-		messageTxt.setFont(Utilities.labelsFont);
-		messageTxt.setPreferredSize(new Dimension(70, 20));
-		messageTxt.setDisabledTextColor(Color.red);
-		messageTxt.setEditable(false);
-		messageTxt.setBounds(new Rectangle(91, 2, 132, 23));
-		messageTxt.setVisible(false);
+		m_fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+		m_fileChooser.setFileFilter(new VMFileFilter());
+		m_programTable.getTableHeader().setReorderingAllowed(false);
+		m_programTable.getTableHeader().setResizingAllowed(false);
+		m_scrollPane = new JScrollPane(m_programTable);
+		m_scrollPane.setLocation(0, 27);
+		m_browseButton.setToolTipText("Load Program");
+		m_browseButton.setIcon(m_browseIcon);
+		m_browseButton.setBounds(new Rectangle(119, 2, 31, 24));
+		m_browseButton.addActionListener(e -> browseButton_actionPerformed(e));
+		m_messageTxt.setBackground(SystemColor.info);
+		m_messageTxt.setEnabled(false);
+		m_messageTxt.setFont(Utilities.labelsFont);
+		m_messageTxt.setPreferredSize(new Dimension(70, 20));
+		m_messageTxt.setDisabledTextColor(Color.red);
+		m_messageTxt.setEditable(false);
+		m_messageTxt.setBounds(new Rectangle(91, 2, 132, 23));
+		m_messageTxt.setVisible(false);
 
-		searchButton.setToolTipText("Search");
-		searchButton.setIcon(searchIcon);
-		searchButton.setBounds(new Rectangle(188, 2, 31, 24));
-		searchButton.addActionListener(e -> searchButton_actionPerformed(e));
+		m_searchButton.setToolTipText("Search");
+		m_searchButton.setIcon(m_searchIcon);
+		m_searchButton.setBounds(new Rectangle(188, 2, 31, 24));
+		m_searchButton.addActionListener(e -> searchButton_actionPerformed(e));
 		this.setForeground(Color.lightGray);
 		this.setLayout(null);
-		nameLbl.setText("Program");
-		nameLbl.setBounds(new Rectangle(5, 5, 73, 20));
-		nameLbl.setFont(Utilities.labelsFont);
+		m_nameLbl.setText("Program");
+		m_nameLbl.setBounds(new Rectangle(5, 5, 73, 20));
+		m_nameLbl.setFont(Utilities.labelsFont);
 
-		clearButton.addActionListener(e -> clearButton_actionPerformed(e));
-		clearButton.setBounds(new Rectangle(154, 2, 31, 24));
-		clearButton.setIcon(clearIcon);
-		clearButton.setToolTipText("Clear");
-		this.add(scrollPane, null);
-		this.add(nameLbl, null);
-		this.add(searchButton, null);
-		this.add(clearButton, null);
-		this.add(messageTxt, null);
-		this.add(browseButton, null);
+		m_clearButton.addActionListener(e -> clearButton_actionPerformed(e));
+		m_clearButton.setBounds(new Rectangle(154, 2, 31, 24));
+		m_clearButton.setIcon(m_clearIcon);
+		m_clearButton.setToolTipText("Clear");
+		this.add(m_scrollPane, null);
+		this.add(m_nameLbl, null);
+		this.add(m_searchButton, null);
+		this.add(m_clearButton, null);
+		this.add(m_messageTxt, null);
+		this.add(m_browseButton, null);
 		determineColumnWidth();
-		programTable.setTableHeader(null);
+		m_programTable.setTableHeader(null);
 		setBorder(BorderFactory.createEtchedBorder());
 	}
 
@@ -355,9 +361,9 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
 	 * Opens the program file chooser for loading a program.
 	 */
 	public void loadProgram() {
-		int returnVal = fileChooser.showDialog(this, "Load Program");
+		int returnVal = m_fileChooser.showDialog(this, "Load Program");
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			notifyProgramListeners(ProgramEvent.LOAD, fileChooser.getSelectedFile().getAbsolutePath());
+			notifyProgramListeners(ProgramEvent.LOAD, m_fileChooser.getSelectedFile().getAbsolutePath());
 		}
 	}
 
@@ -378,8 +384,8 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
 	@Override
 	public void notifyErrorListeners(String errorMessage) {
 		ErrorEvent event = new ErrorEvent(this, errorMessage);
-		for (int i = 0; i < errorEventListeners.size(); i++) {
-			((ErrorEventListener) errorEventListeners.elementAt(i)).errorOccured(event);
+		for (int i = 0; i < m_errorEventListeners.size(); i++) {
+			((ErrorEventListener) m_errorEventListeners.elementAt(i)).errorOccured(event);
 		}
 	}
 
@@ -392,8 +398,8 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
 	@Override
 	public void notifyProgramListeners(byte eventType, String programFileName) {
 		ProgramEvent event = new ProgramEvent(this, eventType, programFileName);
-		for (int i = 0; i < listeners.size(); i++) {
-			((ProgramEventListener) listeners.elementAt(i)).programChanged(event);
+		for (int i = 0; i < m_listeners.size(); i++) {
+			((ProgramEventListener) m_listeners.elementAt(i)).programChanged(event);
 		}
 	}
 
@@ -403,7 +409,7 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
 	 */
 	@Override
 	public void removeErrorListener(ErrorEventListener listener) {
-		errorEventListeners.removeElement(listener);
+		m_errorEventListeners.removeElement(listener);
 	}
 
 	/**
@@ -412,7 +418,7 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
 	 */
 	@Override
 	public void removeProgramListener(ProgramEventListener listener) {
-		listeners.removeElement(listener);
+		m_listeners.removeElement(listener);
 	}
 
 	/**
@@ -420,8 +426,8 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
 	 */
 	@Override
 	public void reset() {
-		instructions = new VMEmulatorInstruction[0];
-		programTable.clearSelection();
+		m_instructions = new VMEmulatorInstruction[0];
+		m_programTable.clearSelection();
 		repaint();
 	}
 
@@ -429,7 +435,7 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
 	 * Implementing the action of pressing the search button.
 	 */
 	public void searchButton_actionPerformed(ActionEvent e) {
-		searchWindow.showWindow();
+		m_searchWindow.showWindow();
 	}
 
 	/**
@@ -438,14 +444,14 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
 	 */
 	@Override
 	public synchronized void setContents(VMEmulatorInstruction[] newInstructions, int newInstructionsLength) {
-		instructions = new VMEmulatorInstruction[newInstructionsLength];
-		System.arraycopy(newInstructions, 0, instructions, 0, newInstructionsLength);
-		programTable.revalidate();
+		m_instructions = new VMEmulatorInstruction[newInstructionsLength];
+		System.arraycopy(newInstructions, 0, m_instructions, 0, newInstructionsLength);
+		m_programTable.revalidate();
 		try {
 			wait(100);
 		} catch (InterruptedException ie) {
 		}
-		searchWindow.setInstructions(instructions);
+		m_searchWindow.setInstructions(m_instructions);
 	}
 
 	/**
@@ -453,23 +459,23 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
 	 */
 	@Override
 	public void setCurrentInstruction(int instructionIndex) {
-		this.instructionIndex = instructionIndex;
-		Utilities.tableCenterScroll(this, programTable, instructionIndex);
+		this.m_instructionIndex = instructionIndex;
+		Utilities.tableCenterScroll(this, m_programTable, instructionIndex);
 	}
 
 	/**
 	 * Sets the name label.
 	 */
 	public void setNameLabel(String name) {
-		nameLbl.setText(name);
+		m_nameLbl.setText(name);
 	}
 
 	/**
 	 * Sets the number of visible rows.
 	 */
 	public void setVisibleRows(int num) {
-		int tableHeight = num * programTable.getRowHeight();
-		scrollPane.setSize(getTableWidth(), tableHeight + 3);
+		int tableHeight = num * m_programTable.getRowHeight();
+		m_scrollPane.setSize(getTableWidth(), tableHeight + 3);
 		setPreferredSize(new Dimension(getTableWidth(), tableHeight + 30));
 		setSize(getTableWidth(), tableHeight + 30);
 	}
@@ -478,7 +484,7 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
 	 * Sets the working directory with the given directory File.
 	 */
 	public void setWorkingDir(File file) {
-		fileChooser.setCurrentDirectory(file);
+		m_fileChooser.setCurrentDirectory(file);
 	}
 
 	/**
@@ -486,10 +492,10 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
 	 */
 	@Override
 	public void showMessage(String message) {
-		messageTxt.setText(message);
-		messageTxt.setVisible(true);
-		searchButton.setVisible(false);
-		clearButton.setVisible(false);
-		browseButton.setVisible(false);
+		m_messageTxt.setText(message);
+		m_messageTxt.setVisible(true);
+		m_searchButton.setVisible(false);
+		m_clearButton.setVisible(false);
+		m_browseButton.setVisible(false);
 	}
 }

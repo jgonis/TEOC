@@ -25,20 +25,22 @@ import java.util.EventObject;
  */
 public class PinValueEvent extends EventObject {
 
+	private static final long serialVersionUID = -3958238988342892503L;
+
 	// The pin value in a string representation.
-	private String valueStr;
+	private String m_valueStr;
 
 	// A boolean value which is true when the user pressed the ok button
 	// and false if the user pressed the cancel button.
-	private boolean isOk;
+	private boolean m_isOk;
 
 	/**
 	 * Constructs a new PinValueEvent.
 	 */
 	public PinValueEvent(Object source, String valueStr, boolean isOk) {
 		super(source);
-		this.valueStr = valueStr;
-		this.isOk = isOk;
+		this.m_valueStr = valueStr;
+		this.m_isOk = isOk;
 	}
 
 	/**
@@ -46,13 +48,13 @@ public class PinValueEvent extends EventObject {
 	 * button and false if the user pressed the 'cancel' button.
 	 */
 	public boolean getIsOk() {
-		return isOk;
+		return m_isOk;
 	}
 
 	/**
 	 * Returns the pin value on a string representation.
 	 */
 	public String getValueStr() {
-		return valueStr;
+		return m_valueStr;
 	}
 }
