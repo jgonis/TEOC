@@ -39,21 +39,22 @@ import HackGUI.Utilities;
  */
 public class StackCalculator extends JPanel implements CalculatorGUI {
 
+	private static final long serialVersionUID = 8803665242452281293L;
 	// wide and regular strokes for the painting.
-	private final static BasicStroke wideStroke = new BasicStroke(3.0f);
-	private final static BasicStroke regularStroke = new BasicStroke(1.0f);
+	private final static BasicStroke WIDE_STROKE = new BasicStroke(3.0f);
+	private final static BasicStroke REGULAR_STROKE = new BasicStroke(1.0f);
 	// The input, command and output textfields.
-	private JTextField firstInput = new JTextField();
-	private JTextField command = new JTextField();
+	private JTextField m_firstInput = new JTextField();
+	private JTextField m_command = new JTextField();
 
-	private JTextField secondInput = new JTextField();
-	private JTextField output = new JTextField();
+	private JTextField m_secondInput = new JTextField();
+	private JTextField m_output = new JTextField();
 
 	// The null value of this component.
-	protected short nullValue;
+	protected short m_nullValue;
 
 	// A boolean field specifying if the null value should be activated or not.
-	protected boolean hideNullValue;
+	protected boolean m_hideNullValue;
 
 	/**
 	 * Constructs a new StackCalculator.
@@ -84,13 +85,13 @@ public class StackCalculator extends JPanel implements CalculatorGUI {
 	public void flash(int index) {
 		switch (index) {
 		case 0:
-			firstInput.setBackground(Color.orange);
+			m_firstInput.setBackground(Color.orange);
 			break;
 		case 1:
-			secondInput.setBackground(Color.orange);
+			m_secondInput.setBackground(Color.orange);
 			break;
 		case 2:
-			output.setBackground(Color.orange);
+			m_output.setBackground(Color.orange);
 			break;
 		}
 	}
@@ -105,16 +106,16 @@ public class StackCalculator extends JPanel implements CalculatorGUI {
 		switch (index) {
 		// The first input
 		case 0:
-			return new Point((int) (location.getX() + firstInput.getLocation().getX()),
-					(int) (location.getY() + firstInput.getLocation().getY()));
+			return new Point((int) (location.getX() + m_firstInput.getLocation().getX()),
+					(int) (location.getY() + m_firstInput.getLocation().getY()));
 		// The second input
 		case 1:
-			return new Point((int) (location.getX() + secondInput.getLocation().getX()),
-					(int) (location.getY() + secondInput.getLocation().getY()));
+			return new Point((int) (location.getX() + m_secondInput.getLocation().getX()),
+					(int) (location.getY() + m_secondInput.getLocation().getY()));
 		// The output
 		case 2:
-			return new Point((int) (location.getX() + output.getLocation().getX()),
-					(int) (location.getY() + output.getLocation().getY()));
+			return new Point((int) (location.getX() + m_output.getLocation().getX()),
+					(int) (location.getY() + m_output.getLocation().getY()));
 		default:
 			return null;
 		}
@@ -127,11 +128,11 @@ public class StackCalculator extends JPanel implements CalculatorGUI {
 	public String getValueAsString(int index) {
 		switch (index) {
 		case 0:
-			return firstInput.getText();
+			return m_firstInput.getText();
 		case 1:
-			return secondInput.getText();
+			return m_secondInput.getText();
 		case 2:
-			return output.getText();
+			return m_output.getText();
 		default:
 			return "";
 		}
@@ -150,9 +151,9 @@ public class StackCalculator extends JPanel implements CalculatorGUI {
 	 */
 	@Override
 	public void hideFlash() {
-		firstInput.setBackground(UIManager.getColor("Button.background"));
-		secondInput.setBackground(UIManager.getColor("Button.background"));
-		output.setBackground(UIManager.getColor("Button.background"));
+		m_firstInput.setBackground(UIManager.getColor("Button.background"));
+		m_secondInput.setBackground(UIManager.getColor("Button.background"));
+		m_output.setBackground(UIManager.getColor("Button.background"));
 	}
 
 	/**
@@ -160,9 +161,9 @@ public class StackCalculator extends JPanel implements CalculatorGUI {
 	 */
 	@Override
 	public void hideHighlight() {
-		firstInput.setForeground(Color.black);
-		secondInput.setForeground(Color.black);
-		output.setForeground(Color.black);
+		m_firstInput.setForeground(Color.black);
+		m_secondInput.setForeground(Color.black);
+		m_output.setForeground(Color.black);
 	}
 
 	/**
@@ -170,7 +171,7 @@ public class StackCalculator extends JPanel implements CalculatorGUI {
 	 */
 	@Override
 	public void hideLeftInput() {
-		firstInput.setVisible(false);
+		m_firstInput.setVisible(false);
 	}
 
 	/**
@@ -180,13 +181,13 @@ public class StackCalculator extends JPanel implements CalculatorGUI {
 	public void highlight(int index) {
 		switch (index) {
 		case 0:
-			firstInput.setForeground(Color.blue);
+			m_firstInput.setForeground(Color.blue);
 			break;
 		case 1:
-			secondInput.setForeground(Color.blue);
+			m_secondInput.setForeground(Color.blue);
 			break;
 		case 2:
-			output.setForeground(Color.blue);
+			m_output.setForeground(Color.blue);
 			break;
 		}
 	}
@@ -194,27 +195,27 @@ public class StackCalculator extends JPanel implements CalculatorGUI {
 	// Initialization of this component.
 	private void jbInit() {
 		this.setLayout(null);
-		firstInput.setHorizontalAlignment(SwingConstants.RIGHT);
-		firstInput.setBounds(new Rectangle(18, 8, 124, 19));
-		firstInput.setBackground(UIManager.getColor("Button.background"));
-		firstInput.setFont(Utilities.valueFont);
-		command.setFont(Utilities.bigLabelsFont);
-		command.setHorizontalAlignment(SwingConstants.CENTER);
-		command.setBounds(new Rectangle(2, 34, 13, 19));
-		command.setBackground(UIManager.getColor("Button.background"));
-		command.setBorder(null);
-		secondInput.setHorizontalAlignment(SwingConstants.RIGHT);
-		secondInput.setBounds(new Rectangle(18, 34, 124, 19));
-		secondInput.setBackground(UIManager.getColor("Button.background"));
-		secondInput.setFont(new java.awt.Font("Courier New", 0, 12));
-		output.setHorizontalAlignment(SwingConstants.RIGHT);
-		output.setBounds(new Rectangle(18, 70, 124, 19));
-		output.setBackground(UIManager.getColor("Button.background"));
-		output.setFont(Utilities.valueFont);
-		this.add(secondInput, null);
-		this.add(firstInput, null);
-		this.add(output, null);
-		this.add(command, null);
+		m_firstInput.setHorizontalAlignment(SwingConstants.RIGHT);
+		m_firstInput.setBounds(new Rectangle(18, 8, 124, 19));
+		m_firstInput.setBackground(UIManager.getColor("Button.background"));
+		m_firstInput.setFont(Utilities.valueFont);
+		m_command.setFont(Utilities.bigLabelsFont);
+		m_command.setHorizontalAlignment(SwingConstants.CENTER);
+		m_command.setBounds(new Rectangle(2, 34, 13, 19));
+		m_command.setBackground(UIManager.getColor("Button.background"));
+		m_command.setBorder(null);
+		m_secondInput.setHorizontalAlignment(SwingConstants.RIGHT);
+		m_secondInput.setBounds(new Rectangle(18, 34, 124, 19));
+		m_secondInput.setBackground(UIManager.getColor("Button.background"));
+		m_secondInput.setFont(new java.awt.Font("Courier New", 0, 12));
+		m_output.setHorizontalAlignment(SwingConstants.RIGHT);
+		m_output.setBounds(new Rectangle(18, 70, 124, 19));
+		m_output.setBackground(UIManager.getColor("Button.background"));
+		m_output.setFont(Utilities.valueFont);
+		this.add(m_secondInput, null);
+		this.add(m_firstInput, null);
+		this.add(m_output, null);
+		this.add(m_command, null);
 	}
 
 	/**
@@ -224,9 +225,9 @@ public class StackCalculator extends JPanel implements CalculatorGUI {
 	public void paintComponent(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setPaint(Color.black);
-		g2.setStroke(wideStroke);
+		g2.setStroke(WIDE_STROKE);
 		g2.draw(new Line2D.Double(18, 60, 142, 60));
-		g2.setStroke(regularStroke);
+		g2.setStroke(REGULAR_STROKE);
 	}
 
 	/**
@@ -234,9 +235,9 @@ public class StackCalculator extends JPanel implements CalculatorGUI {
 	 */
 	@Override
 	public void reset() {
-		firstInput.setText(translateValueToString(nullValue));
-		secondInput.setText(translateValueToString(nullValue));
-		output.setText(translateValueToString(nullValue));
+		m_firstInput.setText(translateValueToString(m_nullValue));
+		m_secondInput.setText(translateValueToString(m_nullValue));
+		m_output.setText(translateValueToString(m_nullValue));
 		hideFlash();
 		hideHighlight();
 	}
@@ -246,8 +247,8 @@ public class StackCalculator extends JPanel implements CalculatorGUI {
 	 */
 	@Override
 	public void setNullValue(short value, boolean hideNullValue) {
-		nullValue = value;
-		this.hideNullValue = hideNullValue;
+		m_nullValue = value;
+		this.m_hideNullValue = hideNullValue;
 	}
 
 	/**
@@ -263,7 +264,7 @@ public class StackCalculator extends JPanel implements CalculatorGUI {
 	 */
 	@Override
 	public void setOperator(char operator) {
-		command.setText(String.valueOf(operator));
+		m_command.setText(String.valueOf(operator));
 	}
 
 	/**
@@ -274,13 +275,13 @@ public class StackCalculator extends JPanel implements CalculatorGUI {
 		String data = translateValueToString(value);
 		switch (index) {
 		case 0:
-			firstInput.setText(data);
+			m_firstInput.setText(data);
 			break;
 		case 1:
-			secondInput.setText(data);
+			m_secondInput.setText(data);
 			break;
 		case 2:
-			output.setText(data);
+			m_output.setText(data);
 			break;
 		}
 	}
@@ -298,15 +299,15 @@ public class StackCalculator extends JPanel implements CalculatorGUI {
 	 */
 	@Override
 	public void showLeftInput() {
-		firstInput.setVisible(true);
+		m_firstInput.setVisible(true);
 	}
 
 	/**
 	 * Translates a given short to a string according to the current format.
 	 */
 	protected String translateValueToString(short value) {
-		if (hideNullValue) {
-			if (value == nullValue) {
+		if (m_hideNullValue) {
+			if (value == m_nullValue) {
 				return "";
 			} else {
 				return Format.translateValueToString(value, Format.DEC_FORMAT);

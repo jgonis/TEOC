@@ -34,6 +34,7 @@ import HackGUI.Utilities;
  */
 public class GateInfoComponent extends JPanel implements GateInfoGUI {
 
+	private static final long serialVersionUID = 5158149504852058464L;
 	// creating labels
 	private JLabel chipNameLbl;
 	private JLabel timeLbl;

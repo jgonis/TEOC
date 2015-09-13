@@ -41,10 +41,14 @@ import HackGUI.Utilities;
  */
 public class CallStackComponent extends JPanel implements CallStackGUI {
 
+	private static final long serialVersionUID = 3274288759472843939L;
+
 	/**
 	 * The Cell Renderer for the call stack's table.
 	 */
-	public class callStackTableCellRenderer extends DefaultTableCellRenderer {
+	public class CallStackTableCellRenderer extends DefaultTableCellRenderer {
+
+		private static final long serialVersionUID = -6568204416360733388L;
 
 		/**
 		 * Returns the cell renderer component.
@@ -65,7 +69,7 @@ public class CallStackComponent extends JPanel implements CallStackGUI {
 		 * Sets a new cell renderer.
 		 */
 		public void setRenderer(int row, int column) {
-			if (row == (methodNames.size() - 1)) {
+			if (row == (m_methodNames.size() - 1)) {
 				setForeground(Color.blue);
 			}
 		}
@@ -73,6 +77,8 @@ public class CallStackComponent extends JPanel implements CallStackGUI {
 
 	// An inner class representing the model of the CallStack table.
 	class CallStackTableModel extends AbstractTableModel {
+
+		private static final long serialVersionUID = -846057644169400305L;
 
 		/**
 		 * Returns the number of columns.
@@ -95,7 +101,7 @@ public class CallStackComponent extends JPanel implements CallStackGUI {
 		 */
 		@Override
 		public int getRowCount() {
-			return methodNames.size();
+			return m_methodNames.size();
 		}
 
 		/**
@@ -103,7 +109,7 @@ public class CallStackComponent extends JPanel implements CallStackGUI {
 		 */
 		@Override
 		public Object getValueAt(int row, int col) {
-			return methodNames.elementAt(row);
+			return m_methodNames.elementAt(row);
 		}
 
 		/**
@@ -119,27 +125,27 @@ public class CallStackComponent extends JPanel implements CallStackGUI {
 	protected static final int DEFAULT_VISIBLE_ROWS = 10;
 
 	// The vector containing the method names of this call stack.
-	private Vector methodNames;
+	private Vector<String> m_methodNames;
 
 	// The table representing this callStack.
-	private JTable callStackTable;
+	private JTable m_callStackTable;
 
 	// The model of the table;
-	private CallStackTableModel model;
+	private CallStackTableModel m_model;
 
 	// The containing scroll panel
-	private JScrollPane scrollPane;
+	private JScrollPane m_scrollPane;
 
 	// The name label
-	private JLabel nameLbl = new JLabel();
+	private JLabel m_nameLbl = new JLabel();
 
 	/**
 	 * Constructs a new CallStackComponent.
 	 */
 	public CallStackComponent() {
-		methodNames = new Vector();
-		model = new CallStackTableModel();
-		callStackTable = new JTable(model);
+		m_methodNames = new Vector<String>();
+		m_model = new CallStackTableModel();
+		m_callStackTable = new JTable(m_model);
 		jbInit();
 
 	}
@@ -154,14 +160,14 @@ public class CallStackComponent extends JPanel implements CallStackGUI {
 	 * The action of the table loosing focus
 	 */
 	public void callStackTable_focusLost(FocusEvent e) {
-		callStackTable.clearSelection();
+		m_callStackTable.clearSelection();
 	}
 
 	/**
 	 * Returns the cell renderer of this component.
 	 */
 	protected DefaultTableCellRenderer getCellRenderer() {
-		return new callStackTableCellRenderer();
+		return new CallStackTableCellRenderer();
 	}
 
 	/**
@@ -173,7 +179,7 @@ public class CallStackComponent extends JPanel implements CallStackGUI {
 
 	// Initializing this component.
 	private void jbInit() {
-		callStackTable.addFocusListener(new FocusListener() {
+		m_callStackTable.addFocusListener(new FocusListener() {
 			@Override
 			public void focusGained(FocusEvent e) {
 				callStackTable_focusGained(e);
@@ -184,18 +190,18 @@ public class CallStackComponent extends JPanel implements CallStackGUI {
 				callStackTable_focusLost(e);
 			}
 		});
-		callStackTable.setTableHeader(null);
-		callStackTable.setDefaultRenderer(callStackTable.getColumnClass(0), getCellRenderer());
-		scrollPane = new JScrollPane(callStackTable);
+		m_callStackTable.setTableHeader(null);
+		m_callStackTable.setDefaultRenderer(m_callStackTable.getColumnClass(0), getCellRenderer());
+		m_scrollPane = new JScrollPane(m_callStackTable);
 		setVisibleRows(DEFAULT_VISIBLE_ROWS);
-		scrollPane.setLocation(0, 27);
+		m_scrollPane.setLocation(0, 27);
 		setBorder(BorderFactory.createEtchedBorder());
 		this.setLayout(null);
-		nameLbl.setText("Call Stack");
-		nameLbl.setBounds(new Rectangle(3, 4, 70, 23));
-		nameLbl.setFont(Utilities.labelsFont);
-		this.add(scrollPane, null);
-		this.add(nameLbl, null);
+		m_nameLbl.setText("Call Stack");
+		m_nameLbl.setBounds(new Rectangle(3, 4, 70, 23));
+		m_nameLbl.setFont(Utilities.labelsFont);
+		this.add(m_scrollPane, null);
+		this.add(m_nameLbl, null);
 	}
 
 	/**
@@ -203,9 +209,9 @@ public class CallStackComponent extends JPanel implements CallStackGUI {
 	 */
 	@Override
 	public void reset() {
-		methodNames.removeAllElements();
-		callStackTable.revalidate();
-		callStackTable.clearSelection();
+		m_methodNames.removeAllElements();
+		m_callStackTable.revalidate();
+		m_callStackTable.clearSelection();
 
 	}
 
@@ -213,12 +219,12 @@ public class CallStackComponent extends JPanel implements CallStackGUI {
 	 * Sets the call stack with the given vector of method names.
 	 */
 	@Override
-	public void setContents(Vector newMethodNames) {
-		methodNames = (Vector) newMethodNames.clone();
-		callStackTable.revalidate();
+	public void setContents(Vector<String> newMethodNames) {
+		m_methodNames = new Vector<String>(newMethodNames);
+		m_callStackTable.revalidate();
 
-		Rectangle r = callStackTable.getCellRect(newMethodNames.size() - 1, 0, true);
-		callStackTable.scrollRectToVisible(r);
+		Rectangle r = m_callStackTable.getCellRect(newMethodNames.size() - 1, 0, true);
+		m_callStackTable.scrollRectToVisible(r);
 		repaint();
 	}
 
@@ -226,8 +232,8 @@ public class CallStackComponent extends JPanel implements CallStackGUI {
 	 * Sets the number of visible rows.
 	 */
 	public void setVisibleRows(int num) {
-		int tableHeight = num * callStackTable.getRowHeight();
-		scrollPane.setSize(getTableWidth(), tableHeight + 3);
+		int tableHeight = num * m_callStackTable.getRowHeight();
+		m_scrollPane.setSize(getTableWidth(), tableHeight + 3);
 		setPreferredSize(new Dimension(getTableWidth(), tableHeight + 30));
 		setSize(getTableWidth(), tableHeight + 30);
 	}

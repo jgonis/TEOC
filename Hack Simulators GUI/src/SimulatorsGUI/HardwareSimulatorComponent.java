@@ -44,6 +44,7 @@ import HackGUI.TextFileComponent;
  */
 public class HardwareSimulatorComponent extends HackSimulatorComponent implements HardwareSimulatorGUI, GatesPanelGUI {
 
+	private static final long serialVersionUID = -6096653474352399561L;
 	// The dimension of this window.
 	private static final int WIDTH = 1018;
 	private static final int HEIGHT = 611;

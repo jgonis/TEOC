@@ -42,72 +42,73 @@ import HackGUI.TrimmedValuesOnlyAbsoluteMemorySegmentComponent;
  * This class represents the gui of the VMEmulator.
  */
 public class VMEmulatorComponent extends HackSimulatorComponent implements VMEmulatorGUI {
-
+ 
+	private static final long serialVersionUID = -1814109754899106821L;
 	// The dimension of this window.
 	private static final int WIDTH = 1018;
 	private static final int HEIGHT = 611;
 
 	// The keyboard of the VMEmulator component.
-	private KeyboardComponent keyboard;
+	private KeyboardComponent m_keyboard;
 
 	// The screen of the VMEmulator component.
-	private ScreenComponent screen;
+	private ScreenComponent m_screen;
 
 	// The call stack of the VMEmulator component.
-	private CallStackComponent callStack;
+	private CallStackComponent m_callStack;
 
 	// The program of the VMEmulator component.
-	private ProgramComponent program;
+	private ProgramComponent m_program;
 
 	// The ram of the VMEmulator component.
-	private LabeledMemoryComponent ram;
+	private LabeledMemoryComponent m_ram;
 
 	// The stack of the VMEmulator component.
-	private AbsolutePointedMemorySegmentComponent stack;
+	private AbsolutePointedMemorySegmentComponent m_stack;
 
 	// The memory segments of the VMEmulator component.
-	private MemorySegmentsComponent segments;
+	private MemorySegmentsComponent m_segments;
 
 	// The bus of the VMEmulator component.
-	private BusComponent bus;
+	private BusComponent m_bus;
 
 	// The calculator of this emulator.
-	private StackCalculator calculator;
+	private StackCalculator m_calculator;
 
 	// The working stack of the VMEmulator component.
-	private TrimmedValuesOnlyAbsoluteMemorySegmentComponent workingStack;
+	private TrimmedValuesOnlyAbsoluteMemorySegmentComponent m_workingStack;
 
 	/**
 	 * Constructs a new VMEmulatorGUI.
 	 */
 	public VMEmulatorComponent() {
-		bus = new BusComponent();
-		screen = new ScreenComponent();
-		keyboard = new KeyboardComponent();
-		ram = new LabeledMemoryComponent();
-		ram.setName("RAM");
-		callStack = new CallStackComponent();
-		program = new ProgramComponent();
-		segments = new MemorySegmentsComponent();
-		workingStack = new TrimmedValuesOnlyAbsoluteMemorySegmentComponent();
-		workingStack.setSegmentName("Stack");
-		stack = new AbsolutePointedMemorySegmentComponent();
-		calculator = new StackCalculator();
+		m_bus = new BusComponent();
+		m_screen = new ScreenComponent();
+		m_keyboard = new KeyboardComponent();
+		m_ram = new LabeledMemoryComponent();
+		m_ram.setName("RAM");
+		m_callStack = new CallStackComponent();
+		m_program = new ProgramComponent();
+		m_segments = new MemorySegmentsComponent();
+		m_workingStack = new TrimmedValuesOnlyAbsoluteMemorySegmentComponent();
+		m_workingStack.setSegmentName("Stack");
+		m_stack = new AbsolutePointedMemorySegmentComponent();
+		m_calculator = new StackCalculator();
 		setSegmentsRam();
 		setStackName();
 
 		jbInit();
 
 		// Setting the top level location of the components.
-		ram.setTopLevelLocation(this);
-		segments.getStaticSegment().setTopLevelLocation(this);
-		segments.getLocalSegment().setTopLevelLocation(this);
-		segments.getArgSegment().setTopLevelLocation(this);
-		segments.getThisSegment().setTopLevelLocation(this);
-		segments.getThatSegment().setTopLevelLocation(this);
-		segments.getTempSegment().setTopLevelLocation(this);
-		stack.setTopLevelLocation(this);
-		workingStack.setTopLevelLocation(this);
+		m_ram.setTopLevelLocation(this);
+		m_segments.getStaticSegment().setTopLevelLocation(this);
+		m_segments.getLocalSegment().setTopLevelLocation(this);
+		m_segments.getArgSegment().setTopLevelLocation(this);
+		m_segments.getThisSegment().setTopLevelLocation(this);
+		m_segments.getThatSegment().setTopLevelLocation(this);
+		m_segments.getTempSegment().setTopLevelLocation(this);
+		m_stack.setTopLevelLocation(this);
+		m_workingStack.setTopLevelLocation(this);
 	}
 
 	@Override
@@ -120,7 +121,7 @@ public class VMEmulatorComponent extends HackSimulatorComponent implements VMEmu
 	 */
 	@Override
 	public MemorySegmentGUI getArgSegment() {
-		return segments.getArgSegment();
+		return m_segments.getArgSegment();
 	}
 
 	/**
@@ -128,7 +129,7 @@ public class VMEmulatorComponent extends HackSimulatorComponent implements VMEmu
 	 */
 	@Override
 	public BusGUI getBus() {
-		return bus;
+		return m_bus;
 	}
 
 	/**
@@ -136,7 +137,7 @@ public class VMEmulatorComponent extends HackSimulatorComponent implements VMEmu
 	 */
 	@Override
 	public CalculatorGUI getCalculator() {
-		return calculator;
+		return m_calculator;
 	}
 
 	/**
@@ -144,7 +145,7 @@ public class VMEmulatorComponent extends HackSimulatorComponent implements VMEmu
 	 */
 	@Override
 	public CallStackGUI getCallStack() {
-		return callStack;
+		return m_callStack;
 	}
 
 	/**
@@ -152,7 +153,7 @@ public class VMEmulatorComponent extends HackSimulatorComponent implements VMEmu
 	 */
 	@Override
 	public KeyboardGUI getKeyboard() {
-		return keyboard;
+		return m_keyboard;
 	}
 
 	/**
@@ -160,7 +161,7 @@ public class VMEmulatorComponent extends HackSimulatorComponent implements VMEmu
 	 */
 	@Override
 	public MemorySegmentGUI getLocalSegment() {
-		return segments.getLocalSegment();
+		return m_segments.getLocalSegment();
 	}
 
 	/**
@@ -168,7 +169,7 @@ public class VMEmulatorComponent extends HackSimulatorComponent implements VMEmu
 	 */
 	@Override
 	public VMProgramGUI getProgram() {
-		return program;
+		return m_program;
 	}
 
 	/**
@@ -176,7 +177,7 @@ public class VMEmulatorComponent extends HackSimulatorComponent implements VMEmu
 	 */
 	@Override
 	public LabeledPointedMemoryGUI getRAM() {
-		return ram;
+		return m_ram;
 	}
 
 	/**
@@ -184,7 +185,7 @@ public class VMEmulatorComponent extends HackSimulatorComponent implements VMEmu
 	 */
 	@Override
 	public ScreenGUI getScreen() {
-		return screen;
+		return m_screen;
 	}
 
 	/**
@@ -192,7 +193,7 @@ public class VMEmulatorComponent extends HackSimulatorComponent implements VMEmu
 	 */
 	@Override
 	public PointedMemorySegmentGUI getStack() {
-		return stack;
+		return m_stack;
 	}
 
 	/**
@@ -200,7 +201,7 @@ public class VMEmulatorComponent extends HackSimulatorComponent implements VMEmu
 	 */
 	@Override
 	public MemorySegmentGUI getStaticSegment() {
-		return segments.getStaticSegment();
+		return m_segments.getStaticSegment();
 	}
 
 	/**
@@ -208,7 +209,7 @@ public class VMEmulatorComponent extends HackSimulatorComponent implements VMEmu
 	 */
 	@Override
 	public MemorySegmentGUI getTempSegment() {
-		return segments.getTempSegment();
+		return m_segments.getTempSegment();
 	}
 
 	/**
@@ -216,7 +217,7 @@ public class VMEmulatorComponent extends HackSimulatorComponent implements VMEmu
 	 */
 	@Override
 	public MemorySegmentGUI getThatSegment() {
-		return segments.getThatSegment();
+		return m_segments.getThatSegment();
 	}
 
 	/**
@@ -224,7 +225,7 @@ public class VMEmulatorComponent extends HackSimulatorComponent implements VMEmu
 	 */
 	@Override
 	public MemorySegmentGUI getThisSegment() {
-		return segments.getThisSegment();
+		return m_segments.getThisSegment();
 	}
 
 	/**
@@ -232,83 +233,83 @@ public class VMEmulatorComponent extends HackSimulatorComponent implements VMEmu
 	 */
 	@Override
 	public PointedMemorySegmentGUI getWorkingStack() {
-		return workingStack;
+		return m_workingStack;
 	}
 
 	// Initialization of this component.
 	private void jbInit() {
 		this.setLayout(null);
-		keyboard.setBounds(492, 270, keyboard.getWidth(), keyboard.getHeight());
-		screen.setBounds(492, 10, screen.getWidth(), screen.getHeight());
-		program.setVisibleRows(15);
-		program.setBounds(new Rectangle(6, 10, program.getWidth(), program.getHeight()));
-		ram.setVisibleRows(15);
-		ram.setBounds(new Rectangle(766, 327, ram.getWidth(), ram.getHeight()));
+		m_keyboard.setBounds(492, 270, m_keyboard.getWidth(), m_keyboard.getHeight());
+		m_screen.setBounds(492, 10, m_screen.getWidth(), m_screen.getHeight());
+		m_program.setVisibleRows(15);
+		m_program.setBounds(new Rectangle(6, 10, m_program.getWidth(), m_program.getHeight()));
+		m_ram.setVisibleRows(15);
+		m_ram.setBounds(new Rectangle(766, 327, m_ram.getWidth(), m_ram.getHeight()));
 
-		stack.setVisibleRows(15);
-		stack.setBounds(new Rectangle(561, 327, stack.getWidth(), stack.getHeight()));
-		segments.getSplitPane().setBounds(
-				new Rectangle(289, 10, segments.getSplitPane().getWidth(), segments.getSplitPane().getHeight()));
-		bus.setBounds(new Rectangle(0, 0, WIDTH, HEIGHT));
+		m_stack.setVisibleRows(15);
+		m_stack.setBounds(new Rectangle(561, 327, m_stack.getWidth(), m_stack.getHeight()));
+		m_segments.getSplitPane().setBounds(
+				new Rectangle(289, 10, m_segments.getSplitPane().getWidth(), m_segments.getSplitPane().getHeight()));
+		m_bus.setBounds(new Rectangle(0, 0, WIDTH, HEIGHT));
 
-		calculator.setBorder(BorderFactory.createLoweredBevelBorder());
-		calculator.setBounds(new Rectangle(137, 331, 148, 103));
-		calculator.setVisible(false);
-		workingStack.setVisibleRows(7);
-		workingStack.setBounds(new Rectangle(8, 304, workingStack.getWidth(), workingStack.getHeight()));
+		m_calculator.setBorder(BorderFactory.createLoweredBevelBorder());
+		m_calculator.setBounds(new Rectangle(137, 331, 148, 103));
+		m_calculator.setVisible(false);
+		m_workingStack.setVisibleRows(7);
+		m_workingStack.setBounds(new Rectangle(8, 304, m_workingStack.getWidth(), m_workingStack.getHeight()));
 
-		callStack.setVisibleRows(7);
-		callStack.setBounds(new Rectangle(8, 458, callStack.getWidth(), callStack.getHeight()));
+		m_callStack.setVisibleRows(7);
+		m_callStack.setBounds(new Rectangle(8, 458, m_callStack.getWidth(), m_callStack.getHeight()));
 
-		this.add(bus, null);
-		this.add(screen, null);
-		this.add(keyboard, null);
-		this.add(program, null);
-		this.add(workingStack, null);
-		this.add(callStack, null);
-		this.add(calculator, null);
-		this.add(stack, null);
-		this.add(ram, null);
-		this.add(callStack, null);
-		this.add(segments.getSplitPane(), null);
+		this.add(m_bus, null);
+		this.add(m_screen, null);
+		this.add(m_keyboard, null);
+		this.add(m_program, null);
+		this.add(m_workingStack, null);
+		this.add(m_callStack, null);
+		this.add(m_calculator, null);
+		this.add(m_stack, null);
+		this.add(m_ram, null);
+		this.add(m_callStack, null);
+		this.add(m_segments.getSplitPane(), null);
 
 		setSize(WIDTH, HEIGHT);
 	}
 
 	@Override
 	public void loadProgram() {
-		program.loadProgram();
+		m_program.loadProgram();
 	}
 
 	// Sets the memory component of the memory segments with the current RAM.
 	private void setSegmentsRam() {
 		// Setting the memory of the segments.
-		segments.getStaticSegment().setMemoryComponent(ram);
-		segments.getLocalSegment().setMemoryComponent(ram);
-		segments.getArgSegment().setMemoryComponent(ram);
-		segments.getThisSegment().setMemoryComponent(ram);
-		segments.getThatSegment().setMemoryComponent(ram);
-		segments.getTempSegment().setMemoryComponent(ram);
-		stack.setMemoryComponent(ram);
-		workingStack.setMemoryComponent(ram);
+		m_segments.getStaticSegment().setMemoryComponent(m_ram);
+		m_segments.getLocalSegment().setMemoryComponent(m_ram);
+		m_segments.getArgSegment().setMemoryComponent(m_ram);
+		m_segments.getThisSegment().setMemoryComponent(m_ram);
+		m_segments.getThatSegment().setMemoryComponent(m_ram);
+		m_segments.getTempSegment().setMemoryComponent(m_ram);
+		m_stack.setMemoryComponent(m_ram);
+		m_workingStack.setMemoryComponent(m_ram);
 		// registers the segments to listen to the repain event of the ram.
-		ram.addChangeListener(segments.getStaticSegment());
-		ram.addChangeListener(segments.getLocalSegment());
-		ram.addChangeListener(segments.getArgSegment());
-		ram.addChangeListener(segments.getThisSegment());
-		ram.addChangeListener(segments.getThatSegment());
-		ram.addChangeListener(segments.getTempSegment());
-		ram.addChangeListener(stack);
-		ram.addChangeListener(workingStack);
+		m_ram.addChangeListener(m_segments.getStaticSegment());
+		m_ram.addChangeListener(m_segments.getLocalSegment());
+		m_ram.addChangeListener(m_segments.getArgSegment());
+		m_ram.addChangeListener(m_segments.getThisSegment());
+		m_ram.addChangeListener(m_segments.getThatSegment());
+		m_ram.addChangeListener(m_segments.getTempSegment());
+		m_ram.addChangeListener(m_stack);
+		m_ram.addChangeListener(m_workingStack);
 	}
 
 	// Sets the name of the stack.
 	private void setStackName() {
-		stack.setSegmentName("Global Stack");
+		m_stack.setSegmentName("Global Stack");
 	}
 
 	@Override
 	public void setWorkingDir(File file) {
-		program.setWorkingDir(file);
+		m_program.setWorkingDir(file);
 	}
 }

@@ -36,6 +36,7 @@ import HackGUI.Utilities;
  */
 public class ChipLoaderFileChooser extends JFrame {
 
+	private static final long serialVersionUID = 6754237597607653977L;
 	// creating the file chooser components.
 	private FileChooserComponent workingDir = new FileChooserComponent();
 	private FileChooserComponent builtInDir = new FileChooserComponent();
@@ -49,14 +50,14 @@ public class ChipLoaderFileChooser extends JFrame {
 	private JButton cancelButton = new JButton();
 
 	// the vector containing the listeners to this component.
-	private Vector listeners;
+	private Vector<FilesTypeListener> listeners;
 
 	/**
 	 * Constructs a new ChipLoaderFileChooser.
 	 */
 	public ChipLoaderFileChooser() {
 		super("Directories Selection");
-		listeners = new Vector();
+		listeners = new Vector<FilesTypeListener>();
 		setSelectionToDirectory();
 		setNames();
 		jbInit();

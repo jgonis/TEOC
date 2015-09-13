@@ -38,6 +38,7 @@ import HackGUI.RegisterComponent;
  */
 public class CPUEmulatorComponent extends HackSimulatorComponent implements CPUEmulatorGUI {
 
+	private static final long serialVersionUID = -4034879038863888153L;
 	// The dimension of this window.
 	private static final int EMULATOR_WIDTH = 1018;
 	private static final int EMULATOR_HEIGHT = 611;

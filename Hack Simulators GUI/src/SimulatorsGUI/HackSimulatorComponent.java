@@ -29,6 +29,8 @@ import Hack.Controller.HackSimulatorGUI;
  */
 public abstract class HackSimulatorComponent extends JPanel implements HackSimulatorGUI {
 
+	private static final long serialVersionUID = -4841528306408015383L;
+
 	// The current additional display
 	protected JComponent currentAdditionalDisplay = null;
 

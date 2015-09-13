@@ -36,32 +36,34 @@ import HackGUI.Utilities;
  */
 public class SearchProgramWindow extends JFrame {
 
+	private static final long serialVersionUID = 1867258185736199360L;
+
 	// creating the label of this window
-	private JLabel instructionLbl = new JLabel();
+	private JLabel m_instructionLbl = new JLabel();
 
 	// creating the text field of this window.
-	private JTextField instruction = new JTextField();
+	private JTextField m_instruction = new JTextField();
 
 	// creating ok and cancel buttons.
-	private JButton okButton = new JButton();
-	private JButton cancelButton = new JButton();
+	private JButton m_okButton = new JButton();
+	private JButton m_cancelButton = new JButton();
 
 	// creating ok and cancel icons.
-	private ImageIcon okIcon = new ImageIcon(Utilities.imagesDir + "ok.gif");
-	private ImageIcon cancelIcon = new ImageIcon(Utilities.imagesDir + "cancel.gif");
+	private ImageIcon m_okIcon = new ImageIcon(Utilities.imagesDir + "ok.gif");
+	private ImageIcon m_cancelIcon = new ImageIcon(Utilities.imagesDir + "cancel.gif");
 
 	// The table of this component.
-	private JTable table;
+	private JTable m_table;
 
 	// an array containing the HVMInstructions.
-	private HVMInstruction[] instructions;
+	private HVMInstruction[] m_instructions;
 
 	/**
 	 * Constructs a new SearchWindow.
 	 */
 	public SearchProgramWindow(JTable table, HVMInstruction[] instructions) {
 		super("Search");
-		this.table = table;
+		this.m_table = table;
 
 		jbInit();
 
@@ -79,7 +81,7 @@ public class SearchProgramWindow extends JFrame {
 	 */
 	private int getSearchedRowIndex() {
 		int rowIndex = -1;
-		String searchedStr = instruction.getText();
+		String searchedStr = m_instruction.getText();
 		StringTokenizer tokenizer = new StringTokenizer(searchedStr);
 		String firstToken = "", secondToken = "", thirdToken = "";
 		int numOfTokens = tokenizer.countTokens();
@@ -88,8 +90,8 @@ public class SearchProgramWindow extends JFrame {
 			break;
 		case 1:
 			firstToken = tokenizer.nextToken();
-			for (int i = 0; i < instructions.length; i++) {
-				String[] formattedStr = instructions[i].getFormattedStrings();
+			for (int i = 0; i < m_instructions.length; i++) {
+				String[] formattedStr = m_instructions[i].getFormattedStrings();
 				if (formattedStr[0].equalsIgnoreCase(firstToken)) {
 					rowIndex = i;
 					break;
@@ -99,8 +101,8 @@ public class SearchProgramWindow extends JFrame {
 		case 2:
 			firstToken = tokenizer.nextToken();
 			secondToken = tokenizer.nextToken();
-			for (int i = 0; i < instructions.length; i++) {
-				String[] formattedStr = instructions[i].getFormattedStrings();
+			for (int i = 0; i < m_instructions.length; i++) {
+				String[] formattedStr = m_instructions[i].getFormattedStrings();
 				if (formattedStr[0].equalsIgnoreCase(firstToken) && formattedStr[1].equalsIgnoreCase(secondToken)) {
 					rowIndex = i;
 					break;
@@ -112,8 +114,8 @@ public class SearchProgramWindow extends JFrame {
 			secondToken = tokenizer.nextToken();
 			thirdToken = tokenizer.nextToken();
 
-			for (int i = 0; i < instructions.length; i++) {
-				String[] formattedStr = instructions[i].getFormattedStrings();
+			for (int i = 0; i < m_instructions.length; i++) {
+				String[] formattedStr = m_instructions[i].getFormattedStrings();
 				if (formattedStr[0].equalsIgnoreCase(firstToken) && formattedStr[1].equalsIgnoreCase(secondToken)
 						&& formattedStr[2].equalsIgnoreCase(thirdToken)) {
 					rowIndex = i;
@@ -136,24 +138,24 @@ public class SearchProgramWindow extends JFrame {
 
 	// Initialization of this component.
 	private void jbInit() {
-		instructionLbl.setFont(Utilities.thinLabelsFont);
-		instructionLbl.setText("Text to find :");
-		instructionLbl.setBounds(new Rectangle(9, 22, 79, 23));
+		m_instructionLbl.setFont(Utilities.thinLabelsFont);
+		m_instructionLbl.setText("Text to find :");
+		m_instructionLbl.setBounds(new Rectangle(9, 22, 79, 23));
 		this.getContentPane().setLayout(null);
-		instruction.setBounds(new Rectangle(82, 25, 220, 18));
-		instruction.addActionListener(e -> instruction_actionPerformed(e));
-		okButton.setToolTipText("OK");
-		okButton.setIcon(okIcon);
-		okButton.setBounds(new Rectangle(66, 68, 63, 44));
-		okButton.addActionListener(e -> okButton_actionPerformed(e));
-		cancelButton.setBounds(new Rectangle(190, 68, 63, 44));
-		cancelButton.addActionListener(e -> cancelButton_actionPerformed(e));
-		cancelButton.setToolTipText("CANCEL");
-		cancelButton.setIcon(cancelIcon);
-		this.getContentPane().add(instruction, null);
-		this.getContentPane().add(okButton, null);
-		this.getContentPane().add(cancelButton, null);
-		this.getContentPane().add(instructionLbl, null);
+		m_instruction.setBounds(new Rectangle(82, 25, 220, 18));
+		m_instruction.addActionListener(e -> instruction_actionPerformed(e));
+		m_okButton.setToolTipText("OK");
+		m_okButton.setIcon(m_okIcon);
+		m_okButton.setBounds(new Rectangle(66, 68, 63, 44));
+		m_okButton.addActionListener(e -> okButton_actionPerformed(e));
+		m_cancelButton.setBounds(new Rectangle(190, 68, 63, 44));
+		m_cancelButton.addActionListener(e -> cancelButton_actionPerformed(e));
+		m_cancelButton.setToolTipText("CANCEL");
+		m_cancelButton.setIcon(m_cancelIcon);
+		this.getContentPane().add(m_instruction, null);
+		this.getContentPane().add(m_okButton, null);
+		this.getContentPane().add(m_cancelButton, null);
+		this.getContentPane().add(m_instructionLbl, null);
 
 		setSize(320, 150);
 		setLocation(250, 250);
@@ -166,9 +168,9 @@ public class SearchProgramWindow extends JFrame {
 		try {
 			int row = getSearchedRowIndex();
 			if (row != -1) {
-				Rectangle r = table.getCellRect(row, 0, true);
-				table.scrollRectToVisible(r);
-				table.setRowSelectionInterval(row, row);
+				Rectangle r = m_table.getCellRect(row, 0, true);
+				m_table.scrollRectToVisible(r);
+				m_table.setRowSelectionInterval(row, row);
 				setVisible(false);
 			}
 		} catch (NumberFormatException nfe) {
@@ -180,7 +182,7 @@ public class SearchProgramWindow extends JFrame {
 	 * Sets the array of instructions of this search window.
 	 */
 	public void setInstructions(HVMInstruction[] instructions) {
-		this.instructions = instructions;
+		this.m_instructions = instructions;
 	}
 
 	/**
@@ -188,6 +190,6 @@ public class SearchProgramWindow extends JFrame {
 	 */
 	public void showWindow() {
 		setVisible(true);
-		instruction.requestFocus();
+		m_instruction.requestFocus();
 	}
 }

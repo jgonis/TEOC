@@ -36,15 +36,16 @@ import Hack.Utilities.Definitions;
  */
 public class ScreenComponent extends JPanel implements ScreenGUI, ActionListener {
 
+	private static final long serialVersionUID = 6379766144947101096L;
 	// the clock intervals for animation
 	private static final int ANIMATION_CLOCK_INTERVALS = 50;
 	private static final int STATIC_CLOCK_INTERVALS = 500;
 
 	// The screen memory array
-	private short[] data;
+	private short[] m_data;
 
 	// redraw flag
-	private boolean redraw = true;
+	private boolean m_redraw = true;
 
 	// screen location at a given index
 	private int[] x, y;
@@ -67,7 +68,7 @@ public class ScreenComponent extends JPanel implements ScreenGUI, ActionListener
 				new Dimension(Definitions.SCREEN_WIDTH + borderWidth, Definitions.SCREEN_HEIGHT + borderHeight));
 		setSize(Definitions.SCREEN_WIDTH + borderWidth, Definitions.SCREEN_HEIGHT + borderHeight);
 
-		data = new short[Definitions.SCREEN_SIZE];
+		m_data = new short[Definitions.SCREEN_SIZE];
 		x = new int[Definitions.SCREEN_SIZE];
 		y = new int[Definitions.SCREEN_SIZE];
 		x[0] = borderInsets.left;
@@ -92,9 +93,9 @@ public class ScreenComponent extends JPanel implements ScreenGUI, ActionListener
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (redraw) {
+		if (m_redraw) {
 			repaint();
-			redraw = false;
+			m_redraw = false;
 		}
 	}
 
@@ -107,11 +108,11 @@ public class ScreenComponent extends JPanel implements ScreenGUI, ActionListener
 		super.paintComponent(g);
 
 		for (int i = 0; i < Definitions.SCREEN_SIZE; i++) {
-			if (data[i] != 0) {
-				if (data[i] == 0xffff) {
+			if (m_data[i] != 0) {
+				if (m_data[i] == 0xffff) {
 					g.drawLine(x[i], y[i], x[i] + 15, y[i]);
 				} else {
-					short value = data[i];
+					short value = m_data[i];
 					for (int j = 0; j < 16; j++) {
 						if ((value & 0x1) == 1) {
 							// since there's no drawPixel, uses drawLine to draw
@@ -131,9 +132,9 @@ public class ScreenComponent extends JPanel implements ScreenGUI, ActionListener
 	 */
 	@Override
 	public void refresh() {
-		if (redraw) {
+		if (m_redraw) {
 			repaint();
-			redraw = false;
+			m_redraw = false;
 		}
 	}
 
@@ -142,11 +143,11 @@ public class ScreenComponent extends JPanel implements ScreenGUI, ActionListener
 	 */
 	@Override
 	public void reset() {
-		for (int i = 0; i < data.length; i++) {
-			data[i] = 0;
+		for (int i = 0; i < m_data.length; i++) {
+			m_data[i] = 0;
 		}
 
-		redraw = true;
+		m_redraw = true;
 	}
 
 	/**
@@ -155,8 +156,8 @@ public class ScreenComponent extends JPanel implements ScreenGUI, ActionListener
 	 */
 	@Override
 	public void setContents(short[] values) {
-		data = values;
-		redraw = true;
+		m_data = values;
+		m_redraw = true;
 	}
 
 	/**
@@ -165,8 +166,8 @@ public class ScreenComponent extends JPanel implements ScreenGUI, ActionListener
 	 */
 	@Override
 	public void setValueAt(int index, short value) {
-		data[index] = value;
-		redraw = true;
+		m_data[index] = value;
+		m_redraw = true;
 	}
 
 	/**
