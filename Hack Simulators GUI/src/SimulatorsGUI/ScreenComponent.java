@@ -48,10 +48,10 @@ public class ScreenComponent extends JPanel implements ScreenGUI, ActionListener
 	private boolean m_redraw = true;
 
 	// screen location at a given index
-	private int[] x, y;
+	private int[] m_x, m_y;
 
 	// The screen redrawing timer
-	protected Timer timer;
+	protected Timer m_timer;
 
 	/**
 	 * Constructs a new Sceen with given height & width (in words) and amount of
@@ -69,23 +69,23 @@ public class ScreenComponent extends JPanel implements ScreenGUI, ActionListener
 		setSize(Definitions.SCREEN_WIDTH + borderWidth, Definitions.SCREEN_HEIGHT + borderHeight);
 
 		m_data = new short[Definitions.SCREEN_SIZE];
-		x = new int[Definitions.SCREEN_SIZE];
-		y = new int[Definitions.SCREEN_SIZE];
-		x[0] = borderInsets.left;
-		y[0] = borderInsets.top;
+		m_x = new int[Definitions.SCREEN_SIZE];
+		m_y = new int[Definitions.SCREEN_SIZE];
+		m_x[0] = borderInsets.left;
+		m_y[0] = borderInsets.top;
 
 		// updates pixels indice
 		for (int i = 1; i < Definitions.SCREEN_SIZE; i++) {
-			x[i] = x[i - 1] + Definitions.BITS_PER_WORD;
-			y[i] = y[i - 1];
-			if (x[i] == (Definitions.SCREEN_WIDTH + borderInsets.left)) {
-				x[i] = borderInsets.left;
-				y[i]++;
+			m_x[i] = m_x[i - 1] + Definitions.BITS_PER_WORD;
+			m_y[i] = m_y[i - 1];
+			if (m_x[i] == (Definitions.SCREEN_WIDTH + borderInsets.left)) {
+				m_x[i] = borderInsets.left;
+				m_y[i]++;
 			}
 		}
 
-		timer = new Timer(STATIC_CLOCK_INTERVALS, this);
-		timer.start();
+		m_timer = new Timer(STATIC_CLOCK_INTERVALS, this);
+		m_timer.start();
 	}
 
 	/**
@@ -110,14 +110,14 @@ public class ScreenComponent extends JPanel implements ScreenGUI, ActionListener
 		for (int i = 0; i < Definitions.SCREEN_SIZE; i++) {
 			if (m_data[i] != 0) {
 				if (m_data[i] == 0xffff) {
-					g.drawLine(x[i], y[i], x[i] + 15, y[i]);
+					g.drawLine(m_x[i], m_y[i], m_x[i] + 15, m_y[i]);
 				} else {
 					short value = m_data[i];
 					for (int j = 0; j < 16; j++) {
 						if ((value & 0x1) == 1) {
 							// since there's no drawPixel, uses drawLine to draw
 							// one pixel
-							g.drawLine(x[i] + j, y[i], x[i] + j, y[i]);
+							g.drawLine(m_x[i] + j, m_y[i], m_x[i] + j, m_y[i]);
 						}
 
 						value = (short) (value >> 1);
@@ -175,7 +175,7 @@ public class ScreenComponent extends JPanel implements ScreenGUI, ActionListener
 	 */
 	@Override
 	public void startAnimation() {
-		timer.setDelay(ANIMATION_CLOCK_INTERVALS);
+		m_timer.setDelay(ANIMATION_CLOCK_INTERVALS);
 	}
 
 	/**
@@ -183,6 +183,6 @@ public class ScreenComponent extends JPanel implements ScreenGUI, ActionListener
 	 */
 	@Override
 	public void stopAnimation() {
-		timer.setDelay(STATIC_CLOCK_INTERVALS);
+		m_timer.setDelay(STATIC_CLOCK_INTERVALS);
 	}
 }
