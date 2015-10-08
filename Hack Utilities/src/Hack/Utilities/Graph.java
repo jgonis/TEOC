@@ -32,16 +32,16 @@ import java.util.Vector;
 public class Graph {
 
 	// The graph
-	private HashMap graph;
+	private HashMap<Object, HashSet<Object>> m_graph;
 
 	// true if the graph has a circle
-	private boolean hasCircle;
+	private boolean m_hasCircle;
 
 	/**
 	 * Constructs a new empty Graph.
 	 */
 	public Graph() {
-		graph = new HashMap();
+		m_graph = new HashMap<Object, HashSet<Object>>();
 	}
 
 	/**
@@ -53,26 +53,26 @@ public class Graph {
 		checkExistence(source);
 		checkExistence(target);
 
-		Set edgeSet = (Set) graph.get(source);
+		Set<Object> edgeSet = (Set<Object>) m_graph.get(source);
 		edgeSet.add(target);
 	}
 
 	// Checks whether the given object exists in the graph. If not, creates it.
 	private void checkExistence(Object object) {
-		if (!graph.keySet().contains(object)) {
-			HashSet edgeSet = new HashSet();
-			graph.put(object, edgeSet);
+		if (!m_graph.keySet().contains(object)) {
+			HashSet<Object> edgeSet = new HashSet<Object>();
+			m_graph.put(object, edgeSet);
 		}
 	}
 
 	// Finds recursively using the DFS algorithm if there is a path from the
 	// source to destination.
-	private boolean doPathExists(Object source, Object destination, Set marked) {
+	private boolean doPathExists(Object source, Object destination, Set<Object> marked) {
 		boolean pathFound = false;
 		marked.add(source);
-		Set edgeSet = (Set) graph.get(source);
+		Set<Object> edgeSet = (Set<Object>) m_graph.get(source);
 		if (edgeSet != null) {
-			Iterator edgeIter = edgeSet.iterator();
+			Iterator<Object> edgeIter = edgeSet.iterator();
 			while (edgeIter.hasNext() && !pathFound) {
 				Object currentNode = edgeIter.next();
 				pathFound = currentNode.equals(destination);
@@ -88,18 +88,18 @@ public class Graph {
 	// Runs the topological sort on the given node. This will run recursively
 	// on all edges from the given node to non marked nodes. In the end, the
 	// given node will be added to the given nodes vector.
-	private void doTopologicalSort(Object node, Vector nodes, Set marked, Set processed) {
+	private void doTopologicalSort(Object node, Vector<Object> nodes, Set<Object> marked, Set<Object> processed) {
 		marked.add(node);
 		processed.add(node);
-		Set edgeSet = (Set) graph.get(node);
+		Set<Object> edgeSet = (Set<Object>) m_graph.get(node);
 		if (edgeSet != null) {
-			Iterator edgeIter = edgeSet.iterator();
+			Iterator<Object> edgeIter = edgeSet.iterator();
 			while (edgeIter.hasNext()) {
 				Object currentNode = edgeIter.next();
 
 				// check circle
 				if (processed.contains(currentNode)) {
-					hasCircle = true;
+					m_hasCircle = true;
 				}
 
 				if (!marked.contains(currentNode)) {
@@ -115,14 +115,14 @@ public class Graph {
 	 * Returns true if the graph has a circle.
 	 */
 	public boolean hasCircle() {
-		return hasCircle;
+		return m_hasCircle;
 	}
 
 	/**
 	 * Returns true if the graph is empty.
 	 */
 	public boolean isEmpty() {
-		return graph.keySet().isEmpty();
+		return m_graph.keySet().isEmpty();
 	}
 
 	/**
@@ -130,7 +130,7 @@ public class Graph {
 	 * destination node.
 	 */
 	public boolean pathExists(Object source, Object destination) {
-		Set marked = new HashSet();
+		Set<Object> marked = new HashSet<Object>();
 		return doPathExists(source, destination, marked);
 	}
 
@@ -140,10 +140,10 @@ public class Graph {
 	 * circle is detected in the graph.
 	 */
 	public Object[] topologicalSort(Object start) {
-		hasCircle = false;
-		Set marked = new HashSet();
-		Set processed = new HashSet();
-		Vector nodes = new Vector();
+		m_hasCircle = false;
+		Set<Object> marked = new HashSet<Object>();
+		Set<Object> processed = new HashSet<Object>();
+		Vector<Object> nodes = new Vector<Object>();
 		doTopologicalSort(start, nodes, marked, processed);
 
 		// reverse the order received from the DFS algorithm
