@@ -20,6 +20,7 @@ package Hack.Assembler;
 /**
  * An Exception for errors that occur in the Assembler
  */
+@SuppressWarnings("serial")
 public class AssemblerException extends Exception {
 
 	/**

@@ -23,6 +23,7 @@ import Hack.Translators.HackTranslatorEvent;
  * An event for notifying a HackAssemblerEventListener on an action that should
  * be taken, together with a data object which is supplied with the action code.
  */
+@SuppressWarnings("serial")
 public class HackAssemblerEvent extends HackTranslatorEvent {
 
 	/**

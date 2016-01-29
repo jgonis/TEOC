@@ -37,22 +37,22 @@ import Hack.Utilities.Definitions;
 public class HackAssembler extends HackTranslator {
 
 	// the reader of the comparison file
-	private BufferedReader comparisonReader;
+	private BufferedReader m_comparisonReader;
 
 	// the name of the comparison .hack file
-	private String comparisonFileName;
+	private String m_comparisonFileName;
 
 	// the symbol table
-	private Hashtable symbolTable;
+	private Hashtable<String, Short> m_symbolTable;
 
 	// The comarison program array
-	private short[] comparisonProgram;
+	private short[] m_comparisonProgram;
 
 	// The HackAssembler translator;
-	private HackAssemblerTranslator translator;
+	private HackAssemblerTranslator m_translator;
 
 	// Index of the next location for unrecognized labels
-	private short varIndex;
+	private short m_varIndex;
 
 	/**
 	 * Constructs a new HackAssembler with the size of the program memory. The
@@ -86,8 +86,8 @@ public class HackAssembler extends HackTranslator {
 
 		switch (event.getAction()) {
 		case HackTranslatorEvent.SOURCE_LOAD:
-			comparisonFileName = "";
-			comparisonReader = null;
+			m_comparisonFileName = "";
+			m_comparisonReader = null;
 			((HackAssemblerGUI) m_gui).setComparisonName("");
 			((HackAssemblerGUI) m_gui).hideComparison();
 			break;
@@ -97,7 +97,7 @@ public class HackAssembler extends HackTranslator {
 			String fileName = (String) event.getData();
 			try {
 				checkComparisonFile(fileName);
-				comparisonFileName = fileName;
+				m_comparisonFileName = fileName;
 				saveWorkingDir(new File(fileName));
 				resetComparisonFile();
 				((HackAssemblerGUI) m_gui).showComparison();
@@ -127,7 +127,7 @@ public class HackAssembler extends HackTranslator {
 		int length = (compiledRange[1] - compiledRange[0]) + 1;
 
 		for (int i = 0; (i < length) && result; i++) {
-			result = (m_program[compiledRange[0] + i] == comparisonProgram[compiledRange[0] + i]);
+			result = (m_program[compiledRange[0] + i] == m_comparisonProgram[compiledRange[0] + i]);
 		}
 
 		return result;
@@ -153,20 +153,20 @@ public class HackAssembler extends HackTranslator {
 					}
 
 					if (!numeric) {
-						Short address = (Short) symbolTable.get(label);
+						Short address = (Short) m_symbolTable.get(label);
 						if (address == null) {
-							address = new Short(varIndex++);
-							symbolTable.put(label, address);
+							address = new Short(m_varIndex++);
+							m_symbolTable.put(label, address);
 						}
 
-						addCommand(translator.textToCode("@" + address.shortValue()));
+						addCommand(m_translator.textToCode("@" + address.shortValue()));
 					} else {
-						addCommand(translator.textToCode(line));
+						addCommand(m_translator.textToCode(line));
 					}
 				} else { // try to compile normaly, if error - try to compile as
 							// compact assembly
 					try {
-						addCommand(translator.textToCode(line));
+						addCommand(m_translator.textToCode(line));
 					} catch (AssemblerException ae) {
 						int openAddressPos = line.indexOf("[");
 						if (openAddressPos >= 0) {
@@ -199,7 +199,7 @@ public class HackAssembler extends HackTranslator {
 		int[] compiledRange = super.compileLineAndCount(line);
 
 		// check comparison
-		if ((compiledRange != null) && (comparisonReader != null)) {
+		if ((compiledRange != null) && (m_comparisonReader != null)) {
 			int length = (compiledRange[1] - compiledRange[0]) + 1;
 			boolean compare = compare(compiledRange);
 
@@ -251,7 +251,7 @@ public class HackAssembler extends HackTranslator {
 	// Generates The symbol table by attaching each label with it's appropriate
 	// value according to it's location in the program
 	private void generateSymbolTable() throws HackTranslatorException {
-		symbolTable = Definitions.getInstance().getAddressesTable();
+		m_symbolTable = Definitions.getInstance().getAddressesTable();
 		short pc = 0;
 		String line;
 		String label;
@@ -273,7 +273,7 @@ public class HackAssembler extends HackTranslator {
 
 						input.ensureEnd();
 
-						symbolTable.put(label, new Short(pc));
+						m_symbolTable.put(label, new Short(pc));
 					} else if (input.contains("[")) {
 						pc += 2;
 					} else {
@@ -312,7 +312,7 @@ public class HackAssembler extends HackTranslator {
 	protected void hidePointers() {
 		super.hidePointers();
 
-		if (comparisonReader != null) {
+		if (m_comparisonReader != null) {
 			((HackAssemblerGUI) m_gui).getComparison().clearHighlights();
 		}
 	}
@@ -320,7 +320,7 @@ public class HackAssembler extends HackTranslator {
 	@Override
 	protected void init(int size, short nullValue) {
 		super.init(size, nullValue);
-		translator = HackAssemblerTranslator.getInstance();
+		m_translator = HackAssemblerTranslator.getInstance();
 	}
 
 	@Override
@@ -338,29 +338,29 @@ public class HackAssembler extends HackTranslator {
 	// opens the comparison file for reading.
 	private void resetComparisonFile() throws HackTranslatorException {
 		try {
-			comparisonReader = new BufferedReader(new FileReader(comparisonFileName));
+			m_comparisonReader = new BufferedReader(new FileReader(m_comparisonFileName));
 
 			if (m_gui != null) {
 				TextFileGUI comp = ((HackAssemblerGUI) m_gui).getComparison();
 				comp.reset();
-				comp.setContents(comparisonFileName);
+				comp.setContents(m_comparisonFileName);
 
-				comparisonProgram = new short[comp.getNumberOfLines()];
+				m_comparisonProgram = new short[comp.getNumberOfLines()];
 				for (int i = 0; i < comp.getNumberOfLines(); i++) {
 					if (comp.getLineAt(i).length() != Definitions.BITS_PER_WORD) {
-						throw new HackTranslatorException("Error in file " + comparisonFileName + ": Line " + i
+						throw new HackTranslatorException("Error in file " + m_comparisonFileName + ": Line " + i
 								+ " does not contain exactly " + Definitions.BITS_PER_WORD + " characters");
 					}
 					try {
-						comparisonProgram[i] = (short) Conversions.binaryToInt(comp.getLineAt(i));
+						m_comparisonProgram[i] = (short) Conversions.binaryToInt(comp.getLineAt(i));
 					} catch (NumberFormatException nfe) {
-						throw new HackTranslatorException("Error in file " + comparisonFileName + ": Line " + i
+						throw new HackTranslatorException("Error in file " + m_comparisonFileName + ": Line " + i
 								+ " does not contain only 1/0 characters");
 					}
 				}
 			}
 		} catch (IOException ioe) {
-			throw new HackTranslatorException("Error reading from file " + comparisonFileName);
+			throw new HackTranslatorException("Error reading from file " + m_comparisonFileName);
 		}
 	}
 
@@ -368,7 +368,7 @@ public class HackAssembler extends HackTranslator {
 	protected void restartCompilation() {
 		super.restartCompilation();
 
-		varIndex = Definitions.VAR_START_ADDRESS;
+		m_varIndex = Definitions.VAR_START_ADDRESS;
 
 		if (m_gui != null) {
 			((HackAssemblerGUI) m_gui).enableLoadComparison();
@@ -379,7 +379,7 @@ public class HackAssembler extends HackTranslator {
 	protected void rewind() {
 		super.rewind();
 
-		if (comparisonReader != null) {
+		if (m_comparisonReader != null) {
 			((HackAssemblerGUI) m_gui).getComparison().clearHighlights();
 			((HackAssemblerGUI) m_gui).getComparison().hideSelect();
 		}
@@ -391,11 +391,11 @@ public class HackAssembler extends HackTranslator {
 
 		int[] range = rowIndexToRange(event.getRowIndex());
 		if (range != null) {
-			if (comparisonReader != null) {
+			if (m_comparisonReader != null) {
 				((HackAssemblerGUI) m_gui).getComparison().select(range[0], range[1]);
 			}
 		} else {
-			if (comparisonReader != null) {
+			if (m_comparisonReader != null) {
 				((HackAssemblerGUI) m_gui).getComparison().hideSelect();
 			}
 		}
@@ -409,7 +409,7 @@ public class HackAssembler extends HackTranslator {
 
 	@Override
 	protected void successfulCompilation() throws HackTranslatorException {
-		if (comparisonReader == null) {
+		if (m_comparisonReader == null) {
 			super.successfulCompilation();
 		} else {
 			if (m_gui != null) {

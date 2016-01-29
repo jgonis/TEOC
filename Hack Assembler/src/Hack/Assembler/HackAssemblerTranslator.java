@@ -117,8 +117,8 @@ public class HackAssemblerTranslator {
 				memory[i] = nullValue;
 			}
 
-			try {
-				BufferedReader reader = new BufferedReader(new FileReader(fileName));
+			try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+				
 				String line;
 				int pc = 0;
 
@@ -158,10 +158,10 @@ public class HackAssemblerTranslator {
 	}
 
 	// The translation tables from text to codes
-	private Hashtable expToCode, destToCode, jmpToCode;
+	private Hashtable<String, Short> expToCode, destToCode, jmpToCode;
 
 	// The translation table from code to text.
-	private Hashtable expToText, destToText, jmpToText;
+	private Hashtable<Short, String> expToText, destToText, jmpToText;
 
 	/**
 	 * Creates a new translator.
@@ -285,8 +285,8 @@ public class HackAssemblerTranslator {
 
 	// initializes the dest table
 	private void initDest() {
-		destToCode = new Hashtable();
-		destToText = new Hashtable();
+		destToCode = new Hashtable<String, Short>();
+		destToText = new Hashtable<Short, String>();
 
 		destToCode.put("A", A);
 		destToCode.put("M", M);
@@ -307,8 +307,8 @@ public class HackAssemblerTranslator {
 
 	// initializes the exp table
 	private void initExp() {
-		expToCode = new Hashtable();
-		expToText = new Hashtable();
+		expToCode = new Hashtable<String, Short>();
+		expToText = new Hashtable<Short, String>();
 
 		expToCode.put("0", ZERO);
 		expToCode.put("1", ONE);
@@ -380,8 +380,8 @@ public class HackAssemblerTranslator {
 
 	// initializes the jmp table
 	private void initJmp() {
-		jmpToCode = new Hashtable();
-		jmpToText = new Hashtable();
+		jmpToCode = new Hashtable<String, Short>();
+		jmpToText = new Hashtable<Short, String>();
 
 		jmpToCode.put("JMP", JMP);
 		jmpToCode.put("JLT", JMP_LESS_THEN);
