@@ -93,7 +93,7 @@ public class HackAssemblerTranslator {
 	 */
 	public static HackAssemblerTranslator getInstance() {
 		if (instance == null) {
-			new HackAssemblerTranslator();
+			instance = new HackAssemblerTranslator();
 		}
 		return instance;
 	}
@@ -138,8 +138,6 @@ public class HackAssemblerTranslator {
 
 					memory[pc++] = value;
 				}
-
-				reader.close();
 			} catch (IOException ioe) {
 				throw new AssemblerException("IO error while reading " + fileName);
 			}
@@ -167,7 +165,6 @@ public class HackAssemblerTranslator {
 	 * Creates a new translator.
 	 */
 	private HackAssemblerTranslator() {
-		instance = this;
 		initExp();
 		initDest();
 		initJmp();
@@ -216,7 +213,7 @@ public class HackAssemblerTranslator {
 	 * throws AssemblerException.
 	 */
 	public String getDestByCode(short code) throws AssemblerException {
-		String result = (String) destToText.get(new Short(code));
+		String result = destToText.get(new Short(code));
 		if (result == null) {
 			throw new AssemblerException("Illegal dest: " + code);
 		}
@@ -228,7 +225,7 @@ public class HackAssemblerTranslator {
 	 * throws AssemblerException.
 	 */
 	public short getDestByText(String text) throws AssemblerException {
-		Short code = (Short) destToCode.get(text);
+		Short code = destToCode.get(text);
 		if (code == null) {
 			throw new AssemblerException("Illegal dest: " + text);
 		}
@@ -240,7 +237,7 @@ public class HackAssemblerTranslator {
 	 * throws AssemblerException.
 	 */
 	public String getExpByCode(short code) throws AssemblerException {
-		String result = (String) expToText.get(new Short(code));
+		String result = expToText.get(new Short(code));
 		if (result == null) {
 			throw new AssemblerException("Illegal exp: " + code);
 		}
@@ -252,7 +249,7 @@ public class HackAssemblerTranslator {
 	 * throws AssemblerException.
 	 */
 	public short getExpByText(String text) throws AssemblerException {
-		Short code = (Short) expToCode.get(text);
+		Short code = expToCode.get(text);
 		if (code == null) {
 			throw new AssemblerException("Illegal exp: " + text);
 		}
@@ -264,7 +261,7 @@ public class HackAssemblerTranslator {
 	 * throws AssemblerException.
 	 */
 	public String getJmpByCode(short code) throws AssemblerException {
-		String result = (String) jmpToText.get(new Short(code));
+		String result = jmpToText.get(new Short(code));
 		if (result == null) {
 			throw new AssemblerException("Illegal jmp: " + code);
 		}
@@ -276,7 +273,7 @@ public class HackAssemblerTranslator {
 	 * throws AssemblerException.
 	 */
 	public short getJmpByText(String text) throws AssemblerException {
-		Short code = (Short) jmpToCode.get(text);
+		Short code = jmpToCode.get(text);
 		if (code == null) {
 			throw new AssemblerException("Illegal jmp: " + text);
 		}
@@ -426,7 +423,7 @@ public class HackAssemblerTranslator {
 
 				// find dest (if any)
 				if (input.isToken("=")) {
-					Short dest = (Short) destToCode.get(firstToken);
+					Short dest = destToCode.get(firstToken);
 					if (dest == null) {
 						throw new AssemblerException("Destination expected");
 					}
@@ -438,9 +435,9 @@ public class HackAssemblerTranslator {
 				// find exp
 				Short exp;
 				if (!firstToken.equals("=") && (destCode == 0)) {
-					exp = (Short) expToCode.get(firstToken);
+					exp = expToCode.get(firstToken);
 				} else {
-					exp = (Short) expToCode.get(input.token());
+					exp = expToCode.get(input.token());
 				}
 
 				if (exp == null) {
@@ -456,7 +453,7 @@ public class HackAssemblerTranslator {
 
 				// find jmp (if any)
 				if (!input.isEnd()) {
-					Short jmp = (Short) jmpToCode.get(input.token());
+					Short jmp = jmpToCode.get(input.token());
 					if (jmp == null) {
 						throw new AssemblerException("Jump directive expected");
 					}

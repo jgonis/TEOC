@@ -153,7 +153,7 @@ public class HackAssembler extends HackTranslator {
 					}
 
 					if (!numeric) {
-						Short address = (Short) m_symbolTable.get(label);
+						Short address = m_symbolTable.get(label);
 						if (address == null) {
 							address = new Short(m_varIndex++);
 							m_symbolTable.put(label, address);
@@ -256,8 +256,8 @@ public class HackAssembler extends HackTranslator {
 		String line;
 		String label;
 
-		try {
-			BufferedReader sourceReader = new BufferedReader(new FileReader(m_sourceFileName));
+		try (BufferedReader sourceReader = new BufferedReader(new FileReader(m_sourceFileName))) {
+			
 			while ((line = sourceReader.readLine()) != null) {
 
 				AssemblyLineTokenizer input = new AssemblyLineTokenizer(line);
@@ -281,8 +281,6 @@ public class HackAssembler extends HackTranslator {
 					}
 				}
 			}
-
-			sourceReader.close();
 		} catch (IOException ioe) {
 			throw new HackTranslatorException("Error reading from file " + m_sourceFileName);
 		}

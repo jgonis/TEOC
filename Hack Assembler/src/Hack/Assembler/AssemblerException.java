@@ -20,8 +20,12 @@ package Hack.Assembler;
 /**
  * An Exception for errors that occur in the Assembler
  */
-@SuppressWarnings("serial")
 public class AssemblerException extends Exception {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1712288306016526958L;
 
 	/**
 	 * Constructs a new AssemblerException with the given message.

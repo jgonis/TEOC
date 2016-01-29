@@ -26,6 +26,11 @@ import Hack.Events.ErrorEvent;
 public class ComputerPartErrorEvent extends ErrorEvent {
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7706550007039578496L;
+
+	/**
 	 * Constructs a new ComputerPartErrorEvent with the given source (computer
 	 * part) and errorMessage.
 	 */

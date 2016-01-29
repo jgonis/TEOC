@@ -16,13 +16,12 @@
  * mark your changes clearly, for the benefit of others.                        *
  ********************************************************************************/
 
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-import Hack.CPUEmulator.CPUEmulator;
 import Hack.CPUEmulator.CPUEmulatorApplication;
 import Hack.CPUEmulator.CPUEmulatorGUI;
 import Hack.Controller.ControllerGUI;
-import Hack.Controller.HackController;
 import HackGUI.ControllerComponent;
 import SimulatorsGUI.CPUEmulatorComponent;
 
@@ -33,6 +32,9 @@ public class CPUEmulatorMain {
 	/**
 	 * The command line CPU Emulator program.
 	 */
+	
+	static CPUEmulatorApplication m_app;
+	
 	public static void main(String[] args) {
 		if (args.length > 1) {
 			System.err.println("Usage: java CPUEmulatorMain [script name]");
@@ -41,14 +43,13 @@ public class CPUEmulatorMain {
 				UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 			} catch (Exception e) {
 			}
-
+			SwingUtilities.invokeLater(()->{
 			CPUEmulatorGUI simulatorGUI = new CPUEmulatorComponent();
 
 			ControllerGUI controllerGUI = new ControllerComponent();
-			new CPUEmulatorApplication(controllerGUI, simulatorGUI, "bin/scripts/defaultCPU.txt",
+			m_app = new CPUEmulatorApplication(controllerGUI, simulatorGUI, "bin/scripts/defaultCPU.txt",
 					"bin/help/cpuUsage.html", "bin/help/cpuAbout.html");
-		} else {
-			new HackController(new CPUEmulator(), args[0]);
+			});
 		}
 	}
 }

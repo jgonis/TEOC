@@ -33,7 +33,7 @@ import Hack.Events.ErrorEventListener;
  */
 public abstract class InteractiveComputerPart extends ComputerPart implements ErrorEventListener {
 
-	private Vector errorListeners;
+	private Vector<ComputerPartErrorEventListener> errorListeners;
 
 	/**
 	 * Constructs a new interactive computer part. If hasGUI is true, the
@@ -41,7 +41,7 @@ public abstract class InteractiveComputerPart extends ComputerPart implements Er
 	 */
 	public InteractiveComputerPart(boolean hasGUI) {
 		super(hasGUI);
-		errorListeners = new Vector();
+		errorListeners = new Vector<ComputerPartErrorEventListener>();
 	}
 
 	/**
@@ -59,7 +59,7 @@ public abstract class InteractiveComputerPart extends ComputerPart implements Er
 		ComputerPartErrorEvent event = new ComputerPartErrorEvent(this, null);
 
 		for (int i = 0; i < errorListeners.size(); i++) {
-			((ComputerPartErrorEventListener) errorListeners.elementAt(i)).computerPartErrorOccured(event);
+			errorListeners.elementAt(i).computerPartErrorOccured(event);
 		}
 	}
 
@@ -82,7 +82,7 @@ public abstract class InteractiveComputerPart extends ComputerPart implements Er
 		ComputerPartErrorEvent event = new ComputerPartErrorEvent(this, errorMessage);
 
 		for (int i = 0; i < errorListeners.size(); i++) {
-			((ComputerPartErrorEventListener) errorListeners.elementAt(i)).computerPartErrorOccured(event);
+			errorListeners.elementAt(i).computerPartErrorOccured(event);
 		}
 	}
 

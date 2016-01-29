@@ -23,9 +23,12 @@ import Hack.Translators.HackTranslatorEvent;
  * An event for notifying a HackAssemblerEventListener on an action that should
  * be taken, together with a data object which is supplied with the action code.
  */
-@SuppressWarnings("serial")
 public class HackAssemblerEvent extends HackTranslatorEvent {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8254391144978537371L;
 	/**
 	 * Action code for changing the comparison file. supplied data = comparison
 	 * file name (String)

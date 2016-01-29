@@ -400,7 +400,6 @@ public class Script {
 		// count args
 		int count;
 		for (count = 0; (count < args.length) && (args[count] != null); count++) {
-			;
 		}
 
 		String[] trimmedArgs = new String[count];
