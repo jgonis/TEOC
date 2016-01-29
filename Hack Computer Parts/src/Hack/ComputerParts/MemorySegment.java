@@ -26,10 +26,10 @@ package Hack.ComputerParts;
 public class MemorySegment extends InteractiveValueComputerPart {
 
 	// The gui of the memory segment
-	protected MemorySegmentGUI gui;
+	protected MemorySegmentGUI m_gui;
 
 	// The main memory
-	protected Memory mainMemory;
+	protected Memory m_mainMemory;
 
 	// The start address of this segment in the main memory
 	protected int startAddress;
@@ -53,14 +53,14 @@ public class MemorySegment extends InteractiveValueComputerPart {
 
 	@Override
 	public void doSetValueAt(int index, short value) {
-		if (mainMemory.getValueAt(startAddress + index) != value) {
-			mainMemory.setValueAt(startAddress + index, value, true);
+		if (m_mainMemory.getValueAt(startAddress + index) != value) {
+			m_mainMemory.setValueAt(startAddress + index, value, true);
 		}
 	}
 
 	@Override
 	public ComputerPartGUI getGUI() {
-		return gui;
+		return m_gui;
 	}
 
 	/**
@@ -72,7 +72,7 @@ public class MemorySegment extends InteractiveValueComputerPart {
 
 	@Override
 	public short getValueAt(int index) {
-		return mainMemory.getValueAt(startAddress + index);
+		return m_mainMemory.getValueAt(startAddress + index);
 	}
 
 	/**
@@ -80,14 +80,14 @@ public class MemorySegment extends InteractiveValueComputerPart {
 	 */
 	public void hideSelect() {
 		if (displayChanges) {
-			gui.hideSelect();
+			m_gui.hideSelect();
 		}
 	}
 
 	// Initializes the memory segment
 	private void init(Memory mainMemory, MemorySegmentGUI gui) {
-		this.mainMemory = mainMemory;
-		this.gui = gui;
+		m_mainMemory = mainMemory;
+		m_gui = gui;
 
 		if (hasGUI) {
 			gui.addListener(this);
@@ -100,7 +100,7 @@ public class MemorySegment extends InteractiveValueComputerPart {
 		super.refreshGUI();
 
 		if (displayChanges) {
-			gui.setStartAddress(startAddress);
+			m_gui.setStartAddress(startAddress);
 		}
 	}
 
@@ -110,7 +110,7 @@ public class MemorySegment extends InteractiveValueComputerPart {
 	 */
 	public void scrollTo(int address) {
 		if (displayChanges) {
-			gui.scrollTo(startAddress + address);
+			m_gui.scrollTo(startAddress + address);
 		}
 	}
 
@@ -120,7 +120,7 @@ public class MemorySegment extends InteractiveValueComputerPart {
 	public void setStartAddress(int startAddress) {
 		this.startAddress = startAddress;
 		if (displayChanges) {
-			gui.setStartAddress(startAddress);
+			m_gui.setStartAddress(startAddress);
 		}
 	}
 }

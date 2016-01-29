@@ -46,9 +46,9 @@ public class PointerAddressRegisterAdapter extends Register {
 
 	@Override
 	public void refreshGUI() {
-		quietUpdateGUI(0, value);
+		quietUpdateGUI(0, m_value);
 		if (updatePointer) {
-			memory.setPointerAddress(value);
+			memory.setPointerAddress(m_value);
 		}
 	}
 
@@ -69,7 +69,7 @@ public class PointerAddressRegisterAdapter extends Register {
 	public void setUpdatePointer(boolean updatePointer) {
 		this.updatePointer = updatePointer;
 		if (updatePointer) {
-			memory.setPointerAddress(value);
+			memory.setPointerAddress(m_value);
 		}
 	}
 

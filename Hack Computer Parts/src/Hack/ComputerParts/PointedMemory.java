@@ -49,7 +49,7 @@ public class PointedMemory extends Memory {
 	 */
 	public void setPointerAddress(int address) {
 		if (displayChanges) {
-			((PointedMemoryGUI) gui).setPointer(address);
+			((PointedMemoryGUI) m_gui).setPointer(address);
 		}
 	}
 }

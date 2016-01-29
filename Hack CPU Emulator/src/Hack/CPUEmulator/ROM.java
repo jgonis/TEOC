@@ -105,7 +105,7 @@ public class ROM extends PointedMemory implements ProgramEventListener {
 		short[] program = null;
 
 		if (displayChanges) {
-			((ROMGUI) gui).showMessage("Loading...");
+			((ROMGUI) m_gui).showMessage("Loading...");
 		}
 
 		try {
@@ -114,19 +114,19 @@ public class ROM extends PointedMemory implements ProgramEventListener {
 			mem = program;
 
 			if (displayChanges) {
-				gui.setContents(mem);
+				m_gui.setContents(mem);
 
-				((ROMGUI) gui).setProgram(fileName);
+				((ROMGUI) m_gui).setProgram(fileName);
 
-				((ROMGUI) gui).hideMessage();
-				gui.hideHighlight();
+				((ROMGUI) m_gui).hideMessage();
+				m_gui.hideHighlight();
 			}
 
 			notifyProgramListeners(ProgramEvent.LOAD, fileName);
 
 		} catch (AssemblerException ae) {
 			if (displayChanges) {
-				((ROMGUI) gui).hideMessage();
+				((ROMGUI) m_gui).hideMessage();
 			}
 			throw new ProgramException(ae.getMessage());
 		}

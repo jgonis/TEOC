@@ -26,13 +26,13 @@ import Hack.Events.ClearEventListener;
 public class Memory extends InteractiveValueComputerPart implements ClearEventListener {
 
 	// The size of the memory
-	protected int size;
+	protected int m_size;
 
 	// the memory array
 	protected short[] mem;
 
 	// The main gui of the memory.
-	protected MemoryGUI gui;
+	protected MemoryGUI m_gui;
 
 	/**
 	 * Constructs a new Memory with the given size and (optional) memory GUI.
@@ -70,14 +70,14 @@ public class Memory extends InteractiveValueComputerPart implements ClearEventLi
 
 	@Override
 	public ComputerPartGUI getGUI() {
-		return gui;
+		return m_gui;
 	}
 
 	/**
 	 * Returns the size of the memory.
 	 */
 	public int getSize() {
-		return size;
+		return m_size;
 	}
 
 	@Override
@@ -90,14 +90,14 @@ public class Memory extends InteractiveValueComputerPart implements ClearEventLi
 	 */
 	public void hideSelect() {
 		if (displayChanges) {
-			gui.hideSelect();
+			m_gui.hideSelect();
 		}
 	}
 
 	// Initializes the memory
 	private void init(int size, MemoryGUI gui) {
-		this.size = size;
-		this.gui = gui;
+		m_size = size;
+		m_gui = gui;
 		mem = new short[size];
 
 		if (hasGUI) {
@@ -113,7 +113,7 @@ public class Memory extends InteractiveValueComputerPart implements ClearEventLi
 		super.refreshGUI();
 
 		if (displayChanges) {
-			gui.setContents(mem);
+			m_gui.setContents(mem);
 		}
 	}
 
@@ -123,7 +123,7 @@ public class Memory extends InteractiveValueComputerPart implements ClearEventLi
 	@Override
 	public void reset() {
 		super.reset();
-		for (int i = 0; i < size; i++) {
+		for (int i = 0; i < m_size; i++) {
 			mem[i] = nullValue;
 		}
 	}
@@ -134,7 +134,7 @@ public class Memory extends InteractiveValueComputerPart implements ClearEventLi
 	 */
 	public void scrollTo(int address) {
 		if (displayChanges) {
-			gui.scrollTo(address);
+			m_gui.scrollTo(address);
 		}
 	}
 
@@ -143,7 +143,7 @@ public class Memory extends InteractiveValueComputerPart implements ClearEventLi
 	 */
 	public void select(int fromIndex, int toIndex) {
 		if (displayChanges) {
-			gui.select(fromIndex, toIndex);
+			m_gui.select(fromIndex, toIndex);
 		}
 	}
 

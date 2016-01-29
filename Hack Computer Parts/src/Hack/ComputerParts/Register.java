@@ -20,13 +20,13 @@ package Hack.ComputerParts;
 /**
  * A computer register. Holds a 16-bit value.
  */
-public class Register extends InteractiveValueComputerPart implements ComputerPartEventListener {
+public class Register extends InteractiveValueComputerPart {
 
 	// The 16-bit value.
-	protected short value;
+	protected short m_value;
 
 	// The register's gui component
-	protected RegisterGUI gui;
+	protected RegisterGUI m_gui;
 
 	/**
 	 * Constructs a new register with the given GUI component (optional).
@@ -47,7 +47,7 @@ public class Register extends InteractiveValueComputerPart implements ComputerPa
 
 	@Override
 	public void doSetValueAt(int index, short value) {
-		this.value = value;
+		m_value = value;
 	}
 
 	/**
@@ -59,17 +59,17 @@ public class Register extends InteractiveValueComputerPart implements ComputerPa
 
 	@Override
 	public ComputerPartGUI getGUI() {
-		return gui;
+		return m_gui;
 	}
 
 	@Override
 	public short getValueAt(int index) {
-		return value;
+		return m_value;
 	}
 
 	// Initalizes the register
 	private void init(RegisterGUI gui) {
-		this.gui = gui;
+		m_gui = gui;
 
 		if (hasGUI) {
 			gui.addListener(this);
@@ -82,14 +82,14 @@ public class Register extends InteractiveValueComputerPart implements ComputerPa
 		super.refreshGUI();
 
 		if (displayChanges) {
-			quietUpdateGUI(0, value);
+			quietUpdateGUI(0, m_value);
 		}
 	}
 
 	@Override
 	public void reset() {
 		super.reset();
-		value = nullValue;
+		m_value = nullValue;
 	}
 
 	/**

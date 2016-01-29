@@ -43,7 +43,7 @@ public class AbsolutePointedMemorySegment extends PointedMemorySegment {
 
 	@Override
 	public short getValueAt(int index) {
-		return mainMemory.getValueAt(index);
+		return m_mainMemory.getValueAt(index);
 	}
 
 	@Override

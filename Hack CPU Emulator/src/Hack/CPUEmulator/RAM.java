@@ -60,8 +60,8 @@ public class RAM extends PointedMemory {
 	 * Clears all labels.
 	 */
 	public void clearLabels() {
-		if (hasGUI && (gui instanceof LabeledPointedMemoryGUI)) {
-			((LabeledPointedMemoryGUI) gui).clearLabels();
+		if (hasGUI && (m_gui instanceof LabeledPointedMemoryGUI)) {
+			((LabeledPointedMemoryGUI) m_gui).clearLabels();
 		}
 	}
 
@@ -82,7 +82,7 @@ public class RAM extends PointedMemory {
 
 		// Update segments
 		if (segments != null) {
-			for (int address = 0; address < size; address++) {
+			for (int address = 0; address < m_size; address++) {
 				if (segments[address] != null) {
 					for (int i = 0; i < segments[address].length; i++) {
 						// check if the relevant memory segment is a pointed
@@ -113,15 +113,15 @@ public class RAM extends PointedMemory {
 	 * Sets a name for the label at the given address
 	 */
 	public synchronized void setLabel(int address, String name, boolean quiet) {
-		if (hasGUI && (gui instanceof LabeledPointedMemoryGUI)) {
-			((LabeledPointedMemoryGUI) gui).setLabel(address, name);
+		if (hasGUI && (m_gui instanceof LabeledPointedMemoryGUI)) {
+			((LabeledPointedMemoryGUI) m_gui).setLabel(address, name);
 			if (!quiet) {
-				((LabeledPointedMemoryGUI) gui).labelFlash(address);
+				((LabeledPointedMemoryGUI) m_gui).labelFlash(address);
 				try {
 					wait(LABEL_FLASH_TIME);
 				} catch (InterruptedException ie) {
 				}
-				((LabeledPointedMemoryGUI) gui).hideLabelFlash();
+				((LabeledPointedMemoryGUI) m_gui).hideLabelFlash();
 			}
 		}
 	}
