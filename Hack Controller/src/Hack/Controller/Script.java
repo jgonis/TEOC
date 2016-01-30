@@ -39,10 +39,10 @@ public class Script {
 	public static final int MAX_OUTPUT_LIST_ARGUMENTS = 20;
 
 	// The list of commands
-	private Vector commands;
+	private Vector<Command> commands;
 
 	// The list of script line numbers that match the corresponding command
-	private Vector lineNumbers;
+	private Vector<Integer> lineNumbers;
 
 	// The file name of the script
 	private String scriptName;
@@ -63,8 +63,8 @@ public class Script {
 			throw new ScriptException("Script " + scriptName + " not found");
 		}
 
-		commands = new Vector();
-		lineNumbers = new Vector();
+		commands = new Vector<Command>();
+		lineNumbers = new Vector<Integer>();
 		buildScript();
 	}
 
@@ -115,7 +115,7 @@ public class Script {
 
 			case ScriptTokenizer.TYPE_INT_CONST:
 				scriptError("A command cannot begin with " + input.getIntValue());
-
+				
 			case ScriptTokenizer.TYPE_SYMBOL:
 				if (input.getSymbol() == '}') {
 					if (!repeatOpen && !whileOpen) {
@@ -137,13 +137,16 @@ public class Script {
 			// sets the terminator of the command
 			switch (input.getSymbol()) {
 			case ',':
-				command.setTerminator(Command.MINI_STEP_TERMINATOR);
+				if(command != null)
+					command.setTerminator(Command.MINI_STEP_TERMINATOR);
 				break;
 			case ';':
-				command.setTerminator(Command.SINGLE_STEP_TERMINATOR);
+				if(command != null)
+					command.setTerminator(Command.SINGLE_STEP_TERMINATOR);
 				break;
 			case '!':
-				command.setTerminator(Command.STOP_TERMINATOR);
+				if(command != null)
+					command.setTerminator(Command.STOP_TERMINATOR);
 				break;
 			}
 
@@ -183,7 +186,7 @@ public class Script {
 		// count args
 		int count;
 		for (count = 0; (count < args.length) && (args[count] != null); count++) {
-			;
+			
 		}
 
 		if (count < 2) {
@@ -301,7 +304,7 @@ public class Script {
 		// count args
 		int count;
 		for (count = 0; (count < args.length) && (args[count] != null); count++) {
-			;
+			
 		}
 
 		VariableFormat[] vars = new VariableFormat[count];
@@ -430,7 +433,7 @@ public class Script {
 	 * Returns the command at the given index. Assumes a legal index.
 	 */
 	public Command getCommandAt(int index) {
-		return (Command) commands.elementAt(index);
+		return commands.elementAt(index);
 	}
 
 	/**
@@ -445,7 +448,7 @@ public class Script {
 	 * a legal index.
 	 */
 	public int getLineNumberAt(int index) {
-		return ((Integer) lineNumbers.elementAt(index)).intValue();
+		return lineNumbers.elementAt(index).intValue();
 	}
 
 	// Reads string arguments from the given input and returns them as a string

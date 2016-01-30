@@ -22,6 +22,11 @@ package Hack.Controller;
  */
 public class ControllerException extends Exception {
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1707585124235742023L;
+
+	/**
 	 * Constructs a new ControllerException with the given message.
 	 */
 	public ControllerException(String message) {

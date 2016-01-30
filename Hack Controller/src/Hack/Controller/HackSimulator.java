@@ -30,10 +30,10 @@ import Hack.Events.ProgramEventListener;
  */
 public abstract class HackSimulator implements ProgramEventListener, ComputerPartErrorEventListener {
 	// The vector of listeners
-	private Vector listeners;
+	private Vector<ControllerEventListener> listeners;
 
 	// The vector of program listeners
-	private Vector programListeners;
+	private Vector<ProgramEventListener> programListeners;
 
 	// The current working dir
 	protected File workingDir;
@@ -42,8 +42,8 @@ public abstract class HackSimulator implements ProgramEventListener, ComputerPar
 	 * Constructs a new hack simulator.
 	 */
 	public HackSimulator() {
-		listeners = new Vector();
-		programListeners = new Vector();
+		listeners = new Vector<ControllerEventListener>();
+		programListeners = new Vector<ProgramEventListener>();
 	}
 
 	/**
@@ -145,7 +145,7 @@ public abstract class HackSimulator implements ProgramEventListener, ComputerPar
 		ControllerEvent event = new ControllerEvent(this, action, data);
 
 		for (int i = 0; i < listeners.size(); i++) {
-			((ControllerEventListener) listeners.elementAt(i)).actionPerformed(event);
+			listeners.elementAt(i).actionPerformed(event);
 		}
 	}
 
@@ -158,7 +158,7 @@ public abstract class HackSimulator implements ProgramEventListener, ComputerPar
 		ProgramEvent event = new ProgramEvent(this, eventType, programFileName);
 
 		for (int i = 0; i < programListeners.size(); i++) {
-			((ProgramEventListener) programListeners.elementAt(i)).programChanged(event);
+			programListeners.elementAt(i).programChanged(event);
 		}
 	}
 

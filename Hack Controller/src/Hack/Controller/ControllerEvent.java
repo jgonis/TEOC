@@ -26,6 +26,11 @@ import java.util.EventObject;
 public class ControllerEvent extends EventObject {
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8167496510626244277L;
+
+	/**
 	 * Action code for performing the single step operation. supplied data =
 	 * null
 	 */

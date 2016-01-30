@@ -22,6 +22,11 @@ package Hack.Controller;
  */
 public class ScriptException extends Exception {
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6788558610166936810L;
+
+	/**
 	 * Constructs a new ScriptException with the given message.
 	 */
 	public ScriptException(String message) {

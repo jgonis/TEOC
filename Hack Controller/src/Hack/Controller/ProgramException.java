@@ -22,6 +22,11 @@ package Hack.Controller;
  */
 public class ProgramException extends Exception {
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5998657764220917321L;
+
+	/**
 	 * Constructs a new ProgramException with the given message.
 	 */
 	public ProgramException(String message) {

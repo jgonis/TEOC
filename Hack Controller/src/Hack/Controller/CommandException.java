@@ -21,6 +21,11 @@ package Hack.Controller;
  * An exception for errors in command definitions.
  */
 public class CommandException extends Exception {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 530216360044598318L;
+
 	private static String commandString(String[] command) {
 		StringBuffer message = new StringBuffer();
 		for (String element : command) {

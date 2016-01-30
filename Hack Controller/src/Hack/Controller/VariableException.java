@@ -22,6 +22,11 @@ package Hack.Controller;
  */
 public class VariableException extends Exception {
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3241332986276108189L;
+
+	/**
 	 * Constructs a new VariableException with the given message and variable
 	 * name.
 	 */

@@ -51,8 +51,7 @@ public class HackController implements ControllerEventListener, ActionListener, 
 				System.runFinalization();
 				System.gc();
 				wait(300);
-			} catch (InterruptedException ie) {
-			}
+			} catch (InterruptedException ie) {	}
 
 			int count = 0;
 			int rounds = FASTFORWARD_SPEED_FUNCTION[currentSpeedUnit - 1];
@@ -65,8 +64,7 @@ public class HackController implements ControllerEventListener, ActionListener, 
 					count = 0;
 					try {
 						wait(1);
-					} catch (InterruptedException ie) {
-					}
+					} catch (InterruptedException ie) {	}
 				}
 
 				count++;
@@ -278,7 +276,7 @@ public class HackController implements ControllerEventListener, ActionListener, 
 	private VariableFormat[] varList;
 
 	// The current breakpoints list
-	private Vector breakpoints;
+	private Vector<Breakpoint> m_breakpoints;
 
 	// The current compared and output lines
 	private int compareLinesCounter, outputLinesCounter;
@@ -344,7 +342,7 @@ public class HackController implements ControllerEventListener, ActionListener, 
 		setNumericFormatTask = new SetNumericFormatTask();
 		simulator.addListener(this);
 		simulator.addProgramListener(this);
-		breakpoints = new Vector();
+		m_breakpoints = new Vector<Breakpoint>();
 
 		defaultScriptFile = new File(defaultScriptName);
 		loadNewScript(defaultScriptFile, false);
@@ -396,7 +394,7 @@ public class HackController implements ControllerEventListener, ActionListener, 
 		animationMode = NO_DISPLAY_CHANGES;
 		simulator.setAnimationMode(animationMode);
 		simulator.addListener(this);
-		breakpoints = new Vector();
+		m_breakpoints = new Vector<Breakpoint>();
 
 		try {
 			loadNewScript(file, false);
@@ -422,6 +420,7 @@ public class HackController implements ControllerEventListener, ActionListener, 
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void actionPerformed(ControllerEvent event) {
 		try {
@@ -453,8 +452,8 @@ public class HackController implements ControllerEventListener, ActionListener, 
 			case ControllerEvent.SPEED_CHANGE:
 				setSpeed(((Integer) event.getData()).intValue());
 				break;
-			case ControllerEvent.BREAKPOINTS_CHANGE:
-				setBreakpoints((Vector) event.getData());
+			case ControllerEvent.BREAKPOINTS_CHANGE:				
+					setBreakpoints((Vector<Breakpoint>) event.getData());
 				break;
 			case ControllerEvent.SCRIPT_CHANGE:
 				File file = (File) event.getData();
@@ -533,7 +532,7 @@ public class HackController implements ControllerEventListener, ActionListener, 
 				displayMessage((String) event.getData(), true);
 				break;
 			default:
-				doUnknownAction(event.getAction(), event.getData());
+				doUnknownAction();
 				break;
 			}
 		} catch (ScriptException e) {
@@ -547,16 +546,15 @@ public class HackController implements ControllerEventListener, ActionListener, 
 
 	// Returns true if the given breakpoint exists in the given breakpoints
 	// vector.
-	private boolean breakpointExists(Vector breakpoints, Breakpoint breakpoint) {
+	private static boolean breakpointExists(final Vector<Breakpoint> breakpoints, final Breakpoint breakpoint) {
 		boolean found = false;
 		for (int j = 0; (j < breakpoints.size()) && !found; j++) {
-			Breakpoint scannedBreakpoint = (Breakpoint) breakpoints.elementAt(j);
+			Breakpoint scannedBreakpoint = breakpoints.elementAt(j);
 			if (breakpoint.getVarName().equals(scannedBreakpoint.getVarName())
 					&& breakpoint.getValue().equals(scannedBreakpoint.getValue())) {
 				found = true;
 			}
 		}
-
 		return found;
 	}
 
@@ -578,21 +576,21 @@ public class HackController implements ControllerEventListener, ActionListener, 
 	private void doBreakpointCommand(Command command) throws ControllerException {
 		Breakpoint breakpoint = (Breakpoint) command.getArg();
 
-		if (!breakpointExists(breakpoints, breakpoint)) {
-			breakpoints.addElement(breakpoint);
+		if (!breakpointExists(m_breakpoints, breakpoint)) {
+			m_breakpoints.addElement(breakpoint);
 
-			gui.setBreakpoints(breakpoints);
+			gui.setBreakpoints(m_breakpoints);
 		}
 	}
 
 	// Executes the controller's clear-breakpoints command.
-	private void doClearBreakpointsCommand(Command command) throws ControllerException {
-		breakpoints.removeAllElements();
-		gui.setBreakpoints(breakpoints);
+	private void doClearBreakpointsCommand() throws ControllerException {
+		m_breakpoints.removeAllElements();
+		gui.setBreakpoints(m_breakpoints);
 	}
 
 	// Executes the controller's Clear-echo command.
-	private void doClearEchoCommand(Command command) throws ControllerException {
+	private void doClearEchoCommand() throws ControllerException {
 		lastEcho = "";
 		if (gui != null) {
 			gui.displayMessage("", false);
@@ -617,7 +615,7 @@ public class HackController implements ControllerEventListener, ActionListener, 
 	}
 
 	// Executes the controller's output command.
-	private void doOutputCommand(Command command) throws ControllerException, VariableException {
+	private void doOutputCommand() throws ControllerException, VariableException {
 		if (output == null) {
 			throw new ControllerException("No output file specified");
 		}
@@ -688,7 +686,7 @@ public class HackController implements ControllerEventListener, ActionListener, 
 	/**
 	 * Executes an unknown controller action event.
 	 */
-	protected void doUnknownAction(byte action, Object data) throws ControllerException {
+	protected void doUnknownAction() throws ControllerException {
 	}
 
 	// Executes all the script unless a breakpoint, comparison failure, stop
@@ -719,7 +717,7 @@ public class HackController implements ControllerEventListener, ActionListener, 
 	protected void loadNewScript(File file, boolean displayMessage) throws ControllerException, ScriptException {
 		currentScriptFile = file;
 		script = new Script(file.getPath());
-		breakpoints.removeAllElements();
+		m_breakpoints.removeAllElements();
 		currentCommandIndex = 0;
 		output = null;
 		currentOutputName = "";
@@ -729,7 +727,7 @@ public class HackController implements ControllerEventListener, ActionListener, 
 		if (gui != null) {
 			gui.setOutputFile("");
 			gui.setComparisonFile("");
-			gui.setBreakpoints(breakpoints);
+			gui.setBreakpoints(m_breakpoints);
 			gui.setScriptFile(file.getPath());
 			gui.setCurrentScriptLine(script.getLineNumberAt(0));
 		}
@@ -744,10 +742,8 @@ public class HackController implements ControllerEventListener, ActionListener, 
 	protected File loadWorkingDir() {
 		String dir = ".";
 
-		try {
-			BufferedReader r = new BufferedReader(new FileReader("bin/" + simulator.getName() + ".dat"));
+		try (BufferedReader r = new BufferedReader(new FileReader("bin/" + simulator.getName() + ".dat"))){
 			dir = r.readLine();
-			r.close();
 		} catch (IOException ioe) {
 		}
 
@@ -778,19 +774,19 @@ public class HackController implements ControllerEventListener, ActionListener, 
 				doOutputListCommand(command);
 				break;
 			case Command.OUTPUT_COMMAND:
-				doOutputCommand(command);
+				doOutputCommand();
 				break;
 			case Command.ECHO_COMMAND:
 				doEchoCommand(command);
 				break;
 			case Command.CLEAR_ECHO_COMMAND:
-				doClearEchoCommand(command);
+				doClearEchoCommand();
 				break;
 			case Command.BREAKPOINT_COMMAND:
 				doBreakpointCommand(command);
 				break;
 			case Command.CLEAR_BREAKPOINTS_COMMAND:
-				doClearBreakpointsCommand(command);
+				doClearBreakpointsCommand();
 				break;
 			case Command.REPEAT_COMMAND:
 				repeatCounter = ((Integer) command.getArg()).intValue();
@@ -804,7 +800,6 @@ public class HackController implements ControllerEventListener, ActionListener, 
 					// advance till the nearest end while command.
 					for (; script.getCommandAt(currentCommandIndex)
 							.getCode() != Command.END_WHILE_COMMAND; currentCommandIndex++) {
-						;
 					}
 				}
 				redo = true; // whether the test was successful or not,
@@ -1021,12 +1016,9 @@ public class HackController implements ControllerEventListener, ActionListener, 
 
 		File dir = file.isDirectory() ? file : parent;
 
-		try {
-			PrintWriter r = new PrintWriter(new FileWriter("bin/" + simulator.getName() + ".dat"));
+		try (PrintWriter r = new PrintWriter(new FileWriter("bin/" + simulator.getName() + ".dat"))) {
 			r.println(dir.getAbsolutePath());
-			r.close();
-		} catch (IOException ioe) {
-		}
+		} catch (IOException ioe) {	}
 	}
 
 	// Sets the additional display with the given code.
@@ -1064,15 +1056,15 @@ public class HackController implements ControllerEventListener, ActionListener, 
 	}
 
 	// Sets the breakpoints list with the given one.
-	private void setBreakpoints(Vector newBreakpoints) {
-		breakpoints = new Vector();
+	private void setBreakpoints(Vector<Breakpoint> newBreakpoints) {
+		m_breakpoints = new Vector<Breakpoint>();
 
 		// Make sure there's no duplicate breakpoints
 		for (int i = 0; i < newBreakpoints.size(); i++) {
-			Breakpoint currentBreakpoint = (Breakpoint) newBreakpoints.elementAt(i);
+			Breakpoint currentBreakpoint = newBreakpoints.elementAt(i);
 
-			if (!breakpointExists(breakpoints, currentBreakpoint)) {
-				breakpoints.addElement(currentBreakpoint);
+			if (!breakpointExists(m_breakpoints, currentBreakpoint)) {
+				m_breakpoints.addElement(currentBreakpoint);
 			}
 		}
 	}
@@ -1112,15 +1104,15 @@ public class HackController implements ControllerEventListener, ActionListener, 
 			}
 
 			// Check Breakpoints
-			for (int i = 0; i < breakpoints.size(); i++) {
-				Breakpoint breakpoint = (Breakpoint) breakpoints.elementAt(i);
+			for (int i = 0; i < m_breakpoints.size(); i++) {
+				Breakpoint breakpoint = m_breakpoints.elementAt(i);
 				String currentValue = simulator.getValue(breakpoint.getVarName());
 				if (currentValue.equals(breakpoint.getValue())) {
 					// if value is equal and the breakpoint wasn't reached
 					// before, turn it on
 					if (!breakpoint.isReached()) {
 						breakpoint.on();
-						gui.setBreakpoints(breakpoints);
+						gui.setBreakpoints(m_breakpoints);
 						displayMessage("Breakpoint reached", false);
 						gui.showBreakpoints();
 						stopMode();
@@ -1130,7 +1122,7 @@ public class HackController implements ControllerEventListener, ActionListener, 
 				// before, turn it off
 				else if (breakpoint.isReached()) {
 					breakpoint.off();
-					gui.setBreakpoints(breakpoints);
+					gui.setBreakpoints(m_breakpoints);
 				}
 			}
 		} catch (ControllerException ce) {
