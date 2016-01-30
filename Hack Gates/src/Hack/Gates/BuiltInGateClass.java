@@ -23,7 +23,7 @@ package Hack.Gates;
 public class BuiltInGateClass extends GateClass {
 
 	// the java class that holds the basic gate functionality
-	private Class javaGateClass;
+	private Class<?> javaGateClass;
 
 	/**
 	 * Constructs a new BuiltInGateClass with the given gate name and the
@@ -50,7 +50,7 @@ public class BuiltInGateClass extends GateClass {
 		}
 
 		// check that the class is a subclass of BuiltInGate
-		Class currentClass = javaGateClass;
+		Class<?> currentClass = javaGateClass;
 		boolean found;
 		do {
 			currentClass = currentClass.getSuperclass();

@@ -25,6 +25,11 @@ import java.util.EventObject;
 public class ClearEvent extends EventObject {
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3340982546810085504L;
+
+	/**
 	 * Constructs a new ClearEvent with the given source.
 	 */
 	public ClearEvent(Object source) {

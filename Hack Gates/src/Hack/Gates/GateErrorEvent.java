@@ -26,6 +26,11 @@ import Hack.Events.ErrorEvent;
 public class GateErrorEvent extends ErrorEvent {
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7469502336870120309L;
+
+	/**
 	 * Constructs a new GateErrorEvent with the given source (gate) and
 	 * errorMessage.
 	 */

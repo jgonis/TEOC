@@ -22,7 +22,12 @@ import java.util.Vector;
 /**
  * A set of nodes.
  */
-public class NodeSet extends Vector {
+public class NodeSet extends Vector<Node> {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2105456289722617984L;
 
 	/**
 	 * Creates a new NodeSet.
@@ -34,6 +39,7 @@ public class NodeSet extends Vector {
 	/**
 	 * Adds the given node to the set.
 	 */
+	@Override
 	public boolean add(Node node) {
 		return super.add(node);
 	}
@@ -49,7 +55,7 @@ public class NodeSet extends Vector {
 	 * Returns the Node at the given index. (Assumes a legal index).
 	 */
 	public Node getNodeAt(int index) {
-		return (Node) elementAt(index);
+		return elementAt(index);
 	}
 
 	/**

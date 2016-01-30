@@ -52,7 +52,7 @@ public class GatesManager {
 	private GateErrorEventListener errorHandler;
 
 	// The list of built in chips with gui
-	private Vector chips;
+	private Vector<BuiltInGateWithGUI> chips;
 
 	// When true, BuiltIn chips with gui should create and update their gui.
 	// otherwise, their gui shouldn't be created.
@@ -62,7 +62,7 @@ public class GatesManager {
 	 * Constructs a new GatesManager.
 	 */
 	private GatesManager() {
-		chips = new Vector();
+		chips = new Vector<BuiltInGateWithGUI>();
 		updateChipsGUI = true;
 	}
 
@@ -153,7 +153,7 @@ public class GatesManager {
 	 */
 	public void removeAllChips() {
 		for (int i = 0; i < chips.size(); i++) {
-			((BuiltInGateWithGUI) chips.elementAt(i)).removeErrorListener(errorHandler);
+			chips.elementAt(i).removeErrorListener(errorHandler);
 		}
 
 		chips.removeAllElements();

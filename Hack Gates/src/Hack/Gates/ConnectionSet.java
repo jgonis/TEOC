@@ -22,7 +22,12 @@ import java.util.HashSet;
 /**
  * A set of Connection objects.
  */
-public class ConnectionSet extends HashSet {
+public class ConnectionSet extends HashSet<Connection> {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -9016423519957414695L;
 
 	/**
 	 * Constructs a new ConnectionSet
@@ -34,6 +39,7 @@ public class ConnectionSet extends HashSet {
 	/**
 	 * Adds the given connection to the set.
 	 */
+	@Override
 	public boolean add(Connection connection) {
 		return super.add(connection);
 	}

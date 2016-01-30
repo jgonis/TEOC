@@ -40,26 +40,26 @@ public abstract class Gate {
 	public static final Node CLOCK_NODE = new Node();
 
 	// the input pins
-	protected Node[] inputPins;
+	protected Node[] m_inputPins;
 
 	// the output pins
-	protected Node[] outputPins;
+	protected Node[] m_outputPins;
 
 	// the class of this gate
-	protected GateClass gateClass;
+	protected GateClass m_gateClass;
 
 	// true if the inputs to this gate changed since the last re-computation.
 	protected boolean isDirty;
 
 	// A list of listeners to the isDirty property.
-	private Vector dirtyGateListeners;
+	private Vector<DirtyGateListener> dirtyGateListeners;
 
 	/**
 	 * Adds the given listener as a listener to the isDirty property.
 	 */
 	public void addDirtyGateListener(DirtyGateListener listener) {
 		if (dirtyGateListeners == null) {
-			dirtyGateListeners = new Vector(1, 1);
+			dirtyGateListeners = new Vector<DirtyGateListener>(1, 1);
 		}
 
 		dirtyGateListeners.add(listener);
@@ -86,7 +86,7 @@ public abstract class Gate {
 			// notify listeners
 			if (dirtyGateListeners != null) {
 				for (int i = 0; i < dirtyGateListeners.size(); i++) {
-					((DirtyGateListener) dirtyGateListeners.elementAt(i)).gotClean();
+					dirtyGateListeners.elementAt(i).gotClean();
 				}
 			}
 		}
@@ -108,14 +108,14 @@ public abstract class Gate {
 	 * Returns the GateClass of this gate.
 	 */
 	public GateClass getGateClass() {
-		return gateClass;
+		return m_gateClass;
 	}
 
 	/**
 	 * Returns the input pins.
 	 */
 	public Node[] getInputNodes() {
-		return inputPins;
+		return m_inputPins;
 	}
 
 	/**
@@ -125,14 +125,14 @@ public abstract class Gate {
 	public Node getNode(String name) {
 		Node result = null;
 
-		byte type = gateClass.getPinType(name);
-		int index = gateClass.getPinNumber(name);
+		byte type = m_gateClass.getPinType(name);
+		int index = m_gateClass.getPinNumber(name);
 		switch (type) {
 		case GateClass.INPUT_PIN_TYPE:
-			result = inputPins[index];
+			result = m_inputPins[index];
 			break;
 		case GateClass.OUTPUT_PIN_TYPE:
-			result = outputPins[index];
+			result = m_outputPins[index];
 			break;
 		}
 
@@ -143,7 +143,7 @@ public abstract class Gate {
 	 * Returns the output pins.
 	 */
 	public Node[] getOutputNodes() {
-		return outputPins;
+		return m_outputPins;
 	}
 
 	/**
@@ -170,7 +170,7 @@ public abstract class Gate {
 		// notify listeners
 		if (dirtyGateListeners != null) {
 			for (int i = 0; i < dirtyGateListeners.size(); i++) {
-				((DirtyGateListener) dirtyGateListeners.elementAt(i)).gotDirty();
+				dirtyGateListeners.elementAt(i).gotDirty();
 			}
 		}
 	}

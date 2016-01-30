@@ -22,6 +22,11 @@ package Hack.Gates;
  */
 public class GateException extends Exception {
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6287059509025926916L;
+
+	/**
 	 * Constructs a new GateException with the given message.
 	 */
 	public GateException(String message) {

@@ -31,7 +31,7 @@ import Hack.Events.ErrorEventListener;
  */
 public abstract class BuiltInGateWithGUI extends BuiltInGate implements ErrorEventListener {
 
-	private Vector errorListeners;
+	private Vector<GateErrorEventListener> errorListeners;
 
 	// The gate parent of this gate. re-evaluates when a change is done through
 	// the gui.
@@ -41,7 +41,7 @@ public abstract class BuiltInGateWithGUI extends BuiltInGate implements ErrorEve
 	 * Constructs a new BuiltInGateWithGUI.
 	 */
 	public BuiltInGateWithGUI() {
-		errorListeners = new Vector();
+		errorListeners = new Vector<GateErrorEventListener>();
 	}
 
 	/**
@@ -59,13 +59,14 @@ public abstract class BuiltInGateWithGUI extends BuiltInGate implements ErrorEve
 		GateErrorEvent event = new GateErrorEvent(this, null);
 
 		for (int i = 0; i < errorListeners.size(); i++) {
-			((GateErrorEventListener) errorListeners.elementAt(i)).gateErrorOccured(event);
+			errorListeners.elementAt(i).gateErrorOccured(event);
 		}
 	}
 
 	/**
 	 * Executes the given command, given in args[] style. Subclasses may
 	 * override this method to implement commands.
+	 * @param command 
 	 */
 	public void doCommand(String[] command) throws GateException {
 		throw new GateException("This chip supports no commands");
@@ -109,7 +110,7 @@ public abstract class BuiltInGateWithGUI extends BuiltInGate implements ErrorEve
 		GateErrorEvent event = new GateErrorEvent(this, errorMessage);
 
 		for (int i = 0; i < errorListeners.size(); i++) {
-			((GateErrorEventListener) errorListeners.elementAt(i)).gateErrorOccured(event);
+			errorListeners.elementAt(i).gateErrorOccured(event);
 		}
 	}
 

@@ -23,6 +23,11 @@ package Hack.Gates;
 public class HDLException extends Exception {
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2622898909183935263L;
+
+	/**
 	 * Constructs a new HDLException with the given message.
 	 */
 	public HDLException(String message) {

@@ -22,7 +22,12 @@ import java.util.HashSet;
 /**
  * A set of GateClasses.
  */
-public class GateClassSet extends HashSet {
+public class GateClassSet extends HashSet<GateClass> {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -550753776021887685L;
 
 	/**
 	 * Creates a new GateClassSet.
@@ -34,6 +39,7 @@ public class GateClassSet extends HashSet {
 	/**
 	 * Adds the given GateClass to the set.
 	 */
+	@Override
 	public boolean add(GateClass gateClass) {
 		return super.add(gateClass);
 	}

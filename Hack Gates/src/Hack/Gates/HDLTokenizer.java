@@ -47,10 +47,10 @@ public class HDLTokenizer {
 	private StreamTokenizer parser;
 
 	// Hashtable containing the keywords of the language
-	private Hashtable keywords;
+	private Hashtable<String, Integer> keywords;
 
 	// Hashtable containing the symbols of the language
-	private Hashtable symbols;
+	private Hashtable<String, String> symbols;
 
 	// The type of the current token
 	private int tokenType;
@@ -117,7 +117,7 @@ public class HDLTokenizer {
 				break;
 			case StreamTokenizer.TT_WORD:
 				currentToken = parser.sval;
-				Integer keywordCode = (Integer) keywords.get(currentToken);
+				Integer keywordCode = keywords.get(currentToken);
 				if (keywordCode != null) {
 					tokenType = TYPE_KEYWORD;
 					keyWordType = keywordCode.intValue();
@@ -231,7 +231,7 @@ public class HDLTokenizer {
 
 	// Initializes the keywords hashtable
 	private void initKeywords() {
-		keywords = new Hashtable();
+		keywords = new Hashtable<String, Integer>();
 		keywords.put("CHIP", new Integer(KW_CHIP));
 		keywords.put("IN", new Integer(KW_IN));
 		keywords.put("OUT", new Integer(KW_OUT));
@@ -242,7 +242,7 @@ public class HDLTokenizer {
 
 	// Initializes the symbols hashtable
 	private void initSymbols() {
-		symbols = new Hashtable();
+		symbols = new Hashtable<String, String>();
 		symbols.put("{", "{");
 		symbols.put("}", "}");
 		symbols.put(",", ",");

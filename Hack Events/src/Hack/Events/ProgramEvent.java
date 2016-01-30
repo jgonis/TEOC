@@ -25,6 +25,11 @@ import java.util.EventObject;
 public class ProgramEvent extends EventObject {
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6937848154531709930L;
+
+	/**
 	 * event type for notifying on a new loaded program. supplied data = program
 	 * file name (String)
 	 */

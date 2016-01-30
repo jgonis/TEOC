@@ -34,9 +34,9 @@ public abstract class BuiltInGate extends Gate {
 	 * Initializes the gate
 	 */
 	public void init(Node[] inputPins, Node[] outputPins, GateClass gateClass) {
-		this.inputPins = inputPins;
-		this.outputPins = outputPins;
-		this.gateClass = gateClass;
+		this.m_inputPins = inputPins;
+		m_outputPins = outputPins;
+		m_gateClass = gateClass;
 		setDirty();
 	}
 

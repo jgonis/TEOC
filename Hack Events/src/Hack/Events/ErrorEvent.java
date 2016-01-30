@@ -24,6 +24,10 @@ import java.util.EventObject;
  */
 public class ErrorEvent extends EventObject {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6937518246739442102L;
 	// the error message
 	private String errorMessage;
 

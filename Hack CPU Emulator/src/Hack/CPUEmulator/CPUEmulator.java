@@ -19,7 +19,6 @@ package Hack.CPUEmulator;
 
 import Hack.ComputerParts.Bus;
 import Hack.ComputerParts.ComputerPartErrorEvent;
-import Hack.ComputerParts.ComputerPartErrorEventListener;
 import Hack.ComputerParts.Register;
 import Hack.Controller.CommandException;
 import Hack.Controller.ControllerEvent;
@@ -45,7 +44,7 @@ import Hack.Utilities.Definitions;
  * file into the ROM TickTock - advances the clock by one time unit (executes
  * one instruction)
  */
-public class CPUEmulator extends HackSimulator implements ComputerPartErrorEventListener {
+public class CPUEmulator extends HackSimulator {
 
 	// Variables
 	private static final String VAR_A = "A";
@@ -184,21 +183,21 @@ public class CPUEmulator extends HackSimulator implements ComputerPartErrorEvent
 	}
 
 	// Checks that the given value is a legal 16-bit address
-	private void check_ram_address(String varName, int value) throws VariableException {
+	private static void check_ram_address(final String varName, final int value) throws VariableException {
 		if ((value < 0) || (value >= Definitions.RAM_SIZE)) {
 			throw new VariableException(value + " is an illegal value for", varName);
 		}
 	}
 
 	// Checks that the given value is a legal 16-bit address
-	private void check_rom_address(String varName, int value) throws VariableException {
+	private static void check_rom_address(final String varName, final int value) throws VariableException {
 		if ((value < 0) || (value >= Definitions.ROM_SIZE)) {
 			throw new VariableException(value + " is an illegal value for", varName);
 		}
 	}
 
 	// Checks that the given value is a legal 16-bit value
-	private void check_value(String varName, int value) throws VariableException {
+	private static void check_value(final String varName, final int value) throws VariableException {
 		if ((value < -32768) || (value >= 32768)) {
 			throw new VariableException(value + " is an illegal value for variable", varName);
 		}

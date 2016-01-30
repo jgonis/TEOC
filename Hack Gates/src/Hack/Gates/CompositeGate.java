@@ -20,15 +20,15 @@ package Hack.Gates;
 public class CompositeGate extends Gate {
 
 	// the internal pins
-	protected Node[] internalPins;
+	protected Node[] m_internalPins;
 
 	// The contained parts (Gates), sorted in topological order.
-	protected Gate[] parts;
+	protected Gate[] m_parts;
 
 	@Override
 	protected void clockDown() {
-		if (gateClass.isClocked) {
-			for (Gate part : parts) {
+		if (m_gateClass.isClocked) {
+			for (Gate part : m_parts) {
 				part.tock();
 			}
 		}
@@ -36,8 +36,8 @@ public class CompositeGate extends Gate {
 
 	@Override
 	protected void clockUp() {
-		if (gateClass.isClocked) {
-			for (Gate part : parts) {
+		if (m_gateClass.isClocked) {
+			for (Gate part : m_parts) {
 				part.tick();
 			}
 		}
@@ -47,7 +47,7 @@ public class CompositeGate extends Gate {
 	 * Returns the internal pins.
 	 */
 	public Node[] getInternalNodes() {
-		return internalPins;
+		return m_internalPins;
 	}
 
 	/**
@@ -59,10 +59,10 @@ public class CompositeGate extends Gate {
 		Node result = super.getNode(name);
 
 		if (result == null) {
-			byte type = gateClass.getPinType(name);
-			int index = gateClass.getPinNumber(name);
+			byte type = m_gateClass.getPinType(name);
+			int index = m_gateClass.getPinNumber(name);
 			if (type == CompositeGateClass.INTERNAL_PIN_TYPE) {
-				result = internalPins[index];
+				result = m_internalPins[index];
 			}
 		}
 
@@ -74,24 +74,24 @@ public class CompositeGate extends Gate {
 	 * order.
 	 */
 	public Gate[] getParts() {
-		return parts;
+		return m_parts;
 	}
 
 	/**
 	 * Initializes the gate
 	 */
 	public void init(Node[] inputPins, Node[] outputPins, Node[] internalPins, Gate[] parts, GateClass gateClass) {
-		this.inputPins = inputPins;
-		this.outputPins = outputPins;
-		this.internalPins = internalPins;
-		this.parts = parts;
-		this.gateClass = gateClass;
+		m_inputPins = inputPins;
+		m_outputPins = outputPins;
+		m_internalPins = internalPins;
+		m_parts = parts;
+		m_gateClass = gateClass;
 		setDirty();
 	}
 
 	@Override
 	protected void reCompute() {
-		for (Gate part : parts) {
+		for (Gate part : m_parts) {
 			part.eval();
 		}
 	}

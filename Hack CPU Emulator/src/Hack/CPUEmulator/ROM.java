@@ -56,12 +56,12 @@ public class ROM extends PointedMemory implements ProgramEventListener {
 	/**
 	 * Decimal numeric format
 	 */
-	public static final int DECIMAL_FORMAT = HackController.DECIMAL_FORMAT;;
+	public static final int DECIMAL_FORMAT = HackController.DECIMAL_FORMAT;
 
 	/**
 	 * Hexadecimal numeric format
 	 */
-	public static final int HEXA_FORMAT = HackController.HEXA_FORMAT;;
+	public static final int HEXA_FORMAT = HackController.HEXA_FORMAT;
 
 	/**
 	 * Binary numeric format
@@ -74,7 +74,7 @@ public class ROM extends PointedMemory implements ProgramEventListener {
 	public static final int ASM_FORMAT = 4;
 
 	// listeners to program changes
-	private Vector listeners;
+	private Vector<ProgramEventListener> listeners;
 
 	/**
 	 * Constructs a new ROM with the given ROM GUI.
@@ -82,7 +82,7 @@ public class ROM extends PointedMemory implements ProgramEventListener {
 	public ROM(ROMGUI gui) {
 		super(Definitions.ROM_SIZE, gui);
 		setNullValue(HackAssemblerTranslator.NOP, true);
-		listeners = new Vector();
+		listeners = new Vector<ProgramEventListener>();
 
 		if (hasGUI) {
 			gui.addProgramListener(this);
@@ -143,7 +143,7 @@ public class ROM extends PointedMemory implements ProgramEventListener {
 		ProgramEvent event = new ProgramEvent(this, eventType, programFileName);
 
 		for (int i = 0; i < listeners.size(); i++) {
-			((ProgramEventListener) listeners.elementAt(i)).programChanged(event);
+			listeners.elementAt(i).programChanged(event);
 		}
 	}
 

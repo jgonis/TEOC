@@ -532,7 +532,7 @@ public class HackController implements ControllerEventListener, ActionListener, 
 				displayMessage((String) event.getData(), true);
 				break;
 			default:
-				doUnknownAction();
+				doUnknownAction(event.getAction(), event.getData());
 				break;
 			}
 		} catch (ScriptException e) {
@@ -685,8 +685,10 @@ public class HackController implements ControllerEventListener, ActionListener, 
 
 	/**
 	 * Executes an unknown controller action event.
+	 * @param action 
+	 * @param data 
 	 */
-	protected void doUnknownAction() throws ControllerException {
+	protected void doUnknownAction(byte action, Object data) throws ControllerException {
 	}
 
 	// Executes all the script unless a breakpoint, comparison failure, stop

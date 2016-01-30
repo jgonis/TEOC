@@ -42,7 +42,7 @@ public abstract class GateClass {
 	public static final byte OUTPUT_PIN_TYPE = 2;
 
 	// a table that maps a gate name with its GateClass
-	protected static Hashtable GateClasses = new Hashtable();
+	protected static Hashtable<String, GateClass> GateClasses = new Hashtable<String, GateClass>();
 
 	/**
 	 * Clears the gate Cache
@@ -86,7 +86,7 @@ public abstract class GateClass {
 		}
 
 		// Try to find the gate in the "cache"
-		GateClass result = (GateClass) GateClasses.get(fileName);
+		GateClass result = GateClasses.get(fileName);
 
 		// gate wasn't found in cache
 		if (result == null) {
@@ -191,7 +191,7 @@ public abstract class GateClass {
 	// Returns an array of pin names read from the input (names may contain
 	// width specification).
 	protected static String[] readPinNames(HDLTokenizer input) throws HDLException {
-		Vector list = new Vector();
+		Vector<String> list = new Vector<String>();
 		boolean exit = false;
 		input.advance();
 
@@ -231,7 +231,7 @@ public abstract class GateClass {
 	protected PinInfo[] outputPinsInfo;
 
 	// The name of the gate
-	protected String name;
+	protected String m_name;
 
 	// true if this gate is clocked
 	protected boolean isClocked;
@@ -243,18 +243,18 @@ public abstract class GateClass {
 	protected boolean[] isOutputClocked;
 
 	// Mapping from pin names to their types (INPUT_PIN_TYPE, OUTPUT_PIN_TYPE)
-	protected Hashtable namesToTypes;
+	protected Hashtable<String, Byte> namesToTypes;
 
 	// Mapping from pin names to their numbers (Integer objects)
-	protected Hashtable namesToNumbers;
+	protected Hashtable<String, Integer> namesToNumbers;
 
 	// Constructs a new GateCLass (public access through the getGateClass
 	// method)
 	protected GateClass(String gateName, PinInfo[] inputPinsInfo, PinInfo[] outputPinsInfo) {
-		namesToTypes = new Hashtable();
-		namesToNumbers = new Hashtable();
+		namesToTypes = new Hashtable<String, Byte>();
+		namesToNumbers = new Hashtable<String, Integer>();
 
-		this.name = gateName;
+		this.m_name = gateName;
 
 		this.inputPinsInfo = inputPinsInfo;
 		registerPins(inputPinsInfo, INPUT_PIN_TYPE);
@@ -266,7 +266,7 @@ public abstract class GateClass {
 	 * Returns the name of the gate.
 	 */
 	public String getName() {
-		return name;
+		return m_name;
 	}
 
 	/**
@@ -306,7 +306,7 @@ public abstract class GateClass {
 	 * Returns the number of the given pinName. If not found, returns -1.
 	 */
 	public int getPinNumber(String pinName) {
-		Integer result = (Integer) namesToNumbers.get(pinName);
+		Integer result = namesToNumbers.get(pinName);
 		return (result != null ? result.intValue() : -1);
 	}
 
@@ -315,7 +315,7 @@ public abstract class GateClass {
 	 * UNKNOWN_PIN_TYPE.
 	 */
 	public byte getPinType(String pinName) {
-		Byte result = (Byte) namesToTypes.get(pinName);
+		Byte result = namesToTypes.get(pinName);
 		return (result != null ? result.byteValue() : UNKNOWN_PIN_TYPE);
 	}
 
