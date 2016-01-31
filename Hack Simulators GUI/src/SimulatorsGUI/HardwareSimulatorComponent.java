@@ -46,8 +46,8 @@ public class HardwareSimulatorComponent extends HackSimulatorComponent implement
 
 	private static final long serialVersionUID = -6096653474352399561L;
 	// The dimension of this window.
-	private static final int WIDTH = 1018;
-	private static final int HEIGHT = 611;
+	private static final int MY_WIDTH = 1018;
+	private static final int MY_HEIGHT = 611;
 
 	// The input pins of the hardware simulator.
 	private PinsComponent inputPins;
@@ -293,7 +293,7 @@ public class HardwareSimulatorComponent extends HackSimulatorComponent implement
 		flowLayoutGatesPanel.setVisible(false);
 
 		messageLbl.setBorder(BorderFactory.createLoweredBevelBorder());
-		messageLbl.setBounds(new Rectangle(0, 694, WIDTH - 8, 20));
+		messageLbl.setBounds(new Rectangle(0, 694, MY_WIDTH - 8, 20));
 
 		this.add(partPins, null);
 		this.add(hdlView, null);
@@ -306,7 +306,7 @@ public class HardwareSimulatorComponent extends HackSimulatorComponent implement
 		this.add(nullLayoutGatesPanel, null);
 		this.add(flowLayoutGatesPanel, null);
 
-		setSize(WIDTH, HEIGHT);
+		setSize(MY_WIDTH, MY_HEIGHT);
 	}
 
 	@Override

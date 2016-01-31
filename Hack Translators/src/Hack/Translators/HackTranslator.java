@@ -571,17 +571,18 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
 			m_sourceFileName = fileName;
 
 			lines = new Vector<String>();
-			BufferedReader sourceReader = new BufferedReader(new FileReader(m_sourceFileName));
+			try (BufferedReader sourceReader = new BufferedReader(new FileReader(m_sourceFileName))) {
 
-			while ((line = sourceReader.readLine()) != null) {
-				formattedLines.addElement(line);
-
-				if (m_gui != null) {
-					lines.addElement(line);
+				while ((line = sourceReader.readLine()) != null) {
+					formattedLines.addElement(line);
+	
+					if (m_gui != null) {
+						lines.addElement(line);
+					}
 				}
+			} catch(IOException ioe) {		
+				errorMessage = "error reading from file " + m_sourceFileName;
 			}
-
-			sourceReader.close();
 
 			m_source = new String[formattedLines.size()];
 			formattedLines.toArray(m_source);
@@ -605,8 +606,6 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
 
 		} catch (HackTranslatorException hte) {
 			errorMessage = hte.getMessage();
-		} catch (IOException ioe) {
-			errorMessage = "error reading from file " + m_sourceFileName;
 		}
 
 		if (errorMessage != null) {
@@ -623,10 +622,8 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
 	protected File loadWorkingDir() {
 		String dir = ".";
 
-		try {
-			BufferedReader r = new BufferedReader(new FileReader("bin/" + getName() + ".dat"));
+		try (BufferedReader r = new BufferedReader(new FileReader("bin/" + getName() + ".dat"))) {
 			dir = r.readLine();
-			r.close();
 		} catch (IOException ioe) {
 		}
 
@@ -691,7 +688,7 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
 	 */
 	protected int[] rowIndexToRange(int rowIndex) {
 		Integer key = new Integer(rowIndex);
-		return (int[]) m_compilationMap.get(key);
+		return m_compilationMap.get(key);
 	}
 
 	/**
@@ -728,10 +725,8 @@ public abstract class HackTranslator implements HackTranslatorEventListener, Act
 	 * Saves the given working dir into the data file.
 	 */
 	protected void saveWorkingDir(File file) {
-		try {
-			PrintWriter r = new PrintWriter(new FileWriter("bin/" + getName() + ".dat"));
+		try (PrintWriter r = new PrintWriter(new FileWriter("bin/" + getName() + ".dat"))) {
 			r.println(file.getAbsolutePath());
-			r.close();
 		} catch (IOException ioe) {
 		}
 

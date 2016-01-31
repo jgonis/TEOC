@@ -45,8 +45,8 @@ public class VMEmulatorComponent extends HackSimulatorComponent implements VMEmu
  
 	private static final long serialVersionUID = -1814109754899106821L;
 	// The dimension of this window.
-	private static final int WIDTH = 1018;
-	private static final int HEIGHT = 611;
+	private static final int MY_WIDTH = 1018;
+	private static final int MY_HEIGHT = 611;
 
 	// The keyboard of the VMEmulator component.
 	private KeyboardComponent m_keyboard;
@@ -250,7 +250,7 @@ public class VMEmulatorComponent extends HackSimulatorComponent implements VMEmu
 		m_stack.setBounds(new Rectangle(561, 327, m_stack.getWidth(), m_stack.getHeight()));
 		m_segments.getSplitPane().setBounds(
 				new Rectangle(289, 10, m_segments.getSplitPane().getWidth(), m_segments.getSplitPane().getHeight()));
-		m_bus.setBounds(new Rectangle(0, 0, WIDTH, HEIGHT));
+		m_bus.setBounds(new Rectangle(0, 0, MY_WIDTH, MY_HEIGHT));
 
 		m_calculator.setBorder(BorderFactory.createLoweredBevelBorder());
 		m_calculator.setBounds(new Rectangle(137, 331, 148, 103));
@@ -273,7 +273,7 @@ public class VMEmulatorComponent extends HackSimulatorComponent implements VMEmu
 		this.add(m_callStack, null);
 		this.add(m_segments.getSplitPane(), null);
 
-		setSize(WIDTH, HEIGHT);
+		setSize(MY_WIDTH, MY_HEIGHT);
 	}
 
 	@Override

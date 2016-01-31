@@ -306,15 +306,9 @@ public class StackCalculator extends JPanel implements CalculatorGUI {
 	 * Translates a given short to a string according to the current format.
 	 */
 	protected String translateValueToString(short value) {
-		if (m_hideNullValue) {
-			if (value == m_nullValue) {
+		if (m_hideNullValue && value == m_nullValue)
 				return "";
-			} else {
-				return Format.translateValueToString(value, Format.DEC_FORMAT);
-			}
-		} else {
-			return Format.translateValueToString(value, Format.DEC_FORMAT);
-		}
-
+			
+		return Format.translateValueToString(value, Format.DEC_FORMAT);
 	}
 }

@@ -18,7 +18,6 @@
 package SimulatorsGUI;
 
 import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
 import java.util.StringTokenizer;
 
 import javax.swing.ImageIcon;
@@ -61,7 +60,7 @@ public class SearchProgramWindow extends JFrame {
 	/**
 	 * Constructs a new SearchWindow.
 	 */
-	public SearchProgramWindow(JTable table, HVMInstruction[] instructions) {
+	public SearchProgramWindow(JTable table) {
 		super("Search");
 		this.m_table = table;
 
@@ -72,7 +71,7 @@ public class SearchProgramWindow extends JFrame {
 	/**
 	 * Implementing the action of pressing the cancel button.
 	 */
-	public void cancelButton_actionPerformed(ActionEvent e) {
+	public void cancelButton_actionPerformed() {
 		setVisible(false);
 	}
 
@@ -132,8 +131,8 @@ public class SearchProgramWindow extends JFrame {
 	/**
 	 * Implementing the action of pressing 'enter' on the text field.
 	 */
-	public void instruction_actionPerformed(ActionEvent e) {
-		okButton_actionPerformed(e);
+	public void instruction_actionPerformed() {
+		okButton_actionPerformed();
 	}
 
 	// Initialization of this component.
@@ -143,13 +142,13 @@ public class SearchProgramWindow extends JFrame {
 		m_instructionLbl.setBounds(new Rectangle(9, 22, 79, 23));
 		this.getContentPane().setLayout(null);
 		m_instruction.setBounds(new Rectangle(82, 25, 220, 18));
-		m_instruction.addActionListener(e -> instruction_actionPerformed(e));
+		m_instruction.addActionListener(e -> instruction_actionPerformed());
 		m_okButton.setToolTipText("OK");
 		m_okButton.setIcon(m_okIcon);
 		m_okButton.setBounds(new Rectangle(66, 68, 63, 44));
-		m_okButton.addActionListener(e -> okButton_actionPerformed(e));
+		m_okButton.addActionListener(e -> okButton_actionPerformed());
 		m_cancelButton.setBounds(new Rectangle(190, 68, 63, 44));
-		m_cancelButton.addActionListener(e -> cancelButton_actionPerformed(e));
+		m_cancelButton.addActionListener(e -> cancelButton_actionPerformed());
 		m_cancelButton.setToolTipText("CANCEL");
 		m_cancelButton.setIcon(m_cancelIcon);
 		this.getContentPane().add(m_instruction, null);
@@ -164,7 +163,7 @@ public class SearchProgramWindow extends JFrame {
 	/**
 	 * Implementing the action of pressing the OK button.
 	 */
-	public void okButton_actionPerformed(ActionEvent e) {
+	public void okButton_actionPerformed() {
 		try {
 			int row = getSearchedRowIndex();
 			if (row != -1) {

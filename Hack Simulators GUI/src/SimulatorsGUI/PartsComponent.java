@@ -53,7 +53,7 @@ public class PartsComponent extends JPanel implements PartsGUI {
 		 * Returns the the class of a specific column.
 		 */
 		@Override
-		public Class getColumnClass(int c) {
+		public Class<? extends Object> getColumnClass(int c) {
 			return getValueAt(0, c).getClass();
 		}
 
@@ -172,12 +172,12 @@ public class PartsComponent extends JPanel implements PartsGUI {
 		m_partsTable.addFocusListener(new FocusListener() {
 			@Override
 			public void focusGained(FocusEvent e) {
-				partsTable_focusGained(e);
+				partsTable_focusGained();
 			}
 
 			@Override
 			public void focusLost(FocusEvent e) {
-				partsTable_focusLost(e);
+				partsTable_focusLost();
 			}
 		});
 
@@ -195,11 +195,11 @@ public class PartsComponent extends JPanel implements PartsGUI {
 	/**
 	 * The action of the table gaining focus (empty implementation)
 	 */
-	public void partsTable_focusGained(FocusEvent e) {
+	public void partsTable_focusGained() {
 	}
 
 	// The action of the table loosing focus
-	public void partsTable_focusLost(FocusEvent e) {
+	public void partsTable_focusLost() {
 		m_partsTable.clearSelection();
 	}
 

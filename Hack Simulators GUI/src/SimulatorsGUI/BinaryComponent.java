@@ -20,7 +20,6 @@ package SimulatorsGUI;
 import java.awt.Color;
 import java.awt.Event;
 import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -119,7 +118,7 @@ public class BinaryComponent extends JPanel implements MouseListener, KeyListene
 	/**
 	 * Implementing the action of pressing the cancel button.
 	 */
-	public void cancelButton_actionPerformed(ActionEvent e) {
+	public void cancelButton_actionPerformed() {
 		hideBinary();
 	}
 
@@ -242,11 +241,11 @@ public class BinaryComponent extends JPanel implements MouseListener, KeyListene
 		m_okButton.setHorizontalTextPosition(SwingConstants.CENTER);
 		m_okButton.setIcon(m_okIcon);
 		m_okButton.setBounds(new Rectangle(97, 29, 23, 20));
-		m_okButton.addActionListener(e -> okButton_actionPerformed(e));
+		m_okButton.addActionListener(e -> okButton_actionPerformed());
 		m_cancelButton.setHorizontalTextPosition(SwingConstants.CENTER);
 		m_cancelButton.setIcon(m_cancelIcon);
 		m_cancelButton.setBounds(new Rectangle(125, 29, 23, 20));
-		m_cancelButton.addActionListener(e -> cancelButton_actionPerformed(e));
+		m_cancelButton.addActionListener(e -> cancelButton_actionPerformed());
 		this.setBorder(m_binaryBorder);
 		this.add(m_bit15, null);
 		this.add(m_bit14, null);
@@ -355,14 +354,14 @@ public class BinaryComponent extends JPanel implements MouseListener, KeyListene
 	public void notifyListeners() {
 		PinValueEvent event = new PinValueEvent(this, m_valueStr.toString(), m_isOk);
 		for (int i = 0; i < m_listeners.size(); i++) {
-			((PinValueListener) m_listeners.elementAt(i)).pinValueChanged(event);
+			m_listeners.elementAt(i).pinValueChanged(event);
 		}
 	}
 
 	/**
 	 * Implementing the action of pressing the ok button.
 	 */
-	public void okButton_actionPerformed(ActionEvent e) {
+	public void okButton_actionPerformed() {
 		approve();
 	}
 

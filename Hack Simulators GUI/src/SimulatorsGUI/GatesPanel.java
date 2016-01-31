@@ -86,9 +86,9 @@ public class GatesPanel implements GatesPanelGUI {
 	public JPanel getGatesPanel() {
 		if (flowLayout) {
 			return flowLayoutGatesPanel;
-		} else {
-			return nullLayoutGatesPanel;
-		}
+		} 
+		
+		return nullLayoutGatesPanel;
 	}
 
 	/**

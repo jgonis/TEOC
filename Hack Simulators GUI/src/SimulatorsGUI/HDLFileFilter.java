@@ -50,14 +50,10 @@ public class HDLFileFilter extends FileFilter {
 		}
 
 		String extension = getExtension(f);
-		if (extension != null) {
-			if (extension.equals("hdl")) {
-				return true;
-			} else {
-				return false;
-			}
-		}
-
+		if (extension != null && extension.equals("hdl")) {
+			return true;
+		} 
+			
 		return false;
 	}
 

@@ -304,25 +304,25 @@ public class HVMInstructionSet {
 	 */
 	public static HVMInstructionSet getInstance() {
 		if (instance == null) {
-			new HVMInstructionSet();
+			instance = new HVMInstructionSet();
 		}
 		return instance;
 	}
 
 	// the translation table from instruction strings to codes.
-	private Hashtable instructionToCode;
+	private Hashtable<String, Byte> instructionToCode;
 
 	// the translation table from instruction codes to strings.
-	private Hashtable instructionToString;
+	private Hashtable<Byte, String> instructionToString;
 
 	// the translation table from segment VM strings to codes.
-	private Hashtable segmentCodes;
+	private Hashtable<String, Byte> segmentCodes;
 
 	// the translation table from segment codes to segment VM strings.
-	private Hashtable segmentStrings;
+	private Hashtable<Byte, String> segmentStrings;
 
 	// the translation table from segment VM strings to hardware pointer names.
-	private Hashtable segmentPointerStrings;
+	private Hashtable<String, String> segmentPointerStrings;
 
 	// Constructs the singlton HVMInstructionSet
 	private HVMInstructionSet() {
@@ -334,7 +334,7 @@ public class HVMInstructionSet {
 
 	// initializes the instructions table
 	private void initInstructions() {
-		instructionToCode = new Hashtable();
+		instructionToCode = new Hashtable<String, Byte>();
 		instructionToCode.put(ADD_STRING, new Byte(ADD_CODE));
 		instructionToCode.put(SUBSTRACT_STRING, new Byte(SUBSTRACT_CODE));
 		instructionToCode.put(NEGATE_STRING, new Byte(NEGATE_CODE));
@@ -353,7 +353,7 @@ public class HVMInstructionSet {
 		instructionToCode.put(RETURN_STRING, new Byte(RETURN_CODE));
 		instructionToCode.put(CALL_STRING, new Byte(CALL_CODE));
 
-		instructionToString = new Hashtable();
+		instructionToString = new Hashtable<Byte, String>();
 		instructionToString.put(new Byte(ADD_CODE), ADD_STRING);
 		instructionToString.put(new Byte(SUBSTRACT_CODE), SUBSTRACT_STRING);
 		instructionToString.put(new Byte(NEGATE_CODE), NEGATE_STRING);
@@ -375,7 +375,7 @@ public class HVMInstructionSet {
 
 	// initializes the segment codes table
 	private void initSegmentCodes() {
-		segmentCodes = new Hashtable();
+		segmentCodes = new Hashtable<String, Byte>();
 		segmentCodes.put(STATIC_SEGMENT_VM_STRING, new Byte(STATIC_SEGMENT_CODE));
 		segmentCodes.put(LOCAL_SEGMENT_VM_STRING, new Byte(LOCAL_SEGMENT_CODE));
 		segmentCodes.put(ARG_SEGMENT_VM_STRING, new Byte(ARG_SEGMENT_CODE));
@@ -388,13 +388,13 @@ public class HVMInstructionSet {
 
 	// initializes the segment strings table
 	private void initSegmentStrings() {
-		segmentPointerStrings = new Hashtable();
+		segmentPointerStrings = new Hashtable<String, String>();
 		segmentPointerStrings.put(LOCAL_SEGMENT_VM_STRING, Definitions.LOCAL_POINTER_NAME);
 		segmentPointerStrings.put(ARG_SEGMENT_VM_STRING, Definitions.ARG_POINTER_NAME);
 		segmentPointerStrings.put(THIS_SEGMENT_VM_STRING, Definitions.THIS_POINTER_NAME);
 		segmentPointerStrings.put(THAT_SEGMENT_VM_STRING, Definitions.THAT_POINTER_NAME);
 
-		segmentStrings = new Hashtable();
+		segmentStrings = new Hashtable<Byte, String>();
 		segmentStrings.put(new Byte(STATIC_SEGMENT_CODE), STATIC_SEGMENT_VM_STRING);
 		segmentStrings.put(new Byte(LOCAL_SEGMENT_CODE), LOCAL_SEGMENT_VM_STRING);
 		segmentStrings.put(new Byte(ARG_SEGMENT_CODE), ARG_SEGMENT_VM_STRING);
@@ -410,7 +410,7 @@ public class HVMInstructionSet {
 	 * null.
 	 */
 	public String instructionCodeToString(byte code) {
-		return (String) instructionToString.get(new Byte(code));
+		return instructionToString.get(new Byte(code));
 	}
 
 	/**
@@ -418,7 +418,7 @@ public class HVMInstructionSet {
 	 * UNKNOWN_INSTRUCTION.
 	 */
 	public byte instructionStringToCode(String instruction) {
-		Byte result = (Byte) instructionToCode.get(instruction);
+		Byte result = instructionToCode.get(instruction);
 		return (result != null ? result.byteValue() : UNKNOWN_INSTRUCTION);
 	}
 
@@ -434,7 +434,7 @@ public class HVMInstructionSet {
 	 * null.
 	 */
 	public String segmentCodeToVMString(byte code) {
-		return (String) segmentStrings.get(new Byte(code));
+		return segmentStrings.get(new Byte(code));
 	}
 
 	/**
@@ -442,7 +442,7 @@ public class HVMInstructionSet {
 	 * exists, returns null.
 	 */
 	public String segmentStringVMToPointer(String segment) {
-		return (String) segmentPointerStrings.get(segment);
+		return segmentPointerStrings.get(segment);
 	}
 
 	/**
@@ -450,7 +450,7 @@ public class HVMInstructionSet {
 	 * UNKNOWN_SEGMENT.
 	 */
 	public byte segmentVMStringToCode(String segment) {
-		Byte result = (Byte) segmentCodes.get(segment);
+		Byte result = segmentCodes.get(segment);
 		return (result != null ? result.byteValue() : UNKNOWN_SEGMENT);
 	}
 }

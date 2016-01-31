@@ -50,13 +50,8 @@ public class ROMFileFilter extends FileFilter {
 		}
 
 		String extension = getExtension(f);
-		if (extension != null) {
-			if (extension.equals("hack") || extension.equals("asm")) {
-				return true;
-			} else {
-				return false;
-			}
-		}
+		if (extension != null && (extension.equals("hack") || extension.equals("asm"))) 
+			return true;
 
 		return false;
 	}

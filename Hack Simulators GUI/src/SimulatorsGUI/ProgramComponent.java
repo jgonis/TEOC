@@ -22,7 +22,6 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.SystemColor;
-import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.Vector;
 
@@ -221,7 +220,7 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
 		m_model = new ProgramTableModel();
 		m_programTable = new JTable(m_model);
 		m_programTable.setDefaultRenderer(m_programTable.getColumnClass(0), m_coloredRenderer);
-		m_searchWindow = new SearchProgramWindow(m_programTable, m_instructions);
+		m_searchWindow = new SearchProgramWindow(m_programTable);
 
 		jbInit();
 
@@ -246,14 +245,14 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
 	/**
 	 * Implementing the action of pressing the browse button.
 	 */
-	public void browseButton_actionPerformed(ActionEvent e) {
+	public void browseButton_actionPerformed() {
 		loadProgram();
 	}
 
 	/**
 	 * Implementing the action of pressing the clear button.
 	 */
-	public void clearButton_actionPerformed(ActionEvent e) {
+	public void clearButton_actionPerformed() {
 		Object[] options = { "Yes", "No", "Cancel" };
 		int pressedButtonValue = JOptionPane.showOptionDialog(this.getParent(),
 				"Are you sure you want to clear the program?", "Warning Message", JOptionPane.YES_NO_CANCEL_OPTION,
@@ -322,7 +321,7 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
 		m_browseButton.setToolTipText("Load Program");
 		m_browseButton.setIcon(m_browseIcon);
 		m_browseButton.setBounds(new Rectangle(119, 2, 31, 24));
-		m_browseButton.addActionListener(e -> browseButton_actionPerformed(e));
+		m_browseButton.addActionListener(e -> browseButton_actionPerformed());
 		m_messageTxt.setBackground(SystemColor.info);
 		m_messageTxt.setEnabled(false);
 		m_messageTxt.setFont(Utilities.labelsFont);
@@ -335,14 +334,14 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
 		m_searchButton.setToolTipText("Search");
 		m_searchButton.setIcon(m_searchIcon);
 		m_searchButton.setBounds(new Rectangle(188, 2, 31, 24));
-		m_searchButton.addActionListener(e -> searchButton_actionPerformed(e));
+		m_searchButton.addActionListener(e -> searchButton_actionPerformed());
 		this.setForeground(Color.lightGray);
 		this.setLayout(null);
 		m_nameLbl.setText("Program");
 		m_nameLbl.setBounds(new Rectangle(5, 5, 73, 20));
 		m_nameLbl.setFont(Utilities.labelsFont);
 
-		m_clearButton.addActionListener(e -> clearButton_actionPerformed(e));
+		m_clearButton.addActionListener(e -> clearButton_actionPerformed());
 		m_clearButton.setBounds(new Rectangle(154, 2, 31, 24));
 		m_clearButton.setIcon(m_clearIcon);
 		m_clearButton.setToolTipText("Clear");
@@ -385,7 +384,7 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
 	public void notifyErrorListeners(String errorMessage) {
 		ErrorEvent event = new ErrorEvent(this, errorMessage);
 		for (int i = 0; i < m_errorEventListeners.size(); i++) {
-			((ErrorEventListener) m_errorEventListeners.elementAt(i)).errorOccured(event);
+			m_errorEventListeners.elementAt(i).errorOccured(event);
 		}
 	}
 
@@ -399,7 +398,7 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
 	public void notifyProgramListeners(byte eventType, String programFileName) {
 		ProgramEvent event = new ProgramEvent(this, eventType, programFileName);
 		for (int i = 0; i < m_listeners.size(); i++) {
-			((ProgramEventListener) m_listeners.elementAt(i)).programChanged(event);
+			m_listeners.elementAt(i).programChanged(event);
 		}
 	}
 
@@ -434,7 +433,7 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
 	/**
 	 * Implementing the action of pressing the search button.
 	 */
-	public void searchButton_actionPerformed(ActionEvent e) {
+	public void searchButton_actionPerformed() {
 		m_searchWindow.showWindow();
 	}
 

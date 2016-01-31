@@ -53,7 +53,7 @@ public class Graph {
 		checkExistence(source);
 		checkExistence(target);
 
-		Set<Object> edgeSet = (Set<Object>) m_graph.get(source);
+		Set<Object> edgeSet = m_graph.get(source);
 		edgeSet.add(target);
 	}
 
@@ -70,7 +70,7 @@ public class Graph {
 	private boolean doPathExists(Object source, Object destination, Set<Object> marked) {
 		boolean pathFound = false;
 		marked.add(source);
-		Set<Object> edgeSet = (Set<Object>) m_graph.get(source);
+		Set<Object> edgeSet = m_graph.get(source);
 		if (edgeSet != null) {
 			Iterator<Object> edgeIter = edgeSet.iterator();
 			while (edgeIter.hasNext() && !pathFound) {
@@ -91,7 +91,7 @@ public class Graph {
 	private void doTopologicalSort(Object node, Vector<Object> nodes, Set<Object> marked, Set<Object> processed) {
 		marked.add(node);
 		processed.add(node);
-		Set<Object> edgeSet = (Set<Object>) m_graph.get(node);
+		Set<Object> edgeSet = m_graph.get(node);
 		if (edgeSet != null) {
 			Iterator<Object> edgeIter = edgeSet.iterator();
 			while (edgeIter.hasNext()) {

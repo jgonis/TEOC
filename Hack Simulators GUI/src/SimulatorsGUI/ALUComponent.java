@@ -349,7 +349,7 @@ public class ALUComponent extends JPanel implements ALUGUI {
 			filledPolygon.lineTo(x4Points[index], y4Points[index]);
 
 		}
-		;
+		
 		filledPolygon.closePath();
 		g2.setPaint(m_aluColor);
 		g2.fill(filledPolygon);
@@ -440,12 +440,11 @@ public class ALUComponent extends JPanel implements ALUGUI {
 		if (m_hideNullValue) {
 			if (value == m_nullValue) {
 				return "";
-			} else {
-				return Format.translateValueToString(value, m_dataFormat);
 			}
-		} else {
+			
 			return Format.translateValueToString(value, m_dataFormat);
-		}
-
+		} 
+			
+		return Format.translateValueToString(value, m_dataFormat);
 	}
 }

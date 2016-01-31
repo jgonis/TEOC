@@ -120,9 +120,9 @@ public class LineTokenizer extends StreamTokenizer {
 	public int number() {
 		if (ttype == TT_NUMBER) {
 			return (int) nval;
-		} else {
-			return 0;
 		}
+		
+		return 0;
 	}
 
 	/**
@@ -131,9 +131,9 @@ public class LineTokenizer extends StreamTokenizer {
 	public char symbol() {
 		if (ttype > 0) {
 			return (char) ttype;
-		} else {
-			return 0;
 		}
+		
+		return 0;
 	}
 
 	/**

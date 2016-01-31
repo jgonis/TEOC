@@ -80,7 +80,7 @@ public class PinsComponent extends JPanel implements PinsGUI, MouseListener, Pin
 			} else {
 				setHorizontalAlignment(SwingConstants.RIGHT);
 				for (int i = 0; i < m_highlightIndex.size(); i++) {
-					if (row == ((Integer) m_highlightIndex.elementAt(i)).intValue()) {
+					if (row == m_highlightIndex.elementAt(i).intValue()) {
 						setForeground(Color.blue);
 						break;
 					} else {
@@ -399,12 +399,12 @@ public class PinsComponent extends JPanel implements PinsGUI, MouseListener, Pin
 		m_pinsTable.addFocusListener(new FocusListener() {
 			@Override
 			public void focusGained(FocusEvent e) {
-				pinsTable_focusGained(e);
+				pinsTable_focusGained();
 			}
 
 			@Override
 			public void focusLost(FocusEvent e) {
-				pinsTable_focusLost(e);
+				pinsTable_focusLost();
 			}
 		});
 		m_pinsTable.addMouseListener(this);
@@ -487,14 +487,14 @@ public class PinsComponent extends JPanel implements PinsGUI, MouseListener, Pin
 	public void notifyErrorListeners(String errorMessage) {
 		ErrorEvent event = new ErrorEvent(this, errorMessage);
 		for (int i = 0; i < m_errorEventListeners.size(); i++) {
-			((ErrorEventListener) m_errorEventListeners.elementAt(i)).errorOccured(event);
+			m_errorEventListeners.elementAt(i).errorOccured(event);
 		}
 	}
 
 	@Override
 	public void notifyListeners() {
 		for (int i = 0; i < m_listeners.size(); i++) {
-			((ComputerPartEventListener) m_listeners.elementAt(i)).guiGainedFocus();
+			m_listeners.elementAt(i).guiGainedFocus();
 		}
 	}
 
@@ -502,17 +502,17 @@ public class PinsComponent extends JPanel implements PinsGUI, MouseListener, Pin
 	public void notifyListeners(int index, short value) {
 		ComputerPartEvent event = new ComputerPartEvent(this, index, value);
 		for (int i = 0; i < m_listeners.size(); i++) {
-			((ComputerPartEventListener) m_listeners.elementAt(i)).valueChanged(event);
+			m_listeners.elementAt(i).valueChanged(event);
 		}
 	}
 
 	// The action of the table gaining focus
-	public void pinsTable_focusGained(FocusEvent e) {
+	public void pinsTable_focusGained() {
 		notifyListeners();
 	}
 
 	// The action of the table loosing focus
-	public void pinsTable_focusLost(FocusEvent e) {
+	public void pinsTable_focusLost() {
 		m_lastSelectedRow = m_pinsTable.getSelectedRow();
 		m_pinsTable.clearSelection();
 	}

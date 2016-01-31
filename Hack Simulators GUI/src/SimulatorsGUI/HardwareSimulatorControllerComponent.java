@@ -18,7 +18,6 @@
 package SimulatorsGUI;
 
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
 
@@ -78,7 +77,7 @@ public class HardwareSimulatorControllerComponent extends ControllerComponent
 		m_fileMenu.removeAll();
 
 		loadChipMenuItem = new JMenuItem("Load Chip", KeyEvent.VK_L);
-		loadChipMenuItem.addActionListener(e -> loadChipMenuItem_actionPerformed(e));
+		loadChipMenuItem.addActionListener(e -> loadChipMenuItem_actionPerformed());
 		m_fileMenu.add(loadChipMenuItem);
 
 		m_fileMenu.add(m_scriptMenuItem);
@@ -94,11 +93,11 @@ public class HardwareSimulatorControllerComponent extends ControllerComponent
 		m_runMenu.addSeparator();
 
 		evalMenuItem = new JMenuItem("Eval", KeyEvent.VK_E);
-		evalMenuItem.addActionListener(e -> evalMenuItem_actionPerformed(e));
+		evalMenuItem.addActionListener(e -> evalMenuItem_actionPerformed());
 		m_runMenu.add(evalMenuItem);
 
 		tickTockMenuItem = new JMenuItem("Tick Tock", KeyEvent.VK_C);
-		tickTockMenuItem.addActionListener(e -> tickTockMenuItem_actionPerformed(e));
+		tickTockMenuItem.addActionListener(e -> tickTockMenuItem_actionPerformed());
 
 		m_runMenu.add(tickTockMenuItem);
 		m_runMenu.addSeparator();
@@ -158,14 +157,14 @@ public class HardwareSimulatorControllerComponent extends ControllerComponent
 	/**
 	 * Implementing the action of pressing the eval button.
 	 */
-	public void evalButton_actionPerformed(ActionEvent e) {
+	public void evalButton_actionPerformed() {
 		notifyControllerListeners(HardwareSimulatorControllerEvent.EVAL_CLICKED, null);
 	}
 
 	/**
 	 * Implementing the action of choosing the eval menu item from the menu bar.
 	 */
-	public void evalMenuItem_actionPerformed(ActionEvent e) {
+	public void evalMenuItem_actionPerformed() {
 		notifyControllerListeners(HardwareSimulatorControllerEvent.EVAL_CLICKED, null);
 	}
 
@@ -196,7 +195,7 @@ public class HardwareSimulatorControllerComponent extends ControllerComponent
 		evalButton.setPreferredSize(new Dimension(39, 39));
 		evalButton.setToolTipText("Eval");
 		evalButton.setIcon(evalIcon);
-		evalButton.addActionListener(e -> evalButton_actionPerformed(e));
+		evalButton.addActionListener(e -> evalButton_actionPerformed());
 	}
 
 	// Initializing the load chip button.
@@ -208,7 +207,7 @@ public class HardwareSimulatorControllerComponent extends ControllerComponent
 		loadChipButton.setPreferredSize(new Dimension(39, 39));
 		loadChipButton.setToolTipText("Load Chip");
 		loadChipButton.setIcon(loadChipIcon);
-		loadChipButton.addActionListener(e -> loadChipButton_actionPerformed(e));
+		loadChipButton.addActionListener(e -> loadChipButton_actionPerformed());
 	}
 
 	// Initializing the tick tock button.
@@ -220,13 +219,13 @@ public class HardwareSimulatorControllerComponent extends ControllerComponent
 		tickTockButton.setPreferredSize(new Dimension(39, 39));
 		tickTockButton.setToolTipText("Tick Tock");
 		tickTockButton.setIcon(tickTockIcon);
-		tickTockButton.addActionListener(e -> tickTockButton_actionPerformed(e));
+		tickTockButton.addActionListener(e -> tickTockButton_actionPerformed());
 	}
 
 	/**
 	 * Implementing the action of pressing the load chip button.
 	 */
-	public void loadChipButton_actionPerformed(ActionEvent e) {
+	public void loadChipButton_actionPerformed() {
 		loadChipPressed();
 	}
 
@@ -234,7 +233,7 @@ public class HardwareSimulatorControllerComponent extends ControllerComponent
 	 * Implementing the action of choosing the load chip menu item from the menu
 	 * bar.
 	 */
-	public void loadChipMenuItem_actionPerformed(ActionEvent e) {
+	public void loadChipMenuItem_actionPerformed() {
 		loadChipPressed();
 	}
 
@@ -256,7 +255,7 @@ public class HardwareSimulatorControllerComponent extends ControllerComponent
 	/**
 	 * Implementing the action of pressing the tick tock button.
 	 */
-	public void tickTockButton_actionPerformed(ActionEvent e) {
+	public void tickTockButton_actionPerformed() {
 		notifyControllerListeners(HardwareSimulatorControllerEvent.TICKTOCK_CLICKED, null);
 	}
 
@@ -264,7 +263,7 @@ public class HardwareSimulatorControllerComponent extends ControllerComponent
 	 * Implementing the action of choosing the tick tock menu item from the menu
 	 * bar.
 	 */
-	public void tickTockMenuItem_actionPerformed(ActionEvent e) {
+	public void tickTockMenuItem_actionPerformed() {
 		notifyControllerListeners(HardwareSimulatorControllerEvent.TICKTOCK_CLICKED, null);
 	}
 }

@@ -59,7 +59,7 @@ public class CallStackComponent extends JPanel implements CallStackGUI {
 			setForeground(null);
 			setBackground(null);
 
-			setRenderer(row, column);
+			setRenderer(row);
 			super.getTableCellRendererComponent(table, value, selected, focused, row, column);
 
 			return this;
@@ -68,7 +68,7 @@ public class CallStackComponent extends JPanel implements CallStackGUI {
 		/**
 		 * Sets a new cell renderer.
 		 */
-		public void setRenderer(int row, int column) {
+		public void setRenderer(int row) {
 			if (row == (m_methodNames.size() - 1)) {
 				setForeground(Color.blue);
 			}
@@ -153,13 +153,13 @@ public class CallStackComponent extends JPanel implements CallStackGUI {
 	/**
 	 * The action of the table gaining focus (empty implementation).
 	 */
-	public void callStackTable_focusGained(FocusEvent e) {
+	public void callStackTable_focusGained() {
 	}
 
 	/**
 	 * The action of the table loosing focus
 	 */
-	public void callStackTable_focusLost(FocusEvent e) {
+	public void callStackTable_focusLost() {
 		m_callStackTable.clearSelection();
 	}
 
@@ -182,12 +182,12 @@ public class CallStackComponent extends JPanel implements CallStackGUI {
 		m_callStackTable.addFocusListener(new FocusListener() {
 			@Override
 			public void focusGained(FocusEvent e) {
-				callStackTable_focusGained(e);
+				callStackTable_focusGained();
 			}
 
 			@Override
 			public void focusLost(FocusEvent e) {
-				callStackTable_focusLost(e);
+				callStackTable_focusLost();
 			}
 		});
 		m_callStackTable.setTableHeader(null);

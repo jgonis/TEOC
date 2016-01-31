@@ -111,9 +111,9 @@ public class PartPinsComponent extends PinsComponent implements PartPinsGUI {
 		public int getRowCount() {
 			if (m_partPins == null) {
 				return 0;
-			} else {
-				return m_partPins.length;
-			}
+			} 
+				
+			return m_partPins.length;
 		}
 
 		/**

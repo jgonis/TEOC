@@ -18,7 +18,6 @@
 package SimulatorsGUI;
 
 import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.Vector;
 
@@ -73,7 +72,7 @@ public class ChipLoaderFileChooser extends JFrame {
 	/**
 	 * Implementing the action of pressing the cancel button.
 	 */
-	public void cancelButton_actionPerformed(ActionEvent e) {
+	public void cancelButton_actionPerformed() {
 		workingDir.showCurrentFileName();
 		builtInDir.showCurrentFileName();
 		setVisible(false);
@@ -87,9 +86,9 @@ public class ChipLoaderFileChooser extends JFrame {
 		okButton.setToolTipText("OK");
 		okButton.setIcon(okIcon);
 		okButton.setBounds(new Rectangle(90, 95, 63, 44));
-		okButton.addActionListener(e -> okButton_actionPerformed(e));
+		okButton.addActionListener(e -> okButton_actionPerformed());
 		cancelButton.setBounds(new Rectangle(265, 95, 63, 44));
-		cancelButton.addActionListener(e -> cancelButton_actionPerformed(e));
+		cancelButton.addActionListener(e -> cancelButton_actionPerformed());
 		cancelButton.setToolTipText("CANCEL");
 		cancelButton.setIcon(cancelIcon);
 		this.getContentPane().add(workingDir, null);
@@ -111,14 +110,14 @@ public class ChipLoaderFileChooser extends JFrame {
 		FilesTypeEvent event = new FilesTypeEvent(this, working, builtIn, null/* , composite */);
 
 		for (int i = 0; i < listeners.size(); i++) {
-			((FilesTypeListener) listeners.elementAt(i)).filesNamesChanged(event);
+			listeners.elementAt(i).filesNamesChanged(event);
 		}
 	}
 
 	/**
 	 * Implementing the action of pressing the ok button.
 	 */
-	public void okButton_actionPerformed(ActionEvent e) {
+	public void okButton_actionPerformed() {
 
 		String working = null;
 		String builtIn = null;

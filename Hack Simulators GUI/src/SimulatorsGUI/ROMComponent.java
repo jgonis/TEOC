@@ -21,7 +21,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.SystemColor;
-import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Vector;
@@ -134,9 +133,9 @@ public class ROMComponent extends PointedMemoryComponent implements ROMGUI {
 	public String getValueAsString(int index) {
 		if (dataFormat != ASM_FORMAT) {
 			return super.getValueAsString(index);
-		} else {
-			return Format.translateValueToString(values[index], Format.DEC_FORMAT);
-		}
+		} 
+		
+		return Format.translateValueToString(values[index], Format.DEC_FORMAT);
 	}
 
 	/**
@@ -156,7 +155,7 @@ public class ROMComponent extends PointedMemoryComponent implements ROMGUI {
 		m_loadButton.setIcon(m_loadIcon);
 		m_loadButton.setBounds(new Rectangle(97, 2, 31, 25));
 		m_loadButton.setToolTipText("Load Program");
-		m_loadButton.addActionListener(e -> loadButton_actionPerformed(e));
+		m_loadButton.addActionListener(e -> loadButton_actionPerformed());
 		m_messageTxt.setBackground(SystemColor.info);
 		m_messageTxt.setEnabled(false);
 		m_messageTxt.setFont(Utilities.labelsFont);
@@ -170,7 +169,7 @@ public class ROMComponent extends PointedMemoryComponent implements ROMGUI {
 		m_romFormat.setBounds(new Rectangle(39, 3, 56, 23));
 		m_romFormat.setFont(Utilities.thinLabelsFont);
 		m_romFormat.setToolTipText("Display Format");
-		m_romFormat.addActionListener(e -> romFormat_actionPerformed(e));
+		m_romFormat.addActionListener(e -> romFormat_actionPerformed());
 		this.add(m_messageTxt, null);
 		this.add(m_loadButton);
 		this.add(m_romFormat, null);
@@ -179,7 +178,7 @@ public class ROMComponent extends PointedMemoryComponent implements ROMGUI {
 	/**
 	 * Implements the action of clicking the load button.
 	 */
-	public void loadButton_actionPerformed(ActionEvent e) {
+	public void loadButton_actionPerformed() {
 		loadProgram();
 	}
 
@@ -212,7 +211,7 @@ public class ROMComponent extends PointedMemoryComponent implements ROMGUI {
 	public void notifyProgramListeners(byte eventType, String programFileName) {
 		ProgramEvent event = new ProgramEvent(this, eventType, programFileName);
 		for (int i = 0; i < m_programEventListeners.size(); i++) {
-			((ProgramEventListener) m_programEventListeners.elementAt(i)).programChanged(event);
+			m_programEventListeners.elementAt(i).programChanged(event);
 		}
 	}
 
@@ -228,7 +227,7 @@ public class ROMComponent extends PointedMemoryComponent implements ROMGUI {
 	/**
 	 * Implemeting the action of changing the selected item in the combo box
 	 */
-	public void romFormat_actionPerformed(ActionEvent e) {
+	public void romFormat_actionPerformed() {
 		String newFormat = (String) m_romFormat.getSelectedItem();
 		if (newFormat.equals(m_format.get(0))) {
 			setNumericFormat(ASM_FORMAT);
