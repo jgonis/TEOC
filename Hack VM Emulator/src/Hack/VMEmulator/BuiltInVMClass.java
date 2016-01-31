@@ -27,7 +27,7 @@ import Hack.Utilities.Definitions;
  * therefore should be static.
  */
 public abstract class BuiltInVMClass {
-	private static Hashtable builtInFunctionsRunnerByThread = new Hashtable();
+	private static Hashtable<Thread, BuiltInFunctionsRunner> builtInFunctionsRunnerByThread = new Hashtable<Thread, BuiltInFunctionsRunner>();
 
 	/* Some definitions regarding the memory. */
 	public static final short SCREEN_START_ADDRESS = Definitions.SCREEN_START_ADDRESS;
@@ -91,7 +91,7 @@ public abstract class BuiltInVMClass {
 	 * them. Note however that all their arguments are truncated to shorts.
 	 */
 	protected static short callFunction(String functionName, short[] params) throws TerminateVMProgramThrowable {
-		return ((BuiltInFunctionsRunner) builtInFunctionsRunnerByThread.get(Thread.currentThread()))
+		return builtInFunctionsRunnerByThread.get(Thread.currentThread())
 				.builtInFunctionRequestsCall(functionName, params);
 	}
 
@@ -105,7 +105,7 @@ public abstract class BuiltInVMClass {
 	 * may be provided (can be null).
 	 */
 	protected static void infiniteLoop(String message) throws TerminateVMProgramThrowable {
-		((BuiltInFunctionsRunner) builtInFunctionsRunnerByThread.get(Thread.currentThread()))
+		builtInFunctionsRunnerByThread.get(Thread.currentThread())
 				.builtInFunctionRequestsInfiniteLoop(message);
 	}
 
@@ -115,7 +115,7 @@ public abstract class BuiltInVMClass {
 	 * truncated to a short.
 	 */
 	protected static short readMemory(int address) throws TerminateVMProgramThrowable {
-		return ((BuiltInFunctionsRunner) builtInFunctionsRunnerByThread.get(Thread.currentThread()))
+		return builtInFunctionsRunnerByThread.get(Thread.currentThread())
 				.builtInFunctionRequestsMemoryRead((short) address);
 	}
 
@@ -127,7 +127,7 @@ public abstract class BuiltInVMClass {
 	 * convenience however they are truncated to shorts.
 	 */
 	protected static void writeMemory(int address, int value) throws TerminateVMProgramThrowable {
-		((BuiltInFunctionsRunner) builtInFunctionsRunnerByThread.get(Thread.currentThread()))
+		builtInFunctionsRunnerByThread.get(Thread.currentThread())
 				.builtInFunctionRequestsMemoryWrite((short) address, (short) value);
 	}
 

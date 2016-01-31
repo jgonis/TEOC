@@ -71,7 +71,7 @@ public class VMProgram extends InteractiveComputerPart implements ProgramEventLi
 	private static final int BUILTIN_ACCESS_DENIED = 2;
 
 	// listeners to program changes
-	private Vector listeners;
+	private Vector<ProgramEventListener> listeners;
 	// The list of VM instructions
 	private VMEmulatorInstruction[] instructions;
 	private int instructionsLength;
@@ -85,7 +85,7 @@ public class VMProgram extends InteractiveComputerPart implements ProgramEventLi
 	private short prevPC;
 
 	// The gui of the program.
-	private VMProgramGUI gui;
+	private VMProgramGUI m_gui;
 
 	// The address of the initial instruction
 	private short startAddress;
@@ -93,9 +93,9 @@ public class VMProgram extends InteractiveComputerPart implements ProgramEventLi
 	// Mapping from file names to an array of two elements, containing the start
 	// and
 	// end addresses of the corresponding static segment.
-	private Hashtable staticRange;
+	private Hashtable<String, Object> staticRange;
 	// Addresses of functions by name
-	private Hashtable functions;
+	private Hashtable<String, Short> m_functions;
 
 	private short infiniteLoopForBuiltInsAddress;
 
@@ -116,14 +116,14 @@ public class VMProgram extends InteractiveComputerPart implements ProgramEventLi
 	 */
 	public VMProgram(VMProgramGUI gui) {
 		super(gui != null);
-		this.gui = gui;
-		listeners = new Vector();
-		staticRange = new Hashtable();
-		functions = new Hashtable();
+		this.m_gui = gui;
+		listeners = new Vector<ProgramEventListener>();
+		staticRange = new Hashtable<String, Object>();
+		m_functions = new Hashtable<String, Short>();
 
 		if (hasGUI) {
-			gui.addProgramListener(this);
-			gui.addErrorListener(this);
+			m_gui.addProgramListener(this);
+			m_gui.addErrorListener(this);
 		}
 
 		reset();
@@ -137,7 +137,7 @@ public class VMProgram extends InteractiveComputerPart implements ProgramEventLi
 	}
 
 	// Scans the given file and creates symbols for its functions & label names.
-	private void buildProgram(File file, Hashtable symbols) throws ProgramException {
+	private void buildProgram(File file, Hashtable<String, Short> symbols) throws ProgramException {
 
 		BufferedReader reader = null;
 
@@ -177,7 +177,7 @@ public class VMProgram extends InteractiveComputerPart implements ProgramEventLi
 					case HVMInstructionSet.PUSH_CODE:
 						String segment = tokenizer.nextToken();
 						try {
-							arg0 = translateSegment(segment, instructionSet, file.getName());
+							arg0 = translateSegment(segment, instructionSet);
 						} catch (ProgramException pe) {
 							throw new ProgramException("in line " + lineNumber + pe.getMessage());
 						}
@@ -197,7 +197,7 @@ public class VMProgram extends InteractiveComputerPart implements ProgramEventLi
 						tokenizer.countTokens();
 						segment = tokenizer.nextToken();
 						try {
-							arg0 = translateSegment(segment, instructionSet, file.getName());
+							arg0 = translateSegment(segment, instructionSet);
 						} catch (ProgramException pe) {
 							throw new ProgramException("in line " + lineNumber + pe.getMessage());
 						}
@@ -255,7 +255,7 @@ public class VMProgram extends InteractiveComputerPart implements ProgramEventLi
 
 					case HVMInstructionSet.GOTO_CODE:
 						label = currentFunction + "$" + tokenizer.nextToken();
-						Short labelAddress = (Short) symbols.get(label);
+						Short labelAddress = symbols.get(label);
 						if (labelAddress == null) {
 							throw new ProgramException("in line " + lineNumber + ": Unknown label - " + label);
 						}
@@ -271,7 +271,7 @@ public class VMProgram extends InteractiveComputerPart implements ProgramEventLi
 
 					case HVMInstructionSet.IF_GOTO_CODE:
 						label = currentFunction + "$" + tokenizer.nextToken();
-						labelAddress = (Short) symbols.get(label);
+						labelAddress = symbols.get(label);
 						if (labelAddress == null) {
 							throw new ProgramException("in line " + lineNumber + ": Unknown label - " + label);
 						}
@@ -329,7 +329,7 @@ public class VMProgram extends InteractiveComputerPart implements ProgramEventLi
 	}
 
 	public short getAddress(String functionName) throws ProgramException {
-		Short address = (Short) functions.get(functionName);
+		Short address = m_functions.get(functionName);
 		if (address != null) {
 			return address.shortValue();
 		} else {
@@ -340,7 +340,7 @@ public class VMProgram extends InteractiveComputerPart implements ProgramEventLi
 				// this as this is not a feature from the book but a later
 				// addition.
 				if (builtInAccessStatus == BUILTIN_ACCESS_UNDECIDED) {
-					if (hasGUI && gui.confirmBuiltInAccess()) {
+					if (hasGUI && m_gui.confirmBuiltInAccess()) {
 						builtInAccessStatus = BUILTIN_ACCESS_AUTHORIZED;
 					} else {
 						builtInAccessStatus = BUILTIN_ACCESS_DENIED;
@@ -372,7 +372,7 @@ public class VMProgram extends InteractiveComputerPart implements ProgramEventLi
 	 */
 	@Override
 	public ComputerPartGUI getGUI() {
-		return gui;
+		return m_gui;
 	}
 
 	/**
@@ -453,14 +453,14 @@ public class VMProgram extends InteractiveComputerPart implements ProgramEventLi
 		}
 
 		if (displayChanges) {
-			gui.showMessage("Loading...");
+			m_gui.showMessage("Loading...");
 		}
 
 		// First scan
 		staticRange.clear();
-		functions.clear();
+		m_functions.clear();
 		builtInAccessStatus = BUILTIN_ACCESS_UNDECIDED;
-		Hashtable symbols = new Hashtable();
+		Hashtable<String, Short> symbols = new Hashtable<String, Short>();
 		nextPC = 0;
 		for (File file2 : files) {
 			String name = file2.getName();
@@ -469,10 +469,10 @@ public class VMProgram extends InteractiveComputerPart implements ProgramEventLi
 			// getAddress in the second pass which classes exist
 			staticRange.put(className, new Boolean(true));
 			try {
-				updateSymbolTable(file2, symbols, functions);
+				updateSymbolTable(file2, symbols, m_functions);
 			} catch (ProgramException pe) {
 				if (displayChanges) {
-					gui.hideMessage();
+					m_gui.hideMessage();
 				}
 				throw new ProgramException(name + ": " + pe.getMessage());
 			}
@@ -507,7 +507,7 @@ public class VMProgram extends InteractiveComputerPart implements ProgramEventLi
 				buildProgram(file2, symbols);
 			} catch (ProgramException pe) {
 				if (displayChanges) {
-					gui.hideMessage();
+					m_gui.hideMessage();
 				}
 				throw new ProgramException(name + ": " + pe.getMessage());
 			}
@@ -559,7 +559,7 @@ public class VMProgram extends InteractiveComputerPart implements ProgramEventLi
 		}
 
 		if (!addCallBuiltInSysInit) {
-			Short sysInitAddress = (Short) symbols.get("Sys.init");
+			Short sysInitAddress = symbols.get("Sys.init");
 			if (sysInitAddress == null) {
 				startAddress = 0;
 			} else {
@@ -568,7 +568,7 @@ public class VMProgram extends InteractiveComputerPart implements ProgramEventLi
 		}
 
 		if (displayChanges) {
-			gui.hideMessage();
+			m_gui.hideMessage();
 		}
 
 		nextPC = startAddress;
@@ -586,7 +586,7 @@ public class VMProgram extends InteractiveComputerPart implements ProgramEventLi
 		ProgramEvent event = new ProgramEvent(this, eventType, programFileName);
 
 		for (int i = 0; i < listeners.size(); i++) {
-			((ProgramEventListener) listeners.elementAt(i)).programChanged(event);
+			listeners.elementAt(i).programChanged(event);
 		}
 	}
 
@@ -613,8 +613,8 @@ public class VMProgram extends InteractiveComputerPart implements ProgramEventLi
 	@Override
 	public void refreshGUI() {
 		if (displayChanges) {
-			gui.setContents(instructions, visibleInstructionsLength);
-			gui.setCurrentInstruction(nextPC);
+			m_gui.setContents(instructions, visibleInstructionsLength);
+			m_gui.setCurrentInstruction(nextPC);
 		}
 	}
 
@@ -652,15 +652,15 @@ public class VMProgram extends InteractiveComputerPart implements ProgramEventLi
 	// Sets the gui's contents (if a gui exists)
 	private void setGUIContents() {
 		if (displayChanges) {
-			gui.setContents(instructions, visibleInstructionsLength);
-			gui.setCurrentInstruction(nextPC);
+			m_gui.setContents(instructions, visibleInstructionsLength);
+			m_gui.setCurrentInstruction(nextPC);
 		}
 	}
 
 	// Sets the GUI's current instruction index
 	private void setGUIPC() {
 		if (displayChanges) {
-			gui.setCurrentInstruction(nextPC);
+			m_gui.setCurrentInstruction(nextPC);
 		}
 	}
 
@@ -685,14 +685,14 @@ public class VMProgram extends InteractiveComputerPart implements ProgramEventLi
 	 */
 	public void setPCToInfiniteLoopForBuiltIns(String message) {
 		if (hasGUI) {
-			gui.notify(message);
+			m_gui.notify(message);
 		}
 		setPC(infiniteLoopForBuiltInsAddress);
 	}
 
 	// Returns the numeric representation of the given string segment.
 	// Throws an exception if unknown segment.
-	private byte translateSegment(String segment, HVMInstructionSet instructionSet, String fileName)
+	private static byte translateSegment(String segment, HVMInstructionSet instructionSet)
 			throws ProgramException {
 		byte code = instructionSet.segmentVMStringToCode(segment);
 		if (code == HVMInstructionSet.UNKNOWN_SEGMENT) {
@@ -733,7 +733,7 @@ public class VMProgram extends InteractiveComputerPart implements ProgramEventLi
 	}
 
 	// Scans the given file and creates symbols for its functions & label names.
-	private void updateSymbolTable(File file, Hashtable symbols, Hashtable functions) throws ProgramException {
+	private void updateSymbolTable(File file, Hashtable<String, Short> symbols, Hashtable<String, Short> functions) throws ProgramException {
 		BufferedReader reader = null;
 
 		try {

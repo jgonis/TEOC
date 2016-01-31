@@ -106,7 +106,7 @@ public class BuiltInFunctionsRunner implements Runnable {
 			try { // Try to run the built-in implementation
 					// programToBuiltIn might be overwritten until the return
 					// from the call. Save what's needed.
-				Class returnType = programToBuiltIn.functionObject.getReturnType();
+				Class<?> returnType = programToBuiltIn.functionObject.getReturnType();
 				functionName = programToBuiltIn.functionObject.getName();
 				// Execute
 				Object returnValue = programToBuiltIn.functionObject.invoke(null, programToBuiltIn.params);
@@ -202,7 +202,7 @@ public class BuiltInFunctionsRunner implements Runnable {
 		}
 
 		// Find the implementing class
-		Class implementingClass;
+		Class<?> implementingClass;
 		try {
 			implementingClass = Class.forName(builtInDir + "." + className);
 		} catch (ClassNotFoundException cnfe) {
@@ -213,7 +213,7 @@ public class BuiltInFunctionsRunner implements Runnable {
 		// Check that the class is a subclass of BuiltInVMClass
 		// (right now not that important if the class doesn't want to access
 		// the computer - like math - but good practice anyway).
-		Class currentClass = implementingClass;
+		Class<?> currentClass = implementingClass;
 		boolean found;
 		do {
 			currentClass = currentClass.getSuperclass();
@@ -240,7 +240,7 @@ public class BuiltInFunctionsRunner implements Runnable {
 					+ methodName + " in class " + className + " taking " + params.length + " argument"
 					+ (params.length == 1 ? "" : "s") + ".");
 		}
-		Class returnType = functionObject.getReturnType();
+		Class<?> returnType = functionObject.getReturnType();
 		if ((returnType != short.class) && (returnType != void.class) && (returnType != char.class)
 				&& (returnType != boolean.class)) {
 			throw new ProgramException("Can't find " + className + ".vm and the built-in implementation for "

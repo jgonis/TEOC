@@ -27,6 +27,11 @@ import Hack.VirtualMachine.HVMInstruction;
  */
 public class VMProgramRowSelectionEvent extends EventObject {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8340777105123583020L;
+
 	// the changed row index;
 	private int rowIndex;
 

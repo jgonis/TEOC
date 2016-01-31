@@ -67,7 +67,7 @@ public class CPU {
 	private MemorySegment[] segments;
 
 	// A stack of method frame addresses
-	private Vector stackFrames;
+	private Vector<Integer> stackFrames;
 
 	// The last instruction that was executed.
 	private VMEmulatorInstruction currentInstruction;
@@ -103,7 +103,7 @@ public class CPU {
 		segments[HVMInstructionSet.THAT_SEGMENT_CODE] = thatSegment;
 		segments[HVMInstructionSet.TEMP_SEGMENT_CODE] = tempSegment;
 
-		stackFrames = new Vector();
+		stackFrames = new Vector<Integer>();
 
 		if (program.getGUI() != null) {
 			builtInFunctionsRunner = new BuiltInFunctionsRunner(this, builtInDir);
@@ -767,7 +767,7 @@ public class CPU {
 		// check whether there is a "calling frame"
 		if (stackFrames.size() > 0) {
 			// retrieve stack frame address of old function
-			int frameAddress = ((Integer) stackFrames.lastElement()).intValue();
+			int frameAddress = stackFrames.lastElement().intValue();
 			stackFrames.removeElementAt(stackFrames.size() - 1);
 			workingStackSegment.setStartAddress(frameAddress);
 

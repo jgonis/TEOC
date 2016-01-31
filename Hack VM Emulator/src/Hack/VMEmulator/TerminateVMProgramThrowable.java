@@ -23,6 +23,11 @@ package Hack.VMEmulator;
  */
 public class TerminateVMProgramThrowable extends Throwable {
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6644789151811575265L;
+
+	/**
 	 * Constructs a new TerminateVMProgramThrowable with no message Don't allow
 	 * builtins (which are outside this package) to construct.
 	 */

@@ -285,14 +285,14 @@ public class VMEmulator extends HackSimulator implements ComputerPartErrorEventL
 	}
 
 	// Checks that the given value is a legal 16-bit address
-	private void check_address(String varName, int value) throws VariableException {
+	private static void check_address(String varName, int value) throws VariableException {
 		if ((value < 0) || (value >= Definitions.RAM_SIZE)) {
 			throw new VariableException(value + " is an illegal value for", varName);
 		}
 	}
 
 	// Checks that the given value is a legal 16-bit value
-	private void check_value(String varName, int value) throws VariableException {
+	private static void check_value(String varName, int value) throws VariableException {
 		if ((value < -32768) || (value >= 32768)) {
 			throw new VariableException(value + " is an illegal value for variable", varName);
 		}
