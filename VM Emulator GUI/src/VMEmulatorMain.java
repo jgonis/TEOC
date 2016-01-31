@@ -37,10 +37,6 @@ public class VMEmulatorMain {
 		if (args.length > 1) {
 			System.err.println("Usage: java CPUEmulatorMain [script name]");
 		} else if (args.length == 0) {
-			try {
-				UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-			} catch (Exception e) {
-			}
 
 			VMEmulatorGUI simulatorGUI = new VMEmulatorComponent();
 			ControllerGUI controllerGUI = new ControllerComponent();
