@@ -49,7 +49,7 @@ public class PartPinInfo extends PinInfo {
 	/**
 	 * The value of the pin.
 	 */
-	public short value;
+	public short m_value;
 
 	/**
 	 * Constructs a new empty PartPinInfo.

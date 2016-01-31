@@ -84,15 +84,8 @@ public class HDLTokenizer {
 	 */
 	public HDLTokenizer(String fileName) throws HDLException {
 		this.fileName = fileName;
-		Reader input;
 
-		try {
-			input = new FileReader(fileName);
-		} catch (IOException ioe) {
-			throw new HDLException("Can't find HDL file " + fileName);
-		}
-
-		try {
+		try (Reader input = new FileReader(fileName) ){
 			initizalizeInput(input);
 		} catch (IOException ioe) {
 			throw new HDLException("Error while initializing for reading", fileName);

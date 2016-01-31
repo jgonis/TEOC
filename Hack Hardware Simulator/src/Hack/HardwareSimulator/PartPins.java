@@ -38,7 +38,7 @@ public class PartPins extends ValueComputerPart {
 	private PartPinsGUI gui;
 
 	// The part pins.
-	private Vector partPins;
+	private Vector<PartPinInfo> partPins;
 
 	// The current gate
 	private Gate gate;
@@ -47,7 +47,7 @@ public class PartPins extends ValueComputerPart {
 	private GateClass partGateClass;
 
 	// mapping from the pins' nodes to their gui adapters.
-	private Hashtable nodes;
+	private Hashtable<Node, Node> nodes;
 
 	/**
 	 * Constructs a new Part Pins with the given gui.
@@ -55,8 +55,8 @@ public class PartPins extends ValueComputerPart {
 	public PartPins(PartPinsGUI gui) {
 		super(gui != null);
 		this.gui = gui;
-		partPins = new Vector();
-		nodes = new Hashtable();
+		partPins = new Vector<PartPinInfo>();
+		nodes = new Hashtable<Node, Node>();
 		clearGate();
 	}
 
@@ -141,10 +141,10 @@ public class PartPins extends ValueComputerPart {
 		partGateClass = null;
 
 		// remove all node gui adapters
-		Enumeration<?> enums = nodes.keys();
+		Enumeration<Node> enums = nodes.keys();
 		while (enums.hasMoreElements()) {
-			Node node = (Node) enums.nextElement();
-			Node nodeAdapter = (Node) nodes.get(node);
+			Node node = enums.nextElement();
+			Node nodeAdapter = nodes.get(node);
 			node.removeListener(nodeAdapter);
 		}
 
@@ -162,7 +162,7 @@ public class PartPins extends ValueComputerPart {
 
 	@Override
 	public short getValueAt(int index) {
-		return ((PartPinInfo) partPins.elementAt(index)).value;
+		return partPins.elementAt(index).value;
 	}
 
 	@Override

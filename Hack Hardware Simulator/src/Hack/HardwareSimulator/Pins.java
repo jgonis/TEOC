@@ -31,7 +31,7 @@ import Hack.Gates.PinInfo;
 public class Pins extends InteractiveValueComputerPart {
 
 	// The gui of the Pins
-	private PinsGUI gui;
+	private PinsGUI m_gui;
 
 	// The type of this pin (out of the type constants in GateClass)
 	private byte type;
@@ -47,16 +47,16 @@ public class Pins extends InteractiveValueComputerPart {
 	 */
 	public Pins(byte type, PinsGUI gui) {
 		super(gui != null);
-		this.gui = gui;
+		this.m_gui = gui;
 		this.type = type;
 
 		pins = new PinInfo[0];
 		nodes = new Node[0];
 
 		if (hasGUI) {
-			gui.addListener(this);
-			gui.addErrorListener(this);
-			gui.setContents(pins);
+			m_gui.addListener(this);
+			m_gui.addErrorListener(this);
+			m_gui.setContents(pins);
 		}
 	}
 
@@ -74,7 +74,7 @@ public class Pins extends InteractiveValueComputerPart {
 
 	@Override
 	public ComputerPartGUI getGUI() {
-		return gui;
+		return m_gui;
 	}
 
 	/**
@@ -105,13 +105,13 @@ public class Pins extends InteractiveValueComputerPart {
 			for (int i = 0; i < pins.length; i++) {
 				pins[i].value = nodes[i].get();
 			}
-			gui.setContents(pins);
+			m_gui.setContents(pins);
 		}
 	}
 
 	@Override
 	public void reset() {
-		gui.reset();
+		m_gui.reset();
 		for (Node node : nodes) {
 			node.set((short) 0);
 		}
@@ -133,7 +133,7 @@ public class Pins extends InteractiveValueComputerPart {
 		}
 
 		if (hasGUI) {
-			gui.setContents(pins);
+			m_gui.setContents(pins);
 		}
 	}
 
