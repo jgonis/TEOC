@@ -37,38 +37,23 @@ public class TextComparer {
 			System.exit(-1);
 		}
 
-		BufferedReader reader1 = null;
-		BufferedReader reader2 = null;
-
-		try {
-			reader1 = new BufferedReader(new FileReader(args[0]));
-		} catch (IOException ioe) {
-			System.err.println("Cannot open " + args[0]);
-			System.exit(-1);
-		}
-
-		try {
-			reader2 = new BufferedReader(new FileReader(args[1]));
-		} catch (IOException ioe) {
-			System.err.println("Cannot open " + args[1]);
-			System.exit(-1);
-		}
-
-		String line1, line2;
-		int count = 0;
-
-		try {
+		
+		try ( BufferedReader reader1 = new BufferedReader(new FileReader(args[0]));
+			  BufferedReader reader2 = new BufferedReader(new FileReader(args[1])) )
+		{
+			String line1, line2;
+			int count = 0;
+			
 			while ((line1 = reader1.readLine()) != null) {
 
-				line1 = removeSpaces(line1);
-
+				line1 = line1.replaceAll("\\s", "");
 				line2 = reader2.readLine();
 
 				if (line2 == null) {
 					System.out.println("Second file is shorter (only " + count + " lines)");
 					System.exit(-1);
 				} else {
-					line2 = removeSpaces(line2);
+					line2 = line2.replaceAll("\\s", "");
 					if (!line1.equals(line2)) {
 						System.out.println("Comparison failure in line " + count + ":");
 						System.out.println(line1);
@@ -85,40 +70,10 @@ public class TextComparer {
 				System.exit(-1);
 			}
 		} catch (IOException ioe) {
-			System.err.println("IO error while reading files");
-			System.exit(-1);
-		}
-
-		try {
-			reader1.close();
-			reader2.close();
-		} catch (IOException ioe) {
-			System.err.println("Could not close files");
+			System.err.println("IO error while trying to deal with files");
 			System.exit(-1);
 		}
 
 		System.out.println("Comparison ended successfully");
-	}
-
-	// Removes the spaces from the given string.
-	private static String removeSpaces(String sourceLine) {
-		StringBuffer line;
-		int i = 0;
-		int j = 0;
-		line = new StringBuffer(sourceLine);
-		while (j < line.length()) {
-			if (line.charAt(j) == ' ') {
-				j++;
-			} else {
-				if (i != j) {
-					line.setCharAt(i, line.charAt(j));
-				}
-				i++;
-				j++;
-			}
-		}
-		line.setLength(i);
-
-		return line.toString().trim();
 	}
 }
