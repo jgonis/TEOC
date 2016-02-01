@@ -729,14 +729,13 @@ public class VMProgram extends InteractiveComputerPart implements ProgramEventLi
 			throws ProgramException {
 		int lineNumber = 0;
 		try (BufferedReader reader = new BufferedReader(new FileReader(file.getAbsolutePath()))) {
-	
-		String line;
-		String currentFunction = null;
-		String label;
-		
 
-		isSlashStar = false;
-		
+			String line;
+			String currentFunction = null;
+			String label;
+
+			isSlashStar = false;
+
 			while ((line = unCommentLine(reader.readLine())) != null) {
 				lineNumber++;
 				if (!line.trim().equals("")) {

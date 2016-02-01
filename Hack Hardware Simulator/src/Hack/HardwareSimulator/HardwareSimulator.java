@@ -310,7 +310,7 @@ public class HardwareSimulator extends HackSimulator
 
 	// Returns the BuiltInGateWithGUI that matches the given chip name, or
 	// null if doesn't exist.
-	private BuiltInGateWithGUI getGUIChip(String chipName) {
+	private static BuiltInGateWithGUI getGUIChip(final String chipName) {
 		BuiltInGateWithGUI chip = null;
 
 		BuiltInGateWithGUI[] gates = GatesManager.getInstance().getChips();
@@ -385,7 +385,7 @@ public class HardwareSimulator extends HackSimulator
 
 	// Returns the chip name of the given var name.
 	// If not legal varName, returns null.
-	private String getVarChipName(String varName) {
+	private static String getVarChipName(final String varName) {
 		String result = null;
 		int loc = varName.indexOf("[");
 		if (loc >= 0) {
@@ -402,7 +402,7 @@ public class HardwareSimulator extends HackSimulator
 
 	// Returns the index of the given var name.
 	// throws VariableException if illegal index format.
-	private int getVarIndex(String varName) throws VariableException {
+	private static int getVarIndex(final String varName) throws VariableException {
 		int index;
 
 		if (varName.endsWith("[]")) {

@@ -26,6 +26,11 @@ import Hack.Controller.ControllerEvent;
 public class HardwareSimulatorControllerEvent extends ControllerEvent {
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 755736830010316440L;
+
+	/**
 	 * Action code for clicking on the TickTock button. supplied data = null.
 	 */
 	public static final byte TICKTOCK_CLICKED = 100;
