@@ -47,8 +47,18 @@ import Hack.ComputerParts.TextFileGUI;
  */
 public class TextFileComponent extends JPanel implements TextFileGUI {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6517601563080539424L;
+
 	// An inner class representing the cell renderer of the table.
 	public class TextFileCellRenderer extends DefaultTableCellRenderer {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -294740463023823975L;
 
 		@Override
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean selected, boolean focused,
@@ -56,13 +66,13 @@ public class TextFileComponent extends JPanel implements TextFileGUI {
 			setForeground(null);
 			setBackground(null);
 
-			setRenderer(row, column);
+			setRenderer(row);
 			super.getTableCellRendererComponent(table, value, selected, focused, row, column);
 
 			return this;
 		}
 
-		public void setRenderer(int row, int column) {
+		public void setRenderer(int row) {
 			if (highlightedLines.contains(new Integer(row))) {
 				setBackground(Color.yellow);
 			} else {
@@ -79,6 +89,11 @@ public class TextFileComponent extends JPanel implements TextFileGUI {
 
 	// An inner class representing the model of the breakpoint table.
 	class TextFileTableModel extends AbstractTableModel {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 5705917047213899593L;
 
 		/**
 		 * Returns the number of columns.
@@ -124,9 +139,9 @@ public class TextFileComponent extends JPanel implements TextFileGUI {
 	}
 
 	// A vector containing the listeners to this component.
-	private Vector listeners;
+	private Vector<TextFileEventListener> listeners;
 
-	private Vector rowsVector;
+	private Vector<String> rowsVector;
 
 	// The model of the table
 	private TextFileTableModel model = new TextFileTableModel();
@@ -141,10 +156,10 @@ public class TextFileComponent extends JPanel implements TextFileGUI {
 	private JLabel nameLbl = new JLabel();
 
 	// A set of indices of highlighted rows.
-	private Set highlightedLines;
+	private Set<Integer> highlightedLines;
 
 	// A set of indices of emphasized rows.
-	private Set emphasizedLines;
+	private Set<Integer> emphasizedLines;
 
 	// Indicates whether this component is enabled.
 	private boolean isEnabled;
@@ -153,13 +168,13 @@ public class TextFileComponent extends JPanel implements TextFileGUI {
 	 * Constructs a new TextFileComponent
 	 */
 	public TextFileComponent() {
-		listeners = new Vector();
-		rowsVector = new Vector();
+		listeners = new Vector<TextFileEventListener>();
+		rowsVector = new Vector<String>();
 		textFileTable = new WideTable(model, 1000);
 		textFileTable.setDefaultRenderer(textFileTable.getColumnClass(0), getCellRenderer());
 		textFileTable.setTableHeader(null);
-		highlightedLines = new HashSet();
-		emphasizedLines = new HashSet();
+		highlightedLines = new HashSet<Integer>();
+		emphasizedLines = new HashSet<Integer>();
 		enableUserInput();
 		jbInit();
 	}
@@ -225,7 +240,7 @@ public class TextFileComponent extends JPanel implements TextFileGUI {
 
 	@Override
 	public String getLineAt(int index) {
-		return (String) rowsVector.elementAt(index);
+		return rowsVector.elementAt(index);
 	}
 
 	@Override
@@ -257,7 +272,7 @@ public class TextFileComponent extends JPanel implements TextFileGUI {
 			ListSelectionModel lsm = (ListSelectionModel) e.getSource();
 			if (!lsm.isSelectionEmpty()) {
 				int selectedRow = lsm.getMinSelectionIndex();
-				notifyTextFileListeners((String) rowsVector.elementAt(selectedRow), selectedRow);
+				notifyTextFileListeners(rowsVector.elementAt(selectedRow), selectedRow);
 			}
 		});
 		this.setLayout(null);
@@ -281,7 +296,7 @@ public class TextFileComponent extends JPanel implements TextFileGUI {
 	public void notifyTextFileListeners(String row, int rowNum) {
 		TextFileEvent event = new TextFileEvent(this, row, rowNum);
 		for (int i = 0; i < listeners.size(); i++) {
-			((TextFileEventListener) listeners.elementAt(i)).rowSelected(event);
+			listeners.elementAt(i).rowSelected(event);
 		}
 	}
 

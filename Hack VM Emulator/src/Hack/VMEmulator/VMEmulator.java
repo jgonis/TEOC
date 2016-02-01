@@ -57,7 +57,7 @@ import Hack.VirtualMachine.HVMInstructionSet;
  * function (String) - READ ONLY line - <function name>.<index in function>
  * (String) - READ ONLY
  */
-public class VMEmulator extends HackSimulator implements ComputerPartErrorEventListener {
+public class VMEmulator extends HackSimulator {
 
 	private static final File INITIAL_BUILTIN_DIR = new File("builtInVMCode");
 	// variables

@@ -138,28 +138,21 @@ public class VMProgram extends InteractiveComputerPart implements ProgramEventLi
 
 	// Scans the given file and creates symbols for its functions & label names.
 	private void buildProgram(File file, Hashtable<String, Short> symbols) throws ProgramException {
-
-		BufferedReader reader = null;
-
-		try {
-			reader = new BufferedReader(new FileReader(file.getAbsolutePath()));
-		} catch (FileNotFoundException fnfe) {
-			throw new ProgramException("file does not exist");
-		}
-
 		int lineNumber = 0;
-		String line;
-		String label;
-		String instructionName;
-		String currentFunction = null;
-		short indexInFunction = 0;
-		byte opCode;
-		short arg0, arg1;
-		short pc = nextPC;
-		HVMInstructionSet instructionSet = HVMInstructionSet.getInstance();
 
-		isSlashStar = false;
-		try {
+		try (BufferedReader reader = new BufferedReader(new FileReader(file.getAbsolutePath()))) {
+			String line;
+			String label;
+			String instructionName;
+			String currentFunction = null;
+			short indexInFunction = 0;
+			byte opCode;
+			short arg0, arg1;
+			short pc = nextPC;
+			HVMInstructionSet instructionSet = HVMInstructionSet.getInstance();
+
+			isSlashStar = false;
+
 			while ((line = unCommentLine(reader.readLine())) != null) {
 				lineNumber++;
 
@@ -692,8 +685,7 @@ public class VMProgram extends InteractiveComputerPart implements ProgramEventLi
 
 	// Returns the numeric representation of the given string segment.
 	// Throws an exception if unknown segment.
-	private static byte translateSegment(String segment, HVMInstructionSet instructionSet)
-			throws ProgramException {
+	private static byte translateSegment(String segment, HVMInstructionSet instructionSet) throws ProgramException {
 		byte code = instructionSet.segmentVMStringToCode(segment);
 		if (code == HVMInstructionSet.UNKNOWN_SEGMENT) {
 			throw new ProgramException(": Illegal memory segment - " + segment);
@@ -733,22 +725,18 @@ public class VMProgram extends InteractiveComputerPart implements ProgramEventLi
 	}
 
 	// Scans the given file and creates symbols for its functions & label names.
-	private void updateSymbolTable(File file, Hashtable<String, Short> symbols, Hashtable<String, Short> functions) throws ProgramException {
-		BufferedReader reader = null;
-
-		try {
-			reader = new BufferedReader(new FileReader(file.getAbsolutePath()));
-		} catch (FileNotFoundException fnfe) {
-			throw new ProgramException("file " + file.getName() + " does not exist");
-		}
-
+	private void updateSymbolTable(File file, Hashtable<String, Short> symbols, Hashtable<String, Short> functions)
+			throws ProgramException {
+		int lineNumber = 0;
+		try (BufferedReader reader = new BufferedReader(new FileReader(file.getAbsolutePath()))) {
+	
 		String line;
 		String currentFunction = null;
 		String label;
-		int lineNumber = 0;
+		
 
 		isSlashStar = false;
-		try {
+		
 			while ((line = unCommentLine(reader.readLine())) != null) {
 				lineNumber++;
 				if (!line.trim().equals("")) {

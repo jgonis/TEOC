@@ -18,7 +18,6 @@
 package HackGUI;
 
 import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
@@ -35,6 +34,11 @@ import Hack.Controller.Breakpoint;
  */
 public class BreakpointVariablesWindow extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8241104878264322642L;
+	
 	// Creating labels.
 	private JLabel nameLbl = new JLabel();
 	private JLabel valueLbl = new JLabel();
@@ -44,7 +48,7 @@ public class BreakpointVariablesWindow extends JFrame {
 	private JTextField valueTxt = new JTextField();
 
 	// Creating the combo box of variables.
-	private JComboBox nameCombo = new JComboBox();
+	private JComboBox<String> nameCombo = new JComboBox<String>();
 
 	// Creating the ok and cancel buttons.
 	private JButton okButton = new JButton();
@@ -55,7 +59,7 @@ public class BreakpointVariablesWindow extends JFrame {
 	private ImageIcon cancelIcon = new ImageIcon(Utilities.imagesDir + "cancel.gif");
 
 	// A vector conatining the listeners to this component.
-	private Vector listeners;
+	private Vector<BreakpointChangedListener> listeners;
 
 	// The breakpoint which is being added or changed.
 	private Breakpoint breakpoint;
@@ -65,7 +69,7 @@ public class BreakpointVariablesWindow extends JFrame {
 	 */
 	public BreakpointVariablesWindow() {
 		super("Breakpoint Variables");
-		listeners = new Vector();
+		listeners = new Vector<BreakpointChangedListener>();
 		jbInit();
 	}
 
@@ -80,7 +84,7 @@ public class BreakpointVariablesWindow extends JFrame {
 	/**
 	 * Implementing the action of pressing the cancel button.
 	 */
-	public void cancelButton_actionPerformed(ActionEvent e) {
+	public void cancelButton_actionPerformed() {
 		setVisible(false);
 	}
 
@@ -96,13 +100,13 @@ public class BreakpointVariablesWindow extends JFrame {
 		nameTxt.setBounds(new Rectangle(53, 10, 115, 19));
 		valueTxt.setBounds(new Rectangle(53, 42, 115, 19));
 		nameCombo.setBounds(new Rectangle(180, 10, 124, 19));
-		nameCombo.addActionListener(e -> nameCombo_actionPerformed(e));
+		nameCombo.addActionListener(e -> nameCombo_actionPerformed());
 		okButton.setToolTipText("Ok");
 		okButton.setIcon(okIcon);
 		okButton.setBounds(new Rectangle(61, 74, 63, 44));
-		okButton.addActionListener(e -> okButton_actionPerformed(e));
+		okButton.addActionListener(e -> okButton_actionPerformed());
 		cancelButton.setBounds(new Rectangle(180, 74, 63, 44));
-		cancelButton.addActionListener(e -> cancelButton_actionPerformed(e));
+		cancelButton.addActionListener(e -> cancelButton_actionPerformed());
 		cancelButton.setToolTipText("Cancel");
 		cancelButton.setIcon(cancelIcon);
 		this.getContentPane().add(nameLbl, null);
@@ -120,7 +124,7 @@ public class BreakpointVariablesWindow extends JFrame {
 	/**
 	 * Implementing the action of changing the selected item in the combo box.
 	 */
-	public void nameCombo_actionPerformed(ActionEvent e) {
+	public void nameCombo_actionPerformed() {
 		String name = (String) nameCombo.getSelectedItem();
 		nameTxt.setText(name);
 	}
@@ -133,14 +137,14 @@ public class BreakpointVariablesWindow extends JFrame {
 	public void notifyListeners() {
 		BreakpointChangedEvent event = new BreakpointChangedEvent(this, breakpoint);
 		for (int i = 0; i < listeners.size(); i++) {
-			((BreakpointChangedListener) listeners.elementAt(i)).breakpointChanged(event);
+			listeners.elementAt(i).breakpointChanged(event);
 		}
 	}
 
 	/**
 	 * Implementing the action of pressing the ok button.
 	 */
-	public void okButton_actionPerformed(ActionEvent e) {
+	public void okButton_actionPerformed() {
 		breakpoint = new Breakpoint(nameTxt.getText(), valueTxt.getText());
 		setVisible(false);
 		notifyListeners();
