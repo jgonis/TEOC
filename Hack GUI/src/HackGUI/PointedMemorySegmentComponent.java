@@ -74,8 +74,8 @@ public class PointedMemorySegmentComponent extends MemorySegmentComponent implem
 	 * Implementing the action of the table gaining the focus.
 	 */
 	@Override
-	public void segmentTable_focusGained(FocusEvent e) {
-		super.segmentTable_focusGained(e);
+	public void segmentTable_focusGained() {
+		super.segmentTable_focusGained();
 		hasFocus = true;
 
 	}
@@ -84,8 +84,8 @@ public class PointedMemorySegmentComponent extends MemorySegmentComponent implem
 	 * Implementing the action of the table loosing the focus.
 	 */
 	@Override
-	public void segmentTable_focusLost(FocusEvent e) {
-		super.segmentTable_focusLost(e);
+	public void segmentTable_focusLost() {
+		super.segmentTable_focusLost();
 		hasFocus = false;
 	}
 

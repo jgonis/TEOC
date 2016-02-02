@@ -51,10 +51,20 @@ import Hack.Events.ErrorEventListener;
  */
 public class MemorySegmentComponent extends JPanel implements MemorySegmentGUI, MemoryChangeListener {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3481739682692645357L;
+
 	// An inner class which implemets the cell renderer of the memory table,
 	// giving
 	// the feature of aligning the text in the cells.
 	class MemorySegmentTableCellRenderer extends DefaultTableCellRenderer {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1198143476283978171L;
 
 		@Override
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean selected, boolean focused,
@@ -97,6 +107,11 @@ public class MemorySegmentComponent extends JPanel implements MemorySegmentGUI, 
 
 	// An inner class representing the model of this table.
 	class MemorySegmentTableModel extends AbstractTableModel {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 7251440894882755452L;
 
 		/**
 		 * Returns the number of columns.
@@ -199,22 +214,19 @@ public class MemorySegmentComponent extends JPanel implements MemorySegmentGUI, 
 	protected JLabel nameLbl = new JLabel();
 
 	// A vector containing the values that should be highlighted.
-	protected Vector highlightIndex;
+	protected Vector<Integer> highlightIndex;
 
 	// The listeners of this component.
-	private Vector listeners;
+	private Vector<ComputerPartEventListener> listeners;
 
 	// The error listeners of this component.
-	private Vector errorEventListeners;
+	private Vector<ErrorEventListener> errorEventListeners;
 
 	// The index of the flashed row.
 	protected int flashIndex = -1;
 
 	// The location of this component relative to its top level ancestor.
 	protected Point topLevelLocation;
-
-	// The layout of this component.
-	private BorderLayout borderLayout = new BorderLayout();
 
 	// The top level component.
 	private Component topLevelComponent;
@@ -419,12 +431,12 @@ public class MemorySegmentComponent extends JPanel implements MemorySegmentGUI, 
 		segmentTable.addFocusListener(new FocusListener() {
 			@Override
 			public void focusGained(FocusEvent e) {
-				segmentTable_focusGained(e);
+				segmentTable_focusGained();
 			}
 
 			@Override
 			public void focusLost(FocusEvent e) {
-				segmentTable_focusLost(e);
+				segmentTable_focusLost();
 			}
 		});
 		segmentTable.setTableHeader(null);
@@ -534,7 +546,7 @@ public class MemorySegmentComponent extends JPanel implements MemorySegmentGUI, 
 	/**
 	 * The action of the table gaining the focus.
 	 */
-	public void segmentTable_focusGained(FocusEvent e) {
+	public void segmentTable_focusGained() {
 		segmentTable.clearSelection();
 		notifyListeners();
 	}
@@ -542,7 +554,7 @@ public class MemorySegmentComponent extends JPanel implements MemorySegmentGUI, 
 	/**
 	 * The action of the table loosing the focus.
 	 */
-	public void segmentTable_focusLost(FocusEvent e) {
+	public void segmentTable_focusLost() {
 		segmentTable.clearSelection();
 	}
 

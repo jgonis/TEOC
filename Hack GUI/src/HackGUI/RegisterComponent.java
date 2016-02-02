@@ -21,7 +21,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.Vector;
@@ -43,6 +42,11 @@ import Hack.Events.ErrorEventListener;
  */
 public class RegisterComponent extends JPanel implements RegisterGUI {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4158744280056916658L;
+
 	// The label with the name of this register.
 	protected JLabel registerName = new JLabel();
 
@@ -50,10 +54,10 @@ public class RegisterComponent extends JPanel implements RegisterGUI {
 	protected JTextField registerValue = new JTextField();
 
 	// A vector containing the listeners to this object.
-	private Vector listeners;
+	private Vector<ComputerPartEventListener> listeners;
 
 	// A vector containing the error listeners to this object.
-	private Vector errorEventListeners;
+	private Vector<ErrorEventListener> errorEventListeners;
 
 	// The value of the register
 	protected short value;
@@ -76,8 +80,8 @@ public class RegisterComponent extends JPanel implements RegisterGUI {
 	 */
 	public RegisterComponent() {
 		dataFormat = Format.DEC_FORMAT;
-		listeners = new Vector();
-		errorEventListeners = new Vector();
+		listeners = new Vector<ComputerPartEventListener>();
+		errorEventListeners = new Vector<ErrorEventListener>();
 		// initializes the register
 		value = 0;
 		registerValue.setText(translateValueToString(value));
@@ -170,12 +174,12 @@ public class RegisterComponent extends JPanel implements RegisterGUI {
 		registerValue.addFocusListener(new FocusListener() {
 			@Override
 			public void focusGained(FocusEvent e) {
-				registerValue_focusGained(e);
+				registerValue_focusGained();
 			}
 
 			@Override
 			public void focusLost(FocusEvent e) {
-				registerValue_focusLost(e);
+				registerValue_focusLost();
 			}
 		});
 
@@ -186,7 +190,7 @@ public class RegisterComponent extends JPanel implements RegisterGUI {
 		registerValue.setDisabledTextColor(Color.black);
 		registerValue.setHorizontalAlignment(SwingConstants.RIGHT);
 		registerValue.setBounds(new Rectangle(36, 3, 124, 18));
-		registerValue.addActionListener(e -> registerValue_actionPerformed(e));
+		registerValue.addActionListener(e -> registerValue_actionPerformed());
 		this.add(registerValue, null);
 		this.add(registerName, null);
 
@@ -204,7 +208,7 @@ public class RegisterComponent extends JPanel implements RegisterGUI {
 	public void notifyErrorListeners(String errorMessage) {
 		ErrorEvent event = new ErrorEvent(this, errorMessage);
 		for (int i = 0; i < errorEventListeners.size(); i++) {
-			((ErrorEventListener) errorEventListeners.elementAt(i)).errorOccured(event);
+			errorEventListeners.elementAt(i).errorOccured(event);
 		}
 	}
 
@@ -212,7 +216,7 @@ public class RegisterComponent extends JPanel implements RegisterGUI {
 	public void notifyListeners() {
 		new ComputerPartEvent(this);
 		for (int i = 0; i < listeners.size(); i++) {
-			((ComputerPartEventListener) listeners.elementAt(i)).guiGainedFocus();
+			listeners.elementAt(i).guiGainedFocus();
 		}
 	}
 
@@ -220,21 +224,21 @@ public class RegisterComponent extends JPanel implements RegisterGUI {
 	public void notifyListeners(int address, short value) {
 		ComputerPartEvent event = new ComputerPartEvent(this, 0, value);
 		for (int i = 0; i < listeners.size(); i++) {
-			((ComputerPartEventListener) listeners.elementAt(i)).valueChanged(event);
+			listeners.elementAt(i).valueChanged(event);
 		}
 	}
 
 	/**
 	 * Implements the action of changing the text of this register.
 	 */
-	public void registerValue_actionPerformed(ActionEvent e) {
+	public void registerValue_actionPerformed() {
 		valueChanged();
 	}
 
 	/**
 	 * The action of the text field gaining the focus.
 	 */
-	public void registerValue_focusGained(FocusEvent e) {
+	public void registerValue_focusGained() {
 		oldValue = registerValue.getText();
 		notifyListeners();
 	}
@@ -242,7 +246,7 @@ public class RegisterComponent extends JPanel implements RegisterGUI {
 	/**
 	 * The action of the text field loosing the focus.
 	 */
-	public void registerValue_focusLost(FocusEvent e) {
+	public void registerValue_focusLost() {
 		valueChanged();
 	}
 
