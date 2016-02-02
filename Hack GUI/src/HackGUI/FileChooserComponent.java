@@ -19,7 +19,6 @@ package HackGUI;
 
 import java.awt.Color;
 import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.Vector;
 
@@ -37,6 +36,11 @@ import javax.swing.filechooser.FileFilter;
  * types of files, in order to be loaded to the simulator.
  */
 public class FileChooserComponent extends JPanel {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8092367590572179983L;
 
 	// The label of this component.
 	private JLabel fileTypeName = new JLabel();
@@ -58,13 +62,13 @@ public class FileChooserComponent extends JPanel {
 	private ImageIcon load = new ImageIcon(Utilities.imagesDir + "open.gif");
 
 	// The vector of listeners the this component.
-	private Vector listeners;
+	private Vector<EnterPressedListener> listeners;
 
 	/**
 	 * Constructs a new FileChooserComponent.
 	 */
 	public FileChooserComponent() {
-		listeners = new Vector();
+		listeners = new Vector<EnterPressedListener>();
 		jbInit();
 		fileChooserFrame.setSize(440, 250);
 		fileChooserFrame.setLocation(250, 250);
@@ -82,7 +86,7 @@ public class FileChooserComponent extends JPanel {
 	/**
 	 * Implementing the action of pressing the browse button.
 	 */
-	public void browseButton_actionPerformed(ActionEvent e) {
+	public void browseButton_actionPerformed() {
 		int returnVal = fc.showDialog(FileChooserComponent.this, "Select file");
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			File file = fc.getSelectedFile();
@@ -93,7 +97,7 @@ public class FileChooserComponent extends JPanel {
 	/**
 	 * Implementing the action of pressing 'enter' on the file name text field.
 	 */
-	public void fileName_actionPerformed(ActionEvent e) {
+	public void fileName_actionPerformed() {
 		notifyListeners();
 	}
 
@@ -133,11 +137,11 @@ public class FileChooserComponent extends JPanel {
 		this.setLayout(null);
 		fileName.setDisabledTextColor(Color.black);
 		fileName.setBounds(new Rectangle(118, 13, 221, 22));
-		fileName.addActionListener(e -> fileName_actionPerformed(e));
+		fileName.addActionListener(e -> fileName_actionPerformed());
 		browseButton.setToolTipText("Load File");
 		browseButton.setIcon(load);
 		browseButton.setBounds(new Rectangle(351, 12, 46, 24));
-		browseButton.addActionListener(e -> browseButton_actionPerformed(e));
+		browseButton.addActionListener(e -> browseButton_actionPerformed());
 		currentFileName = "";
 
 		this.add(fileTypeName, null);
@@ -151,7 +155,7 @@ public class FileChooserComponent extends JPanel {
 	 */
 	public void notifyListeners() {
 		for (int i = 0; i < listeners.size(); i++) {
-			((EnterPressedListener) listeners.elementAt(i)).enterPressed();
+			listeners.elementAt(i).enterPressed();
 		}
 	}
 

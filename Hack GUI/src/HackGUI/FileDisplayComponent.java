@@ -38,8 +38,18 @@ import javax.swing.table.DefaultTableCellRenderer;
  */
 public class FileDisplayComponent extends JPanel {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8049575348850389630L;
+
 	// A cell renderer for the displayed table.
 	class FileDisplayTableCellRenderer extends DefaultTableCellRenderer {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -5685379265985160392L;
 
 		@Override
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean selected, boolean focused,
@@ -48,13 +58,13 @@ public class FileDisplayComponent extends JPanel {
 			setForeground(null);
 			setBackground(null);
 
-			setRenderer(row, column);
+			setRenderer(row);
 			super.getTableCellRendererComponent(table, value, selected, focused, row, column);
 
 			return this;
 		}
 
-		public void setRenderer(int row, int column) {
+		public void setRenderer(int row) {
 
 			if (row == selectedRow) {
 				setBackground(Color.yellow);
@@ -66,6 +76,11 @@ public class FileDisplayComponent extends JPanel {
 
 	// A model for the displayed table
 	class FileDisplayTableModel extends AbstractTableModel {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -6330347180523694251L;
 
 		/**
 		 * Returns the number of columns.
@@ -178,7 +193,7 @@ public class FileDisplayComponent extends JPanel {
 	public synchronized void setContents(String fileName) {
 		this.fileName = fileName;
 		BufferedReader reader;
-		Vector rowsVector = new Vector();
+		Vector<String> rowsVector = new Vector<String>();
 		try {
 			reader = new BufferedReader(new FileReader(fileName));
 			String line;
