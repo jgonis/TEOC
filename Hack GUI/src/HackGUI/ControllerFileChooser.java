@@ -32,6 +32,10 @@ import javax.swing.JFrame;
  */
 public class ControllerFileChooser extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6770520505629399787L;
 	// Creating the file chooser components
 	private FileChooserComponent outputFileChooser = new FileChooserComponent();
 	private FileChooserComponent comparisonFileChooser = new FileChooserComponent();
@@ -46,13 +50,13 @@ public class ControllerFileChooser extends JFrame {
 	private ImageIcon cancelIcon = new ImageIcon(Utilities.imagesDir + "cancel.gif");
 
 	// the listeners to this component.
-	private Vector listeners;
+	private Vector<FilesTypeListener> listeners;
 
 	/**
 	 * Constructs a new FilesChooserWindow.
 	 */
 	public ControllerFileChooser() {
-		listeners = new Vector();
+		listeners = new Vector<FilesTypeListener>();
 
 		jbInit();
 
@@ -72,7 +76,7 @@ public class ControllerFileChooser extends JFrame {
 	/**
 	 * Implementing the action of pressing the cancel button.
 	 */
-	public void cancelButton_actionPerformed(ActionEvent e) {
+	public void cancelButton_actionPerformed() {
 		scriptFileChooser.showCurrentFileName();
 		outputFileChooser.showCurrentFileName();
 		comparisonFileChooser.showCurrentFileName();
@@ -89,9 +93,9 @@ public class ControllerFileChooser extends JFrame {
 		okButton.setToolTipText("OK");
 		okButton.setIcon(okIcon);
 		okButton.setBounds(new Rectangle(123, 134, 63, 44));
-		okButton.addActionListener(e -> okButton_actionPerformed(e));
+		okButton.addActionListener(e -> okButton_actionPerformed());
 		cancelButton.setBounds(new Rectangle(283, 134, 63, 44));
-		cancelButton.addActionListener(e -> cancelButton_actionPerformed(e));
+		cancelButton.addActionListener(e -> cancelButton_actionPerformed());
 		cancelButton.setToolTipText("CANCEL");
 		cancelButton.setIcon(cancelIcon);
 		this.getContentPane().add(scriptFileChooser, null);
@@ -112,14 +116,14 @@ public class ControllerFileChooser extends JFrame {
 		FilesTypeEvent event = new FilesTypeEvent(this, script, output, comparison);
 
 		for (int i = 0; i < listeners.size(); i++) {
-			((FilesTypeListener) listeners.elementAt(i)).filesNamesChanged(event);
+			listeners.elementAt(i).filesNamesChanged(event);
 		}
 	}
 
 	/**
 	 * Implementing the action of pressing the ok button.
 	 */
-	public void okButton_actionPerformed(ActionEvent e) {
+	public void okButton_actionPerformed() {
 
 		String script = null;
 		String output = null;

@@ -40,7 +40,7 @@ public class NodeSet extends Vector<Node> {
 	 * Adds the given node to the set.
 	 */
 	@Override
-	public boolean add(Node node) {
+	public synchronized boolean add(Node node) {
 		return super.add(node);
 	}
 
@@ -55,7 +55,7 @@ public class NodeSet extends Vector<Node> {
 	 * Returns the Node at the given index. (Assumes a legal index).
 	 */
 	public Node getNodeAt(int index) {
-		return elementAt(index);
+		return super.elementAt(index);
 	}
 
 	/**

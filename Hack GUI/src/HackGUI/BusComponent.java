@@ -36,6 +36,10 @@ import Hack.Controller.HackController;
 
 public class BusComponent extends JPanel implements ActionListener, BusGUI {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4942657312241340374L;
 	// Minimum and maximum miliseconds per one unit of movement
 	private static final int MIN_MS = 10;
 	private static final int MAX_MS = 40;
@@ -45,10 +49,10 @@ public class BusComponent extends JPanel implements ActionListener, BusGUI {
 	private static final double MAX_STEP_LENGTH = 11;
 
 	// The height of the text field.
-	private static final int HEIGHT = 22;
+	private static final int MY_HEIGHT = 22;
 
 	// The width of the text field.
-	private static final int WIDTH = 128;
+	private static final int MY_WIDTH = 128;
 
 	// The textField to be moved
 	protected JTextField txtField;
@@ -120,7 +124,7 @@ public class BusComponent extends JPanel implements ActionListener, BusGUI {
 	// Initializes this component.
 	private void jbInit() {
 		txtBorder = BorderFactory.createMatteBorder(4, 4, 4, 4, Color.orange);
-		txtField.setBounds(new Rectangle(10, 8, WIDTH, HEIGHT));
+		txtField.setBounds(new Rectangle(10, 8, MY_WIDTH, MY_HEIGHT));
 		txtField.setBackground(Color.white);
 		txtField.setEnabled(false);
 		txtField.setBorder(txtBorder);
