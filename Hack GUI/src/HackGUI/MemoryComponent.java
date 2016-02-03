@@ -23,7 +23,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.Vector;
@@ -57,10 +56,20 @@ import Hack.Events.ErrorEventListener;
  */
 public class MemoryComponent extends JPanel implements MemoryGUI {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8029834458869247999L;
+
 	// An inner class which implemets the cell renderer of the memory table,
 	// giving
 	// the feature of aligning the text in the cells.
 	class MemoryTableCellRenderer extends DefaultTableCellRenderer {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 760394633373325224L;
 
 		@Override
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean selected, boolean focused,
@@ -82,7 +91,7 @@ public class MemoryComponent extends JPanel implements MemoryGUI {
 				setHorizontalAlignment(SwingConstants.RIGHT);
 
 				for (int i = 0; i < highlightIndex.size(); i++) {
-					if (row == ((Integer) highlightIndex.elementAt(i)).intValue()) {
+					if (row == highlightIndex.elementAt(i).intValue()) {
 						setForeground(Color.blue);
 						break;
 					}
@@ -100,6 +109,11 @@ public class MemoryComponent extends JPanel implements MemoryGUI {
 
 	// An inner class representing the model of this table.
 	class MemoryTableModel extends AbstractTableModel {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -6712562954222142112L;
 
 		/**
 		 * Returns the number of columns.
@@ -184,22 +198,19 @@ public class MemoryComponent extends JPanel implements MemoryGUI {
 	public int dataFormat;
 
 	// A vector containing the listeners to this object.
-	private Vector listeners;
+	private Vector<ComputerPartEventListener> listeners;
 
 	// A vector containing the clear listeners to this object.
-	private Vector clearListeners;
+	private Vector<ClearEventListener> clearListeners;
 
 	// A vector containing the error listeners to this object.
-	private Vector errorEventListeners;
+	private Vector<ErrorEventListener> errorEventListeners;
 
 	// A vector containing the repaint listeners to this object.
-	private Vector changeListeners;
+	private Vector<MemoryChangeListener> changeListeners;
 
 	// The table representing the memory.
 	protected JTable memoryTable;
-
-	// The model of the table.
-	private MemoryTableModel tableModel = new MemoryTableModel();
 
 	// The values of this memory in a string representation.
 	protected String[] valuesStr;
@@ -223,7 +234,7 @@ public class MemoryComponent extends JPanel implements MemoryGUI {
 	protected JScrollPane scrollPane;
 
 	// A vector containing the highlighted rows.
-	protected Vector highlightIndex;
+	protected Vector<Integer> highlightIndex;
 
 	// The index of the flashed row.
 	protected int flashIndex = -1;
@@ -262,11 +273,11 @@ public class MemoryComponent extends JPanel implements MemoryGUI {
 		tf.setBorder(null);
 		DefaultCellEditor editor = new DefaultCellEditor(tf);
 
-		listeners = new Vector();
-		clearListeners = new Vector();
-		errorEventListeners = new Vector();
-		changeListeners = new Vector();
-		highlightIndex = new Vector();
+		listeners = new Vector<ComputerPartEventListener>();
+		clearListeners = new Vector<ClearEventListener>();
+		errorEventListeners = new Vector<ErrorEventListener>();
+		changeListeners = new Vector<MemoryChangeListener>();
+		highlightIndex = new Vector<Integer>();
 		memoryTable = new JTable(getTableModel());
 		memoryTable.setDefaultRenderer(memoryTable.getColumnClass(0), getCellRenderer());
 		memoryTable.getColumnModel().getColumn(getValueColumnIndex()).setCellEditor(editor);
@@ -308,7 +319,7 @@ public class MemoryComponent extends JPanel implements MemoryGUI {
 	/**
 	 * Implementing the action of pressing the clear button.
 	 */
-	public void clearButton_actionPerformed(ActionEvent e) {
+	public void clearButton_actionPerformed() {
 
 		Object[] options = { "Yes", "No", "Cancel" };
 		int pressedButtonValue = JOptionPane.showOptionDialog(this.getParent(), "Are you sure you want to clear ?",
@@ -477,12 +488,12 @@ public class MemoryComponent extends JPanel implements MemoryGUI {
 		memoryTable.addFocusListener(new FocusListener() {
 			@Override
 			public void focusGained(FocusEvent e) {
-				memoryTable_focusGained(e);
+				memoryTable_focusGained();
 			}
 
 			@Override
 			public void focusLost(FocusEvent e) {
-				memoryTable_focusLost(e);
+				memoryTable_focusLost();
 			}
 		});
 
@@ -491,7 +502,7 @@ public class MemoryComponent extends JPanel implements MemoryGUI {
 		searchButton.setToolTipText("Search");
 		searchButton.setIcon(searchIcon);
 		searchButton.setBounds(new Rectangle(159, 2, 31, 25));
-		searchButton.addActionListener(e -> searchButton_actionPerformed(e));
+		searchButton.addActionListener(e -> searchButton_actionPerformed());
 		memoryTable.setFont(Utilities.valueFont);
 		nameLbl.setBounds(new Rectangle(3, 5, 70, 23));
 		nameLbl.setFont(Utilities.labelsFont);
@@ -499,7 +510,7 @@ public class MemoryComponent extends JPanel implements MemoryGUI {
 		setBorder(BorderFactory.createEtchedBorder());
 		scrollPane.setLocation(0, 27);
 
-		clearButton.addActionListener(e -> clearButton_actionPerformed(e));
+		clearButton.addActionListener(e -> clearButton_actionPerformed());
 		clearButton.setIcon(clearIcon);
 		clearButton.setBounds(new Rectangle(128, 2, 31, 25));
 		clearButton.setToolTipText("Clear");
@@ -512,7 +523,7 @@ public class MemoryComponent extends JPanel implements MemoryGUI {
 	/**
 	 * Implementing the action of the table gaining the focus.
 	 */
-	public void memoryTable_focusGained(FocusEvent e) {
+	public void memoryTable_focusGained() {
 		memoryTable.clearSelection();
 		notifyListeners();
 	}
@@ -520,7 +531,7 @@ public class MemoryComponent extends JPanel implements MemoryGUI {
 	/**
 	 * Implementing the action of the table loosing the focus.
 	 */
-	public void memoryTable_focusLost(FocusEvent e) {
+	public void memoryTable_focusLost() {
 		memoryTable.clearSelection();
 	}
 
@@ -528,7 +539,7 @@ public class MemoryComponent extends JPanel implements MemoryGUI {
 	public void notifyClearListeners() {
 		ClearEvent clearEvent = new ClearEvent(this);
 		for (int i = 0; i < clearListeners.size(); i++) {
-			((ClearEventListener) clearListeners.elementAt(i)).clearRequested(clearEvent);
+			clearListeners.elementAt(i).clearRequested(clearEvent);
 		}
 	}
 
@@ -541,7 +552,7 @@ public class MemoryComponent extends JPanel implements MemoryGUI {
 	public void notifyErrorListeners(String errorMessage) {
 		ErrorEvent event = new ErrorEvent(this, errorMessage);
 		for (int i = 0; i < errorEventListeners.size(); i++) {
-			((ErrorEventListener) errorEventListeners.elementAt(i)).errorOccured(event);
+			errorEventListeners.elementAt(i).errorOccured(event);
 		}
 	}
 
@@ -549,7 +560,7 @@ public class MemoryComponent extends JPanel implements MemoryGUI {
 	public void notifyListeners() {
 		new ComputerPartEvent(this);
 		for (int i = 0; i < listeners.size(); i++) {
-			((ComputerPartEventListener) listeners.elementAt(i)).guiGainedFocus();
+			listeners.elementAt(i).guiGainedFocus();
 		}
 	}
 
@@ -557,7 +568,7 @@ public class MemoryComponent extends JPanel implements MemoryGUI {
 	public void notifyListeners(int address, short value) {
 		ComputerPartEvent event = new ComputerPartEvent(this, address, value);
 		for (int i = 0; i < listeners.size(); i++) {
-			((ComputerPartEventListener) listeners.elementAt(i)).valueChanged(event);
+			listeners.elementAt(i).valueChanged(event);
 		}
 	}
 
@@ -566,7 +577,7 @@ public class MemoryComponent extends JPanel implements MemoryGUI {
 	 */
 	public void notifyRepaintListeners() {
 		for (int i = 0; i < changeListeners.size(); i++) {
-			((MemoryChangeListener) changeListeners.elementAt(i)).repaintChange();
+			changeListeners.elementAt(i).repaintChange();
 		}
 	}
 
@@ -575,7 +586,7 @@ public class MemoryComponent extends JPanel implements MemoryGUI {
 	 */
 	public void notifyRevalidateListeners() {
 		for (int i = 0; i < changeListeners.size(); i++) {
-			((MemoryChangeListener) changeListeners.elementAt(i)).revalidateChange();
+			changeListeners.elementAt(i).revalidateChange();
 		}
 	}
 
@@ -630,7 +641,7 @@ public class MemoryComponent extends JPanel implements MemoryGUI {
 	/**
 	 * Implementing the action of pressing the search button.
 	 */
-	public void searchButton_actionPerformed(ActionEvent e) {
+	public void searchButton_actionPerformed() {
 		searchWindow.showWindow();
 	}
 

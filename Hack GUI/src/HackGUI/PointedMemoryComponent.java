@@ -18,7 +18,6 @@
 package HackGUI;
 
 import java.awt.Color;
-import java.awt.event.FocusEvent;
 
 import javax.swing.table.DefaultTableCellRenderer;
 
@@ -29,10 +28,20 @@ import Hack.ComputerParts.PointedMemoryGUI;
  */
 public class PointedMemoryComponent extends MemoryComponent implements PointedMemoryGUI {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5024293277986923812L;
+
 	// An inner class which implemets the cell renderer of the program table,
 	// giving
 	// the feature of coloring the background of a specific cell.
 	public class PointedMemoryTableCellRenderer extends MemoryTableCellRenderer {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -3678291711255300161L;
 
 		@Override
 		public void setRenderer(int row, int column) {
@@ -61,8 +70,8 @@ public class PointedMemoryComponent extends MemoryComponent implements PointedMe
 	 * Implementing the action of the table gaining the focus.
 	 */
 	@Override
-	public void memoryTable_focusGained(FocusEvent e) {
-		super.memoryTable_focusGained(e);
+	public void memoryTable_focusGained() {
+		super.memoryTable_focusGained();
 		hasFocus = true;
 	}
 
@@ -70,8 +79,8 @@ public class PointedMemoryComponent extends MemoryComponent implements PointedMe
 	 * Implementing the action of the table loosing the focus.
 	 */
 	@Override
-	public void memoryTable_focusLost(FocusEvent e) {
-		super.memoryTable_focusLost(e);
+	public void memoryTable_focusLost() {
+		super.memoryTable_focusLost();
 		hasFocus = false;
 	}
 
