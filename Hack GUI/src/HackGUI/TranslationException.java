@@ -22,6 +22,11 @@ package HackGUI;
  */
 public class TranslationException extends Exception {
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8603957320874508167L;
+
+	/**
 	 * Constructs a new TranslationException with the given message.
 	 */
 	public TranslationException(String message) {

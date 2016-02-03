@@ -28,6 +28,10 @@ import javax.swing.table.TableModel;
  */
 public class WideTable extends JTable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2031038100218191424L;
 	// The width of the table.
 	private int width;
 

@@ -28,6 +28,11 @@ import javax.swing.JCheckBox;
  */
 public class ViewableFileChooserComponent extends FileChooserComponent {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1517492736263433331L;
+
 	// A check box used for showing the file's content.
 	private JCheckBox viewCheckBox = new JCheckBox();
 

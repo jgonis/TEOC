@@ -85,6 +85,11 @@ public class LabeledMemoryComponent extends PointedMemoryComponent implements La
 	// VMMemoryComponent.
 	public class LabeledPointedMemoryTableCellRenderer extends PointedMemoryTableCellRenderer {
 
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 7286003223977623079L;
+
 		@Override
 		public void setRenderer(int row, int column) {
 			super.setRenderer(row, column - 1);

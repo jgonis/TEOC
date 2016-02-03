@@ -80,6 +80,11 @@ public class TrimmedValuesOnlyAbsoluteMemorySegmentComponent extends AbsolutePoi
 	// the feature of aligning the text in the cells.
 	class TrimmedValuesOnlyTableCellRenderer extends PointedMemorySegmentTableCellRenderer {
 
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -6216458602305212503L;
+
 		@Override
 		public void setRenderer(int row, int column) {
 			super.setRenderer(row, column + 1);

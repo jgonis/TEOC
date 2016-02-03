@@ -29,6 +29,11 @@ import javax.swing.JButton;
 public class MouseOverJButton extends JButton implements MouseListener {
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8261952395023761198L;
+
+	/**
 	 * Constructs a new MouseOverJButton.
 	 */
 	public MouseOverJButton() {
