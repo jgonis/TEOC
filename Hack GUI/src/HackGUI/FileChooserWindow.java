@@ -18,7 +18,6 @@
 package HackGUI;
 
 import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
@@ -33,6 +32,11 @@ import javax.swing.filechooser.FileFilter;
  */
 public class FileChooserWindow extends JFrame implements EnterPressedListener {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6918852068703748475L;
+
 	// Creating the file chooser component.
 	private ViewableFileChooserComponent fileChooser;
 
@@ -45,13 +49,13 @@ public class FileChooserWindow extends JFrame implements EnterPressedListener {
 	private ImageIcon cancelIcon = new ImageIcon(Utilities.imagesDir + "cancel.gif");
 
 	// the listeners to this component.
-	private Vector listeners;
+	private Vector<FilesTypeListener> listeners;
 
 	/**
 	 * Constructs a new FilesChooserWindow.
 	 */
 	public FileChooserWindow(FileFilter filter) {
-		listeners = new Vector();
+		listeners = new Vector<FilesTypeListener>();
 		fileChooser = new ViewableFileChooserComponent();
 		fileChooser.setFilter(filter);
 
@@ -68,7 +72,7 @@ public class FileChooserWindow extends JFrame implements EnterPressedListener {
 	/**
 	 * Implementing the action of pressing the cancel button.
 	 */
-	public void cancelButton_actionPerformed(ActionEvent e) {
+	public void cancelButton_actionPerformed() {
 		fileChooser.showCurrentFileName();
 		setVisible(false);
 	}
@@ -104,9 +108,9 @@ public class FileChooserWindow extends JFrame implements EnterPressedListener {
 		okButton.setToolTipText("OK");
 		okButton.setIcon(okIcon);
 		okButton.setBounds(new Rectangle(124, 64, 63, 44));
-		okButton.addActionListener(e -> okButton_actionPerformed(e));
+		okButton.addActionListener(e -> okButton_actionPerformed());
 		cancelButton.setBounds(new Rectangle(282, 63, 63, 44));
-		cancelButton.addActionListener(e -> cancelButton_actionPerformed(e));
+		cancelButton.addActionListener(e -> cancelButton_actionPerformed());
 		cancelButton.setToolTipText("CANCEL");
 		cancelButton.setIcon(cancelIcon);
 		this.getContentPane().add(fileChooser, null);
@@ -125,14 +129,14 @@ public class FileChooserWindow extends JFrame implements EnterPressedListener {
 		FilesTypeEvent event = new FilesTypeEvent(this, fileName, null, null);
 
 		for (int i = 0; i < listeners.size(); i++) {
-			((FilesTypeListener) listeners.elementAt(i)).filesNamesChanged(event);
+			listeners.elementAt(i).filesNamesChanged(event);
 		}
 	}
 
 	/**
 	 * Implementing the action of pressing the ok button.
 	 */
-	public void okButton_actionPerformed(ActionEvent e) {
+	public void okButton_actionPerformed() {
 
 		String file = null;
 		file = fileChooser.getFileName();

@@ -91,7 +91,7 @@ public class MemorySegmentComponent extends JPanel implements MemorySegmentGUI, 
 				setHorizontalAlignment(SwingConstants.RIGHT);
 
 				for (int i = 0; i < highlightIndex.size(); i++) {
-					if (row == ((Integer) highlightIndex.elementAt(i)).intValue()) {
+					if (row == highlightIndex.elementAt(i).intValue()) {
 						setForeground(Color.blue);
 						break;
 					}
@@ -251,9 +251,9 @@ public class MemorySegmentComponent extends JPanel implements MemorySegmentGUI, 
 	 */
 	public MemorySegmentComponent() {
 		dataFormat = Format.DEC_FORMAT;
-		listeners = new Vector();
-		errorEventListeners = new Vector();
-		highlightIndex = new Vector();
+		listeners = new Vector<ComputerPartEventListener>();
+		errorEventListeners = new Vector<ErrorEventListener>();
+		highlightIndex = new Vector<Integer>();
 		segmentTable = new JTable(getTableModel());
 		segmentTable.setDefaultRenderer(segmentTable.getColumnClass(0), getCellRenderer());
 		startEnabling = -1;
@@ -468,7 +468,7 @@ public class MemorySegmentComponent extends JPanel implements MemorySegmentGUI, 
 	public void notifyErrorListeners(String errorMessage) {
 		ErrorEvent event = new ErrorEvent(this, errorMessage);
 		for (int i = 0; i < errorEventListeners.size(); i++) {
-			((ErrorEventListener) errorEventListeners.elementAt(i)).errorOccured(event);
+			errorEventListeners.elementAt(i).errorOccured(event);
 		}
 	}
 
@@ -476,7 +476,7 @@ public class MemorySegmentComponent extends JPanel implements MemorySegmentGUI, 
 	public void notifyListeners() {
 		new ComputerPartEvent(this);
 		for (int i = 0; i < listeners.size(); i++) {
-			((ComputerPartEventListener) listeners.elementAt(i)).guiGainedFocus();
+			listeners.elementAt(i).guiGainedFocus();
 		}
 	}
 
@@ -489,7 +489,7 @@ public class MemorySegmentComponent extends JPanel implements MemorySegmentGUI, 
 	public void notifyListeners(int address, short value) {
 		ComputerPartEvent event = new ComputerPartEvent(this, address, value);
 		for (int i = 0; i < listeners.size(); i++) {
-			((ComputerPartEventListener) listeners.elementAt(i)).valueChanged(event);
+			listeners.elementAt(i).valueChanged(event);
 		}
 	}
 
