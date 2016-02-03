@@ -34,6 +34,11 @@ import javax.swing.JTextArea;
  */
 public class FileContentWindow extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2666271859039570765L;
+
 	// The text area on which the content of the file is shown.
 	private JTextArea fileContent = new JTextArea();
 

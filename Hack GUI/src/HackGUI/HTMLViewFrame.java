@@ -33,6 +33,11 @@ import javax.swing.text.html.HTMLFrameHyperlinkEvent;
  */
 public class HTMLViewFrame extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1122942752587079956L;
+
 	// The scroll pane for this frame
 	private JScrollPane scrollPane;
 

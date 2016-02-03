@@ -32,8 +32,18 @@ import Hack.ComputerParts.LabeledPointedMemoryGUI;
  */
 public class LabeledMemoryComponent extends PointedMemoryComponent implements LabeledPointedMemoryGUI {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6259435349738097353L;
+
 	// An inner class representing the model of this table.
 	class LabeledMemoryTableModel extends MemoryTableModel {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 5403707427923591236L;
 
 		/**
 		 * Returns the number of columns.

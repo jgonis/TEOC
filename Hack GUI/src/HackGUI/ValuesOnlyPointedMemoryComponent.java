@@ -26,8 +26,18 @@ import javax.swing.table.TableModel;
  */
 public class ValuesOnlyPointedMemoryComponent extends PointedMemoryComponent {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1845897647665483739L;
+
 	// An inner class representing the model of the table.
 	public class ValuesOnlyPointedMemoryTableModel extends MemoryTableModel {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1314083337242703087L;
 
 		/**
 		 * Returns the number of columns.
@@ -56,6 +66,11 @@ public class ValuesOnlyPointedMemoryComponent extends PointedMemoryComponent {
 	}
 
 	public class ValuesOnlyPointedTableCellRenderer extends PointedMemoryTableCellRenderer {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -8560040992589057954L;
 
 		@Override
 		public void setRenderer(int row, int column) {

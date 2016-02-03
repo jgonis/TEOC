@@ -27,6 +27,10 @@ import Hack.Controller.Breakpoint;
  */
 public class BreakpointChangedEvent extends EventObject {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8839796204137366247L;
 	// The breakpoint
 	private Breakpoint breakpoint;
 

@@ -30,8 +30,18 @@ import javax.swing.table.TableModel;
  */
 public class TrimmedValuesOnlyAbsoluteMemorySegmentComponent extends AbsolutePointedMemorySegmentComponent {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3134179691672435898L;
+
 	// An inner class representing the model of this table.
 	class TrimmedValuesOnlyAbsoluteTableModel extends AbsoluteTableModel {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -143957148620405674L;
 
 		/**
 		 * Returns the number of columns.
