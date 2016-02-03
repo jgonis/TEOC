@@ -18,7 +18,6 @@
 package HackGUI;
 
 import java.awt.Color;
-import java.awt.event.FocusEvent;
 
 import javax.swing.table.DefaultTableCellRenderer;
 
@@ -26,10 +25,20 @@ import Hack.ComputerParts.PointedMemorySegmentGUI;
 
 public class PointedMemorySegmentComponent extends MemorySegmentComponent implements PointedMemorySegmentGUI {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 606244214763110343L;
+
 	// An inner class which implemets the cell renderer of the program table,
 	// giving
 	// the feature of coloring the background of a specific cell.
 	public class PointedMemorySegmentTableCellRenderer extends MemorySegmentTableCellRenderer {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 5879890599809725095L;
 
 		@Override
 		public void setRenderer(int row, int column) {

@@ -16,8 +16,6 @@
  * mark your changes clearly, for the benefit of others.                        *
  ********************************************************************************/
 
-import javax.swing.UIManager;
-
 import Hack.Controller.ControllerGUI;
 import Hack.Controller.HackController;
 import Hack.VMEmulator.VMEmulator;

@@ -25,7 +25,6 @@ import Hack.CPUEmulator.ScreenGUI;
 import Hack.ComputerParts.AbsolutePointedMemorySegment;
 import Hack.ComputerParts.Bus;
 import Hack.ComputerParts.ComputerPartErrorEvent;
-import Hack.ComputerParts.ComputerPartErrorEventListener;
 import Hack.ComputerParts.LabeledPointedMemoryGUI;
 import Hack.ComputerParts.MemorySegment;
 import Hack.ComputerParts.TrimmedAbsoluteMemorySegment;
