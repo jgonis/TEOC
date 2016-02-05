@@ -18,6 +18,8 @@
 package SimulatorsGUI;
 
 import java.awt.Rectangle;
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
 import java.util.StringTokenizer;
 
 import javax.swing.ImageIcon;
@@ -48,8 +50,8 @@ public class SearchProgramWindow extends JFrame {
 	private JButton m_cancelButton = new JButton();
 
 	// creating ok and cancel icons.
-	private ImageIcon m_okIcon = new ImageIcon(Utilities.imagesDir + "ok.gif");
-	private ImageIcon m_cancelIcon = new ImageIcon(Utilities.imagesDir + "cancel.gif");
+	private ImageIcon m_okIcon;
+	private ImageIcon m_cancelIcon;
 
 	// The table of this component.
 	private JTable m_table;
@@ -63,6 +65,14 @@ public class SearchProgramWindow extends JFrame {
 	public SearchProgramWindow(JTable table) {
 		super("Search");
 		this.m_table = table;
+		
+		try {
+			m_okIcon = new ImageIcon(Paths.get(ClassLoader.getSystemResource( "ok.gif" ).toURI()).toString());
+			m_cancelIcon = new ImageIcon(Paths.get(ClassLoader.getSystemResource( "cancel.gif" ).toURI()).toString() );
+		} catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		jbInit();
 

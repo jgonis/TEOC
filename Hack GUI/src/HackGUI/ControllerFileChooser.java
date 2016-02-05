@@ -18,6 +18,8 @@
 package HackGUI;
 
 import java.awt.Rectangle;
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
@@ -45,8 +47,8 @@ public class ControllerFileChooser extends JFrame {
 	private JButton cancelButton = new JButton();
 
 	// Creating icons.
-	private ImageIcon okIcon = new ImageIcon(Utilities.imagesDir + "ok.gif");
-	private ImageIcon cancelIcon = new ImageIcon(Utilities.imagesDir + "cancel.gif");
+	private ImageIcon okIcon;
+	private ImageIcon cancelIcon;
 
 	// the listeners to this component.
 	private Vector<FilesTypeListener> listeners;
@@ -56,7 +58,14 @@ public class ControllerFileChooser extends JFrame {
 	 */
 	public ControllerFileChooser() {
 		listeners = new Vector<FilesTypeListener>();
-
+		
+		try {
+			okIcon = new ImageIcon(Paths.get(ClassLoader.getSystemResource("ok.gif").toURI()).toString());
+			cancelIcon = new ImageIcon(Paths.get(ClassLoader.getSystemResource("cancel.gif").toURI()).toString());
+		} catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		jbInit();
 
 		// Sets the names of the file chooser components.

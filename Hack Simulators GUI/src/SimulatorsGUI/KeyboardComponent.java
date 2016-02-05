@@ -24,6 +24,8 @@ import java.awt.Rectangle;
 import java.awt.SystemColor;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -34,7 +36,6 @@ import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 
 import Hack.CPUEmulator.KeyboardGUI;
-import HackGUI.Utilities;
 
 /**
  * A keyboard GUI component. Receives key input by using key events.
@@ -44,7 +45,7 @@ public class KeyboardComponent extends JPanel implements KeyboardGUI {
 	private static final long serialVersionUID = -3357924013065805531L;
 
 	// The icon of the keyboard.
-	private ImageIcon m_keyboardIcon = new ImageIcon(Utilities.imagesDir + "keyboard.gif");
+	private ImageIcon m_keyboardIcon;
 
 	// The text field on which the letter are appearing.
 	private JTextField m_keyNameText = new JTextField();
@@ -77,6 +78,12 @@ public class KeyboardComponent extends JPanel implements KeyboardGUI {
 
 	// Initializes this component.
 	private void jbInit() {
+		try {
+			m_keyboardIcon = new ImageIcon(Paths.get(ClassLoader.getSystemResource("keyboard.gif").toURI()).toString());
+		} catch (URISyntaxException e1) {
+			e1.printStackTrace();
+		}
+		
 		m_keyNameText.setBounds(new Rectangle(258, 0, 258, 27));
 		m_keyNameText.setEnabled(false);
 		m_keyNameText.setFont(new Font("Times New Roman", 1, 14));

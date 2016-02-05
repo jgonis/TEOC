@@ -23,6 +23,8 @@ import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.SystemColor;
 import java.io.File;
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
@@ -174,7 +176,7 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
 	protected MouseOverJButton m_browseButton = new MouseOverJButton();
 
 	// Creating the icon of the button.
-	private ImageIcon m_browseIcon = new ImageIcon(Utilities.imagesDir + "open2.gif");
+	private ImageIcon m_browseIcon;
 
 	// The file chooser window.
 	// private FileChooserWindow fileChooser = new FileChooserWindow(null);
@@ -193,7 +195,7 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
 	private MouseOverJButton m_searchButton = new MouseOverJButton();
 
 	// Creating the icon for the search button.
-	private ImageIcon m_searchIcon = new ImageIcon(Utilities.imagesDir + "find.gif");
+	private ImageIcon m_searchIcon;
 
 	// The window of searching a specific location in memory.
 	private SearchProgramWindow m_searchWindow;
@@ -208,7 +210,7 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
 	protected MouseOverJButton m_clearButton = new MouseOverJButton();
 
 	// Creating the icon for the clear button.
-	private ImageIcon m_clearIcon = new ImageIcon(Utilities.imagesDir + "smallnew.gif");
+	private ImageIcon m_clearIcon;
 
 	/**
 	 * Constructs a new ProgramComponent.
@@ -218,6 +220,16 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
 		m_errorEventListeners = new Vector<ErrorEventListener>();
 		m_instructions = new VMEmulatorInstruction[0];
 		m_model = new ProgramTableModel();
+		
+		try {
+			m_searchIcon = new ImageIcon(Paths.get(ClassLoader.getSystemResource( "find.gif").toURI()).toString());
+			m_browseIcon = new ImageIcon(Paths.get(ClassLoader.getSystemResource("open2.gif").toURI()).toString());
+			m_clearIcon = new ImageIcon(Paths.get(ClassLoader.getSystemResource("smallnew.gif").toURI()).toString());
+		} catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		m_programTable = new JTable(m_model);
 		m_programTable.setDefaultRenderer(m_programTable.getColumnClass(0), m_coloredRenderer);
 		m_searchWindow = new SearchProgramWindow(m_programTable);
