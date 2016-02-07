@@ -33,11 +33,6 @@ import javax.swing.plaf.FontUIResource;
  */
 public class Utilities {
 
-	/**
-	 * The directory of the images.
-	 */
-	public static final String imagesDir = "bin/images/";
-
 	// The name of the font for values
 	private static final String VALUE_FONT_NAME = "Monospaced";
 

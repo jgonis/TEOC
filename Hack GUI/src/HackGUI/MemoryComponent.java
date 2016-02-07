@@ -25,6 +25,8 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
@@ -223,9 +225,8 @@ public class MemoryComponent extends JPanel implements MemoryGUI {
 	protected MouseOverJButton searchButton = new MouseOverJButton();
 	protected MouseOverJButton clearButton = new MouseOverJButton();
 
-	private ImageIcon searchIcon = new ImageIcon(Utilities.imagesDir + "find.gif");
-
-	private ImageIcon clearIcon = new ImageIcon(Utilities.imagesDir + "smallnew.gif");
+	private ImageIcon searchIcon;
+	private ImageIcon clearIcon;
 
 	// The window of searching a specific location in memory.
 	private SearchMemoryWindow searchWindow;
@@ -267,6 +268,14 @@ public class MemoryComponent extends JPanel implements MemoryGUI {
 		dataFormat = Format.DEC_FORMAT;
 		startEnabling = -1;
 		endEnabling = -1;
+		
+		try {
+			searchIcon = new ImageIcon(Paths.get(ClassLoader.getSystemResource("find.gif").toURI()).toString());
+			clearIcon = new ImageIcon(Paths.get(ClassLoader.getSystemResource("smallnew.gif").toURI()).toString());
+		} catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		JTextField tf = new JTextField();
 		tf.setFont(Utilities.bigBoldValueFont);

@@ -20,6 +20,8 @@ package HackGUI;
 import java.awt.Color;
 import java.awt.Rectangle;
 import java.io.File;
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
@@ -59,7 +61,7 @@ public class FileChooserComponent extends JPanel {
 	protected String currentFileName = "";
 
 	// Creating the browse icon.
-	private ImageIcon load = new ImageIcon(Utilities.imagesDir + "open.gif");
+	private ImageIcon load;
 
 	// The vector of listeners the this component.
 	private Vector<EnterPressedListener> listeners;
@@ -69,6 +71,12 @@ public class FileChooserComponent extends JPanel {
 	 */
 	public FileChooserComponent() {
 		listeners = new Vector<EnterPressedListener>();
+		try {
+			load = new ImageIcon(Paths.get(ClassLoader.getSystemResource("open.gif").toURI()).toString());
+		} catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		jbInit();
 		fileChooserFrame.setSize(440, 250);
 		fileChooserFrame.setLocation(250, 250);

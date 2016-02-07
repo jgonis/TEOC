@@ -19,6 +19,8 @@ package SimulatorsGUI;
 
 import java.awt.Rectangle;
 import java.io.File;
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
@@ -28,7 +30,6 @@ import javax.swing.JFrame;
 import HackGUI.FileChooserComponent;
 import HackGUI.FilesTypeEvent;
 import HackGUI.FilesTypeListener;
-import HackGUI.Utilities;
 
 /**
  * This class represents the gui of the chip loader file chooser.
@@ -41,8 +42,8 @@ public class ChipLoaderFileChooser extends JFrame {
 	private FileChooserComponent builtInDir = new FileChooserComponent();
 
 	// creating the ok and cancel icons.
-	private ImageIcon okIcon = new ImageIcon(Utilities.imagesDir + "ok.gif");
-	private ImageIcon cancelIcon = new ImageIcon(Utilities.imagesDir + "cancel.gif");
+	private ImageIcon okIcon;
+	private ImageIcon cancelIcon;
 
 	// creating the ok and cancel buttons.
 	private JButton okButton = new JButton();
@@ -56,6 +57,14 @@ public class ChipLoaderFileChooser extends JFrame {
 	 */
 	public ChipLoaderFileChooser() {
 		super("Directories Selection");
+		try {
+			okIcon =  new ImageIcon(Paths.get(ClassLoader.getSystemResource("ok.gif").toURI()).toString());
+			cancelIcon =  new ImageIcon(Paths.get(ClassLoader.getSystemResource("cancel.gif").toURI()).toString());
+		} catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		listeners = new Vector<FilesTypeListener>();
 		setSelectionToDirectory();
 		setNames();

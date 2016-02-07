@@ -25,6 +25,8 @@ import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
 import java.util.Hashtable;
 import java.util.Vector;
 
@@ -100,13 +102,13 @@ public class ControllerComponent extends JFrame
 	private BreakpointWindow m_breakpointWindow = new BreakpointWindow();
 
 	// Creating the icons for the buttons.
-	private ImageIcon m_rewindIcon = new ImageIcon(Utilities.imagesDir + "vcrrewind.gif");
-	private ImageIcon m_ffwdIcon = new ImageIcon(Utilities.imagesDir + "vcrfastforward.gif");
-	private ImageIcon m_singleStepIcon = new ImageIcon(Utilities.imagesDir + "vcrforward.gif");
-	private ImageIcon m_stopIcon = new ImageIcon(Utilities.imagesDir + "vcrstop.gif");
-	private ImageIcon m_breakIcon = new ImageIcon(Utilities.imagesDir + "redflag.gif");
-	private ImageIcon m_loadProgramIcon = new ImageIcon(Utilities.imagesDir + "opendoc.gif");
-	private ImageIcon m_scriptIcon = new ImageIcon(Utilities.imagesDir + "scroll.gif");
+	private ImageIcon m_rewindIcon;
+	private ImageIcon m_ffwdIcon;
+	private ImageIcon m_singleStepIcon;
+	private ImageIcon m_stopIcon;
+	private ImageIcon m_breakIcon;
+	private ImageIcon m_loadProgramIcon;
+	private ImageIcon m_scriptIcon;
 
 	// The speed slider.
 	protected JSlider m_speedSlider;
@@ -159,7 +161,20 @@ public class ControllerComponent extends JFrame
 		m_scriptComponent = new FileDisplayComponent();
 		m_outputComponent = new FileDisplayComponent();
 		m_comparisonComponent = new FileDisplayComponent();
-
+		
+		try {
+			m_rewindIcon = new ImageIcon(Paths.get(ClassLoader.getSystemResource("vcrrewind.gif").toURI()).toString());
+			m_ffwdIcon = new ImageIcon(Paths.get(ClassLoader.getSystemResource("vcrfastforward.gif").toURI()).toString());
+			m_singleStepIcon = new ImageIcon(Paths.get(ClassLoader.getSystemResource("vcrforward.gif").toURI()).toString());
+			m_stopIcon = new ImageIcon(Paths.get(ClassLoader.getSystemResource("vcrstop.gif").toURI()).toString());
+			m_breakIcon = new ImageIcon(Paths.get(ClassLoader.getSystemResource("redflag.gif").toURI()).toString());
+			m_loadProgramIcon = new ImageIcon(Paths.get(ClassLoader.getSystemResource("opendoc.gif").toURI()).toString());
+			m_scriptIcon = new ImageIcon(Paths.get(ClassLoader.getSystemResource("scroll.gif").toURI()).toString());
+		} catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		init();
 		jbInit();
 	}

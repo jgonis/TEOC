@@ -22,6 +22,8 @@ import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.SystemColor;
 import java.io.File;
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Vector;
 
@@ -80,7 +82,7 @@ public class ROMComponent extends PointedMemoryComponent implements ROMGUI {
 	protected MouseOverJButton m_loadButton = new MouseOverJButton();
 
 	// The icon on the load file button.
-	private ImageIcon m_loadIcon = new ImageIcon(Utilities.imagesDir + "open2.gif");
+	private ImageIcon m_loadIcon;
 
 	// The file filter of this component.
 	private FileFilter m_filter;
@@ -109,6 +111,14 @@ public class ROMComponent extends PointedMemoryComponent implements ROMGUI {
 		m_programEventListeners = new Vector<ProgramEventListener>();
 		m_filter = new ROMFileFilter();
 		m_fileChooser = new JFileChooser();
+		
+		try {
+			m_loadIcon = new ImageIcon(Paths.get(ClassLoader.getSystemResource( "open2.gif" ).toURI()).toString());
+		} catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		m_fileChooser.setFileFilter(m_filter);
 		jbInit();
 	}

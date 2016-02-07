@@ -23,6 +23,8 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
@@ -150,11 +152,9 @@ public class BreakpointWindow extends JFrame implements MouseListener, Breakpoin
 	// The cell renderer of the table.
 	private ColoredTableCellRenderer m_coloredRenderer = new ColoredTableCellRenderer();
 	// Creating icons.
-	private ImageIcon m_addIcon = new ImageIcon(Utilities.imagesDir + "smallplus.gif");
-
-	private ImageIcon m_removeIcon = new ImageIcon(Utilities.imagesDir + "smallminus.gif");
-
-	private ImageIcon m_okIcon = new ImageIcon(Utilities.imagesDir + "ok2.gif");
+	private ImageIcon m_addIcon;
+	private ImageIcon m_removeIcon;
+	private ImageIcon m_okIcon;
 
 	// Creating the window which allows adding and editing a given breakpoint.
 	private BreakpointVariablesWindow m_variables = new BreakpointVariablesWindow();
@@ -173,6 +173,15 @@ public class BreakpointWindow extends JFrame implements MouseListener, Breakpoin
 		m_breakpointTable.setDefaultRenderer(m_breakpointTable.getColumnClass(0), m_coloredRenderer);
 		m_listeners = new Vector<BreakpointsChangedListener>();
 		setResizable(false);
+		
+		try {
+			m_okIcon = new ImageIcon(Paths.get(ClassLoader.getSystemResource("ok2.gif").toURI()).toString());
+			m_addIcon = new ImageIcon(Paths.get(ClassLoader.getSystemResource("smallplus.gif").toURI()).toString());
+			m_removeIcon = new ImageIcon(Paths.get(ClassLoader.getSystemResource("smallminus.gif").toURI()).toString());
+		} catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		jbInit();
 	}
