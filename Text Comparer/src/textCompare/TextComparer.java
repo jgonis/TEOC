@@ -1,3 +1,5 @@
+package textCompare;
+
 
 /********************************************************************************
  * The contents of this file are subject to the GNU General Public License      *
@@ -37,43 +39,48 @@ public class TextComparer {
 			System.exit(-1);
 		}
 
-		
-		try ( BufferedReader reader1 = new BufferedReader(new FileReader(args[0]));
-			  BufferedReader reader2 = new BufferedReader(new FileReader(args[1])) )
-		{
-			String line1, line2;
-			int count = 0;
-			
-			while ((line1 = reader1.readLine()) != null) {
-
-				line1 = line1.replaceAll("\\s", "");
-				line2 = reader2.readLine();
-
-				if (line2 == null) {
-					System.out.println("Second file is shorter (only " + count + " lines)");
-					System.exit(-1);
-				} else {
-					line2 = line2.replaceAll("\\s", "");
-					if (!line1.equals(line2)) {
-						System.out.println("Comparison failure in line " + count + ":");
-						System.out.println(line1);
-						System.out.println(line2);
-						System.exit(-1);
-					}
-				}
-
-				count++;
-			}
-
-			if (reader2.readLine() != null) {
-				System.out.println("First file is shorter (only " + count + " lines)");
+		try (BufferedReader reader1 = new BufferedReader(new FileReader(args[0]));
+				BufferedReader reader2 = new BufferedReader(new FileReader(args[1]))) {
+			if (!compareText(reader1, reader2))
 				System.exit(-1);
-			}
+
 		} catch (IOException ioe) {
 			System.err.println("IO error while trying to deal with files");
 			System.exit(-1);
 		}
-
+		
 		System.out.println("Comparison ended successfully");
+	}
+
+	static boolean compareText(BufferedReader source1, BufferedReader source2) throws IOException {
+		String line1, line2;
+		int count = 0;
+
+		while ((line1 = source1.readLine()) != null) {
+
+			line1 = line1.replaceAll("\\s", "");
+			line2 = source2.readLine();
+
+			if (line2 == null) {
+				System.out.println("Second file is shorter (only " + count + " lines)");
+				System.exit(-1);
+			} else {
+				line2 = line2.replaceAll("\\s", "");
+				if (!line1.equals(line2)) {
+					System.out.println("Comparison failure in line " + count + ":");
+					System.out.println(line1);
+					System.out.println(line2);
+					return false;
+				}
+			}
+			count++;
+		}
+
+		if (source2.readLine() != null) {
+			System.out.println("First file is shorter (only " + count + " lines)");
+			return false;
+		}
+
+		return true;
 	}
 }
