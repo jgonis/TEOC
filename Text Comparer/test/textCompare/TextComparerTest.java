@@ -5,6 +5,10 @@ package textCompare;
 
 import static org.junit.Assert.*;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.StringReader;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -16,6 +20,9 @@ import org.junit.Test;
  *
  */
 public class TextComparerTest {
+
+	private BufferedReader m_br1;
+	private BufferedReader m_br2;
 
 	/**
 	 * @throws java.lang.Exception
@@ -36,6 +43,10 @@ public class TextComparerTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
+		String input1 = "Hello World!";
+		String input2 = "Hello world!";
+		m_br1 = new BufferedReader(new StringReader(input1));
+		m_br2 = new BufferedReader(new StringReader(input2));
 	}
 
 	/**
@@ -46,19 +57,17 @@ public class TextComparerTest {
 	}
 
 	/**
-	 * Test method for {@link textCompare.TextComparer#main(java.lang.String[])}.
-	 */
-	@Test
-	public final void testMain() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	/**
 	 * Test method for {@link textCompare.TextComparer#compareText(java.io.BufferedReader, java.io.BufferedReader)}.
 	 */
 	@Test
-	public final void testCompareText() {
-		fail("Not yet implemented"); // TODO
+	public final void testCompareTextReturnsFalseWithNullInput() {
+		try {
+			assertFalse(TextComparer.compareText(null, null));
+			assertFalse(TextComparer.compareText(m_br1, null));
+			assertFalse(TextComparer.compareText(null, m_br2));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

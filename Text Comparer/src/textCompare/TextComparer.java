@@ -36,7 +36,7 @@ public class TextComparer {
 	public static void main(String[] args) {
 		if (args.length != 2) {
 			System.err.println("Usage: java TextComparer <file name> <file name>");
-			System.exit(-1);
+			return;
 		}
 
 		try (BufferedReader reader1 = new BufferedReader(new FileReader(args[0]));
@@ -46,13 +46,16 @@ public class TextComparer {
 
 		} catch (IOException ioe) {
 			System.err.println("IO error while trying to deal with files");
-			System.exit(-1);
+			return;
 		}
 		
 		System.out.println("Comparison ended successfully");
 	}
 
 	static boolean compareText(BufferedReader source1, BufferedReader source2) throws IOException {
+		if(source1 == null || source2 == null)
+			return false;
+		
 		String line1, line2;
 		int count = 0;
 
