@@ -99,3 +99,4 @@ Temporary Items
 /Hack Virtual Machine/build/
 /Hack Simulators GUI/dist/
 /CPU Emulator GUI/dist/
+\.idea/workspace\.xml
