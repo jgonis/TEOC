@@ -54,49 +54,5 @@ Temporary Items
 
 #final jar file output for running the simulators
 *.jar
-/Hack Events/nbproject/private/
-/Hack Computer Parts/nbproject/private/
-/Hack Utilities/nbproject/private/
-/Hack Controller/nbproject/private/
-/Hack GUI/nbproject/private/
-/Hack Gates/nbproject/private/
-/Hack Hardware Simulator/nbproject/private/
-/Hack Virtual Machine/nbproject/private/
-/Hack Translators/nbproject/private/
-/Hack Assembler/nbproject/private/
-/Hack CPU Emulator/nbproject/private/
-/Hack VM Emulator/nbproject/private/
-/Hack Simulators GUI/nbproject/private/
-/CPU Emulator GUI/nbproject/private/
-/Text Comparer/nbproject/private/
-/Hardware Simulator GUI/nbproject/private/
-/VM Emulator GUI/nbproject/private/
-/Hack CPU Emulator/build/
-/Hack Assembler/build/
-/CPU Emulator GUI/build/
-/Hack Events/build/
-/Hack Computer Parts/build/
-/Hack Events/dist/
-/Hack Computer Parts/dist/
-/Hack Utilities/build/
-/Hack Utilities/dist/
-/Hack Translators/build/
-/Hack Translators/dist/
-/Hack Controller/build/
-/Hack Controller/dist/
-/Hack Assembler/dist/
-/Hack CPU Emulator/dist/
-/Hack GUI/build/
-/Hack Gates/build/
-/Hack Gates/dist/
-/Hack Simulators GUI/build/
-/Hack Hardware Simulator/build/
-/Hack GUI/dist/
-/Hack Hardware Simulator/dist/
-/Hack VM Emulator/build/
-/Hack VM Emulator/dist/
-/Hack Virtual Machine/dist/
-/Hack Virtual Machine/build/
-/Hack Simulators GUI/dist/
-/CPU Emulator GUI/dist/
 \.idea/workspace\.xml
+out/
