@@ -31,9 +31,10 @@ public abstract class HackApplication {
 	 */
 	public HackApplication(HackSimulator simulator, ControllerGUI controllerComponent,
 			HackSimulatorGUI simulatorComponent, String defaultScript, String usageFileName, String aboutFileName) {
+		ClassLoader classLoader = getClass().getClassLoader();
 		try {
-			simulatorComponent.setUsageFileName(usageFileName);
-			simulatorComponent.setAboutFileName(aboutFileName);
+			simulatorComponent.setUsageFileName(classLoader.getResource(usageFileName));
+			simulatorComponent.setAboutFileName(classLoader.getResource(aboutFileName));
 			createController(simulator, controllerComponent, defaultScript);
 		} catch (ScriptException se) {
 			System.err.println(se.getMessage());

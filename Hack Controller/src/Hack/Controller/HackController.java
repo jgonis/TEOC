@@ -19,16 +19,14 @@ package Hack.Controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
 import java.util.Vector;
 
+import javax.print.URIException;
 import javax.swing.Timer;
 
 import Hack.Events.ProgramEvent;
@@ -325,7 +323,7 @@ public class HackController implements ControllerEventListener, ActionListener, 
 	private String lastEcho;
 
 	// The default script file object
-	private File defaultScriptFile;
+	private URL defaultScriptFile;
 
 	/**
 	 * Constructs a new HackController with the given GUI component, hack
@@ -344,9 +342,16 @@ public class HackController implements ControllerEventListener, ActionListener, 
 		simulator.addProgramListener(this);
 		m_breakpoints = new Vector<Breakpoint>();
 
-		defaultScriptFile = new File(defaultScriptName);
-		loadNewScript(defaultScriptFile, false);
-
+		ClassLoader classLoader = getClass().getClassLoader();
+		try {
+			defaultScriptFile = classLoader.getResource(defaultScriptName);
+			loadNewScript(defaultScriptFile, false);
+		} catch( IOException e) {
+			e.printStackTrace();
+		} catch( URISyntaxException e) {
+			System.out.println("uri!");
+			e.printStackTrace();
+		}
 		delays = new int[NUMBER_OF_SPEED_UNITS];
 		for (int i = 0; i < NUMBER_OF_SPEED_UNITS; i++) {
 			delays[i] = (int) (MAX_MS - (SPEED_FUNCTION[i] * (MAX_MS - MIN_MS)));
@@ -716,7 +721,7 @@ public class HackController implements ControllerEventListener, ActionListener, 
 	}
 
 	// loads the given script file and restarts the GUI.
-	protected void loadNewScript(File file, boolean displayMessage) throws ControllerException, ScriptException {
+	protected void loadNewScript(URL file, boolean displayMessage) throws ControllerException, ScriptException {
 		currentScriptFile = file;
 		script = new Script(file.getPath());
 		m_breakpoints.removeAllElements();

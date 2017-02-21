@@ -23,6 +23,8 @@ import Hack.Controller.HackApplication;
 import Hack.Controller.HackSimulator;
 import Hack.Controller.ScriptException;
 
+import java.net.URL;
+
 /**
  * A HardwareSimulator application.
  */
@@ -36,6 +38,7 @@ public class HardwareSimulatorApplication extends HackApplication {
 	public HardwareSimulatorApplication(HardwareSimulatorControllerGUI controllerComponent,
 			HardwareSimulatorGUI simulatorComponent, String defaultScript, String contentsFileName,
 			String aboutFileName) {
+
 		super(new HardwareSimulator(simulatorComponent), controllerComponent, simulatorComponent, defaultScript,
 				contentsFileName, aboutFileName);
 	}

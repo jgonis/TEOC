@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
   <artifact type="jar" build-on-make="true" name="Hardware Simulator GUI:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/CPU_Emulator_GUI_jar</output-path>
+    <output-path>$PROJECT_DIR$/out/artifacts/Hardware_Simulator_GUI_jar</output-path>
     <root id="archive" name="Hardware Simulator GUI.jar">
       <element id="module-output" name="Hardware Simulator GUI" />
       <element id="module-output" name="Hack Controller" />

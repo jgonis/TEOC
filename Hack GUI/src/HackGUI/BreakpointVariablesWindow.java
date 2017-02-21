@@ -72,15 +72,10 @@ public class BreakpointVariablesWindow extends JFrame {
 	public BreakpointVariablesWindow() {
 		super("Breakpoint Variables");
 		listeners = new Vector<BreakpointChangedListener>();
-		
-		try {
-			okIcon = new ImageIcon(Paths.get(ClassLoader.getSystemResource( "ok.gif").toURI()).toString());
-			cancelIcon = new ImageIcon(Paths.get(ClassLoader.getSystemResource( "cancel.gif" ).toURI()).toString());
-		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+		ClassLoader classLoader = getClass().getClassLoader();
+
+		okIcon = new ImageIcon(classLoader.getResource("ok.gif"));
+		cancelIcon = new ImageIcon(classLoader.getResource("cancel.gif"));
 		jbInit();
 	}
 

@@ -71,12 +71,9 @@ public class FileChooserComponent extends JPanel {
 	 */
 	public FileChooserComponent() {
 		listeners = new Vector<EnterPressedListener>();
-		try {
-			load = new ImageIcon(Paths.get(ClassLoader.getSystemResource("open.gif").toURI()).toString());
-		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		ClassLoader classLoader = getClass().getClassLoader();
+		load = new ImageIcon(classLoader.getResource("open.gif"));
+
 		jbInit();
 		fileChooserFrame.setSize(440, 250);
 		fileChooserFrame.setLocation(250, 250);

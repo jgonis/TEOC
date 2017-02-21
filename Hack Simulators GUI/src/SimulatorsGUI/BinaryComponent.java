@@ -24,7 +24,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.InputStream;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Paths;
 import java.util.Vector;
 
@@ -96,13 +98,10 @@ public class BinaryComponent extends JPanel implements MouseListener, KeyListene
 	 */
 	public BinaryComponent() {
 		m_listeners = new Vector<PinValueListener>();
-		try {
-			m_okIcon =  new ImageIcon(Paths.get(ClassLoader.getSystemResource("smallok.gif").toURI()).toString());
-			m_cancelIcon =  new ImageIcon(Paths.get(ClassLoader.getSystemResource("smallcancel.gif").toURI()).toString());
-		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
+		ClassLoader classLoader = getClass().getClassLoader();
+		m_okIcon = new ImageIcon(classLoader.getResource("smallok.gif"));
+		m_cancelIcon = new ImageIcon(classLoader.getResource("smallcancel.gif"));
 
 		jbInit();
 	}

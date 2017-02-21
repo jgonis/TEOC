@@ -18,6 +18,7 @@
 package Hack.Controller;
 
 import java.io.File;
+import java.net.URL;
 
 import javax.swing.JComponent;
 
@@ -29,12 +30,12 @@ public interface HackSimulatorGUI {
 	/**
 	 * Returns the name of the about information file.
 	 */
-	public String getAboutFileName();
+	public URL getAboutFileName();
 
 	/**
 	 * Returns the name of the help usage file.
 	 */
-	public String getUsageFileName();
+	public URL getUsageFileName();
 
 	/**
 	 * Opens the program file dialog for choosing a new program.
@@ -44,7 +45,7 @@ public interface HackSimulatorGUI {
 	/**
 	 * Sets the name of the html file that contains the "about" information.
 	 */
-	public void setAboutFileName(String fileName);
+	public void setAboutFileName(URL fileName);
 
 	/**
 	 * Displays the given component in the simulator. If another component is
@@ -56,7 +57,7 @@ public interface HackSimulatorGUI {
 	/**
 	 * Sets the name of the html file that contains the help usage.
 	 */
-	public void setUsageFileName(String fileName);
+	public void setUsageFileName(URL fileName);
 
 	/**
 	 * Sets the working dir name with the given one.

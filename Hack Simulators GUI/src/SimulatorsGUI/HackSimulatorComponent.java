@@ -18,6 +18,7 @@
 package SimulatorsGUI;
 
 import java.awt.Point;
+import java.net.URL;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -35,10 +36,10 @@ public abstract class HackSimulatorComponent extends JPanel implements HackSimul
 	protected JComponent currentAdditionalDisplay = null;
 
 	// The names of the help files
-	protected String usageFileName, aboutFileName;
+	protected URL usageFileName, aboutFileName;
 
 	@Override
-	public String getAboutFileName() {
+	public URL getAboutFileName() {
 		return aboutFileName;
 	}
 
@@ -48,12 +49,12 @@ public abstract class HackSimulatorComponent extends JPanel implements HackSimul
 	protected abstract Point getAdditionalDisplayLocation();
 
 	@Override
-	public String getUsageFileName() {
+	public URL getUsageFileName() {
 		return usageFileName;
 	}
 
 	@Override
-	public void setAboutFileName(String fileName) {
+	public void setAboutFileName(URL fileName) {
 		aboutFileName = fileName;
 	}
 
@@ -75,7 +76,7 @@ public abstract class HackSimulatorComponent extends JPanel implements HackSimul
 	}
 
 	@Override
-	public void setUsageFileName(String fileName) {
+	public void setUsageFileName(URL fileName) {
 		usageFileName = fileName;
 	}
 

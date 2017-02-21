@@ -19,6 +19,7 @@ package HackGUI;
 
 import java.awt.BorderLayout;
 import java.io.IOException;
+import java.net.URL;
 
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
@@ -47,13 +48,13 @@ public class HTMLViewFrame extends JFrame {
 	/**
 	 * Constructs a new HTMLViewFrame for the given HTML file.
 	 */
-	public HTMLViewFrame(String fileName) {
+	public HTMLViewFrame(URL fileName) {
 		setTitle("Help");
 		ep.setEditable(false);
 		ep.setContentType("text/html");
 
 		try {
-			ep.setPage("file:" + fileName);
+			ep.setPage(fileName);
 		} catch (IOException ioe) {
 			System.err.println("Error while reading file: " + fileName);
 			System.exit(-1);

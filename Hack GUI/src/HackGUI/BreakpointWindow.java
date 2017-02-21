@@ -173,15 +173,11 @@ public class BreakpointWindow extends JFrame implements MouseListener, Breakpoin
 		m_breakpointTable.setDefaultRenderer(m_breakpointTable.getColumnClass(0), m_coloredRenderer);
 		m_listeners = new Vector<BreakpointsChangedListener>();
 		setResizable(false);
-		
-		try {
-			m_okIcon = new ImageIcon(Paths.get(ClassLoader.getSystemResource("ok2.gif").toURI()).toString());
-			m_addIcon = new ImageIcon(Paths.get(ClassLoader.getSystemResource("smallplus.gif").toURI()).toString());
-			m_removeIcon = new ImageIcon(Paths.get(ClassLoader.getSystemResource("smallminus.gif").toURI()).toString());
-		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
+		ClassLoader classLoader = getClass().getClassLoader();
+		m_okIcon = new ImageIcon(classLoader.getResource("ok2.gif"));
+		m_addIcon = new ImageIcon(classLoader.getResource("smallplus.gif"));
+		m_removeIcon = new ImageIcon(classLoader.getResource("smallminus.gif"));
 
 		jbInit();
 	}

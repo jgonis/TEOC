@@ -153,28 +153,26 @@ public class ControllerComponent extends JFrame
 	public ControllerComponent() {
 		m_listeners = new Vector<ControllerEventListener>();
 		m_formatCombo = new TitledComboBox("Format:", "Numeric display format",
-				new String[] { "Decimal", "Hexa", "Binary" }, 75);
+				new String[]{"Decimal", "Hexa", "Binary"}, 75);
 		m_additionalDisplayCombo = new TitledComboBox("View:", "View options",
-				new String[] { "Script", "Output", "Compare", "Screen" }, 80);
+				new String[]{"Script", "Output", "Compare", "Screen"}, 80);
 		m_animationCombo = new TitledComboBox("Animate:", "Animtion type",
-				new String[] { "Program flow", "Program & data flow", "No animation" }, 135);
+				new String[]{"Program flow", "Program & data flow", "No animation"}, 135);
 		m_scriptComponent = new FileDisplayComponent();
 		m_outputComponent = new FileDisplayComponent();
 		m_comparisonComponent = new FileDisplayComponent();
-		
-		try {
-			m_rewindIcon = new ImageIcon(Paths.get(ClassLoader.getSystemResource("vcrrewind.gif").toURI()).toString());
-			m_ffwdIcon = new ImageIcon(Paths.get(ClassLoader.getSystemResource("vcrfastforward.gif").toURI()).toString());
-			m_singleStepIcon = new ImageIcon(Paths.get(ClassLoader.getSystemResource("vcrforward.gif").toURI()).toString());
-			m_stopIcon = new ImageIcon(Paths.get(ClassLoader.getSystemResource("vcrstop.gif").toURI()).toString());
-			m_breakIcon = new ImageIcon(Paths.get(ClassLoader.getSystemResource("redflag.gif").toURI()).toString());
-			m_loadProgramIcon = new ImageIcon(Paths.get(ClassLoader.getSystemResource("opendoc.gif").toURI()).toString());
-			m_scriptIcon = new ImageIcon(Paths.get(ClassLoader.getSystemResource("scroll.gif").toURI()).toString());
-		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+
+
+		ClassLoader classLoader = getClass().getClassLoader();
+		m_rewindIcon = new ImageIcon(classLoader.getResource("vcrrewind.gif"));
+		m_ffwdIcon = new ImageIcon(classLoader.getResource("vcrfastforward.gif"));
+		m_singleStepIcon = new ImageIcon(classLoader.getResource("vcrforward.gif"));
+		m_stopIcon = new ImageIcon(classLoader.getResource("vcrstop.gif"));
+		m_breakIcon = new ImageIcon(classLoader.getResource("redflag.gif"));
+		m_loadProgramIcon = new ImageIcon(classLoader.getResource("opendoc.gif"));
+		m_scriptIcon = new ImageIcon(classLoader.getResource("scroll.gif"));
+
+
 		init();
 		jbInit();
 	}

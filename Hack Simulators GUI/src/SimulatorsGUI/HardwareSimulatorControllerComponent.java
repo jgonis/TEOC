@@ -194,7 +194,8 @@ public class HardwareSimulatorControllerComponent extends ControllerComponent
 
 	// Initializing the eval button.
 	private void initEvalButton() throws URISyntaxException {
-		evalIcon = new ImageIcon(Paths.get(ClassLoader.getSystemResource( "calculator2.gif").toURI()).toString());
+		ClassLoader classLoader = getClass().getClassLoader();
+		evalIcon = new ImageIcon(classLoader.getResource("calculator2.gif"));
 		evalButton = new MouseOverJButton();
 		evalButton.setMaximumSize(new Dimension(39, 39));
 		evalButton.setMinimumSize(new Dimension(39, 39));
@@ -206,7 +207,8 @@ public class HardwareSimulatorControllerComponent extends ControllerComponent
 
 	// Initializing the load chip button.
 	private void initLoadChipButton() throws URISyntaxException {
-		loadChipIcon = new ImageIcon(Paths.get(ClassLoader.getSystemResource("chip.gif").toURI()).toString());
+		ClassLoader classLoader = getClass().getClassLoader();
+		loadChipIcon = new ImageIcon(classLoader.getResource("chip.gif"));
 		loadChipButton = new MouseOverJButton();
 		loadChipButton.setMaximumSize(new Dimension(39, 39));
 		loadChipButton.setMinimumSize(new Dimension(39, 39));
@@ -218,7 +220,8 @@ public class HardwareSimulatorControllerComponent extends ControllerComponent
 
 	// Initializing the tick tock button.
 	private void initTickTockButton() throws URISyntaxException {
-		tickTockIcon = new ImageIcon(Paths.get(ClassLoader.getSystemResource("clock2.gif").toURI()).toString() );
+		ClassLoader classLoader = getClass().getClassLoader();
+		tickTockIcon = new ImageIcon(classLoader.getResource("clock2.gif"));
 		tickTockButton = new MouseOverJButton();
 		tickTockButton.setMaximumSize(new Dimension(39, 39));
 		tickTockButton.setMinimumSize(new Dimension(39, 39));

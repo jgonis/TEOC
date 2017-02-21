@@ -15,6 +15,7 @@
  * MIT Press 2005. If you modify the contents of this file, please document and *
  * mark your changes clearly, for the benefit of others.                        *
  ********************************************************************************/
+
 import java.io.IOException;
 import java.nio.file.Paths;
 
@@ -34,7 +35,7 @@ import SimulatorsGUI.HardwareSimulatorControllerComponent;
 public class HardwareSimulatorMain {
 	/**
 	 * The command line Hardware Simulator program.
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	public static void main(String[] args) throws IOException {
@@ -44,16 +45,11 @@ public class HardwareSimulatorMain {
 			SwingUtilities.invokeLater(() -> {
 				HardwareSimulatorGUI simulatorGUI = new HardwareSimulatorComponent();
 				HardwareSimulatorControllerGUI controllerGUI = new HardwareSimulatorControllerComponent();
-
-				try {
-					new HardwareSimulatorApplication(controllerGUI, simulatorGUI,
-							Paths.get(ClassLoader.getSystemResource("defaultHW.txt").toURI()).toString(),
-							Paths.get(ClassLoader.getSystemResource("hwUsage.html").toURI()).toString(),
-							Paths.get(ClassLoader.getSystemResource("hwAbout.html").toURI()).toString());
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				new HardwareSimulatorApplication(controllerGUI,
+						simulatorGUI,
+						"defaultHW.txt",
+						"hwUsage.html",
+						"hwAbout.html");
 			});
 		} else {
 			new HackController(new HardwareSimulator(), args[0]);
