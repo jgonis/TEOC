@@ -36,15 +36,20 @@ public class HardwareSimulatorApplication extends HackApplication {
 	 * the names of the help files.
 	 */
 	public HardwareSimulatorApplication(HardwareSimulatorControllerGUI controllerComponent,
-			HardwareSimulatorGUI simulatorComponent, String defaultScript, String contentsFileName,
-			String aboutFileName) {
+	                                    HardwareSimulatorGUI simulatorComponent,
+	                                    String defaultScript,
+	                                    String contentsFileName,
+	                                    String aboutFileName)
+	{
 
 		super(new HardwareSimulator(simulatorComponent), controllerComponent, simulatorComponent, defaultScript,
 				contentsFileName, aboutFileName);
 	}
 
 	@Override
-	protected void createController(HackSimulator simulator, ControllerGUI controllerComponent, String defaultScript)
+	protected void createController(HackSimulator simulator,
+	                                ControllerGUI controllerComponent,
+	                                String defaultScript)
 			throws ScriptException, ControllerException {
 		new HardwareSimulatorController((HardwareSimulatorControllerGUI) controllerComponent,
 				(HardwareSimulator) simulator, defaultScript);

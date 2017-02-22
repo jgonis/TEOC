@@ -29,8 +29,13 @@ public abstract class HackApplication {
 	 * controller GUI component, the simulator GUI component, the default script
 	 * name and the names of the help files.
 	 */
-	public HackApplication(HackSimulator simulator, ControllerGUI controllerComponent,
-			HackSimulatorGUI simulatorComponent, String defaultScript, String usageFileName, String aboutFileName) {
+	public HackApplication(HackSimulator simulator,
+	                       ControllerGUI controllerComponent,
+	                       HackSimulatorGUI simulatorComponent,
+	                       String defaultScript,
+	                       String usageFileName,
+	                       String aboutFileName)
+	{
 		ClassLoader classLoader = getClass().getClassLoader();
 		try {
 			simulatorComponent.setUsageFileName(classLoader.getResource(usageFileName));
