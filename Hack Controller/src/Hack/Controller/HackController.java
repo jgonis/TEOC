@@ -49,7 +49,8 @@ public class HackController implements ControllerEventListener, ActionListener, 
 				System.runFinalization();
 				System.gc();
 				wait(300);
-			} catch (InterruptedException ie) {	}
+			} catch (InterruptedException ie) {
+			}
 
 			int count = 0;
 			int rounds = FASTFORWARD_SPEED_FUNCTION[currentSpeedUnit - 1];
@@ -62,7 +63,8 @@ public class HackController implements ControllerEventListener, ActionListener, 
 					count = 0;
 					try {
 						wait(1);
-					} catch (InterruptedException ie) {	}
+					} catch (InterruptedException ie) {
+					}
 				}
 
 				count++;
@@ -134,14 +136,14 @@ public class HackController implements ControllerEventListener, ActionListener, 
 	/**
 	 * The speed function for data flow animation.
 	 */
-	public static final float[] SPEED_FUNCTION = { 0f, 0.35f, 0.63f, 0.87f, 1f };
+	public static final float[] SPEED_FUNCTION = {0f, 0.35f, 0.63f, 0.87f, 1f};
 
 	// NUMERIC FORMATS:
 
 	/**
 	 * The speed function for fast forward mode.
 	 */
-	public static final int[] FASTFORWARD_SPEED_FUNCTION = { 500, 1000, 2000, 4000, 15000 };
+	public static final int[] FASTFORWARD_SPEED_FUNCTION = {500, 1000, 2000, 4000, 15000};
 
 	/**
 	 * Animation mode: Specifies using static display changes - displays value
@@ -343,15 +345,10 @@ public class HackController implements ControllerEventListener, ActionListener, 
 		m_breakpoints = new Vector<Breakpoint>();
 
 		ClassLoader classLoader = getClass().getClassLoader();
-		try {
-			defaultScriptFile = classLoader.getResource(defaultScriptName);
-			loadNewScript(defaultScriptFile, false);
-		} catch( IOException e) {
-			e.printStackTrace();
-		} catch( URISyntaxException e) {
-			System.out.println("uri!");
-			e.printStackTrace();
-		}
+
+		defaultScriptFile = classLoader.getResource(defaultScriptName);
+		loadNewScript(defaultScriptFile, false);
+
 		delays = new int[NUMBER_OF_SPEED_UNITS];
 		for (int i = 0; i < NUMBER_OF_SPEED_UNITS; i++) {
 			delays[i] = (int) (MAX_MS - (SPEED_FUNCTION[i] * (MAX_MS - MIN_MS)));
@@ -430,115 +427,115 @@ public class HackController implements ControllerEventListener, ActionListener, 
 	public void actionPerformed(ControllerEvent event) {
 		try {
 			switch (event.getAction()) {
-			case ControllerEvent.SINGLE_STEP:
-				displayMessage(lastEcho, true);
-				gui.disableSingleStep();
-				gui.disableFastForward();
-				gui.disableScript();
-				gui.disableRewind();
-				gui.enableStop();
-				Thread t = new Thread(singleStepTask);
-				t.start();
-				break;
-			case ControllerEvent.FAST_FORWARD:
-				displayMessage(lastEcho, true);
-				fastForward();
-				break;
-			case ControllerEvent.STOP:
-				if (animationMode == NO_DISPLAY_CHANGES) {
-					displayMessage("", false);
-				}
-				stopMode();
-				break;
-			case ControllerEvent.REWIND:
-				displayMessage("Script restarted", false);
-				rewind();
-				break;
-			case ControllerEvent.SPEED_CHANGE:
-				setSpeed(((Integer) event.getData()).intValue());
-				break;
-			case ControllerEvent.BREAKPOINTS_CHANGE:				
-					setBreakpoints((Vector<Breakpoint>) event.getData());
-				break;
-			case ControllerEvent.SCRIPT_CHANGE:
-				File file = (File) event.getData();
-				loadNewScript(file, true);
-				setAdditionalDisplay(SCRIPT_ADDITIONAL_DISPLAY);
-				saveWorkingDir(file);
-				rewind();
-				break;
-			case ControllerEvent.ANIMATION_MODE_CHANGE:
-				setAnimationModeTask.setMode(((Integer) event.getData()).intValue());
-				t = new Thread(setAnimationModeTask);
-				t.start();
-				break;
-			case ControllerEvent.NUMERIC_FORMAT_CHANGE:
-				setNumericFormatTask.setFormat(((Integer) event.getData()).intValue());
-				t = new Thread(setNumericFormatTask);
-				t.start();
-				break;
-			case ControllerEvent.ADDITIONAL_DISPLAY_CHANGE:
-				setAdditionalDisplay(((Integer) event.getData()).intValue());
-				break;
-			case ControllerEvent.DISABLE_ANIMATION_MODE_CHANGE:
-				gui.disableAnimationModes();
-				break;
-			case ControllerEvent.ENABLE_ANIMATION_MODE_CHANGE:
-				gui.enableAnimationModes();
-				break;
-			case ControllerEvent.DISABLE_SINGLE_STEP:
-				gui.disableSingleStep();
-				break;
-			case ControllerEvent.ENABLE_SINGLE_STEP:
-				gui.enableSingleStep();
-				break;
-			case ControllerEvent.DISABLE_FAST_FORWARD:
-				gui.disableFastForward();
-				break;
-			case ControllerEvent.ENABLE_FAST_FORWARD:
-				gui.enableFastForward();
-				break;
-			case ControllerEvent.LOAD_PROGRAM:
-				simulator.loadProgram();
-				break;
-			case ControllerEvent.HALT_PROGRAM:
-				displayMessage("End of program", false);
-				programHalted = true;
-				if (fastForwardRunning) {
+				case ControllerEvent.SINGLE_STEP:
+					displayMessage(lastEcho, true);
+					gui.disableSingleStep();
+					gui.disableFastForward();
+					gui.disableScript();
+					gui.disableRewind();
+					gui.enableStop();
+					Thread t = new Thread(singleStepTask);
+					t.start();
+					break;
+				case ControllerEvent.FAST_FORWARD:
+					displayMessage(lastEcho, true);
+					fastForward();
+					break;
+				case ControllerEvent.STOP:
+					if (animationMode == NO_DISPLAY_CHANGES) {
+						displayMessage("", false);
+					}
 					stopMode();
-				}
-				gui.disableSingleStep();
-				gui.disableFastForward();
-				break;
-			case ControllerEvent.CONTINUE_PROGRAM:
-				if (programHalted) {
-					programHalted = false;
+					break;
+				case ControllerEvent.REWIND:
+					displayMessage("Script restarted", false);
+					rewind();
+					break;
+				case ControllerEvent.SPEED_CHANGE:
+					setSpeed(((Integer) event.getData()).intValue());
+					break;
+				case ControllerEvent.BREAKPOINTS_CHANGE:
+					setBreakpoints((Vector<Breakpoint>) event.getData());
+					break;
+				case ControllerEvent.SCRIPT_CHANGE:
+					File file = (File) event.getData();
+					loadNewScript(file, true);
+					setAdditionalDisplay(SCRIPT_ADDITIONAL_DISPLAY);
+					saveWorkingDir(file);
+					rewind();
+					break;
+				case ControllerEvent.ANIMATION_MODE_CHANGE:
+					setAnimationModeTask.setMode(((Integer) event.getData()).intValue());
+					t = new Thread(setAnimationModeTask);
+					t.start();
+					break;
+				case ControllerEvent.NUMERIC_FORMAT_CHANGE:
+					setNumericFormatTask.setFormat(((Integer) event.getData()).intValue());
+					t = new Thread(setNumericFormatTask);
+					t.start();
+					break;
+				case ControllerEvent.ADDITIONAL_DISPLAY_CHANGE:
+					setAdditionalDisplay(((Integer) event.getData()).intValue());
+					break;
+				case ControllerEvent.DISABLE_ANIMATION_MODE_CHANGE:
+					gui.disableAnimationModes();
+					break;
+				case ControllerEvent.ENABLE_ANIMATION_MODE_CHANGE:
+					gui.enableAnimationModes();
+					break;
+				case ControllerEvent.DISABLE_SINGLE_STEP:
+					gui.disableSingleStep();
+					break;
+				case ControllerEvent.ENABLE_SINGLE_STEP:
+					gui.enableSingleStep();
+					break;
+				case ControllerEvent.DISABLE_FAST_FORWARD:
+					gui.disableFastForward();
+					break;
+				case ControllerEvent.ENABLE_FAST_FORWARD:
+					gui.enableFastForward();
+					break;
+				case ControllerEvent.LOAD_PROGRAM:
+					simulator.loadProgram();
+					break;
+				case ControllerEvent.HALT_PROGRAM:
+					displayMessage("End of program", false);
+					programHalted = true;
+					if (fastForwardRunning) {
+						stopMode();
+					}
+					gui.disableSingleStep();
+					gui.disableFastForward();
+					break;
+				case ControllerEvent.CONTINUE_PROGRAM:
+					if (programHalted) {
+						programHalted = false;
+						gui.enableSingleStep();
+						gui.enableFastForward();
+					}
+					break;
+				case ControllerEvent.DISABLE_MOVEMENT:
+					gui.disableSingleStep();
+					gui.disableFastForward();
+					gui.disableRewind();
+					break;
+				case ControllerEvent.ENABLE_MOVEMENT:
 					gui.enableSingleStep();
 					gui.enableFastForward();
-				}
-				break;
-			case ControllerEvent.DISABLE_MOVEMENT:
-				gui.disableSingleStep();
-				gui.disableFastForward();
-				gui.disableRewind();
-				break;
-			case ControllerEvent.ENABLE_MOVEMENT:
-				gui.enableSingleStep();
-				gui.enableFastForward();
-				gui.enableRewind();
-				break;
-			case ControllerEvent.DISPLAY_MESSAGE:
-				displayMessage((String) event.getData(), false);
-				break;
-			case ControllerEvent.DISPLAY_ERROR_MESSAGE:
-				if (timer.isRunning()) {
-					stopMode();
-				}
-				displayMessage((String) event.getData(), true);
-				break;
-			default:
-				doUnknownAction(event.getAction(), event.getData());
-				break;
+					gui.enableRewind();
+					break;
+				case ControllerEvent.DISPLAY_MESSAGE:
+					displayMessage((String) event.getData(), false);
+					break;
+				case ControllerEvent.DISPLAY_ERROR_MESSAGE:
+					if (timer.isRunning()) {
+						stopMode();
+					}
+					displayMessage((String) event.getData(), true);
+					break;
+				default:
+					doUnknownAction(event.getAction(), event.getData());
+					break;
 			}
 		} catch (ScriptException e) {
 			displayMessage(e.getMessage(), true);
@@ -690,8 +687,9 @@ public class HackController implements ControllerEventListener, ActionListener, 
 
 	/**
 	 * Executes an unknown controller action event.
-	 * @param action 
-	 * @param data 
+	 *
+	 * @param action
+	 * @param data
 	 */
 	protected void doUnknownAction(byte action, Object data) throws ControllerException {
 	}
@@ -749,7 +747,7 @@ public class HackController implements ControllerEventListener, ActionListener, 
 	protected File loadWorkingDir() {
 		String dir = ".";
 
-		try (BufferedReader r = new BufferedReader(new FileReader("bin/" + simulator.getName() + ".dat"))){
+		try (BufferedReader r = new BufferedReader(new FileReader("bin/" + simulator.getName() + ".dat"))) {
 			dir = r.readLine();
 		} catch (IOException ioe) {
 		}
@@ -768,80 +766,80 @@ public class HackController implements ControllerEventListener, ActionListener, 
 			redo = false;
 
 			switch (command.getCode()) {
-			case Command.SIMULATOR_COMMAND:
-				simulator.doCommand((String[]) command.getArg());
-				break;
-			case Command.OUTPUT_FILE_COMMAND:
-				doOutputFileCommand(command);
-				break;
-			case Command.COMPARE_TO_COMMAND:
-				doCompareToCommand(command);
-				break;
-			case Command.OUTPUT_LIST_COMMAND:
-				doOutputListCommand(command);
-				break;
-			case Command.OUTPUT_COMMAND:
-				doOutputCommand();
-				break;
-			case Command.ECHO_COMMAND:
-				doEchoCommand(command);
-				break;
-			case Command.CLEAR_ECHO_COMMAND:
-				doClearEchoCommand();
-				break;
-			case Command.BREAKPOINT_COMMAND:
-				doBreakpointCommand(command);
-				break;
-			case Command.CLEAR_BREAKPOINTS_COMMAND:
-				doClearBreakpointsCommand();
-				break;
-			case Command.REPEAT_COMMAND:
-				repeatCounter = ((Integer) command.getArg()).intValue();
-				loopCommandIndex = currentCommandIndex + 1;
-				redo = true;
-				break;
-			case Command.WHILE_COMMAND:
-				whileCondititon = (ScriptCondition) command.getArg();
-				loopCommandIndex = currentCommandIndex + 1;
-				if (!whileCondititon.compare(simulator)) {
-					// advance till the nearest end while command.
-					for (; script.getCommandAt(currentCommandIndex)
-							.getCode() != Command.END_WHILE_COMMAND; currentCommandIndex++) {
+				case Command.SIMULATOR_COMMAND:
+					simulator.doCommand((String[]) command.getArg());
+					break;
+				case Command.OUTPUT_FILE_COMMAND:
+					doOutputFileCommand(command);
+					break;
+				case Command.COMPARE_TO_COMMAND:
+					doCompareToCommand(command);
+					break;
+				case Command.OUTPUT_LIST_COMMAND:
+					doOutputListCommand(command);
+					break;
+				case Command.OUTPUT_COMMAND:
+					doOutputCommand();
+					break;
+				case Command.ECHO_COMMAND:
+					doEchoCommand(command);
+					break;
+				case Command.CLEAR_ECHO_COMMAND:
+					doClearEchoCommand();
+					break;
+				case Command.BREAKPOINT_COMMAND:
+					doBreakpointCommand(command);
+					break;
+				case Command.CLEAR_BREAKPOINTS_COMMAND:
+					doClearBreakpointsCommand();
+					break;
+				case Command.REPEAT_COMMAND:
+					repeatCounter = ((Integer) command.getArg()).intValue();
+					loopCommandIndex = currentCommandIndex + 1;
+					redo = true;
+					break;
+				case Command.WHILE_COMMAND:
+					whileCondititon = (ScriptCondition) command.getArg();
+					loopCommandIndex = currentCommandIndex + 1;
+					if (!whileCondititon.compare(simulator)) {
+						// advance till the nearest end while command.
+						for (; script.getCommandAt(currentCommandIndex)
+								.getCode() != Command.END_WHILE_COMMAND; currentCommandIndex++) {
+						}
 					}
-				}
-				redo = true; // whether the test was successful or not,
-								// the while command doesn't count
-				break;
-			case Command.END_SCRIPT_COMMAND:
-				scriptEnded = true;
-				stopMode();
+					redo = true; // whether the test was successful or not,
+					// the while command doesn't count
+					break;
+				case Command.END_SCRIPT_COMMAND:
+					scriptEnded = true;
+					stopMode();
 
-				if (gui != null) {
-					gui.disableSingleStep();
-					gui.disableFastForward();
-				}
-
-				try {
-					if (output != null) {
-						output.close();
+					if (gui != null) {
+						gui.disableSingleStep();
+						gui.disableFastForward();
 					}
 
-					if (comparisonFile != null) {
-						if (comparisonFailed) {
-							displayMessage("End of script - Comparison failure at line " + comparisonFailureLine, true);
-						} else {
-							displayMessage("End of script - Comparison ended successfully", false);
+					try {
+						if (output != null) {
+							output.close();
 						}
 
-						comparisonFile.close();
-					} else {
-						displayMessage("End of script", false);
-					}
-				} catch (IOException ioe) {
-					throw new ControllerException("Could not read comparison file");
-				}
+						if (comparisonFile != null) {
+							if (comparisonFailed) {
+								displayMessage("End of script - Comparison failure at line " + comparisonFailureLine, true);
+							} else {
+								displayMessage("End of script - Comparison ended successfully", false);
+							}
 
-				break;
+							comparisonFile.close();
+						} else {
+							displayMessage("End of script", false);
+						}
+					} catch (IOException ioe) {
+						throw new ControllerException("Could not read comparison file");
+					}
+
+					break;
 			}
 
 			// advance script line pointer
@@ -910,18 +908,18 @@ public class HackController implements ControllerEventListener, ActionListener, 
 	@Override
 	public void programChanged(ProgramEvent event) {
 		switch (event.getType()) {
-		case ProgramEvent.SAVE:
-			updateProgramFile(event.getProgramFileName());
-			break;
-		case ProgramEvent.LOAD:
-			updateProgramFile(event.getProgramFileName());
-			if (!singleStepLocked) {
-				reloadDefaultScript();
-			}
-			break;
-		case ProgramEvent.CLEAR:
-			gui.setTitle(simulator.getName() + getVersionString());
-			break;
+			case ProgramEvent.SAVE:
+				updateProgramFile(event.getProgramFileName());
+				break;
+			case ProgramEvent.LOAD:
+				updateProgramFile(event.getProgramFileName());
+				if (!singleStepLocked) {
+					reloadDefaultScript();
+				}
+				break;
+			case ProgramEvent.CLEAR:
+				gui.setTitle(simulator.getName() + getVersionString());
+				break;
 		}
 	}
 
@@ -1025,25 +1023,26 @@ public class HackController implements ControllerEventListener, ActionListener, 
 
 		try (PrintWriter r = new PrintWriter(new FileWriter("bin/" + simulator.getName() + ".dat"))) {
 			r.println(dir.getAbsolutePath());
-		} catch (IOException ioe) {	}
+		} catch (IOException ioe) {
+		}
 	}
 
 	// Sets the additional display with the given code.
 	private void setAdditionalDisplay(int additionalDisplayCode) {
 
 		switch (additionalDisplayCode) {
-		case NO_ADDITIONAL_DISPLAY:
-			simulator.getGUI().setAdditionalDisplay(null);
-			break;
-		case SCRIPT_ADDITIONAL_DISPLAY:
-			simulator.getGUI().setAdditionalDisplay(gui.getScriptComponent());
-			break;
-		case OUTPUT_ADDITIONAL_DISPLAY:
-			simulator.getGUI().setAdditionalDisplay(gui.getOutputComponent());
-			break;
-		case COMPARISON_ADDITIONAL_DISPLAY:
-			simulator.getGUI().setAdditionalDisplay(gui.getComparisonComponent());
-			break;
+			case NO_ADDITIONAL_DISPLAY:
+				simulator.getGUI().setAdditionalDisplay(null);
+				break;
+			case SCRIPT_ADDITIONAL_DISPLAY:
+				simulator.getGUI().setAdditionalDisplay(gui.getScriptComponent());
+				break;
+			case OUTPUT_ADDITIONAL_DISPLAY:
+				simulator.getGUI().setAdditionalDisplay(gui.getOutputComponent());
+				break;
+			case COMPARISON_ADDITIONAL_DISPLAY:
+				simulator.getGUI().setAdditionalDisplay(gui.getComparisonComponent());
+				break;
 		}
 
 		gui.setAdditionalDisplay(additionalDisplayCode);
