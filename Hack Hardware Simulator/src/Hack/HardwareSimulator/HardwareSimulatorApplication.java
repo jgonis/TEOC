@@ -19,6 +19,8 @@ package Hack.HardwareSimulator;
 
 import Hack.Controller.*;
 
+import java.net.URL;
+
 /**
  * A HardwareSimulator application.
  */
