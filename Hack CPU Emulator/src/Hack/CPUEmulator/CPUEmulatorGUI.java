@@ -17,70 +17,67 @@
 
 package Hack.CPUEmulator;
 
-import java.awt.event.KeyListener;
-
-import Hack.ComputerParts.BusGUI;
-import Hack.ComputerParts.PointedMemoryGUI;
-import Hack.ComputerParts.RegisterGUI;
-import Hack.Controller.HackSimulatorGUI;
+import Hack.Controller.*;
+import Hack.ComputerParts.*;
+import java.awt.event.*;
 
 /**
  * An interface for a GUI of the CPU emulator.
  */
 public interface CPUEmulatorGUI extends HackSimulatorGUI {
 
-	/**
-	 * Registers the given listener to listen to key events.
-	 */
-	public void addKeyListener(KeyListener listener);
+    /**
+     * Returns the bus GUI component.
+     */
+    public BusGUI getBus();
 
-	/**
-	 * Returns the A register GUI component.
-	 */
-	public RegisterGUI getA();
+    /**
+     * Returns the screen GUI component.
+     */
+    public ScreenGUI getScreen();
 
-	/**
-	 * Returns the ALU GUI component.
-	 */
-	public ALUGUI getALU();
+    /**
+     * Returns the keyboard GUI component.
+     */
+    public KeyboardGUI getKeyboard();
 
-	/**
-	 * Returns the bus GUI component.
-	 */
-	public BusGUI getBus();
+    /**
+     * Returns the RAM GUI component.
+     */
+    public PointedMemoryGUI getRAM();
 
-	/**
-	 * Returns the D register GUI component.
-	 */
-	public RegisterGUI getD();
+    /**
+     * Returns the ROM GUI component.
+     */
+    public ROMGUI getROM();
 
-	/**
-	 * Returns the keyboard GUI component.
-	 */
-	public KeyboardGUI getKeyboard();
+    /**
+     * Returns the A register GUI component.
+     */
+    public RegisterGUI getA();
 
-	/**
-	 * Returns the PC register GUI component.
-	 */
-	public RegisterGUI getPC();
+    /**
+     * Returns the D register GUI component.
+     */
+    public RegisterGUI getD();
 
-	/**
-	 * Returns the RAM GUI component.
-	 */
-	public PointedMemoryGUI getRAM();
+    /**
+     * Returns the PC register GUI component.
+     */
+    public RegisterGUI getPC();
 
-	/**
-	 * Returns the ROM GUI component.
-	 */
-	public ROMGUI getROM();
+    /**
+     * Returns the ALU GUI component.
+     */
+    public ALUGUI getALU();
 
-	/**
-	 * Returns the screen GUI component.
-	 */
-	public ScreenGUI getScreen();
+    /**
+     * Registers the given listener to listen to key events.
+     */
+    public void addKeyListener(KeyListener listener);
 
-	/**
-	 * Sets the focus on the CPUEmulator's frame
-	 */
-	public void requestFocus();
+    /**
+     * Sets the focus on the CPUEmulator's frame
+     */
+    public void requestFocus();
 }

@@ -17,53 +17,43 @@
 
 package HackGUI;
 
-import java.awt.Dimension;
-import java.awt.Rectangle;
-
-import javax.swing.JTable;
-import javax.swing.table.TableModel;
+import javax.swing.*;
+import javax.swing.table.*;
+import java.awt.*;
 
 /**
  * A table with a pre-determind width.
  */
 public class WideTable extends JTable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -2031038100218191424L;
-	// The width of the table.
-	private int width;
+    // The width of the table.
+    private int width;
 
-	/**
-	 * Constructs a new WideTable with the given model and width.
-	 */
-	public WideTable(TableModel model, int width) {
-		super(model);
-		this.width = width;
-	}
+    /**
+     * Constructs a new WideTable with the given model and width.
+     */
+    public WideTable(TableModel model, int width) {
+        super(model);
+        this.width = width;
+    }
 
-	@Override
-	public Rectangle getBounds() {
-		Rectangle rect = super.getBounds();
-		rect.width = width;
-		return rect;
-	}
+    public Dimension getSize() {
+        return new Dimension(width, super.getHeight());
+    }
 
-	@Override
-	public Dimension getPreferredSize() {
-		Dimension dimension = super.getPreferredSize();
-		dimension.width = width;
-		return dimension;
-	}
+    public Dimension getPreferredSize() {
+        Dimension dimension = super.getPreferredSize();
+        dimension.width = width;
+        return dimension;
+    }
 
-	@Override
-	public Dimension getSize() {
-		return new Dimension(width, super.getHeight());
-	}
+    public Rectangle getBounds() {
+        Rectangle rect = super.getBounds();
+        rect.width = width;
+        return rect;
+    }
 
-	@Override
-	public int getWidth() {
-		return width;
-	}
+    public int getWidth() {
+        return width;
+    }
 }

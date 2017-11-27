@@ -17,340 +17,296 @@
 
 package HackGUI;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
+import Hack.ComputerParts.*;
+import Hack.Events.*;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 import java.util.Vector;
-
-import javax.swing.BorderFactory;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
-
-import Hack.ComputerParts.ComputerPartEvent;
-import Hack.ComputerParts.ComputerPartEventListener;
-import Hack.ComputerParts.RegisterGUI;
-import Hack.Events.ErrorEvent;
-import Hack.Events.ErrorEventListener;
 
 /**
  * This class represents the GUI of a register.
  */
 public class RegisterComponent extends JPanel implements RegisterGUI {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 4158744280056916658L;
+    // The label with the name of this register.
+    protected JLabel registerName = new JLabel();
 
-	// The label with the name of this register.
-	protected JLabel registerName = new JLabel();
+    // The text field containing the value of this register.
+    protected JTextField registerValue = new JTextField();
 
-	// The text field containing the value of this register.
-	protected JTextField registerValue = new JTextField();
+    // A vector containing the listeners to this object.
+    private Vector listeners;
 
-	// A vector containing the listeners to this object.
-	private Vector<ComputerPartEventListener> listeners;
+    // A vector containing the error listeners to this object.
+    private Vector errorEventListeners;
 
-	// A vector containing the error listeners to this object.
-	private Vector<ErrorEventListener> errorEventListeners;
+    // The value of the register
+    protected short value;
 
-	// The value of the register
-	protected short value;
+    // The old value of this component
+    protected String oldValue;
 
-	// The old value of this component
-	protected String oldValue;
+    // The format in which the value is represented: decimal, hexadecimal or binary format.
+    protected int dataFormat;
 
-	// The format in which the value is represented: decimal, hexadecimal or
-	// binary format.
-	protected int dataFormat;
+    // The null value of this component.
+    protected short nullValue;
 
-	// The null value of this component.
-	protected short nullValue;
+    // A boolean field specifying if the null value should be activated or not.
+    protected boolean hideNullValue;
 
-	// A boolean field specifying if the null value should be activated or not.
-	protected boolean hideNullValue;
+    /**
+     * Constructs a new RegisterComponent.
+     */
+    public RegisterComponent() {
+        dataFormat = Format.DEC_FORMAT;
+        listeners = new Vector();
+        errorEventListeners = new Vector();
+        // initializes the register
+        value = 0;
+        registerValue.setText(translateValueToString(value));
 
-	/**
-	 * Constructs a new RegisterComponent.
-	 */
-	public RegisterComponent() {
-		dataFormat = Format.DEC_FORMAT;
-		listeners = new Vector<ComputerPartEventListener>();
-		errorEventListeners = new Vector<ErrorEventListener>();
-		// initializes the register
-		value = 0;
-		registerValue.setText(translateValueToString(value));
+        jbInit();
+        setVisible(true);
+    }
 
-		jbInit();
-		setVisible(true);
-	}
+    /**
+     * Sets the null value of this component.
+     */
+    public void setNullValue (short newValue, boolean hideNullValue) {
+        nullValue = newValue;
+        this.hideNullValue = hideNullValue;
+        if (value == nullValue && hideNullValue)
+            oldValue = "";
+    }
 
-	/**
-	 * Registers the given ErrorEventListener as a listener to this GUI.
-	 */
-	@Override
-	public void addErrorListener(ErrorEventListener listener) {
-		errorEventListeners.addElement(listener);
-	}
+    public void addListener(ComputerPartEventListener listener) {
+        listeners.addElement(listener);
+    }
 
-	@Override
-	public void addListener(ComputerPartEventListener listener) {
-		listeners.addElement(listener);
-	}
+    public void removeListener(ComputerPartEventListener listener) {
+        listeners.removeElement(listener);
+    }
 
-	/**
-	 * Disables user input into the source.
-	 */
-	@Override
-	public void disableUserInput() {
-		registerValue.setEnabled(false);
-	}
+    public void notifyListeners(int address, short value) {
+        ComputerPartEvent event = new ComputerPartEvent(this,0,value);
+        for(int i=0;i<listeners.size();i++) {
+            ((ComputerPartEventListener)listeners.elementAt(i)).valueChanged(event);
+        }
+    }
 
-	/**
-	 * Enables user input into the source.
-	 */
-	@Override
-	public void enableUserInput() {
-		registerValue.setEnabled(true);
-	}
+    public void notifyListeners() {
+        ComputerPartEvent event = new ComputerPartEvent(this);
+        for(int i=0;i<listeners.size();i++) {
+            ((ComputerPartEventListener)listeners.elementAt(i)).guiGainedFocus();
+        }
+    }
 
-	/**
-	 * flashes the value at the given index.
-	 */
-	@Override
-	public void flash(int index) {
-		registerValue.setBackground(Color.orange);
-	}
+    /**
+     * Registers the given ErrorEventListener as a listener to this GUI.
+     */
+    public void addErrorListener(ErrorEventListener listener) {
+        errorEventListeners.addElement(listener);
+    }
 
-	/**
-	 * Returns the coordinates of the top left corner of the value at the given
-	 * index.
-	 */
-	@Override
-	public Point getCoordinates(int index) {
-		Point location = getLocation();
-		return new Point((int) location.getX() + registerValue.getX(), (int) location.getY() + registerValue.getY());
-	}
+    /**
+     * Un-registers the given ErrorEventListener from being a listener to this GUI.
+     */
+    public void removeErrorListener(ErrorEventListener listener) {
+        errorEventListeners.removeElement(listener);
+    }
 
-	/**
-	 * Returns the value at the given index in its string representation.
-	 */
-	@Override
-	public String getValueAsString(int index) {
-		return registerValue.getText();
-	}
+    /**
+     * Notifies all the ErrorEventListener on an error in this gui by
+     * creating an ErrorEvent (with the error message) and sending it
+     * using the errorOccured method to all the listeners.
+     */
+    public void notifyErrorListeners(String errorMessage) {
+        ErrorEvent event = new ErrorEvent(this, errorMessage);
+        for (int i=0; i<errorEventListeners.size(); i++)
+            ((ErrorEventListener)errorEventListeners.elementAt(i)).errorOccured(event);
+    }
 
-	/**
-	 * hides the existing flash.
-	 */
-	@Override
-	public void hideFlash() {
-		registerValue.setBackground(Color.white);
-	}
+    /**
+     * Enables user input into the source.
+     */
+    public void enableUserInput() {
+        registerValue.setEnabled(true);
+    }
 
-	/**
-	 * Hides all highlightes.
-	 */
-	@Override
-	public void hideHighlight() {
-		registerValue.setForeground(Color.black);
-	}
+    /**
+     * Disables user input into the source.
+     */
+    public void disableUserInput() {
+        registerValue.setEnabled(false);
+    }
 
-	/**
-	 * Highlights the value at the given index.
-	 */
-	@Override
-	public void highlight(int index) {
-		registerValue.setForeground(Color.blue);
-	}
+    /**
+     * Translates a given short to a string according to the current format.
+     */
+    protected String translateValueToString(short value) {
+        if(hideNullValue) {
+            if(value==nullValue)
+                return "";
+            else return Format.translateValueToString(value, dataFormat);
+        }
+        else
+            return Format.translateValueToString(value, dataFormat);
+    }
 
-	// Initializes this register.
-	private void jbInit() {
-		registerValue.addFocusListener(new FocusListener() {
-			@Override
-			public void focusGained(FocusEvent e) {
-				registerValue_focusGained();
-			}
+    /**
+     * Sets the value of the register with the given value.
+     */
+    public void setValueAt(int index, short value) {
+        String data = translateValueToString(value);
+        this.value = value;
+        registerValue.setText(data);
+    }
 
-			@Override
-			public void focusLost(FocusEvent e) {
-				registerValue_focusLost();
-			}
-		});
+    /**
+     * Resets the contents of this RegisterComponent.
+     */
+    public void reset() {
+        value = nullValue;
+        if (hideNullValue)
+            oldValue = "";
+        registerValue.setText(translateValueToString(nullValue));
+        hideFlash();
+        hideHighlight();
+    }
 
-		registerName.setFont(Utilities.labelsFont);
-		registerName.setBounds(new Rectangle(8, 3, 41, 18));
-		this.setLayout(null);
-		registerValue.setFont(Utilities.valueFont);
-		registerValue.setDisabledTextColor(Color.black);
-		registerValue.setHorizontalAlignment(SwingConstants.RIGHT);
-		registerValue.setBounds(new Rectangle(36, 3, 124, 18));
-		registerValue.addActionListener(e -> registerValue_actionPerformed());
-		this.add(registerValue, null);
-		this.add(registerName, null);
+    /**
+     * Returns the coordinates of the top left corner of the value at the given index.
+     */
+    public Point getCoordinates(int index) {
+        Point location = getLocation();
+        return new Point((int)location.getX() + registerValue.getX() , (int)location.getY() + registerValue.getY());
+    }
 
-		setPreferredSize(new Dimension(164, 24));
-		setSize(164, 24);
-		setBorder(BorderFactory.createEtchedBorder());
-	}
+    /**
+     * Hides all highlightes.
+     */
+    public void hideHighlight() {
+        registerValue.setForeground(Color.black);
+    }
 
-	/**
-	 * Notifies all the ErrorEventListener on an error in this gui by creating
-	 * an ErrorEvent (with the error message) and sending it using the
-	 * errorOccured method to all the listeners.
-	 */
-	@Override
-	public void notifyErrorListeners(String errorMessage) {
-		ErrorEvent event = new ErrorEvent(this, errorMessage);
-		for (int i = 0; i < errorEventListeners.size(); i++) {
-			errorEventListeners.elementAt(i).errorOccured(event);
-		}
-	}
+    /**
+     * Highlights the value at the given index.
+     */
+    public void highlight(int index) {
+        registerValue.setForeground(Color.blue);
+    }
 
-	@Override
-	public void notifyListeners() {
-		new ComputerPartEvent(this);
-		for (int i = 0; i < listeners.size(); i++) {
-			listeners.elementAt(i).guiGainedFocus();
-		}
-	}
+    /**
+     * flashes the value at the given index.
+     */
+    public void flash (int index) {
+        registerValue.setBackground(Color.orange);
+    }
 
-	@Override
-	public void notifyListeners(int address, short value) {
-		ComputerPartEvent event = new ComputerPartEvent(this, 0, value);
-		for (int i = 0; i < listeners.size(); i++) {
-			listeners.elementAt(i).valueChanged(event);
-		}
-	}
+    /**
+     * hides the existing flash.
+     */
+    public void hideFlash () {
+        registerValue.setBackground(Color.white);
+    }
 
-	/**
-	 * Implements the action of changing the text of this register.
-	 */
-	public void registerValue_actionPerformed() {
-		valueChanged();
-	}
+    /**
+     * Sets the enabled range of this segment.
+     * Any address outside this range will be disabled for user input.
+     * If gray is true, addresses outside the range will be gray colored.
+     */
+    public void setEnabledRange(int start, int end, boolean gray) {
+    }
 
-	/**
-	 * The action of the text field gaining the focus.
-	 */
-	public void registerValue_focusGained() {
-		oldValue = registerValue.getText();
-		notifyListeners();
-	}
+    /**
+     * Returns the value at the given index in its string representation.
+     */
+    public String getValueAsString(int index) {
+        return registerValue.getText();
+    }
 
-	/**
-	 * The action of the text field loosing the focus.
-	 */
-	public void registerValue_focusLost() {
-		valueChanged();
-	}
+    /**
+     * Sets the numeric format with the given code (out of the format constants
+     * in HackController).
+     */
+    public void setNumericFormat(int formatCode) {
+        dataFormat = formatCode;
+        registerValue.setText(Format.translateValueToString(value,formatCode));
+    }
 
-	/**
-	 * Un-registers the given ErrorEventListener from being a listener to this
-	 * GUI.
-	 */
-	@Override
-	public void removeErrorListener(ErrorEventListener listener) {
-		errorEventListeners.removeElement(listener);
-	}
+    // Implementing the action of changing the register's value.
+    private void valueChanged() {
+        String text = registerValue.getText();
+        if(!text.equals(oldValue)) {
+            try {
+                value = Format.translateValueToShort(text,dataFormat);
+                notifyListeners(0,value);
+                oldValue = text;
+            }
+            catch (NumberFormatException nfe) {
+                notifyErrorListeners("Illegal value");
+                registerValue.setText(translateValueToString(value));
+            }
+        }
+    }
 
-	@Override
-	public void removeListener(ComputerPartEventListener listener) {
-		listeners.removeElement(listener);
-	}
+    public void setName(String name) {
+        registerName.setText(name);
+    }
 
-	/**
-	 * Resets the contents of this RegisterComponent.
-	 */
-	@Override
-	public void reset() {
-		value = nullValue;
-		if (hideNullValue) {
-			oldValue = "";
-		}
-		registerValue.setText(translateValueToString(nullValue));
-		hideFlash();
-		hideHighlight();
-	}
+    // Initializes this register.
+    private void jbInit() {
+        registerValue.addFocusListener(new FocusListener() {
+            public void focusGained(FocusEvent e) {
+                registerValue_focusGained(e);
+            }
 
-	/**
-	 * Sets the enabled range of this segment. Any address outside this range
-	 * will be disabled for user input. If gray is true, addresses outside the
-	 * range will be gray colored.
-	 */
-	@Override
-	public void setEnabledRange(int start, int end, boolean gray) {
-	}
+            public void focusLost(FocusEvent e) {
+                registerValue_focusLost(e);
+            }
+        });
 
-	@Override
-	public void setName(String name) {
-		registerName.setText(name);
-	}
+        registerName.setFont(Utilities.labelsFont);
+        registerName.setBounds(new Rectangle(8, 3, 41, 18));
+        this.setLayout(null);
+        registerValue.setFont(Utilities.valueFont);
+        registerValue.setDisabledTextColor(Color.black);
+        registerValue.setHorizontalAlignment(SwingConstants.RIGHT);
+        registerValue.setBounds(new Rectangle(36, 3, 124, 18));
+        registerValue.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                registerValue_actionPerformed(e);
+            }
+        });
+        this.add(registerValue, null);
+        this.add(registerName, null);
 
-	/**
-	 * Sets the null value of this component.
-	 */
-	@Override
-	public void setNullValue(short newValue, boolean hideNullValue) {
-		nullValue = newValue;
-		this.hideNullValue = hideNullValue;
-		if ((value == nullValue) && hideNullValue) {
-			oldValue = "";
-		}
-	}
+        setPreferredSize(new Dimension(164, 24));
+        setSize(164, 24);
+        setBorder(BorderFactory.createEtchedBorder());
+    }
 
-	/**
-	 * Sets the numeric format with the given code (out of the format constants
-	 * in HackController).
-	 */
-	@Override
-	public void setNumericFormat(int formatCode) {
-		dataFormat = formatCode;
-		registerValue.setText(Format.translateValueToString(value, formatCode));
-	}
+    /**
+     * The action of the text field gaining the focus.
+     */
+    public void registerValue_focusGained(FocusEvent e) {
+        oldValue = registerValue.getText();
+        notifyListeners();
+    }
 
-	/**
-	 * Sets the value of the register with the given value.
-	 */
-	@Override
-	public void setValueAt(int index, short value) {
-		String data = translateValueToString(value);
-		this.value = value;
-		registerValue.setText(data);
-	}
+    /**
+     * The action of the text field loosing the focus.
+     */
+    public void registerValue_focusLost(FocusEvent e) {
+        valueChanged();
+    }
 
-	/**
-	 * Translates a given short to a string according to the current format.
-	 */
-	protected String translateValueToString(short value) {
-		if (hideNullValue) {
-			if (value == nullValue) {
-				return "";
-			} else {
-				return Format.translateValueToString(value, dataFormat);
-			}
-		} else {
-			return Format.translateValueToString(value, dataFormat);
-		}
-	}
-
-	// Implementing the action of changing the register's value.
-	private void valueChanged() {
-		String text = registerValue.getText();
-		if (!text.equals(oldValue)) {
-			try {
-				value = Format.translateValueToShort(text, dataFormat);
-				notifyListeners(0, value);
-				oldValue = text;
-			} catch (NumberFormatException nfe) {
-				notifyErrorListeners("Illegal value");
-				registerValue.setText(translateValueToString(value));
-			}
-		}
-	}
+    /**
+     * Implements the action of changing the text of this register.
+     */
+    public void registerValue_actionPerformed(ActionEvent e) {
+        valueChanged();
+    }
 }

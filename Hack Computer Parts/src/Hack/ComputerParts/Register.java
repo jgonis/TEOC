@@ -17,85 +17,81 @@
 
 package Hack.ComputerParts;
 
+import java.util.EventObject;
+
 /**
  * A computer register. Holds a 16-bit value.
  */
-public class Register extends InteractiveValueComputerPart {
+public class Register extends InteractiveValueComputerPart implements ComputerPartEventListener {
 
-	// The 16-bit value.
-	protected short m_value;
+    // The 16-bit value.
+    protected short value;
 
-	// The register's gui component
-	protected RegisterGUI m_gui;
+    // The register's gui component
+    protected RegisterGUI gui;
 
-	/**
-	 * Constructs a new register with the given GUI component (optional).
-	 */
-	public Register(RegisterGUI gui) {
-		super(gui != null);
-		init(gui);
-	}
+    /**
+     * Constructs a new register with the given GUI component and the legal
+     * values range.
+     */
+    public Register(RegisterGUI gui, short minValue, short maxValue) {
+        super(gui != null, minValue, maxValue);
+        init(gui);
+    }
 
-	/**
-	 * Constructs a new register with the given GUI component and the legal
-	 * values range.
-	 */
-	public Register(RegisterGUI gui, short minValue, short maxValue) {
-		super(gui != null, minValue, maxValue);
-		init(gui);
-	}
+    /**
+     * Constructs a new register with the given GUI component (optional).
+     */
+    public Register(RegisterGUI gui) {
+        super(gui != null);
+        init(gui);
+    }
 
-	@Override
-	public void doSetValueAt(int index, short value) {
-		m_value = value;
-	}
+    // Initalizes the register
+    private void init(RegisterGUI gui) {
+        this.gui = gui;
 
-	/**
-	 * Returns the value of the register.
-	 */
-	public short get() {
-		return getValueAt(0);
-	}
+        if (hasGUI) {
+            gui.addListener(this);
+            gui.addErrorListener(this);
+        }
+    }
 
-	@Override
-	public ComputerPartGUI getGUI() {
-		return m_gui;
-	}
+    /**
+     * Returns the value of the register.
+     */
+    public short get() {
+        return getValueAt(0);
+    }
 
-	@Override
-	public short getValueAt(int index) {
-		return m_value;
-	}
+    /**
+     * Sets the value of the register with the given value.
+     */
+    public void store(short value) {
+        setValueAt(0, value, false);
+    }
 
-	// Initalizes the register
-	private void init(RegisterGUI gui) {
-		m_gui = gui;
+    public short getValueAt(int index) {
+        return value;
+    }
 
-		if (hasGUI) {
-			gui.addListener(this);
-			gui.addErrorListener(this);
-		}
-	}
+    public void doSetValueAt(int index, short value) {
+        this.value = value;
+    }
 
-	@Override
-	public void refreshGUI() {
-		super.refreshGUI();
+    public void reset() {
+        super.reset();
+        value = nullValue;
+    }
 
-		if (displayChanges) {
-			quietUpdateGUI(0, m_value);
-		}
-	}
+    public ComputerPartGUI getGUI() {
+        return gui;
+    }
 
-	@Override
-	public void reset() {
-		super.reset();
-		m_value = nullValue;
-	}
+    public void refreshGUI() {
+        super.refreshGUI();
 
-	/**
-	 * Sets the value of the register with the given value.
-	 */
-	public void store(short value) {
-		setValueAt(0, value, false);
-	}
+        if (displayChanges)
+            quietUpdateGUI(0, value);
+    }
 }

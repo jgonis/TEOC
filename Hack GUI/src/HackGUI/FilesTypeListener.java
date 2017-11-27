@@ -22,9 +22,14 @@ package HackGUI;
  */
 public interface FilesTypeListener {
 
-	/**
-	 * Called when the names of the files were changed. The event contains the
-	 * three strings representing the names of the files.
-	 */
-	public void filesNamesChanged(FilesTypeEvent event);
+    /**
+     * Called when the names of the files were changed.
+     * The event contains the three strings representing the names of the
+     * files.
+     */
+    public void filesNamesChanged(FilesTypeEvent event);
 }
+
+
+
+

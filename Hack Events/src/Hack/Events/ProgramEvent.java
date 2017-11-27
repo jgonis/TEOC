@@ -24,56 +24,51 @@ import java.util.EventObject;
  */
 public class ProgramEvent extends EventObject {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 6937848154531709930L;
+    /**
+     * event type for notifying on a new loaded program.
+     * supplied data = program file name (String)
+     */
+    public static final byte LOAD = 1;
 
-	/**
-	 * event type for notifying on a new loaded program. supplied data = program
-	 * file name (String)
-	 */
-	public static final byte LOAD = 1;
+    /**
+     * event type for notifying on a new saved program.
+     * supplied data = program file name (String)
+     */
+    public static final byte SAVE = 2;
 
-	/**
-	 * event type for notifying on a new saved program. supplied data = program
-	 * file name (String)
-	 */
-	public static final byte SAVE = 2;
+    /**
+     * event type for notifying that the program was cleared.
+     * supplied data = null
+     */
+    public static final byte CLEAR = 3;
 
-	/**
-	 * event type for notifying that the program was cleared. supplied data =
-	 * null
-	 */
-	public static final byte CLEAR = 3;
+    // The program's file name.
+    private String programFileName;
 
-	// The program's file name.
-	private String programFileName;
+    // The type of the event.
+    private byte eventType;
 
-	// The type of the event.
-	private byte eventType;
+    /**
+     * Constructs a new ProgramEvent with the given source, event type and the new program
+     * file name (or null if not applicable).
+     */
+    public ProgramEvent(Object source, byte eventType, String programFileName) {
+        super(source);
+        this.programFileName = programFileName;
+        this.eventType = eventType;
+    }
 
-	/**
-	 * Constructs a new ProgramEvent with the given source, event type and the
-	 * new program file name (or null if not applicable).
-	 */
-	public ProgramEvent(Object source, byte eventType, String programFileName) {
-		super(source);
-		this.programFileName = programFileName;
-		this.eventType = eventType;
-	}
+    /**
+     * Returns the new program's file name.
+     */
+    public String getProgramFileName() {
+        return programFileName;
+    }
 
-	/**
-	 * Returns the new program's file name.
-	 */
-	public String getProgramFileName() {
-		return programFileName;
-	}
-
-	/**
-	 * Returns the event type.
-	 */
-	public byte getType() {
-		return eventType;
-	}
+    /**
+     * Returns the event type.
+     */
+    public byte getType() {
+        return eventType;
+    }
 }

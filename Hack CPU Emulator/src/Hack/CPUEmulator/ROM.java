@@ -17,176 +17,165 @@
 
 package Hack.CPUEmulator;
 
-import java.util.Vector;
-
-import Hack.Assembler.AssemblerException;
-import Hack.Assembler.HackAssemblerTranslator;
-import Hack.ComputerParts.ComputerPartEvent;
-import Hack.ComputerParts.PointedMemory;
-import Hack.Controller.HackController;
-import Hack.Controller.ProgramException;
-import Hack.Events.ProgramEvent;
-import Hack.Events.ProgramEventListener;
-import Hack.Utilities.Definitions;
+import java.util.*;
+import Hack.Utilities.*;
+import Hack.ComputerParts.*;
+import Hack.Controller.*;
+import Hack.Events.*;
+import Hack.Assembler.*;
 
 /**
- * A Read Only Memory. Has methods for loading a machine language file (.hack)
- * and for setting a pointer (a specific address in the ROM for GUI perposes).
+ * A Read Only Memory. Has methods for loading a machine language file (.hack) and for
+ * setting a pointer (a specific address in the ROM for GUI perposes).
  */
-public class ROM extends PointedMemory implements ProgramEventListener {
-	class ROMLoadProgramTask implements Runnable {
+public class ROM extends PointedMemory implements ProgramEventListener
+{
+    /**
+     * Decimal numeric format
+     */
+    public static final int DECIMAL_FORMAT = HackController.DECIMAL_FORMAT;
 
-		private String programName;
+    /**
+     * Hexadecimal numeric format
+     */
+    public static final int HEXA_FORMAT = HackController.HEXA_FORMAT;;
 
-		public ROMLoadProgramTask(String programName) {
-			this.programName = programName;
-		}
+    /**
+     * Binary numeric format
+     */
+    public static final int BINARY_FORMAT = HackController.BINARY_FORMAT;;
 
-		@Override
-		public void run() {
-			clearErrorListeners();
-			try {
-				loadProgram(programName);
-			} catch (ProgramException pe) {
-				notifyErrorListeners(pe.getMessage());
-			}
-		}
-	}
+    /**
+     * Assembler format
+     */
+    public static final int ASM_FORMAT = 4;
 
-	/**
-	 * Decimal numeric format
-	 */
-	public static final int DECIMAL_FORMAT = HackController.DECIMAL_FORMAT;
+    // listeners to program changes
+    private Vector listeners;
 
-	/**
-	 * Hexadecimal numeric format
-	 */
-	public static final int HEXA_FORMAT = HackController.HEXA_FORMAT;
+    /**
+     * Constructs a new ROM with the given ROM GUI.
+     */
+    public ROM(ROMGUI gui) {
+        super(Definitions.ROM_SIZE, gui);
+        setNullValue(HackAssemblerTranslator.NOP, true);
+        listeners = new Vector();
 
-	/**
-	 * Binary numeric format
-	 */
-	public static final int BINARY_FORMAT = HackController.BINARY_FORMAT;
+        if (hasGUI) {
+          gui.addProgramListener( (ProgramEventListener)this);
+          gui.setNumericFormat(ASM_FORMAT); // enable assembler
+//          gui.setNumericFormat(BINARY_FORMAT); // disable assembler
+        }
+    }
 
-	/**
-	 * Assembler format
-	 */
-	public static final int ASM_FORMAT = 4;
+    /**
+     * Loads the given program file (HACK or ASM) into the ROM.
+     */
+    public synchronized void loadProgram(String fileName) throws ProgramException {
+        short[] program = null;
 
-	// listeners to program changes
-	private Vector<ProgramEventListener> listeners;
+        if (displayChanges)
+            ((ROMGUI)gui).showMessage("Loading...");
 
-	/**
-	 * Constructs a new ROM with the given ROM GUI.
-	 */
-	public ROM(ROMGUI gui) {
-		super(Definitions.ROM_SIZE, gui);
-		setNullValue(HackAssemblerTranslator.NOP, true);
-		listeners = new Vector<ProgramEventListener>();
+        try {
+            program = HackAssemblerTranslator.loadProgram(fileName, Definitions.ROM_SIZE,
+                                                          HackAssemblerTranslator.NOP);
 
-		if (hasGUI) {
-			gui.addProgramListener(this);
-			gui.setNumericFormat(ASM_FORMAT); // enable assembler
-			// gui.setNumericFormat(BINARY_FORMAT); // disable assembler
-		}
-	}
+            mem = program;
 
-	/**
-	 * Registers the given ProgramEventListener as a listener to this GUI.
-	 */
-	public void addProgramListener(ProgramEventListener listener) {
-		listeners.add(listener);
-	}
+            if (displayChanges) {
+                gui.setContents(mem);
 
-	/**
-	 * Loads the given program file (HACK or ASM) into the ROM.
-	 */
-	public synchronized void loadProgram(String fileName) throws ProgramException {
-		short[] program = null;
+                ((ROMGUI)gui).setProgram(fileName);
 
-		if (displayChanges) {
-			((ROMGUI) m_gui).showMessage("Loading...");
-		}
+                ((ROMGUI)gui).hideMessage();
+                gui.hideHighlight();
+            }
 
-		try {
-			program = HackAssemblerTranslator.loadProgram(fileName, Definitions.ROM_SIZE, HackAssemblerTranslator.NOP);
+            notifyProgramListeners(ProgramEvent.LOAD, fileName);
 
-			mem = program;
+        } catch (AssemblerException ae) {
+            if (displayChanges)
+                ((ROMGUI)gui).hideMessage();
+            throw new ProgramException(ae.getMessage());
+        }
 
-			if (displayChanges) {
-				m_gui.setContents(mem);
+    }
 
-				((ROMGUI) m_gui).setProgram(fileName);
+    /**
+     * Called when the ROM's current program is changed.
+     * The event contains the source object, event type and the new program's file name (if any).
+     */
+    public void programChanged(ProgramEvent event) {
+        switch (event.getType()) {
+            case ProgramEvent.LOAD:
+                ROMLoadProgramTask task = new ROMLoadProgramTask(event.getProgramFileName());
+                Thread t = new Thread(task);
+                t.start();
+                break;
+            case ProgramEvent.CLEAR:
+                notifyProgramListeners(ProgramEvent.CLEAR, null);
+        }
+    }
 
-				((ROMGUI) m_gui).hideMessage();
-				m_gui.hideHighlight();
-			}
+    /**
+     * Called when the contents of the memory are changed through the memory gui.
+     */
+    public void valueChanged(ComputerPartEvent event) {
+        short newValue = event.getValue();
+        int newAddress = event.getIndex();
+        clearErrorListeners();
+        try {
+            HackAssemblerTranslator.getInstance().codeToText(newValue);
+            setValueAt(newAddress, newValue, true);
+        } catch (AssemblerException ae) {
+            notifyErrorListeners("Illegal instruction");
+            quietUpdateGUI(newAddress, mem[newAddress]);
+        }
+    }
 
-			notifyProgramListeners(ProgramEvent.LOAD, fileName);
+    class ROMLoadProgramTask implements Runnable {
 
-		} catch (AssemblerException ae) {
-			if (displayChanges) {
-				((ROMGUI) m_gui).hideMessage();
-			}
-			throw new ProgramException(ae.getMessage());
-		}
+        private String programName;
 
-	}
+        public ROMLoadProgramTask(String programName) {
+            this.programName = programName;
+        }
 
-	/**
-	 * Notifies all the ProgramEventListeners on a change in the ROM's program
-	 * by creating a ProgramEvent (with the new event type and program's file
-	 * name) and sending it using the programChanged method to all the
-	 * listeners.
-	 */
-	protected void notifyProgramListeners(byte eventType, String programFileName) {
-		ProgramEvent event = new ProgramEvent(this, eventType, programFileName);
+        public void run() {
+            clearErrorListeners();
+            try {
+                loadProgram(programName);
+            } catch (ProgramException pe) {
+                notifyErrorListeners(pe.getMessage());
+            }
+        }
+    }
 
-		for (int i = 0; i < listeners.size(); i++) {
-			listeners.elementAt(i).programChanged(event);
-		}
-	}
+    /**
+     * Registers the given ProgramEventListener as a listener to this GUI.
+     */
+    public void addProgramListener(ProgramEventListener listener) {
+        listeners.add(listener);
+    }
 
-	/**
-	 * Called when the ROM's current program is changed. The event contains the
-	 * source object, event type and the new program's file name (if any).
-	 */
-	@Override
-	public void programChanged(ProgramEvent event) {
-		switch (event.getType()) {
-		case ProgramEvent.LOAD:
-			ROMLoadProgramTask task = new ROMLoadProgramTask(event.getProgramFileName());
-			Thread t = new Thread(task);
-			t.start();
-			break;
-		case ProgramEvent.CLEAR:
-			notifyProgramListeners(ProgramEvent.CLEAR, null);
-		}
-	}
+    /**
+     * Un-registers the given ProgramEventListener from being a listener to this GUI.
+     */
+    public void removeProgramListener(ProgramEventListener listener) {
+        listeners.remove(listener);
+    }
 
-	/**
-	 * Un-registers the given ProgramEventListener from being a listener to this
-	 * GUI.
-	 */
-	public void removeProgramListener(ProgramEventListener listener) {
-		listeners.remove(listener);
-	}
+    /**
+     * Notifies all the ProgramEventListeners on a change in the ROM's program by creating
+     * a ProgramEvent (with the new event type and program's file name) and sending it using the
+     * programChanged method to all the listeners.
+     */
+    protected void notifyProgramListeners(byte eventType, String programFileName) {
+        ProgramEvent event = new ProgramEvent(this, eventType, programFileName);
 
-	/**
-	 * Called when the contents of the memory are changed through the memory
-	 * gui.
-	 */
-	@Override
-	public void valueChanged(ComputerPartEvent event) {
-		short newValue = event.getValue();
-		int newAddress = event.getIndex();
-		clearErrorListeners();
-		try {
-			HackAssemblerTranslator.getInstance().codeToText(newValue);
-			setValueAt(newAddress, newValue, true);
-		} catch (AssemblerException ae) {
-			notifyErrorListeners("Illegal instruction");
-			quietUpdateGUI(newAddress, mem[newAddress]);
-		}
-	}
+        for (int i = 0; i < listeners.size(); i++) {
+            ((ProgramEventListener)listeners.elementAt(i)).programChanged(event);
+        }
+    }
 }

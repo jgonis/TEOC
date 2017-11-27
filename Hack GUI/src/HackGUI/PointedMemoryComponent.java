@@ -17,82 +17,63 @@
 
 package HackGUI;
 
-import java.awt.Color;
-
-import javax.swing.table.DefaultTableCellRenderer;
-
-import Hack.ComputerParts.PointedMemoryGUI;
+import Hack.ComputerParts.*;
+import javax.swing.table.*;
+import java.awt.*;
+import java.awt.event.*;
 
 /**
  * This class represents the GUI of a pointed memory.
  */
 public class PointedMemoryComponent extends MemoryComponent implements PointedMemoryGUI {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 5024293277986923812L;
+    // The pointer address
+    protected int pointerAddress = -1;
 
-	// An inner class which implemets the cell renderer of the program table,
-	// giving
-	// the feature of coloring the background of a specific cell.
-	public class PointedMemoryTableCellRenderer extends MemoryTableCellRenderer {
+    // Indicates whether this component has the focus
+    protected boolean hasFocus = false;
 
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = -3678291711255300161L;
+    protected DefaultTableCellRenderer getCellRenderer() {
+        return new PointedMemoryTableCellRenderer();
+    }
 
-		@Override
-		public void setRenderer(int row, int column) {
-			if (row == pointerAddress) {
-				setBackground(Color.yellow);
-			} else {
-				setBackground(null);
-			}
+     /**
+     * Sets the pointer with the given pointer address.
+     */
+    public void setPointer (int pointerAddress) {
+        this.pointerAddress = pointerAddress;
 
-			super.setRenderer(row, column);
-		}
-	}
+        if (pointerAddress >= 0)
+            Utilities.tableCenterScroll(this, memoryTable, pointerAddress);
+    }
 
-	// The pointer address
-	protected int pointerAddress = -1;
+    /**
+     * Implementing the action of the table gaining the focus.
+     */
+    public void memoryTable_focusGained(FocusEvent e) {
+        super.memoryTable_focusGained(e);
+        hasFocus = true;
+    }
 
-	// Indicates whether this component has the focus
-	protected boolean hasFocus = false;
+    /**
+     * Implementing the action of the table loosing the focus.
+     */
+    public void memoryTable_focusLost(FocusEvent e) {
+        super.memoryTable_focusLost(e);
+        hasFocus = false;
+    }
 
-	@Override
-	protected DefaultTableCellRenderer getCellRenderer() {
-		return new PointedMemoryTableCellRenderer();
-	}
+    // An inner class which implemets the cell renderer of the program table, giving
+    // the feature of coloring the background of a specific cell.
+    public class PointedMemoryTableCellRenderer extends MemoryTableCellRenderer {
 
-	/**
-	 * Implementing the action of the table gaining the focus.
-	 */
-	@Override
-	public void memoryTable_focusGained() {
-		super.memoryTable_focusGained();
-		hasFocus = true;
-	}
+        public void setRenderer(int row, int column) {
+            if (row == pointerAddress)
+                setBackground(Color.yellow);
+            else
+                setBackground(null);
 
-	/**
-	 * Implementing the action of the table loosing the focus.
-	 */
-	@Override
-	public void memoryTable_focusLost() {
-		super.memoryTable_focusLost();
-		hasFocus = false;
-	}
-
-	/**
-	 * Sets the pointer with the given pointer address.
-	 */
-	@Override
-	public void setPointer(int pointerAddress) {
-		this.pointerAddress = pointerAddress;
-
-		if (pointerAddress >= 0) {
-			Utilities.tableCenterScroll(this, memoryTable, pointerAddress);
-		}
-	}
+            super.setRenderer(row, column);
+        }
+    }
 }

@@ -17,8 +17,7 @@
 
 package HackGUI;
 
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableModel;
+import javax.swing.table.*;
 
 /**
  * A Memory component that has an address pointer and displays only its values
@@ -26,81 +25,58 @@ import javax.swing.table.TableModel;
  */
 public class ValuesOnlyPointedMemoryComponent extends PointedMemoryComponent {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -1845897647665483739L;
+    /**
+     * Returns the table model of this component.
+     */
+    protected TableModel getTableModel() {
+        return new ValuesOnlyPointedMemoryTableModel();
+    }
 
-	// An inner class representing the model of the table.
-	public class ValuesOnlyPointedMemoryTableModel extends MemoryTableModel {
+    protected DefaultTableCellRenderer getCellRenderer() {
+        return new ValuesOnlyPointedTableCellRenderer();
+    }
 
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 1314083337242703087L;
+    /**
+     * Returns the index of the values column.
+     */
+    protected int getValueColumnIndex() {
+        return 0;
+    }
 
-		/**
-		 * Returns the number of columns.
-		 */
-		@Override
-		public int getColumnCount() {
-			return 1;
-		}
+    // Determines the width of each column in the table.
+    protected void determineColumnWidth() {}
 
-		/**
-		 * Returns the value at a specific row and column.
-		 */
-		@Override
-		public Object getValueAt(int row, int col) {
-			return super.getValueAt(row, col + 1);
-		}
+    // An inner class representing the model of the table.
+    public class ValuesOnlyPointedMemoryTableModel extends MemoryTableModel {
 
-		/**
-		 * Returns true of this table cells are editable, false - otherwise.
-		 */
-		@Override
-		public boolean isCellEditable(int row, int col) {
-			return super.isCellEditable(row, col + 1);
-		}
+        /**
+         * Returns the number of columns.
+         */
+        public int getColumnCount() {
+            return 1;
+        }
 
-	}
+        /**
+         * Returns the value at a specific row and column.
+         */
+        public Object getValueAt(int row, int col) {
+            return super.getValueAt(row, col + 1);
+        }
 
-	public class ValuesOnlyPointedTableCellRenderer extends PointedMemoryTableCellRenderer {
+        /**
+         * Returns true of this table cells are editable, false -
+         * otherwise.
+         */
+        public boolean isCellEditable(int row, int col) {
+            return super.isCellEditable(row, col + 1);
+        }
 
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = -8560040992589057954L;
+    }
 
-		@Override
-		public void setRenderer(int row, int column) {
-			super.setRenderer(row, column + 1);
-		}
-	}
+    public class ValuesOnlyPointedTableCellRenderer extends PointedMemoryTableCellRenderer {
 
-	// Determines the width of each column in the table.
-	@Override
-	protected void determineColumnWidth() {
-	}
-
-	@Override
-	protected DefaultTableCellRenderer getCellRenderer() {
-		return new ValuesOnlyPointedTableCellRenderer();
-	}
-
-	/**
-	 * Returns the table model of this component.
-	 */
-	@Override
-	protected TableModel getTableModel() {
-		return new ValuesOnlyPointedMemoryTableModel();
-	}
-
-	/**
-	 * Returns the index of the values column.
-	 */
-	@Override
-	protected int getValueColumnIndex() {
-		return 0;
-	}
+        public void setRenderer(int row, int column) {
+            super.setRenderer(row, column + 1);
+        }
+    }
 }

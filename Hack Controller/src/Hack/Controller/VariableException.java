@@ -20,17 +20,12 @@ package Hack.Controller;
 /**
  * An exception for errors with variable definitions.
  */
-public class VariableException extends Exception {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -3241332986276108189L;
-
-	/**
-	 * Constructs a new VariableException with the given message and variable
-	 * name.
-	 */
-	public VariableException(String message, String varName) {
-		super(message + ": " + varName);
-	}
+public class VariableException extends Exception
+{
+    /**
+     * Constructs a new VariableException with the given message and variable name.
+     */
+    public VariableException(String message, String varName) {
+        super(message + ": " + varName);
+    }
 }

@@ -17,36 +17,37 @@
 
 package Hack.CPUEmulator;
 
-import Hack.ComputerParts.ValueComputerPartGUI;
+import Hack.ComputerParts.*;
 
 /**
- * An interface for the GUI of the ALU. An ALU has two inputs (index 0,1) and an
- * output (index 2). The two inputs and output should be read-only.
+ * An interface for the GUI of the ALU.
+ * An ALU has two inputs (index 0,1) and an output (index 2).
+ * The two inputs and output should be read-only.
  */
 public interface ALUGUI extends ValueComputerPartGUI {
 
-	/**
-	 * Flashes the ALU body.
-	 */
-	public void bodyFlash();
+    /**
+     * Sets the command of the ALU with the given command.
+     */
+    public void setCommand(String command);
 
-	/**
-	 * Flashes the ALU command.
-	 */
-	public void commandFlash();
+    /**
+     * Flashes the ALU body.
+     */
+    public void bodyFlash();
 
-	/**
-	 * Hides the ALU's body flash.
-	 */
-	public void hideBodyFlash();
+    /**
+     * Hides the ALU's body flash.
+     */
+    public void hideBodyFlash();
 
-	/**
-	 * Hides the ALU's command flash.
-	 */
-	public void hideCommandFlash();
+    /**
+     * Flashes the ALU command.
+     */
+    public void commandFlash();
 
-	/**
-	 * Sets the command of the ALU with the given command.
-	 */
-	public void setCommand(String command);
+    /**
+     * Hides the ALU's command flash.
+     */
+    public void hideCommandFlash();
 }

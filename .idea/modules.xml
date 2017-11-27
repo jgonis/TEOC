@@ -2,23 +2,23 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/CPU Emulator GUI/CPU Emulator GUI.iml" filepath="$PROJECT_DIR$/CPU Emulator GUI/CPU Emulator GUI.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Hack Assembler/Hack Assembler.iml" filepath="$PROJECT_DIR$/Hack Assembler/Hack Assembler.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Hack CPU Emulator/Hack CPU Emulator.iml" filepath="$PROJECT_DIR$/Hack CPU Emulator/Hack CPU Emulator.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Hack Computer Parts/Hack Computer Parts.iml" filepath="$PROJECT_DIR$/Hack Computer Parts/Hack Computer Parts.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Hack Controller/Hack Controller.iml" filepath="$PROJECT_DIR$/Hack Controller/Hack Controller.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Hack Events/Hack Events.iml" filepath="$PROJECT_DIR$/Hack Events/Hack Events.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Hack GUI/Hack GUI.iml" filepath="$PROJECT_DIR$/Hack GUI/Hack GUI.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Hack Gates/Hack Gates.iml" filepath="$PROJECT_DIR$/Hack Gates/Hack Gates.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Hack Hardware Simulator/Hack Hardware Simulator.iml" filepath="$PROJECT_DIR$/Hack Hardware Simulator/Hack Hardware Simulator.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Hack Simulators GUI/Hack Simulators GUI.iml" filepath="$PROJECT_DIR$/Hack Simulators GUI/Hack Simulators GUI.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Hack Translators/Hack Translators.iml" filepath="$PROJECT_DIR$/Hack Translators/Hack Translators.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Hack Utilities/Hack Utilities.iml" filepath="$PROJECT_DIR$/Hack Utilities/Hack Utilities.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Hack VM Emulator/Hack VM Emulator.iml" filepath="$PROJECT_DIR$/Hack VM Emulator/Hack VM Emulator.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Hack Virtual Machine/Hack Virtual Machine.iml" filepath="$PROJECT_DIR$/Hack Virtual Machine/Hack Virtual Machine.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Hardware Simulator GUI/Hardware Simulator GUI.iml" filepath="$PROJECT_DIR$/Hardware Simulator GUI/Hardware Simulator GUI.iml" />
+      <module fileurl="file://$PROJECT_DIR$/CPU Emulator App/CPU Emulator App.iml" filepath="$PROJECT_DIR$/CPU Emulator App/CPU Emulator App.iml" group="Apps" />
+      <module fileurl="file://$PROJECT_DIR$/Hack Assembler/Hack Assembler.iml" filepath="$PROJECT_DIR$/Hack Assembler/Hack Assembler.iml" group="Libs" />
+      <module fileurl="file://$PROJECT_DIR$/Hack CPU Emulator/Hack CPU Emulator.iml" filepath="$PROJECT_DIR$/Hack CPU Emulator/Hack CPU Emulator.iml" group="Libs" />
+      <module fileurl="file://$PROJECT_DIR$/Hack Computer Parts/Hack Computer Parts.iml" filepath="$PROJECT_DIR$/Hack Computer Parts/Hack Computer Parts.iml" group="Libs" />
+      <module fileurl="file://$PROJECT_DIR$/Hack Controller/Hack Controller.iml" filepath="$PROJECT_DIR$/Hack Controller/Hack Controller.iml" group="Libs" />
+      <module fileurl="file://$PROJECT_DIR$/Hack Events/Hack Events.iml" filepath="$PROJECT_DIR$/Hack Events/Hack Events.iml" group="Libs" />
+      <module fileurl="file://$PROJECT_DIR$/Hack Gates/Hack Gates.iml" filepath="$PROJECT_DIR$/Hack Gates/Hack Gates.iml" group="Libs" />
+      <module fileurl="file://$PROJECT_DIR$/Hack Gui/Hack Gui.iml" filepath="$PROJECT_DIR$/Hack Gui/Hack Gui.iml" group="Libs" />
+      <module fileurl="file://$PROJECT_DIR$/Hack Hardware Simulator/Hack Hardware Simulator.iml" filepath="$PROJECT_DIR$/Hack Hardware Simulator/Hack Hardware Simulator.iml" group="Libs" />
+      <module fileurl="file://$PROJECT_DIR$/Hack Simulator Gui/Hack Simulator Gui.iml" filepath="$PROJECT_DIR$/Hack Simulator Gui/Hack Simulator Gui.iml" group="Libs" />
+      <module fileurl="file://$PROJECT_DIR$/Hack Translators/Hack Translators.iml" filepath="$PROJECT_DIR$/Hack Translators/Hack Translators.iml" group="Libs" />
+      <module fileurl="file://$PROJECT_DIR$/Hack Utilities/Hack Utilities.iml" filepath="$PROJECT_DIR$/Hack Utilities/Hack Utilities.iml" group="Libs" />
+      <module fileurl="file://$PROJECT_DIR$/Hack VM Emulator/Hack VM Emulator.iml" filepath="$PROJECT_DIR$/Hack VM Emulator/Hack VM Emulator.iml" group="Libs" />
+      <module fileurl="file://$PROJECT_DIR$/Hack Virtual Machine/Hack Virtual Machine.iml" filepath="$PROJECT_DIR$/Hack Virtual Machine/Hack Virtual Machine.iml" group="Libs" />
+      <module fileurl="file://$PROJECT_DIR$/Hardware Simulator App/Hardware Simulator App.iml" filepath="$PROJECT_DIR$/Hardware Simulator App/Hardware Simulator App.iml" group="Apps" />
       <module fileurl="file://$PROJECT_DIR$/Text Comparer/Text Comparer.iml" filepath="$PROJECT_DIR$/Text Comparer/Text Comparer.iml" />
-      <module fileurl="file://$PROJECT_DIR$/VM Emulator GUI/VM Emulator GUI.iml" filepath="$PROJECT_DIR$/VM Emulator GUI/VM Emulator GUI.iml" />
+      <module fileurl="file://$PROJECT_DIR$/VM Emulator App/VM Emulator App.iml" filepath="$PROJECT_DIR$/VM Emulator App/VM Emulator App.iml" group="Apps" />
     </modules>
   </component>
 </project>

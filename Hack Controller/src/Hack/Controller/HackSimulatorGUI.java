@@ -17,49 +17,48 @@
 
 package Hack.Controller;
 
-import java.io.File;
-
-import javax.swing.JComponent;
+import javax.swing.*;
+import java.io.*;
 
 /**
  * An interface for the gui of the hack simulator.
  */
 public interface HackSimulatorGUI {
 
-	/**
-	 * Returns the name of the about information file.
-	 */
-	public String getAboutFileName();
+    /**
+     * Displays the given component in the simulator.
+     * If another component is already displayed, it will be removed.
+     * If the given component is null, removes the currently displayed component.
+     */
+    public void setAdditionalDisplay(JComponent component);
 
-	/**
-	 * Returns the name of the help usage file.
-	 */
-	public String getUsageFileName();
+    /**
+     * Opens the program file dialog for choosing a new program.
+     */
+    public void loadProgram();
 
-	/**
-	 * Opens the program file dialog for choosing a new program.
-	 */
-	public void loadProgram();
+    /**
+     * Sets the name of the html file that contains the help usage.
+     */
+    public void setUsageFileName(String fileName);
 
-	/**
-	 * Sets the name of the html file that contains the "about" information.
-	 */
-	public void setAboutFileName(String fileName);
+    /**
+     * Sets the name of the html file that contains the "about" information.
+     */
+    public void setAboutFileName(String fileName);
 
-	/**
-	 * Displays the given component in the simulator. If another component is
-	 * already displayed, it will be removed. If the given component is null,
-	 * removes the currently displayed component.
-	 */
-	public void setAdditionalDisplay(JComponent component);
+    /**
+     * Returns the name of the help usage file.
+     */
+    public String getUsageFileName();
 
-	/**
-	 * Sets the name of the html file that contains the help usage.
-	 */
-	public void setUsageFileName(String fileName);
+    /**
+     * Returns the name of the about information file.
+     */
+    public String getAboutFileName();
 
-	/**
-	 * Sets the working dir name with the given one.
-	 */
-	public void setWorkingDir(File file);
+    /**
+     * Sets the working dir name with the given one.
+     */
+    public void setWorkingDir(File file);
 }

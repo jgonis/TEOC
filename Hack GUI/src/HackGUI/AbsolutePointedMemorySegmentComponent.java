@@ -17,71 +17,53 @@
 
 package HackGUI;
 
-import java.awt.Point;
-
-import javax.swing.table.TableModel;
+import java.awt.*;
+import javax.swing.table.*;
 
 /**
  * A PointedMemorySegmentComponent with an absolute address referencing.
  */
 public class AbsolutePointedMemorySegmentComponent extends PointedMemorySegmentComponent {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -2907736221591871221L;
+    /**
+     * Returns the appropriate table model.
+     */
+    protected TableModel getTableModel() {
+        return new AbsoluteTableModel();
+    }
 
-	// An inner class representing the model of this table.
-	public class AbsoluteTableModel extends MemorySegmentTableModel {
+    /**
+     * Returns the value at the given index in its string representation.
+     */
+    public String getValueAsString(int index) {
+        return super.getValueAsString(index - startAddress);
+    }
 
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = -3305758518051623695L;
+    /**
+     * Returns the coordinates of the top left corner of the value at the given index.
+     */
+    public Point getCoordinates(int index) {
+        return super.getCoordinates(index-startAddress);
+    }
 
-		/**
-		 * Returns the value at a specific row and column.
-		 */
-		@Override
-		public Object getValueAt(int row, int col) {
-			if (col == 0) {
-				return String.valueOf(row + startAddress);
-			} else {
-				return super.getValueAt(row, col);
-			}
-		}
-	}
+    /**
+     * Scrolls the table to the pointer location.
+     */
+    protected void scrollToPointer() {
+        Utilities.tableCenterScroll(this, segmentTable, pointerAddress - startAddress);
+    }
 
-	/**
-	 * Returns the coordinates of the top left corner of the value at the given
-	 * index.
-	 */
-	@Override
-	public Point getCoordinates(int index) {
-		return super.getCoordinates(index - startAddress);
-	}
+    // An inner class representing the model of this table.
+    public class AbsoluteTableModel extends MemorySegmentTableModel {
 
-	/**
-	 * Returns the appropriate table model.
-	 */
-	@Override
-	protected TableModel getTableModel() {
-		return new AbsoluteTableModel();
-	}
-
-	/**
-	 * Returns the value at the given index in its string representation.
-	 */
-	@Override
-	public String getValueAsString(int index) {
-		return super.getValueAsString(index - startAddress);
-	}
-
-	/**
-	 * Scrolls the table to the pointer location.
-	 */
-	@Override
-	protected void scrollToPointer() {
-		Utilities.tableCenterScroll(this, segmentTable, pointerAddress - startAddress);
-	}
+        /**
+         * Returns the value at a specific row and column.
+         */
+        public Object getValueAt(int row, int col) {
+            if(col==0)
+                return String.valueOf(row + startAddress);
+            else
+                return super.getValueAt(row, col);
+        }
+    }
 }

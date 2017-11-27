@@ -18,14 +18,13 @@
 package Hack.VMEmulator;
 
 /**
- * An interface for objects that wants to listen to the
- * VMProgramRowSelectionEvent.
+ * An interface for objects that wants to listen to the VMProgramRowSelectionEvent.
  */
 public interface VMProgramRowSelectionEventListener {
 
-	/**
-	 * Called when a new row is selected in the VMProgram. The event contains
-	 * the source object and the selected row instruction and index.
-	 */
-	public void rowSelected(VMProgramRowSelectionEvent event);
+    /**
+     * Called when a new row is selected in the VMProgram.
+     * The event contains the source object and the selected row instruction and index.
+     */
+    public void rowSelected(VMProgramRowSelectionEvent event);
 }

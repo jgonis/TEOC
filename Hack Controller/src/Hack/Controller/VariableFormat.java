@@ -22,56 +22,56 @@ package Hack.Controller;
  */
 public class VariableFormat {
 
-	// the valid formats
+    // the valid formats
 
-	/**
-	 * Binary numeric format
-	 */
-	public static final char BINARY_FORMAT = 'B';
+    /**
+     * Binary numeric format
+     */
+    public static final char BINARY_FORMAT = 'B';
 
-	/**
-	 * Decimal numeric format
-	 */
-	public static final char DECIMAL_FORMAT = 'D';
+    /**
+     * Decimal numeric format
+     */
+    public static final char DECIMAL_FORMAT = 'D';
 
-	/**
-	 * Hexa decimal numeric format
-	 */
-	public static final char HEX_FORMAT = 'X';
+    /**
+     * Hexa decimal numeric format
+     */
+    public static final char HEX_FORMAT = 'X';
 
-	/**
-	 * String format
-	 */
-	public static final char STRING_FORMAT = 'S';
+    /**
+     * String format
+     */
+    public static final char STRING_FORMAT = 'S';
 
-	/**
-	 * The variable's name.
-	 */
-	public String varName;
+    /**
+     * The variable's name.
+     */
+    public String varName;
 
-	/**
-	 * The number of padding spaces.
-	 */
-	public int padL, padR;
+    /**
+     * The number of padding spaces.
+     */
+    public int padL, padR;
 
-	/**
-	 * The printing length.
-	 */
-	public int len;
+    /**
+     * The printing length.
+     */
+    public int len;
 
-	/**
-	 * The printing format.
-	 */
-	public char format;
+    /**
+     * The printing format.
+     */
+    public char format;
 
-	/**
-	 * Constructs a new VariableFormat.
-	 */
-	public VariableFormat(String varName, char format, int padL, int padR, int len) {
-		this.varName = varName;
-		this.format = format;
-		this.padL = padL;
-		this.padR = padR;
-		this.len = len;
-	}
+    /**
+     * Constructs a new VariableFormat.
+     */
+    public VariableFormat(String varName, char format, int padL, int padR, int len) {
+        this.varName = varName;
+        this.format = format;
+        this.padL = padL;
+        this.padR = padR;
+        this.len = len;
+    }
 }

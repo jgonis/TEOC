@@ -22,39 +22,33 @@ import java.util.HashSet;
 /**
  * A set of Connection objects.
  */
-public class ConnectionSet extends HashSet<Connection> {
+public class ConnectionSet extends HashSet {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -9016423519957414695L;
+    /**
+     * Constructs a new ConnectionSet
+     */
+    public ConnectionSet() {
+        super();
+    }
 
-	/**
-	 * Constructs a new ConnectionSet
-	 */
-	public ConnectionSet() {
-		super();
-	}
+    /**
+     * Adds the given connection to the set.
+     */
+    public boolean add(Connection connection) {
+        return super.add(connection);
+    }
 
-	/**
-	 * Adds the given connection to the set.
-	 */
-	@Override
-	public boolean add(Connection connection) {
-		return super.add(connection);
-	}
+    /**
+     * Removes the given connection from the set.
+     */
+    public boolean remove(Connection connection) {
+        return super.remove(connection);
+    }
 
-	/**
-	 * Returns true if this set contains the given connection.
-	 */
-	public boolean contains(Connection connection) {
-		return super.contains(connection);
-	}
-
-	/**
-	 * Removes the given connection from the set.
-	 */
-	public boolean remove(Connection connection) {
-		return super.remove(connection);
-	}
+    /**
+     * Returns true if this set contains the given connection.
+     */
+    public boolean contains(Connection connection) {
+        return super.contains(connection);
+    }
 }

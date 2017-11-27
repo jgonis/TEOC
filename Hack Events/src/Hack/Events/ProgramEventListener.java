@@ -22,9 +22,9 @@ package Hack.Events;
  */
 public interface ProgramEventListener {
 
-	/**
-	 * Called when the current program is changed. The event contains the source
-	 * object, and the new program's file name.
-	 */
-	public void programChanged(ProgramEvent event);
+    /**
+     * Called when the current program is changed.
+     * The event contains the source object, and the new program's file name.
+     */
+    public void programChanged(ProgramEvent event);
 }

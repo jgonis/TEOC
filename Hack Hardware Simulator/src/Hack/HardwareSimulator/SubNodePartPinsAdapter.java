@@ -17,33 +17,32 @@
 
 package Hack.HardwareSimulator;
 
-import Hack.Gates.SubNode;
+import Hack.Gates.*;
 
 /**
- * A SubNode that receives a PartPins and an index and updates the PartPins at
- * the given index when the value of the node changes.
+ * A SubNode that receives a PartPins and an index and updates the PartPins at the given
+ * index when the value of the node changes.
  */
 public class SubNodePartPinsAdapter extends SubNode {
 
-	// The PartPins that contain the node.
-	private PartPins partPins;
+    // The PartPins that contain the node.
+    private PartPins partPins;
 
-	// The index of the node in the PartPins.
-	private int index;
+    // The index of the node in the PartPins.
+    private int index;
 
-	/**
-	 * Constructs a new SubNodePartPinsAdapter with the sub bus specification,
-	 * the PartPins and the index.
-	 */
-	public SubNodePartPinsAdapter(byte low, byte high, PartPins partPins, int index) {
-		super(low, high);
-		this.partPins = partPins;
-		this.index = index;
-	}
+    /**
+     * Constructs a new SubNodePartPinsAdapter with the sub bus specification,
+     * the PartPins and the index.
+     */
+    public SubNodePartPinsAdapter(byte low, byte high, PartPins partPins, int index) {
+        super(low, high);
+        this.partPins = partPins;
+        this.index = index;
+    }
 
-	@Override
-	public void set(short value) {
-		this.value = value;
-		partPins.quietUpdateGUI(index, get());
-	}
+    public void set(short value) {
+        this.value = value;
+        partPins.quietUpdateGUI(index, get());
+    }
 }

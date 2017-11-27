@@ -19,20 +19,17 @@ package Hack.Translators;
 
 public class HackTranslatorException extends Exception {
 
-	private static final long serialVersionUID = -313707791887674347L;
+    /**
+     * Constructs a new HackTranslatorException with the given message.
+     */
+    public HackTranslatorException(String message) {
+        super(message);
+    }
 
-	/**
-	 * Constructs a new HackTranslatorException with the given message.
-	 */
-	public HackTranslatorException(String message) {
-		super(message);
-	}
-
-	/**
-	 * Constructs a new HackTranslatorException with the given message and Line
-	 * number.
-	 */
-	public HackTranslatorException(String message, int lineNumber) {
-		super("In line " + lineNumber + ", " + message);
-	}
+    /**
+     * Constructs a new HackTranslatorException with the given message and Line number.
+     */
+    public HackTranslatorException(String message, int lineNumber) {
+        super("In line " + lineNumber + ", " + message);
+    }
 }

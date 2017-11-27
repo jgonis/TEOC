@@ -17,203 +17,190 @@
 
 package HackGUI;
 
-import java.awt.Color;
-import java.awt.Rectangle;
-import java.io.File;
-import java.net.URISyntaxException;
-import java.nio.file.Paths;
-import java.util.Vector;
-
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
+import java.awt.*;
+import javax.swing.*;
+import java.awt.event.*;
 import javax.swing.filechooser.FileFilter;
+import java.io.File;
+import java.util.*;
 
 /**
- * This class represents a window from which the users can select different
- * types of files, in order to be loaded to the simulator.
+ * This class represents a window from which the users can select different types
+ * of files, in order to be loaded to the simulator.
  */
 public class FileChooserComponent extends JPanel {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 8092367590572179983L;
+    // The label of this component.
+    private JLabel fileTypeName = new JLabel();
 
-	// The label of this component.
-	private JLabel fileTypeName = new JLabel();
+    // The text field.
+    protected JTextField fileName = new JTextField();
 
-	// The text field.
-	protected JTextField fileName = new JTextField();
+    // The browse button.
+    private JButton browseButton = new JButton();
 
-	// The browse button.
-	private JButton browseButton = new JButton();
+    // The file chooser component.
+    private JFileChooser fc = new JFileChooser();
+    private JFrame fileChooserFrame = new JFrame();
 
-	// The file chooser component.
-	private JFileChooser fc = new JFileChooser();
-	private JFrame fileChooserFrame = new JFrame();
+    // The name of the current file.
+    protected String currentFileName = "";
 
-	// The name of the current file.
-	protected String currentFileName = "";
+    // Creating the browse icon.
+    private ImageIcon load = new ImageIcon(Utilities.imagesDir + "open.gif");
 
-	// Creating the browse icon.
-	private ImageIcon load;
+    // The vector of listeners the this component.
+    private Vector listeners;
 
-	// The vector of listeners the this component.
-	private Vector<EnterPressedListener> listeners;
+    /**
+     * Constructs a new FileChooserComponent.
+     */
+    public FileChooserComponent() {
+        listeners = new Vector();
+        jbInit();
+        fileChooserFrame.setSize(440,250);
+        fileChooserFrame.setLocation(250,250);
+        fileChooserFrame.setTitle("Choose a file :");
+        fileChooserFrame.getContentPane().add(fc);
+    }
 
-	/**
-	 * Constructs a new FileChooserComponent.
-	 */
-	public FileChooserComponent() {
-		listeners = new Vector<EnterPressedListener>();
-		try {
-			load = new ImageIcon(Paths.get(ClassLoader.getSystemResource("open.gif").toURI()).toString());
-		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		jbInit();
-		fileChooserFrame.setSize(440, 250);
-		fileChooserFrame.setLocation(250, 250);
-		fileChooserFrame.setTitle("Choose a file :");
-		fileChooserFrame.getContentPane().add(fc);
-	}
+    /**
+     * Registers the given EnterPressedListener as a listener to this GUI.
+     */
+    public void addListener(EnterPressedListener listener) {
+        listeners.addElement(listener);
+    }
 
-	/**
-	 * Registers the given EnterPressedListener as a listener to this GUI.
-	 */
-	public void addListener(EnterPressedListener listener) {
-		listeners.addElement(listener);
-	}
+    /**
+     * Un-registers the given EnterPressedListener as a listener to this GUI.
+     */
+    public void removeListener(EnterPressedListener listener) {
+        listeners.removeElement(listener);
+    }
 
-	/**
-	 * Implementing the action of pressing the browse button.
-	 */
-	public void browseButton_actionPerformed() {
-		int returnVal = fc.showDialog(FileChooserComponent.this, "Select file");
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			File file = fc.getSelectedFile();
-			fileName.setText(file.getAbsolutePath());
-		}
-	}
+    /**
+     * Notifies all the EnterPressedListeners on an event of pressing the enter
+     * button by calling the enterPressed method to all the listeners.
+     */
+    public void notifyListeners() {
+        for (int i=0;i<listeners.size();i++) {
+           ((EnterPressedListener)listeners.elementAt(i)).enterPressed();
+        }
+    }
 
-	/**
-	 * Implementing the action of pressing 'enter' on the file name text field.
-	 */
-	public void fileName_actionPerformed() {
-		notifyListeners();
-	}
+    /**
+     * Sets the name of the file chooser.
+     */
+    public void setName(String name) {
+        fileTypeName.setText(name);
+    }
 
-	/**
-	 * Returns the current file name.
-	 */
-	public String getCurrentFileName() {
-		return currentFileName;
-	}
+    /**
+     * Returns the current file name.
+     */
+    public String getCurrentFileName() {
+        return currentFileName;
+    }
 
-	/**
-	 * Returns the file name.
-	 */
-	public String getFileName() {
-		return fileName.getText();
-	}
+    /**
+     * Sets the selection of the file chooser to directories only.
+     */
+     public void setSelectionToDirectories() {
+        fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+     }
 
-	/**
-	 * Returns the textfield.
-	 */
-	public JTextField getTextField() {
-		return fileName;
-	}
+    /**
+     * Sets the current file name.
+     */
+    public void setCurrentFileName(String currentName) {
+        currentFileName = currentName;
+    }
 
-	/**
-	 * Returns true if the file name was changed by the user, false - otherwise.
-	 */
-	public boolean isFileNameChanged() {
-		return !currentFileName.equals(fileName.getText());
-	}
+    /**
+     * Sets the textfield with the current file name.
+     */
+    public void showCurrentFileName() {
+        fileName.setText(currentFileName);
+    }
 
-	// Initialization of this component.
-	private void jbInit() {
-		fileTypeName.setFont(Utilities.thinLabelsFont);
-		fileTypeName.setText("File Type: ");
-		fileTypeName.setBounds(new Rectangle(10, 10, 104, 26));
-		this.setLayout(null);
-		fileName.setDisabledTextColor(Color.black);
-		fileName.setBounds(new Rectangle(118, 13, 221, 22));
-		fileName.addActionListener(e -> fileName_actionPerformed());
-		browseButton.setToolTipText("Load File");
-		browseButton.setIcon(load);
-		browseButton.setBounds(new Rectangle(351, 12, 46, 24));
-		browseButton.addActionListener(e -> browseButton_actionPerformed());
-		currentFileName = "";
+    /**
+     * Sets the filter of the FileChooser component.
+     */
+    public void setFilter(FileFilter filter) {
+        fc.setFileFilter(filter);
+    }
 
-		this.add(fileTypeName, null);
-		this.add(fileName, null);
-		this.add(browseButton, null);
-	}
+    /**
+     * Returns true if the file name was changed by the user, false - otherwise.
+     */
+    public boolean isFileNameChanged() {
+         return !currentFileName.equals(fileName.getText());
+    }
 
-	/**
-	 * Notifies all the EnterPressedListeners on an event of pressing the enter
-	 * button by calling the enterPressed method to all the listeners.
-	 */
-	public void notifyListeners() {
-		for (int i = 0; i < listeners.size(); i++) {
-			listeners.elementAt(i).enterPressed();
-		}
-	}
+    /**
+     * Returns the file name.
+     */
+    public String getFileName() {
+        return fileName.getText();
+    }
 
-	/**
-	 * Un-registers the given EnterPressedListener as a listener to this GUI.
-	 */
-	public void removeListener(EnterPressedListener listener) {
-		listeners.removeElement(listener);
-	}
+    /**
+     * Returns the textfield.
+     */
+    public JTextField getTextField() {
+        return fileName;
+    }
 
-	/**
-	 * Sets the current file name.
-	 */
-	public void setCurrentFileName(String currentName) {
-		currentFileName = currentName;
-	}
+    /**
+     * Sets the directory of the script files.
+     */
+    public void setScriptDir(String dir) {
+        fc.setCurrentDirectory(new File(dir));
+    }
 
-	/**
-	 * Sets the filter of the FileChooser component.
-	 */
-	public void setFilter(FileFilter filter) {
-		fc.setFileFilter(filter);
-	}
+    // Initialization of this component.
+    private void jbInit() {
+        fileTypeName.setFont(Utilities.thinLabelsFont);
+        fileTypeName.setText("File Type: ");
+        fileTypeName.setBounds(new Rectangle(10, 10, 104, 26));
+        this.setLayout(null);
+        fileName.setDisabledTextColor(Color.black);
+        fileName.setBounds(new Rectangle(118, 13, 221, 22));
+        fileName.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                fileName_actionPerformed(e);
+            }
+        });
+        browseButton.setToolTipText("Load File");
+        browseButton.setIcon(load);
+        browseButton.setBounds(new Rectangle(351, 12, 46, 24));
+        browseButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                browseButton_actionPerformed(e);
+            }
+        });
+        currentFileName = "";
 
-	/**
-	 * Sets the name of the file chooser.
-	 */
-	@Override
-	public void setName(String name) {
-		fileTypeName.setText(name);
-	}
+        this.add(fileTypeName, null);
+        this.add(fileName, null);
+        this.add(browseButton, null);
+    }
 
-	/**
-	 * Sets the directory of the script files.
-	 */
-	public void setScriptDir(String dir) {
-		fc.setCurrentDirectory(new File(dir));
-	}
+    /**
+     * Implementing the action of pressing the browse button.
+     */
+    public void browseButton_actionPerformed(ActionEvent e) {
+        int returnVal = fc.showDialog(FileChooserComponent.this, "Select file");
+        if(returnVal == JFileChooser.APPROVE_OPTION) {
+            File file = fc.getSelectedFile();
+            fileName.setText(file.getAbsolutePath());
+        }
+    }
 
-	/**
-	 * Sets the selection of the file chooser to directories only.
-	 */
-	public void setSelectionToDirectories() {
-		fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-	}
-
-	/**
-	 * Sets the textfield with the current file name.
-	 */
-	public void showCurrentFileName() {
-		fileName.setText(currentFileName);
-	}
+    /**
+     * Implementing the action of pressing 'enter' on the file name text field.
+     */
+    public void fileName_actionPerformed(ActionEvent e) {
+        notifyListeners();
+    }
 }

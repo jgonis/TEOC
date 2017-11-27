@@ -17,178 +17,165 @@
 
 package Hack.CPUEmulator;
 
-import Hack.ComputerParts.ComputerPartGUI;
-import Hack.ComputerParts.ValueComputerPart;
-import Hack.Utilities.Definitions;
+import Hack.Utilities.*;
+import Hack.ComputerParts.*;
 
 /**
  * A computer ALU. Has two inputs, one output, and a set of commands.
  */
 public class ALU extends ValueComputerPart {
 
-	// The amount of miliseconds that the ALU will flash when computing its
-	// value.
-	private static final int BODY_FLASH_TIME = 500;
-	private static final int COMMAND_FLASH_TIME = 500;
+    // The amount of miliseconds that the ALU will flash when computing its value.
+    private static final int BODY_FLASH_TIME = 500;
+    private static final int COMMAND_FLASH_TIME = 500;
 
-	// The inputs of the ALU
-	private short input0, input1;
+    // The inputs of the ALU
+    private short input0, input1;
 
-	// The output of the ALU
-	private short output;
+    // The output of the ALU
+    private short output;
 
-	// The gui of the ALU
-	private ALUGUI gui;
+    // The dscription of the command
+    private String commandDescription;
 
-	// if true, zeros input0 before operation
-	private boolean zero0;
+    // The gui of the ALU
+    private ALUGUI gui;
 
-	// if true, zeros input1 before operation
-	private boolean zero1;
+    // if true, zeros input0 before operation
+    private boolean zero0;
 
-	// if true, negates input0 before operation
-	private boolean negate0;
+    // if true, zeros input1 before operation
+    private boolean zero1;
 
-	// if true, negates input1 before operation
-	private boolean negate1;
+    // if true, negates input0 before operation
+    private boolean negate0;
 
-	// if true, ADDs the inputs. Otherwise, ANDs the inputs (logical AND)
-	private boolean ADDorAND;
+    // if true, negates input1 before operation
+    private boolean negate1;
 
-	// if true, negates the output after the operation.
-	private boolean negateOutput;
+    // if true, ADDs the inputs. Otherwise, ANDs the inputs (logical AND)
+    private boolean ADDorAND;
 
-	/**
-	 * Constructs a new ALU with the given ALU GUI.
-	 */
-	public ALU(ALUGUI gui) {
-		super(gui != null);
-		this.gui = gui;
-	}
+    // if true, negates the output after the operation.
+    private boolean negateOutput;
 
-	/**
-	 * Computes the value of the ALU's output according to the inputs and the
-	 * current command.
-	 */
-	public synchronized void compute() {
 
-		if (animate) {
-			gui.bodyFlash();
-			try {
-				wait(BODY_FLASH_TIME);
-			} catch (InterruptedException ie) {
-			}
-			gui.hideBodyFlash();
-		}
+    /**
+     * Constructs a new ALU with the given ALU GUI.
+     */
+    public ALU(ALUGUI gui) {
+        super(gui != null);
+        this.gui = gui;
+    }
 
-		short result = Definitions.computeALU(input0, input1, zero0, negate0, zero1, negate1, ADDorAND, negateOutput);
+    public ComputerPartGUI getGUI() {
+        return gui;
+    }
 
-		setValueAt(2, result, false);
-	}
+    /**
+     * Sets the ALU's command with the given information.
+     * zero0 - if true, zeros input0 before operation
+     * zero1 - if true, zeros input1 before operation
+     * negate0 - if true, negates input0 before operation
+     * negate1 - if true, negates input1 before operation
+     * ADDorAND - if true, ADDs the inputs. Otherwise, ANDs the inputs (logical AND)
+     * negateOutput - if true, negates the output after the operation.
+     */
+    public synchronized void setCommand(String description,  boolean zero0, boolean negate0,
+                                        boolean zero1, boolean negate1, boolean ADDorAND,
+                                        boolean negateOutput) {
+        commandDescription = description;
+        this.zero0 = zero0;
+        this.negate0 = negate0;
+        this.zero1 = zero1;
+        this.negate1 = negate1;
+        this.ADDorAND = ADDorAND;
+        this.negateOutput = negateOutput;
 
-	@Override
-	public void doSetValueAt(int index, short value) {
-		switch (index) {
-		case 0:
-			input0 = value;
-			break;
-		case 1:
-			input1 = value;
-			break;
-		case 2:
-			output = value;
-			break;
-		}
-	}
+        if (displayChanges)
+            gui.setCommand(description);
 
-	@Override
-	public ComputerPartGUI getGUI() {
-		return gui;
-	}
+        if (animate) {
+            gui.commandFlash();
+            try {
+                wait(COMMAND_FLASH_TIME);
+            } catch (InterruptedException ie) {}
+            gui.hideCommandFlash();
+        }
+    }
 
-	/**
-	 * Returns the output of the ALU.
-	 */
-	public short getOutput() {
-		return getValueAt(2);
-	}
 
-	@Override
-	public short getValueAt(int index) {
-		short result = 0;
+    /**
+     * Computes the value of the ALU's output according to the inputs and the
+     * current command.
+     */
+    public synchronized void compute() {
 
-		switch (index) {
-		case 0:
-			result = input0;
-			break;
-		case 1:
-			result = input1;
-			break;
-		case 2:
-			result = output;
-			break;
-		}
+        if (animate) {
+            gui.bodyFlash();
+            try {
+                wait(BODY_FLASH_TIME);
+            } catch (InterruptedException ie) {}
+            gui.hideBodyFlash();
+        }
 
-		return result;
-	}
+        short result = Definitions.computeALU(input0, input1, zero0, negate0, zero1,
+                                              negate1, ADDorAND, negateOutput);
 
-	@Override
-	public void refreshGUI() {
-		quietUpdateGUI(0, input0);
-		quietUpdateGUI(1, input1);
-		quietUpdateGUI(2, output);
-	}
+        setValueAt(2, result, false);
+    }
 
-	@Override
-	public void reset() {
-		super.reset();
-		input0 = nullValue;
-		input1 = nullValue;
-		output = nullValue;
-	}
+    /**
+     * Sets the first input of the ALU with the given value.
+     */
+    public void setInput0(short value) {
+        setValueAt(0, value, false);
+    }
 
-	/**
-	 * Sets the ALU's command with the given information. zero0 - if true, zeros
-	 * input0 before operation zero1 - if true, zeros input1 before operation
-	 * negate0 - if true, negates input0 before operation negate1 - if true,
-	 * negates input1 before operation ADDorAND - if true, ADDs the inputs.
-	 * Otherwise, ANDs the inputs (logical AND) negateOutput - if true, negates
-	 * the output after the operation.
-	 */
-	public synchronized void setCommand(String description, boolean zero0, boolean negate0, boolean zero1,
-			boolean negate1, boolean ADDorAND, boolean negateOutput) {
-		this.zero0 = zero0;
-		this.negate0 = negate0;
-		this.zero1 = zero1;
-		this.negate1 = negate1;
-		this.ADDorAND = ADDorAND;
-		this.negateOutput = negateOutput;
+    /**
+     * Sets the second input of the ALU with the given value.
+     */
+    public void setInput1(short value) {
+        setValueAt(1, value, false);
+    }
 
-		if (displayChanges) {
-			gui.setCommand(description);
-		}
+    /**
+     * Returns the output of the ALU.
+     */
+    public short getOutput() {
+        return getValueAt(2);
+    }
 
-		if (animate) {
-			gui.commandFlash();
-			try {
-				wait(COMMAND_FLASH_TIME);
-			} catch (InterruptedException ie) {
-			}
-			gui.hideCommandFlash();
-		}
-	}
+    public short getValueAt(int index) {
+        short result = 0;
 
-	/**
-	 * Sets the first input of the ALU with the given value.
-	 */
-	public void setInput0(short value) {
-		setValueAt(0, value, false);
-	}
+        switch (index) {
+            case 0: result = input0; break;
+            case 1: result = input1; break;
+            case 2: result = output; break;
+        }
 
-	/**
-	 * Sets the second input of the ALU with the given value.
-	 */
-	public void setInput1(short value) {
-		setValueAt(1, value, false);
-	}
+        return result;
+    }
+
+    public void doSetValueAt(int index, short value) {
+        switch (index) {
+            case 0: input0 = value; break;
+            case 1: input1 = value; break;
+            case 2: output = value; break;
+        }
+    }
+
+    public void reset() {
+        super.reset();
+        input0 = nullValue;
+        input1 = nullValue;
+        output = nullValue;
+    }
+
+    public void refreshGUI() {
+        quietUpdateGUI(0, input0);
+        quietUpdateGUI(1, input1);
+        quietUpdateGUI(2, output);
+    }
 }

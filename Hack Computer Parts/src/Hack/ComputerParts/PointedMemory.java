@@ -22,34 +22,31 @@ package Hack.ComputerParts;
  */
 public class PointedMemory extends Memory {
 
-	/**
-	 * Constructs a new PointedMemory of the given size with the given optional
-	 * GUI.
-	 */
-	public PointedMemory(int size, PointedMemoryGUI gui) {
-		super(size, gui);
-	}
+    /**
+     * Constructs a new PointedMemory of the given size with the given optional GUI.
+     */
+    public PointedMemory(int size, PointedMemoryGUI gui) {
+        super(size, gui);
+    }
 
-	/**
-	 * Constructs a new PointedMemory of the given size with the given optional
-	 * GUI and the given legal values range.
-	 */
-	public PointedMemory(int size, PointedMemoryGUI gui, short minValue, short maxValue) {
-		super(size, gui, minValue, maxValue);
-	}
+    /**
+     * Constructs a new PointedMemory of the given size with the given optional GUI and
+     * the given legal values range.
+     */
+    public PointedMemory(int size, PointedMemoryGUI gui, short minValue, short maxValue) {
+        super(size, gui, minValue, maxValue);
+    }
 
-	@Override
-	public void reset() {
-		setPointerAddress(0);
-		super.reset();
-	}
+    /**
+     * Set the pointer to point at the given address.
+     */
+    public void setPointerAddress(int address) {
+        if (displayChanges)
+            ((PointedMemoryGUI)gui).setPointer(address);
+    }
 
-	/**
-	 * Set the pointer to point at the given address.
-	 */
-	public void setPointerAddress(int address) {
-		if (displayChanges) {
-			((PointedMemoryGUI) m_gui).setPointer(address);
-		}
-	}
+    public void reset() {
+        setPointerAddress(0);
+        super.reset();
+    }
 }

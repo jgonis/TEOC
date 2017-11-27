@@ -18,39 +18,37 @@
 package Hack.Gates;
 
 /**
- * A Node that receives a target node and low & high bit indice of a sub bus.
- * When the value of this node changes, it only changes the appropriate sub bus
- * of the target node.
+ * A Node that receives a target node and low & high bit indice of a sub bus. When the
+ * value of this node changes, it only changes the appropriate sub bus of the target node.
  */
 public class SubBusListeningAdapter extends Node {
 
-	// The mask which filters out the non-relevant part of the sub-node
-	private short mask;
+    // The mask which filters out the non-relevant part of the sub-node
+    private short mask;
 
-	// The amount of bits to shift left before masking
-	private byte shiftLeft;
+    // The amount of bits to shift left before masking
+    private byte shiftLeft;
 
-	// The target node (the node that this node affects).
-	private Node targetNode;
+    // The target node (the node that this node affects).
+    private Node targetNode;
 
-	/**
-	 * Constructs a new SubBusListeningAdapter with the given target node and
-	 * the low & high bit indice of the sub bus.
-	 */
-	public SubBusListeningAdapter(Node targetNode, byte low, byte high) {
-		mask = SubNode.getMask(low, high);
-		shiftLeft = low;
-		this.targetNode = targetNode;
-	}
+    /**
+     * Constructs a new SubBusListeningAdapter with the given target node and the
+     * low & high bit indice of the sub bus.
+     */
+    public SubBusListeningAdapter(Node targetNode, byte low, byte high) {
+        mask = SubNode.getMask(low, high);
+        shiftLeft = low;
+        this.targetNode = targetNode;
+    }
 
-	/**
-	 * Sets the node's value with the given value. Notifies the listeners on the
-	 * change by calling their set() method.
-	 */
-	@Override
-	public void set(short value) {
-		short masked1 = (short) (targetNode.get() & (~mask));
-		short masked2 = (short) ((short) (value << shiftLeft) & mask);
-		targetNode.set((short) (masked1 | masked2));
-	}
+    /**
+     * Sets the node's value with the given value.
+     * Notifies the listeners on the change by calling their set() method.
+     */
+    public void set(short value) {
+        short masked1 = (short)(targetNode.get() & (~mask));
+        short masked2 = (short)((short)(value << shiftLeft) & mask);
+        targetNode.set((short)(masked1 | masked2));
+    }
 }

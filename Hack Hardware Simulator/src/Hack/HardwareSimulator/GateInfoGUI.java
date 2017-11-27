@@ -17,41 +17,40 @@
 
 package Hack.HardwareSimulator;
 
-import Hack.ComputerParts.ComputerPartGUI;
+import Hack.ComputerParts.*;
 
 /**
  * An interface for the GUI of the gate information.
  */
 public interface GateInfoGUI extends ComputerPartGUI {
 
-	/**
-	 * Disables the time display.
-	 */
-	public void disableTime();
+    /**
+     * Sets the current time.
+     */
+    public void setTime(int time);
 
-	/**
-	 * Enables the time display.
-	 */
-	public void enableTime();
+    /**
+     * Sets the clocked flag - whether the chip is clocked or not clocked.
+     */
+    public void setClocked(boolean clocked);
 
-	/**
-	 * Sets the current chip name with the given name.
-	 */
-	public void setChip(String chipName);
+    /**
+     * If up is true, sets the clock to be up. otherwise, sets the clock to be down.
+     */
+    public void setClock(boolean up);
 
-	/**
-	 * If up is true, sets the clock to be up. otherwise, sets the clock to be
-	 * down.
-	 */
-	public void setClock(boolean up);
+    /**
+     * Sets the current chip name with the given name.
+     */
+    public void setChip(String chipName);
 
-	/**
-	 * Sets the clocked flag - whether the chip is clocked or not clocked.
-	 */
-	public void setClocked(boolean clocked);
+    /**
+     * Enables the time display.
+     */
+    public void enableTime();
 
-	/**
-	 * Sets the current time.
-	 */
-	public void setTime(int time);
+    /**
+     * Disables the time display.
+     */
+    public void disableTime();
 }

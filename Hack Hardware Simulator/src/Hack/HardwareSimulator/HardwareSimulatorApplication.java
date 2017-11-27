@@ -17,33 +17,31 @@
 
 package Hack.HardwareSimulator;
 
-import Hack.Controller.ControllerException;
-import Hack.Controller.ControllerGUI;
-import Hack.Controller.HackApplication;
-import Hack.Controller.HackSimulator;
-import Hack.Controller.ScriptException;
+import Hack.Controller.*;
 
 /**
  * A HardwareSimulator application.
  */
 public class HardwareSimulatorApplication extends HackApplication {
 
-	/**
-	 * Constructs a new HardwareSimulatorApplication with the given controller
-	 * GUI component, the simulator GUI component, the default script name and
-	 * the names of the help files.
-	 */
-	public HardwareSimulatorApplication(HardwareSimulatorControllerGUI controllerComponent,
-			HardwareSimulatorGUI simulatorComponent, String defaultScript, String contentsFileName,
-			String aboutFileName) {
-		super(new HardwareSimulator(simulatorComponent), controllerComponent, simulatorComponent, defaultScript,
-				contentsFileName, aboutFileName);
-	}
+    /**
+     * Constructs a new HardwareSimulatorApplication with the given controller GUI
+     * component, the simulator GUI component, the default script name and the names of the
+     * help files.
+     */
+    public HardwareSimulatorApplication(HardwareSimulatorControllerGUI controllerComponent,
+                                        HardwareSimulatorGUI simulatorComponent,
+                                        String defaultScript, String contentsFileName,
+                                        String aboutFileName) {
+        super(new HardwareSimulator(simulatorComponent), controllerComponent, simulatorComponent,
+              defaultScript, contentsFileName, aboutFileName);
+    }
 
-	@Override
-	protected void createController(HackSimulator simulator, ControllerGUI controllerComponent, String defaultScript)
-			throws ScriptException, ControllerException {
-		new HardwareSimulatorController((HardwareSimulatorControllerGUI) controllerComponent,
-				(HardwareSimulator) simulator, defaultScript);
-	}
+    protected void createController(HackSimulator simulator, ControllerGUI controllerComponent,
+                                    String defaultScript)
+     throws ScriptException, ControllerException {
+        HardwareSimulatorController c =
+            new HardwareSimulatorController((HardwareSimulatorControllerGUI)controllerComponent,
+                                            (HardwareSimulator)simulator, defaultScript);
+    }
 }

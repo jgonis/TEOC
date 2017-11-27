@@ -20,31 +20,26 @@ package Hack.Controller;
 /**
  * An exception for errors that occurs in the script.
  */
-public class ScriptException extends Exception {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 6788558610166936810L;
+public class ScriptException extends Exception
+{
+    /**
+     * Constructs a new ScriptException with the given message, script name and Line number.
+     */
+    public ScriptException(String message, String scriptName, int lineNumber) {
+        super("In script " + scriptName + ", Line " + lineNumber + ", " + message);
+    }
 
-	/**
-	 * Constructs a new ScriptException with the given message.
-	 */
-	public ScriptException(String message) {
-		super(message);
-	}
+    /**
+     * Constructs a new ScriptException with the given message and script name.
+     */
+    public ScriptException(String message, String scriptName) {
+        super("In script " + scriptName + ", " + message);
+    }
 
-	/**
-	 * Constructs a new ScriptException with the given message and script name.
-	 */
-	public ScriptException(String message, String scriptName) {
-		super("In script " + scriptName + ", " + message);
-	}
-
-	/**
-	 * Constructs a new ScriptException with the given message, script name and
-	 * Line number.
-	 */
-	public ScriptException(String message, String scriptName, int lineNumber) {
-		super("In script " + scriptName + ", Line " + lineNumber + ", " + message);
-	}
+    /**
+     * Constructs a new ScriptException with the given message.
+     */
+    public ScriptException(String message) {
+        super(message);
+    }
 }

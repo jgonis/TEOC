@@ -22,54 +22,49 @@ package Hack.ComputerParts;
  */
 public class Bus extends ComputerPart {
 
-	// The gui of the bus.
-	private BusGUI gui;
+    // The gui of the bus.
+    private BusGUI gui;
 
-	/**
-	 * Constructs a new bus with its given (optional) GUI.
-	 */
-	public Bus(BusGUI gui) {
-		super(gui != null);
-		this.gui = gui;
-	}
+    /**
+     * Constructs a new bus with its given (optional) GUI.
+     */
+    public Bus(BusGUI gui) {
+        super(gui != null);
+        this.gui = gui;
+    }
 
-	@Override
-	public ComputerPartGUI getGUI() {
-		return gui;
-	}
+    public ComputerPartGUI getGUI() {
+        return gui;
+    }
 
-	@Override
-	public void refreshGUI() {
-	}
+    /**
+     * Sets the animation speed with the given speed.
+     * (in the range 1..HackController.NUMBER_OF_SPEED_UNITS)
+     */
+    public void setAnimationSpeed(int speed) {
+        if (hasGUI)
+            gui.setSpeed(speed);
+    }
 
-	/**
-	 * Sends a value from the the source computer part at location sourceIndex
-	 * to the target computer part at location targetIndex.
-	 */
-	public synchronized void send(ValueComputerPart sourcePart, int sourceIndex, ValueComputerPart targetPart,
-			int targetIndex) {
+    /**
+     * Sends a value from the the source computer part at location sourceIndex to the
+     * target computer part at location targetIndex.
+     */
+    public synchronized void send(ValueComputerPart sourcePart, int sourceIndex,
+                                  ValueComputerPart targetPart, int targetIndex) {
 
-		if (animate && sourcePart.animate && hasGUI) {
-			try {
-				wait(100);
-			} catch (InterruptedException ie) {
-			}
+        if (animate && sourcePart.animate && hasGUI) {
+            try {
+                wait(100);
+            } catch (InterruptedException ie) {}
 
-			gui.move(((ValueComputerPartGUI) sourcePart.getGUI()).getCoordinates(sourceIndex),
-					((ValueComputerPartGUI) targetPart.getGUI()).getCoordinates(targetIndex),
-					((ValueComputerPartGUI) sourcePart.getGUI()).getValueAsString(sourceIndex));
-		}
+            gui.move(((ValueComputerPartGUI)sourcePart.getGUI()).getCoordinates(sourceIndex),
+                     ((ValueComputerPartGUI)targetPart.getGUI()).getCoordinates(targetIndex),
+                     ((ValueComputerPartGUI)sourcePart.getGUI()).getValueAsString(sourceIndex));
+        }
 
-		targetPart.setValueAt(targetIndex, sourcePart.getValueAt(sourceIndex), false);
-	}
+        targetPart.setValueAt(targetIndex, sourcePart.getValueAt(sourceIndex), false);
+    }
 
-	/**
-	 * Sets the animation speed with the given speed. (in the range
-	 * 1..HackController.NUMBER_OF_SPEED_UNITS)
-	 */
-	public void setAnimationSpeed(int speed) {
-		if (hasGUI) {
-			gui.setSpeed(speed);
-		}
-	}
+    public void refreshGUI() {}
 }

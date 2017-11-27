@@ -22,10 +22,10 @@ package Hack.Controller;
  */
 public interface ControllerEventListener {
 
-	/**
-	 * Called when an action should be taken in the controller. The given event
-	 * contains the source object, the performed action's code and the action's
-	 * supplied data object.
-	 */
-	public void actionPerformed(ControllerEvent event);
+    /**
+     * Called when an action should be taken in the controller.
+     * The given event contains the source object, the performed action's code
+     * and the action's supplied data object.
+     */
+    public void actionPerformed(ControllerEvent event);
 }

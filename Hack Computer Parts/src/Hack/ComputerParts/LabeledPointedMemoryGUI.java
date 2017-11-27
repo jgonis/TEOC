@@ -21,23 +21,23 @@ package Hack.ComputerParts;
  * An interface for the GUI of the Labeled Pointed Memory.
  */
 public interface LabeledPointedMemoryGUI extends PointedMemoryGUI {
-	/**
-	 * Clears all labels.
-	 */
-	public void clearLabels();
+    /**
+     * Sets a name for the label at the given address
+     */
+    public void setLabel(int address, String name);
 
-	/**
-	 * Hides the existing flash.
-	 */
-	public void hideLabelFlash();
+    /**
+     * Clears all labels.
+     */
+    public void clearLabels();
 
-	/**
-	 * Flashes the label at the given address.
-	 */
-	public void labelFlash(int address);
+    /**
+     * Flashes the label at the given address.
+     */
+    public void labelFlash(int address);
 
-	/**
-	 * Sets a name for the label at the given address
-	 */
-	public void setLabel(int address, String name);
+    /**
+     * Hides the existing flash.
+     */
+    public void hideLabelFlash();
 }

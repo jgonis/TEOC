@@ -22,57 +22,56 @@ package Hack.Controller;
  */
 public class Breakpoint {
 
-	// The variable name
-	private String varName;
+    // The variable name
+    private String varName;
 
-	// The desired value
-	private String value;
+    // The desired value
+    private String value;
 
-	// The status of the breakpoint
-	private boolean reached;
+    // The status of the breakpoint
+    private boolean reached;
 
-	/**
-	 * Constructs a new Breakpoint with the given variable name and desired
-	 * value.
-	 */
-	public Breakpoint(String varName, String value) {
-		this.varName = varName;
-		this.value = value;
-		reached = false;
-	}
+    /**
+     * Constructs a new Breakpoint with the given variable name and desired value.
+     */
+    public Breakpoint(String varName, String value) {
+        this.varName = varName;
+        this.value = value;
+        reached = false;
+    }
 
-	/**
-	 * Returns the breakpoint value.
-	 */
-	public String getValue() {
-		return value;
-	}
+    /**
+     * Returns the variable name.
+     */
+    public String getVarName() {
+        return varName;
+    }
 
-	/**
-	 * Returns the variable name.
-	 */
-	public String getVarName() {
-		return varName;
-	}
+    /**
+     * Returns the breakpoint value.
+     */
+    public String getValue() {
+        return value;
+    }
 
-	/**
-	 * Returns true if the breakpoint is reached.
-	 */
-	public boolean isReached() {
-		return reached;
-	}
+    /**
+     * sets the breakpoint "off" - puts it into "not reached" state.
+     */
+    public void off() {
+        reached = false;
+    }
 
-	/**
-	 * sets the breakpoint "off" - puts it into "not reached" state.
-	 */
-	public void off() {
-		reached = false;
-	}
+    /**
+     * Sets the breakpoint "on" - puts it into "reached" state.
+     */
+    public void on() {
+        reached = true;
+    }
 
-	/**
-	 * Sets the breakpoint "on" - puts it into "reached" state.
-	 */
-	public void on() {
-		reached = true;
-	}
+    /**
+     * Returns true if the breakpoint is reached.
+     */
+    public boolean isReached() {
+        return reached;
+    }
 }

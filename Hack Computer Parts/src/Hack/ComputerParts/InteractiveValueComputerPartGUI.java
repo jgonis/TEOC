@@ -20,47 +20,46 @@ package Hack.ComputerParts;
 /**
  * An interface for the gui of an InteractiveValueComputerPart.
  */
-public interface InteractiveValueComputerPartGUI extends ValueComputerPartGUI, InteractiveComputerPartGUI {
+public interface InteractiveValueComputerPartGUI
+ extends ValueComputerPartGUI, InteractiveComputerPartGUI {
 
-	/**
-	 * Registers the given ComputerPartEventListener as a listener to this GUI.
-	 */
-	public void addListener(ComputerPartEventListener listener);
+    /**
+     * Registers the given ComputerPartEventListener as a listener to this GUI.
+     */
+    public void addListener(ComputerPartEventListener listener);
 
-	/**
-	 * Disables user input into the computer part.
-	 */
-	public void disableUserInput();
+    /**
+     * Un-registers the given ComputerPartEventListener from being a listener to this GUI.
+     */
+    public void removeListener(ComputerPartEventListener listener);
 
-	/**
-	 * Enables user input into the computer part.
-	 */
-	public void enableUserInput();
+    /**
+     * Notifies all the ComputerPartEventListeners on a change in the computer part by creating
+     * a ComputerPartEvent (with the changed index and value) and sending it using the
+     * valueChanged method to all the listeners.
+     */
+    public void notifyListeners(int index, short value);
 
-	/**
-	 * Notifies all the ComputerPartEventListeners that the gui gained focus by
-	 * creating a ComputerPartEvent and sending it using the guiGainedFocus
-	 * method to all the listeners.
-	 */
-	public void notifyListeners();
+    /**
+     * Notifies all the ComputerPartEventListeners that the gui gained focus by creating
+     * a ComputerPartEvent and sending it using the guiGainedFocus method to all the listeners.
+     */
+    public void notifyListeners();
 
-	/**
-	 * Notifies all the ComputerPartEventListeners on a change in the computer
-	 * part by creating a ComputerPartEvent (with the changed index and value)
-	 * and sending it using the valueChanged method to all the listeners.
-	 */
-	public void notifyListeners(int index, short value);
+    /**
+     * Enables user input into the computer part.
+     */
+    public void enableUserInput();
 
-	/**
-	 * Un-registers the given ComputerPartEventListener from being a listener to
-	 * this GUI.
-	 */
-	public void removeListener(ComputerPartEventListener listener);
+    /**
+     * Disables user input into the computer part.
+     */
+    public void disableUserInput();
 
-	/**
-	 * Sets the enabled range of this segment. Any address outside this range
-	 * will be disabled for user input. If gray is true, addresses outside the
-	 * range will be gray colored.
-	 */
-	public void setEnabledRange(int start, int end, boolean gray);
+    /**
+     * Sets the enabled range of this segment.
+     * Any address outside this range will be disabled for user input.
+     * If gray is true, addresses outside the range will be gray colored.
+     */
+    public void setEnabledRange(int start, int end, boolean gray);
 }

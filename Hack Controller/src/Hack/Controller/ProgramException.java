@@ -20,24 +20,20 @@ package Hack.Controller;
 /**
  * An exception for errors in the program.
  */
-public class ProgramException extends Exception {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 5998657764220917321L;
+public class ProgramException extends Exception
+{
+    /**
+     * Constructs a new ProgramException with the given message.
+     */
+    public ProgramException(String message) {
+        super(message);
+    }
 
-	/**
-	 * Constructs a new ProgramException with the given message.
-	 */
-	public ProgramException(String message) {
-		super(message);
-	}
-
-	/**
-	 * Constructs a new ProgramException with the given message and Line number.
-	 */
-	public ProgramException(String message, int lineNumber) {
-		super("In line " + lineNumber + ", " + message);
-	}
+    /**
+     * Constructs a new ProgramException with the given message and Line number.
+     */
+    public ProgramException(String message, int lineNumber) {
+        super("In line " + lineNumber + ", " + message);
+    }
 
 }

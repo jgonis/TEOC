@@ -17,181 +17,164 @@
 
 package Hack.HardwareSimulator;
 
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Vector;
-
-import Hack.ComputerParts.ComputerPartGUI;
-import Hack.ComputerParts.ValueComputerPart;
-import Hack.Gates.CompositeGateClass;
-import Hack.Gates.Gate;
-import Hack.Gates.GateClass;
-import Hack.Gates.Node;
-import Hack.Gates.PinInfo;
+import Hack.ComputerParts.*;
+import Hack.Gates.*;
+import java.util.*;
 
 /**
  * Represents a collection of pins of a specific part.
  */
 public class PartPins extends ValueComputerPart {
 
-	// The gui
-	private PartPinsGUI gui;
 
-	// The part pins.
-	private Vector<PartPinInfo> partPins;
+    // The gui
+    private PartPinsGUI gui;
 
-	// The current gate
-	private Gate gate;
+    // The part pins.
+    private Vector partPins;
 
-	// The GateClass of the part
-	private GateClass partGateClass;
+    // The current gate
+    private Gate gate;
 
-	// mapping from the pins' nodes to their gui adapters.
-	private Hashtable<Node, Node> nodes;
+    // The GateClass of the part
+    private GateClass partGateClass;
 
-	/**
-	 * Constructs a new Part Pins with the given gui.
-	 */
-	public PartPins(PartPinsGUI gui) {
-		super(gui != null);
-		this.gui = gui;
-		partPins = new Vector<PartPinInfo>();
-		nodes = new Hashtable<Node, Node>();
-		clearGate();
-	}
+    // mapping from the pins' nodes to their gui adapters.
+    private Hashtable nodes;
 
-	// Adds the given pin to list
-	public void addPin(String partPinName, String gatePinName) {
-		if ((gate != null) && (partGateClass != null)) {
-			String cleanPartPinName = partPinName;
-			String cleanGatePinName = gatePinName;
+    /**
+     * Constructs a new Part Pins with the given gui.
+     */
+    public PartPins(PartPinsGUI gui) {
+        super(gui != null);
+        this.gui = gui;
+        partPins = new Vector();
+        nodes = new Hashtable();
+        clearGate();
+    }
 
-			// find names without sub bus specifications
-			if (partPinName.indexOf("[") >= 0) {
-				cleanPartPinName = partPinName.substring(0, partPinName.indexOf("["));
-			}
-			if (gatePinName.indexOf("[") >= 0) {
-				cleanGatePinName = gatePinName.substring(0, gatePinName.indexOf("["));
-			}
+    // Removes the current gate
+    private void clearGate() {
+        gate = null;
+        clearPart();
+    }
 
-			// prepare part pin info
-			PinInfo partInfo = partGateClass.getPinInfo(cleanPartPinName);
-			PartPinInfo info = new PartPinInfo();
-			info.partPinName = partInfo.name;
-			try {
-				info.partPinSubBus = CompositeGateClass.getSubBus(partPinName);
-			} catch (Exception e) {
-			}
+    // Removes the current part
+    private void clearPart() {
+        partPins.removeAllElements();
+        partGateClass = null;
 
-			// find gate's node and info
-			Node node;
-			boolean selfFittingWidth = false;
-			if (cleanGatePinName.equals(CompositeGateClass.TRUE_NODE_INFO.name)) {
-				node = Gate.TRUE_NODE;
-				info.gatePinName = CompositeGateClass.TRUE_NODE_INFO.name;
-				selfFittingWidth = true;
-			} else if (cleanGatePinName.equals(CompositeGateClass.FALSE_NODE_INFO.name)) {
-				node = Gate.FALSE_NODE;
-				info.gatePinName = CompositeGateClass.FALSE_NODE_INFO.name;
-				selfFittingWidth = true;
-			} else if (cleanGatePinName.equals(CompositeGateClass.CLOCK_NODE_INFO.name)) {
-				node = Gate.CLOCK_NODE;
-				info.gatePinName = CompositeGateClass.CLOCK_NODE_INFO.name;
-			} else {
-				node = gate.getNode(cleanGatePinName);
-				PinInfo gateInfo = gate.getGateClass().getPinInfo(cleanGatePinName);
-				info.gatePinName = gateInfo.name;
-			}
+        // remove all node gui adapters
+        Enumeration keys = nodes.keys();
+        while (keys.hasMoreElements()) {
+            Node node = (Node)keys.nextElement();
+            Node nodeAdapter = (Node)nodes.get(node);
+            node.removeListener(nodeAdapter);
+        }
 
-			if (selfFittingWidth) {
-				info.gatePinSubBus = new byte[] { 0, (byte) (partInfo.width - 1) };
-			} else {
-				try {
-					info.gatePinSubBus = CompositeGateClass.getSubBus(gatePinName);
-				} catch (Exception e) {
-				}
-			}
+        refreshGUI();
+    }
 
-			// create node adapter for notifying gui on value changes
-			Node nodeAdapter = null;
-			if (info.gatePinSubBus == null) {
-				nodeAdapter = new NodePartPinsAdapter(this, partPins.size());
-			} else {
-				nodeAdapter = new SubNodePartPinsAdapter(info.gatePinSubBus[0], info.gatePinSubBus[1], this,
-						partPins.size());
-			}
-			node.addListener(nodeAdapter);
-			nodes.put(node, nodeAdapter);
-			partPins.addElement(info);
-			refreshGUI();
-			nodeAdapter.set(node.get());
-			reset();
-		}
-	}
+    // Sets the current gate.
+    public void setGate(Gate gate) {
+        clearGate();
+        this.gate = gate;
+    }
 
-	// Removes the current gate
-	private void clearGate() {
-		gate = null;
-		clearPart();
-	}
+    // Sets the current part GateClass.
+    public void setPart(GateClass partGateClass, String partName) {
+        clearPart();
+        this.partGateClass = partGateClass;
 
-	// Removes the current part
-	private void clearPart() {
-		partPins.removeAllElements();
-		partGateClass = null;
+        if (hasGUI)
+            gui.setPartName(partName);
+    }
 
-		// remove all node gui adapters
-		Enumeration<Node> enums = nodes.keys();
-		while (enums.hasMoreElements()) {
-			Node node = enums.nextElement();
-			Node nodeAdapter = nodes.get(node);
-			node.removeListener(nodeAdapter);
-		}
+    // Adds the given pin to list
+    public void addPin(String partPinName, String gatePinName) {
+        if (gate != null && partGateClass != null) {
+            String cleanPartPinName = partPinName;
+            String cleanGatePinName = gatePinName;
 
-		refreshGUI();
-	}
+            // find names without sub bus specifications
+            if (partPinName.indexOf("[") >= 0)
+                cleanPartPinName = partPinName.substring(0, partPinName.indexOf("["));
+            if (gatePinName.indexOf("[") >= 0)
+                cleanGatePinName = gatePinName.substring(0, gatePinName.indexOf("["));
 
-	@Override
-	public void doSetValueAt(int index, short value) {
-	}
+            // prepare part pin info
+            PinInfo partInfo = partGateClass.getPinInfo(cleanPartPinName);
+            PartPinInfo info = new PartPinInfo();
+            info.partPinName = partInfo.name;
+            try {
+                info.partPinSubBus = CompositeGateClass.getSubBus(partPinName);
+            } catch (Exception e) {}
 
-	@Override
-	public ComputerPartGUI getGUI() {
-		return gui;
-	}
+            // find gate's node and info
+            Node node;
+            boolean selfFittingWidth = false;
+            if (cleanGatePinName.equals(CompositeGateClass.TRUE_NODE_INFO.name)) {
+                node = Gate.TRUE_NODE;
+                info.gatePinName = CompositeGateClass.TRUE_NODE_INFO.name;
+                selfFittingWidth = true;
+            }
+            else if (cleanGatePinName.equals(CompositeGateClass.FALSE_NODE_INFO.name)) {
+                node = Gate.FALSE_NODE;
+                info.gatePinName = CompositeGateClass.FALSE_NODE_INFO.name;
+                selfFittingWidth = true;
+            }
+            else if (cleanGatePinName.equals(CompositeGateClass.CLOCK_NODE_INFO.name)) {
+                node = Gate.CLOCK_NODE;
+                info.gatePinName = CompositeGateClass.CLOCK_NODE_INFO.name;
+            }
+            else {
+                node = gate.getNode(cleanGatePinName);
+                PinInfo gateInfo = gate.getGateClass().getPinInfo(cleanGatePinName);
+                info.gatePinName = gateInfo.name;
+            }
 
-	@Override
-	public short getValueAt(int index) {
-		return partPins.elementAt(index).value;
-	}
+            if (selfFittingWidth)
+                info.gatePinSubBus = new byte[]{0, (byte)(partInfo.width - 1)};
+            else {
+                try {
+                    info.gatePinSubBus = CompositeGateClass.getSubBus(gatePinName);
+                } catch (Exception e) {}
+            }
 
-	@Override
-	public void refreshGUI() {
-		if (displayChanges) {
-			gui.setContents(partPins);
-		}
-	}
+            // create node adapter for notifying gui on value changes
+            Node nodeAdapter = null;
+            if (info.gatePinSubBus == null)
+                nodeAdapter = new NodePartPinsAdapter(this, partPins.size());
+            else
+                nodeAdapter = new SubNodePartPinsAdapter(info.gatePinSubBus[0],
+                                                         info.gatePinSubBus[1],
+                                                         this, partPins.size());
+            node.addListener(nodeAdapter);
+            nodes.put(node, nodeAdapter);
+            partPins.addElement(info);
+            refreshGUI();
+            nodeAdapter.set(node.get());
+            reset();
+        }
+    }
 
-	// Sets the current gate.
-	public void setGate(Gate gate) {
-		clearGate();
-		this.gate = gate;
-	}
+    public ComputerPartGUI getGUI() {
+        return gui;
+    }
 
-	// Sets the current part GateClass.
-	public void setPart(GateClass partGateClass, String partName) {
-		clearPart();
-		this.partGateClass = partGateClass;
+    public short getValueAt(int index) {
+        return ((PartPinInfo)partPins.elementAt(index)).value;
+    }
 
-		if (hasGUI) {
-			gui.setPartName(partName);
-		}
-	}
+    public void refreshGUI() {
+        if (displayChanges)
+            gui.setContents(partPins);
+    }
 
-	@Override
-	public void setValueAt(int index, short value, boolean quiet) {
-		if (getValueAt(index) != value) {
-			super.setValueAt(index, value, quiet);
-		}
-	}
+    public void setValueAt(int index, short value, boolean quiet) {
+        if (getValueAt(index) != value)
+            super.setValueAt(index, value, quiet);
+    }
+
+    public void doSetValueAt(int index, short value) {}
 }

@@ -17,220 +17,215 @@
 
 package Hack.Controller;
 
-import java.io.File;
-import java.util.Vector;
-
-import javax.swing.JComponent;
+import java.util.*;
+import javax.swing.*;
+import java.io.*;
 
 /**
  * An interface for a GUI of the hack controller.
  */
 public interface ControllerGUI {
 
-	/**
-	 * Registers the given ControllerEventListener as a listener to this GUI.
-	 */
-	public void addControllerListener(ControllerEventListener listener);
+    /**
+     * Registers the given ControllerEventListener as a listener to this GUI.
+     */
+    public void addControllerListener(ControllerEventListener listener);
 
-	/**
-	 * Disables the animation mode buttons.
-	 */
-	public void disableAnimationModes();
+    /**
+     * Un-registers the given ControllerEventListener from being a listener to this GUI.
+     */
+    public void removeControllerListener(ControllerEventListener listener);
 
-	/**
-	 * Disables the fast forward action.
-	 */
-	public void disableFastForward();
+    /**
+     * Notify all the ControllerEventListeners on actions taken in it, by creating
+     * a ControllerEvent (with the action and supplied data) and sending it using
+     * the actionPerformed method to all the listeners.
+     */
+    public void notifyControllerListeners(byte action, Object data);
 
-	/**
-	 * Disables the load program action.
-	 */
-	public void disableLoadProgram();
+    /**
+     * Sets the simulator component
+     */
+    public void setSimulator(HackSimulatorGUI simulator);
 
-	/**
-	 * Disables the rewind action.
-	 */
-	public void disableRewind();
+    /**
+     * Sets the title of the translator with the given title.
+     */
+    public void setTitle(String title);
 
-	/**
-	 * Disables the open script action.
-	 */
-	public void disableScript();
+    /**
+     * Displays the given message, according to the given type.
+     */
+    public void displayMessage(String message, boolean error);
 
-	/**
-	 * Disables the single step action.
-	 */
-	public void disableSingleStep();
+    /**
+     * Sets the working dir name with the given one.
+     */
+    public void setWorkingDir(File file);
 
-	/**
-	 * Disables the speed slider.
-	 */
-	public void disableSpeedSlider();
+    /**
+     * Sets the script file name with the given one.
+     */
+    public void setScriptFile(String fileName);
 
-	/**
-	 * Disables the stop action.
-	 */
-	public void disableStop();
+    /**
+     * Sets the current script line.
+     */
+    public void setCurrentScriptLine(int line);
 
-	/**
-	 * Displays the given message, according to the given type.
-	 */
-	public void displayMessage(String message, boolean error);
+    /**
+     * Returns the script file component.
+     */
+    public JComponent getScriptComponent();
 
-	/**
-	 * Enables the animation mode buttons.
-	 */
-	public void enableAnimationModes();
+    /**
+     * Sets the output file name with the given one.
+     */
+    public void setOutputFile(String fileName);
 
-	/**
-	 * Enables the fast forward action.
-	 */
-	public void enableFastForward();
+    /**
+     * Sets the current output line.
+     */
+    public void setCurrentOutputLine(int line);
 
-	/**
-	 * Enables the load program action.
-	 */
-	public void enableLoadProgram();
+    /**
+     * Returns the output file component.
+     */
+    public JComponent getOutputComponent();
 
-	/**
-	 * Enables the rewind action.
-	 */
-	public void enableRewind();
+    /**
+     * Sets the comparison file name with the given one.
+     */
+    public void setComparisonFile(String fileName);
 
-	/**
-	 * Enables the open script action.
-	 */
-	public void enableScript();
+    /**
+     * Sets the current comparison line.
+     */
+    public void setCurrentComparisonLine(int line);
 
-	/**
-	 * Enables the single step action.
-	 */
-	public void enableSingleStep();
+    /**
+     * Returns the comparison file component.
+     */
+    public JComponent getComparisonComponent();
 
-	/**
-	 * Enables the speed slider.
-	 */
-	public void enableSpeedSlider();
+    /**
+     * Sets the additional display (int code, out of the possible additional display
+     * constants in HackController)
+     */
+    public void setAdditionalDisplay(int additionalDisplayCode);
 
-	/**
-	 * Enables the stop action.
-	 */
-	public void enableStop();
+    /**
+     * Sets the breakpoints list with the given one.
+     */
+    public void setBreakpoints(Vector breakpoints);
 
-	/**
-	 * Returns the comparison file component.
-	 */
-	public JComponent getComparisonComponent();
+    /**
+     * Sets the list of recognized variables with the given one.
+     */
+    public void setVariables(String[] vars);
 
-	/**
-	 * Returns the output file component.
-	 */
-	public JComponent getOutputComponent();
+    /**
+     * Sets the speed (int code, between 1 and HackController.NUMBER_OF_SPEED_UNTIS)
+     */
+    public void setSpeed(int speed);
 
-	/**
-	 * Returns the script file component.
-	 */
-	public JComponent getScriptComponent();
+    /**
+     * Sets the animation mode (int code, out of the possible animation constants in HackController)
+     */
+    public void setAnimationMode(int animationMode);
 
-	/**
-	 * Notify all the ControllerEventListeners on actions taken in it, by
-	 * creating a ControllerEvent (with the action and supplied data) and
-	 * sending it using the actionPerformed method to all the listeners.
-	 */
-	public void notifyControllerListeners(byte action, Object data);
+    /**
+     * Sets the numeric format (int code, out of the possible format constants in HackController)
+     */
+    public void setNumericFormat(int formatCode);
 
-	/**
-	 * Called when the output file is updated.
-	 */
-	public void outputFileUpdated();
+    /**
+     * Opens the breakpoints panel.
+     */
+    public void showBreakpoints();
 
-	/**
-	 * Un-registers the given ControllerEventListener from being a listener to
-	 * this GUI.
-	 */
-	public void removeControllerListener(ControllerEventListener listener);
+    /**
+     * Called when the output file is updated.
+     */
+    public void outputFileUpdated();
 
-	/**
-	 * Sets the additional display (int code, out of the possible additional
-	 * display constants in HackController)
-	 */
-	public void setAdditionalDisplay(int additionalDisplayCode);
+    /**
+     * Enables the single step action.
+     */
+    public void enableSingleStep();
 
-	/**
-	 * Sets the animation mode (int code, out of the possible animation
-	 * constants in HackController)
-	 */
-	public void setAnimationMode(int animationMode);
+    /**
+     * Disables the single step action.
+     */
+    public void disableSingleStep();
 
-	/**
-	 * Sets the breakpoints list with the given one.
-	 */
-	public void setBreakpoints(Vector<Breakpoint> breakpoints);
+    /**
+     * Enables the fast forward action.
+     */
+    public void enableFastForward();
 
-	/**
-	 * Sets the comparison file name with the given one.
-	 */
-	public void setComparisonFile(String fileName);
+    /**
+     * Disables the fast forward action.
+     */
+    public void disableFastForward();
 
-	/**
-	 * Sets the current comparison line.
-	 */
-	public void setCurrentComparisonLine(int line);
+    /**
+     * Enables the stop action.
+     */
+    public void enableStop();
 
-	/**
-	 * Sets the current output line.
-	 */
-	public void setCurrentOutputLine(int line);
+    /**
+     * Disables the stop action.
+     */
+    public void disableStop();
 
-	/**
-	 * Sets the current script line.
-	 */
-	public void setCurrentScriptLine(int line);
+    /**
+     * Enables the open script action.
+     */
+    public void enableScript();
 
-	/**
-	 * Sets the numeric format (int code, out of the possible format constants
-	 * in HackController)
-	 */
-	public void setNumericFormat(int formatCode);
+    /**
+     * Disables the open script action.
+     */
+    public void disableScript();
 
-	/**
-	 * Sets the output file name with the given one.
-	 */
-	public void setOutputFile(String fileName);
+    /**
+     * Enables the rewind action.
+     */
+    public void enableRewind();
 
-	/**
-	 * Sets the script file name with the given one.
-	 */
-	public void setScriptFile(String fileName);
+    /**
+     * Disables the rewind action.
+     */
+    public void disableRewind();
 
-	/**
-	 * Sets the simulator component
-	 */
-	public void setSimulator(HackSimulatorGUI simulator);
+    /**
+     * Enables the load program action.
+     */
+    public void enableLoadProgram();
 
-	/**
-	 * Sets the speed (int code, between 1 and
-	 * HackController.NUMBER_OF_SPEED_UNTIS)
-	 */
-	public void setSpeed(int speed);
+    /**
+     * Disables the load program action.
+     */
+    public void disableLoadProgram();
 
-	/**
-	 * Sets the title of the translator with the given title.
-	 */
-	public void setTitle(String title);
+    /**
+     * Enables the speed slider.
+     */
+    public void enableSpeedSlider();
 
-	/**
-	 * Sets the list of recognized variables with the given one.
-	 */
-	public void setVariables(String[] vars);
+    /**
+     * Disables the speed slider.
+     */
+    public void disableSpeedSlider();
 
-	/**
-	 * Sets the working dir name with the given one.
-	 */
-	public void setWorkingDir(File file);
+    /**
+     * Enables the animation mode buttons.
+     */
+    public void enableAnimationModes();
 
-	/**
-	 * Opens the breakpoints panel.
-	 */
-	public void showBreakpoints();
+    /**
+     * Disables the animation mode buttons.
+     */
+    public void disableAnimationModes();
 }

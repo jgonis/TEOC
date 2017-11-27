@@ -17,139 +17,125 @@
 
 package Hack.HardwareSimulator;
 
-import Hack.ComputerParts.ComputerPartEvent;
-import Hack.ComputerParts.ComputerPartGUI;
-import Hack.ComputerParts.InteractiveValueComputerPart;
-import Hack.Gates.GateClass;
-import Hack.Gates.Node;
-import Hack.Gates.PinInfo;
+import Hack.ComputerParts.*;
+import Hack.Gates.*;
 
 /**
- * Represents a collection of pins, using the Nodes implementation. Enables
- * changing pins values.
+ * Represents a collection of pins, using the Nodes implementation.
+ * Enables changing pins values.
  */
 public class Pins extends InteractiveValueComputerPart {
 
-	// The gui of the Pins
-	private PinsGUI m_gui;
+    // The gui of the Pins
+    private PinsGUI gui;
 
-	// The type of this pin (out of the type constants in GateClass)
-	private byte type;
+    // The type of this pin (out of the type constants in GateClass)
+    private byte type;
 
-	// The nodes array
-	private Node[] nodes;
+    // The nodes array
+    private Node[] nodes;
 
-	// The array of pins
-	private PinInfo[] pins;
+    // The array of pins
+    private PinInfo[] pins;
 
-	/**
-	 * Constructs a new Pins with the given pin type and Pins GUI.
-	 */
-	public Pins(byte type, PinsGUI gui) {
-		super(gui != null);
-		this.m_gui = gui;
-		this.type = type;
+    /**
+     * Constructs a new Pins with the given pin type and Pins GUI.
+     */
+    public Pins(byte type, PinsGUI gui) {
+        super (gui != null);
+        this.gui = gui;
+        this.type = type;
 
-		pins = new PinInfo[0];
-		nodes = new Node[0];
+        pins = new PinInfo[0];
+        nodes = new Node[0];
 
-		if (hasGUI) {
-			m_gui.addListener(this);
-			m_gui.addErrorListener(this);
-			m_gui.setContents(pins);
-		}
-	}
+        if (hasGUI) {
+            gui.addListener(this);
+            gui.addErrorListener(this);
+            gui.setContents(pins);
+        }
+    }
 
-	@Override
-	public void doSetValueAt(int index, short value) {
-		nodes[index].set(value);
-	}
+    /**
+     * Sets the nodes with the given nodes array according to the given GateClass.
+     */
+    public void setNodes(Node[] nodes, GateClass gateClass) {
+        this.nodes = nodes;
+        pins = new PinInfo[nodes.length];
+        for (int i = 0; i < pins.length; i++) {
+            pins[i] = gateClass.getPinInfo(type, i);
+            pins[i].value = (short)nodes[i].get();
 
-	/**
-	 * Returns the number of pins.
-	 */
-	public int getCount() {
-		return nodes.length;
-	}
+            nodes[i].addListener(new NodePinsAdapter(this, i));
+        }
 
-	@Override
-	public ComputerPartGUI getGUI() {
-		return m_gui;
-	}
+        if (hasGUI)
+            gui.setContents(pins);
+    }
 
-	/**
-	 * Returns the Info for the pin at the given index.
-	 */
-	public PinInfo getPinInfo(int index) {
-		return pins[index];
-	}
+    /**
+     * Returns the Info for the pin at the given index.
+     */
+    public PinInfo getPinInfo(int index) {
+        return pins[index];
+    }
 
-	@Override
-	public short getValueAt(int index) {
-		return nodes[index].get();
-	}
+    public ComputerPartGUI getGUI() {
+        return gui;
+    }
 
-	/**
-	 * Returns true if the width of the given value is less or equal to the
-	 * width of the pin at the given index.
-	 */
-	public boolean isLegalWidth(int pinIndex, short value) {
-		int maxWidth = pins[pinIndex].width;
-		int width = value > 0 ? (int) (Math.log(value) / Math.log(2)) + 1 : 1;
-		return (width <= maxWidth);
-	}
+    public void doSetValueAt(int index, short value) {
+        nodes[index].set(value);
+    }
 
-	@Override
-	public void refreshGUI() {
-		if (displayChanges) {
-			for (int i = 0; i < pins.length; i++) {
-				pins[i].value = nodes[i].get();
-			}
-			m_gui.setContents(pins);
-		}
-	}
+    public short getValueAt(int index) {
+        return (short)nodes[index].get();
+    }
 
-	@Override
-	public void reset() {
-		m_gui.reset();
-		for (Node node : nodes) {
-			node.set((short) 0);
-		}
-		refreshGUI();
-	}
+    public void refreshGUI() {
+        if (displayChanges) {
+            for (int i = 0; i < pins.length; i++)
+                pins[i].value = (short)nodes[i].get();
+            gui.setContents(pins);
+        }
+    }
 
-	/**
-	 * Sets the nodes with the given nodes array according to the given
-	 * GateClass.
-	 */
-	public void setNodes(Node[] nodes, GateClass gateClass) {
-		this.nodes = nodes;
-		pins = new PinInfo[nodes.length];
-		for (int i = 0; i < pins.length; i++) {
-			pins[i] = gateClass.getPinInfo(type, i);
-			pins[i].value = nodes[i].get();
+    public void reset() {
+        gui.reset();
+        for (int i = 0; i < nodes.length; i++)
+            nodes[i].set((short)0);
+        refreshGUI();
+    }
 
-			nodes[i].addListener(new NodePinsAdapter(this, i));
-		}
+    /**
+     * Returns the number of pins.
+     */
+    public int getCount() {
+        return nodes.length;
+    }
 
-		if (hasGUI) {
-			m_gui.setContents(pins);
-		}
-	}
+    /**
+     * Returns true if the width of the given value is less or equal to the width
+     * of the pin at the given index.
+     */
+    public boolean isLegalWidth(int pinIndex, short value) {
+        int maxWidth = pins[pinIndex].width;
+        int width = value > 0 ? (int)(Math.log(value) / Math.log(2)) + 1 : 1;
+        return (width <= maxWidth);
+    }
 
-	/**
-	 * Called when a value of a pin was changed.
-	 */
-	@Override
-	public void valueChanged(ComputerPartEvent event) {
-		clearErrorListeners();
-		int index = event.getIndex();
-		short value = event.getValue();
-		if (isLegalWidth(index, value)) {
-			setValueAt(index, value, true);
-		} else {
-			notifyErrorListeners("Value doesn't match the pin's width");
-			quietUpdateGUI(index, nodes[event.getIndex()].get());
-		}
-	}
+    /**
+     * Called when a value of a pin was changed.
+     */
+    public void valueChanged(ComputerPartEvent event) {
+        clearErrorListeners();
+        int index = event.getIndex();
+        short value = event.getValue();
+        if (isLegalWidth(index, value))
+            setValueAt(index, value, true);
+        else {
+            notifyErrorListeners("Value doesn't match the pin's width");
+            quietUpdateGUI(index, (short)nodes[event.getIndex()].get());
+        }
+    }
 }

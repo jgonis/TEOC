@@ -18,7 +18,6 @@
 package HackGUI;
 
 import java.io.File;
-
 import javax.swing.filechooser.FileFilter;
 
 /**
@@ -26,44 +25,43 @@ import javax.swing.filechooser.FileFilter;
  */
 public class TextFileFilter extends FileFilter {
 
-	/*
-	 * Get the extension of a file.
-	 */
-	public static String getExtension(File f) {
-		String ext = null;
-		String s = f.getName();
-		int i = s.lastIndexOf('.');
+    /**
+     * Determines which files this filter should accept.
+     */
+    public boolean accept(File f) {
+        if (f.isDirectory()) {
+            return true;
+        }
 
-		if ((i > 0) && (i < (s.length() - 1))) {
-			ext = s.substring(i + 1).toLowerCase();
-		}
-		return ext;
-	}
+        String extension = getExtension(f);
+        if (extension != null) {
+            if (extension.equals("txt") )
+                    return true;
+            else {
+                return false;
+            }
+        }
 
-	/**
-	 * Determines which files this filter should accept.
-	 */
-	@Override
-	public boolean accept(File f) {
-		if (f.isDirectory()) {
-			return true;
-		}
+        return false;
+    }
 
-		String extension = getExtension(f);
-		if (extension != null) {
-			if (extension.equals("txt")) {
-				return true;
-			} else {
-				return false;
-			}
-		}
 
-		return false;
-	}
+    /*
+     * Get the extension of a file.
+     */
+    public static String getExtension(File f) {
+        String ext = null;
+        String s = f.getName();
+        int i = s.lastIndexOf('.');
 
-	// The description of this filter
-	@Override
-	public String getDescription() {
-		return "Text Files";
-	}
+        if (i > 0 &&  i < s.length() - 1) {
+            ext = s.substring(i+1).toLowerCase();
+        }
+        return ext;
+    }
+
+    // The description of this filter
+    public String getDescription() {
+        return "Text Files";
+    }
 }

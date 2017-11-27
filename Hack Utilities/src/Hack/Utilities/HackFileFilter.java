@@ -17,37 +17,33 @@
 
 package Hack.Utilities;
 
-import java.io.File;
-import java.io.FilenameFilter;
+import java.io.*;
 
 /**
- * A File filter that only accepts files with the extension that is given in the
- * constructor
+ * A File filter that only accepts files with the extension that is given
+ * in the constructor
  */
 public class HackFileFilter implements FilenameFilter {
 
-	// the accepted extension
-	private String extension;
+    // the accepted extension
+    private String extension;
 
-	/**
-	 * Constucts a new HackFileFilter with the given extension
-	 * 
-	 * @param extension
-	 *            The given extension
-	 */
-	public HackFileFilter(String extension) {
-		this.extension = extension;
-	}
+    /**
+     * Constucts a new HackFileFilter with the given extension
+     * @param extension The given extension
+     */
+    public HackFileFilter(String extension) {
+        this.extension = extension;
+    }
 
-	@Override
-	public boolean accept(File directory, String name) {
-		return name.endsWith(extension);
-	}
+    public boolean accept(File directory, String name) {
+        return name.endsWith(extension);
+    }
 
-	/**
-	 * Returns the accepted extension
-	 */
-	public String getAcceptedExtension() {
-		return extension;
-	}
+    /**
+     * Returns the accepted extension
+     */
+    public String getAcceptedExtension() {
+        return extension;
+    }
 }

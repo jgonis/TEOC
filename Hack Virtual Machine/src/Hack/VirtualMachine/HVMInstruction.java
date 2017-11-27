@@ -18,160 +18,159 @@
 package Hack.VirtualMachine;
 
 /**
- * This class represents a single hack Virtual machine instruction (with its
- * arguments). It holds the operation code that can be one of the VM operations
+ * This class represents a single hack Virtual machine instruction (with its arguments).
+ * It holds the operation code that can be one of the VM operations
  * and up to 2 arguments.
  */
 public class HVMInstruction {
 
-	// the operation code
-	private byte opCode;
+    // the operation code
+    private byte opCode;
 
-	// the operation arguments
-	private short arg0;
-	private short arg1;
+    // the operation arguments
+    private short arg0;
+    private short arg1;
 
-	// A string argument
-	private String stringArg;
+    // A string argument
+    private String stringArg;
 
-	// The number of arguments
-	private short numberOfArgs;
+    // The number of arguments
+    private short numberOfArgs;
 
-	/**
-	 * Constructs a new instruction with no arguments.
-	 */
-	public HVMInstruction(byte opCode) {
-		this.opCode = opCode;
-		numberOfArgs = 0;
-	}
+    /**
+     * Constructs a new instruction with two arguments.
+     */
+    public HVMInstruction(byte opCode, short arg0, short arg1) {
+        this.opCode = opCode;
+        this.arg0 = arg0;
+        this.arg1 = arg1;
+        numberOfArgs = 2;
+    }
 
-	/**
-	 * Constructs a new instruction with one argument.
-	 */
-	public HVMInstruction(byte opCode, short arg0) {
-		this.opCode = opCode;
-		this.arg0 = arg0;
-		numberOfArgs = 1;
-	}
+    /**
+     * Constructs a new instruction with one argument.
+     */
+    public HVMInstruction(byte opCode, short arg0) {
+        this.opCode = opCode;
+        this.arg0 = arg0;
+        numberOfArgs = 1;
+    }
 
-	/**
-	 * Constructs a new instruction with two arguments.
-	 */
-	public HVMInstruction(byte opCode, short arg0, short arg1) {
-		this.opCode = opCode;
-		this.arg0 = arg0;
-		this.arg1 = arg1;
-		numberOfArgs = 2;
-	}
+    /**
+     * Constructs a new instruction with no arguments.
+     */
+    public HVMInstruction(byte opCode) {
+        this.opCode = opCode;
+        numberOfArgs = 0;
+    }
 
-	/**
-	 * Returns arg0
-	 */
-	public short getArg0() {
-		return arg0;
-	}
+    /**
+     * Returns the operation code
+     */
+    public short getOpCode() {
+        return opCode;
+    }
 
-	/**
-	 * Returns arg1
-	 */
-	public short getArg1() {
-		return arg1;
-	}
+    /**
+     * Returns arg0
+     */
+    public short getArg0() {
+        return arg0;
+    }
 
-	/**
-	 * Returns an array of 3 Strings. The first is the operation name, the
-	 * second is the first argument and the third is the second argument.
-	 */
-	public String[] getFormattedStrings() {
-		String[] result = new String[3];
-		HVMInstructionSet instructionSet = HVMInstructionSet.getInstance();
-		result[1] = "";
-		result[2] = "";
+    /**
+     * Returns arg1
+     */
+    public short getArg1() {
+        return arg1;
+    }
 
-		result[0] = instructionSet.instructionCodeToString(opCode);
-		if (result[0] == null) {
-			result[0] = "";
-		}
+    /**
+     * Sets the string argument with the given string.
+     */
+    public void setStringArg(String arg) {
+        stringArg = arg;
+    }
 
-		switch (opCode) {
-		case HVMInstructionSet.PUSH_CODE:
-			result[1] = instructionSet.segmentCodeToVMString((byte) arg0);
-			result[2] = String.valueOf(arg1);
-			break;
-		case HVMInstructionSet.POP_CODE:
-			if (numberOfArgs == 2) {
-				result[1] = instructionSet.segmentCodeToVMString((byte) arg0);
-				result[2] = String.valueOf(arg1);
-			}
-			break;
-		case HVMInstructionSet.LABEL_CODE:
-			result[1] = stringArg;
-			break;
-		case HVMInstructionSet.GOTO_CODE:
-			result[1] = stringArg;
-			break;
-		case HVMInstructionSet.IF_GOTO_CODE:
-			result[1] = stringArg;
-			break;
-		case HVMInstructionSet.FUNCTION_CODE:
-			result[1] = stringArg;
-			result[2] = String.valueOf(arg0);
-			break;
-		case HVMInstructionSet.CALL_CODE:
-			result[1] = stringArg;
-			result[2] = String.valueOf(arg1);
-			break;
-		}
+    /**
+     * Returns the string argument
+     */
+    public String getStringArg() {
+        return stringArg;
+    }
 
-		return result;
-	}
+    /**
+     * Returns the number of arguments.
+     */
+    public short getNumberOfArgs() {
+        return numberOfArgs;
+    }
 
-	/**
-	 * Returns the number of arguments.
-	 */
-	public short getNumberOfArgs() {
-		return numberOfArgs;
-	}
+    /**
+     * Returns an array of 3 Strings. The first is the operation name, the second is
+     * the first argument and the third is the second argument.
+     */
+    public String[] getFormattedStrings() {
+        String[] result = new String[3];
+        HVMInstructionSet instructionSet = HVMInstructionSet.getInstance();
+        result[1] = "";
+        result[2] = "";
 
-	/**
-	 * Returns the operation code
-	 */
-	public short getOpCode() {
-		return opCode;
-	}
+        result[0] = instructionSet.instructionCodeToString(opCode);
+        if (result[0] == null)
+            result[0] = "";
 
-	/**
-	 * Returns the string argument
-	 */
-	public String getStringArg() {
-		return stringArg;
-	}
+        switch (opCode) {
+            case HVMInstructionSet.PUSH_CODE:
+                result[1] = instructionSet.segmentCodeToVMString((byte)arg0);
+                result[2] = String.valueOf(arg1);
+                break;
+            case HVMInstructionSet.POP_CODE:
+                if (numberOfArgs == 2) {
+                    result[1] = instructionSet.segmentCodeToVMString((byte)arg0);
+                    result[2] = String.valueOf(arg1);
+                }
+                break;
+            case HVMInstructionSet.LABEL_CODE:
+                result[1] = stringArg;
+                break;
+            case HVMInstructionSet.GOTO_CODE:
+                result[1] = stringArg;
+                break;
+            case HVMInstructionSet.IF_GOTO_CODE:
+                result[1] = stringArg;
+                break;
+            case HVMInstructionSet.FUNCTION_CODE:
+                result[1] = stringArg;
+                result[2] = String.valueOf(arg0);
+                break;
+            case HVMInstructionSet.CALL_CODE:
+                result[1] = stringArg;
+                result[2] = String.valueOf(arg1);
+                break;
+        }
 
-	/**
-	 * Sets the string argument with the given string.
-	 */
-	public void setStringArg(String arg) {
-		stringArg = arg;
-	}
+        return result;
+    }
 
-	@Override
-	public String toString() {
-		String[] formatted = getFormattedStrings();
-		StringBuffer result = new StringBuffer();
-		if (!formatted[0].equals("")) {
-			result.append(formatted[0]);
 
-			if (!formatted[1].equals("")) {
-				result.append(" ");
-				result.append(formatted[1]);
+    public String toString() {
+        String[] formatted = getFormattedStrings();
+        StringBuffer result = new StringBuffer();
+        if (!formatted[0].equals("")) {
+            result.append(formatted[0]);
 
-				if (!formatted[2].equals("")) {
-					result.append(" ");
-					result.append(formatted[2]);
-				}
-			}
-		}
+            if (!formatted[1].equals("")) {
+                result.append(" ");
+                result.append(formatted[1]);
 
-		return result.toString();
-	}
+                if (!formatted[2].equals("")) {
+                    result.append(" ");
+                    result.append(formatted[2]);
+                }
+            }
+        }
+
+        return result.toString();
+    }
 }

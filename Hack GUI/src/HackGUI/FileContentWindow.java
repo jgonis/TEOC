@@ -17,96 +17,82 @@
 
 package HackGUI;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-
-import javax.swing.JFrame;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
+import java.io.*;
+import java.awt.*;
+import javax.swing.*;
 
 /**
  * This class represents a window which shows the contents of a specified file.
  */
 public class FileContentWindow extends JFrame {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -2666271859039570765L;
+    // The text area on which the content of the file is shown.
+    private JTextArea fileContent = new JTextArea();
 
-	// The text area on which the content of the file is shown.
-	private JTextArea fileContent = new JTextArea();
+    // A reader used for reading the file.
+    private BufferedReader reader;
 
-	// A reader used for reading the file.
-	private BufferedReader reader;
+    // The name of the file which is currently displayed.
+    private String displayedFileName;
 
-	// The name of the file which is currently displayed.
-	private String displayedFileName;
+    // If true, loads the file's contents even if the filename wasn't changed
+    private boolean loadAnyway;
 
-	// If true, loads the file's contents even if the filename wasn't changed
-	private boolean loadAnyway;
+    // The scroll pane of this component.
+    private JScrollPane scrollPane;
 
-	// The scroll pane of this component.
-	private JScrollPane scrollPane;
+    /**
+     * Constructs a new FileContentWindow.
+     */
+    public FileContentWindow() {
 
-	/**
-	 * Constructs a new FileContentWindow.
-	 */
-	public FileContentWindow() {
+        jbInit();
+    }
 
-		jbInit();
-	}
+    /**
+     * Calling this method causes the next call to setContent to load the file
+     * even if its name wasn't changed.
+     */
+    public void loadAnyway() {
+    	loadAnyway = true;
+    }
 
-	/**
-	 * Deletes the content of the window.
-	 */
-	public void deleteContent() {
-		fileContent.setText("");
-	}
-
-	// Initializes this component.
-	private void jbInit() {
-		fileContent.setEditable(false);
-		fileContent.setFont(Utilities.valueFont);
-		fileContent.setEnabled(false);
-		fileContent.setDisabledTextColor(Color.black);
-		scrollPane = new JScrollPane(fileContent);
-		scrollPane.setPreferredSize(new Dimension(190, 330));
-		setSize(375, 372);
-		this.getContentPane().add(scrollPane, BorderLayout.CENTER);
-	}
-
-	/**
-	 * Calling this method causes the next call to setContent to load the file
-	 * even if its name wasn't changed.
-	 */
-	public void loadAnyway() {
-		loadAnyway = true;
-	}
-
-	/**
-	 * Sets the content of this window.
-	 */
-	public void setContent(File fileName) {
-		if (loadAnyway || !fileName.equals(displayedFileName)) {
-			displayedFileName = fileName.getAbsolutePath();
-			fileContent.setText("");
-			try {
-				reader = new BufferedReader(new FileReader(fileName));
-				String line;
-				while ((line = reader.readLine()) != null) {
-					fileContent.append(line);
-					fileContent.append("\n");
-				}
-				reader.close();
-			} catch (IOException ioe) {
-			}
+    /**
+     * Sets the content of this window.
+     */
+    public void setContent(File fileName) {
+	if (loadAnyway || !fileName.equals(displayedFileName)) {
+            displayedFileName = fileName.getAbsolutePath();
+            fileContent.setText("");
+            try {
+		reader = new BufferedReader(new FileReader(fileName));
+		String line;
+		while((line = reader.readLine()) != null) {
+                    fileContent.append(line);
+                    fileContent.append("\n");
 		}
-		fileContent.select(0, 0);
-	}
+		reader.close();
+            } catch (IOException ioe) {}
+        }
+        fileContent.select(0,0);
+    }
+
+    /**
+     * Deletes the content of the window.
+     */
+    public void deleteContent() {
+        fileContent.setText("");
+    }
+
+    // Initializes this component.
+    private void jbInit() {
+        fileContent.setEditable(false);
+        fileContent.setFont(Utilities.valueFont);
+        fileContent.setEnabled(false);
+        fileContent.setDisabledTextColor(Color.black);
+        scrollPane = new JScrollPane(fileContent);
+        scrollPane.setPreferredSize(new Dimension(190, 330));
+        setSize(375,372);
+        this.getContentPane().add(scrollPane, BorderLayout.CENTER);
+    }
 }

@@ -17,17 +17,16 @@
 
 package Hack.VMEmulator;
 
-import java.util.Vector;
-
-import Hack.ComputerParts.ComputerPartGUI;
+import Hack.ComputerParts.*;
+import java.util.*;
 
 /**
  * An interface for a GUI of the call stack.
  */
 public interface CallStackGUI extends ComputerPartGUI {
 
-	/**
-	 * Sets the stack with the given vector of method names.
-	 */
-	public void setContents(Vector<String> names);
+    /**
+     * Sets the stack with the given vector of method names.
+     */
+    public void setContents(Vector names);
 }

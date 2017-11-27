@@ -18,123 +18,130 @@
 package Hack.VirtualMachine;
 
 /**
- * A Virtual Machine interface. provides an interface for compiling byte code to
- * machine language - every implementation should produce the proper commands
- * for it's architectue. It has 4 types of operations: 1 - Arithmetic commands 2
- * - Memory access commands 3 - Program flow 4 - Function calls
+ * A Virtual Machine interface. provides an interface for compiling
+ * byte code to machine language - every implementation should
+ * produce the proper commands for it's architectue.
+ * It has 4 types of operations:
+ * 1 - Arithmetic commands
+ * 2 - Memory access commands
+ * 3 - Program flow
+ * 4 - Function calls
  */
 public interface VirtualMachine {
 
-	// ---- The Arithmetic commands ---//
-	// Each operation pops it's argument from the stack and pushes
-	// the result back to the stack
 
-	/**
-	 * integer addition (binary operation).
-	 */
-	public abstract void add();
+    //----  The Arithmetic commands ---//
+    // Each operation pops it's argument from the stack and pushes
+    // the result back to the stack
 
-	/**
-	 * Bit wise "AND" (binary operation).
-	 */
-	public abstract void and();
+    /**
+     * integer addition (binary operation).
+     */
+    public abstract void add();
 
-	/**
-	 * Calls a function according to the given function number stating that the
-	 * given number of arguments have been pushed onto the stack
-	 * 
-	 * @param functionName
-	 *            The function name
-	 * @param numberOfArguments
-	 *            The number of arguments of the function
-	 */
-	public abstract void callFunction(String functionName, short numberOfArguments);
+    /**
+     * 2's complement integer substraction (binary operation)
+     */
+    public abstract void substract();
 
-	/**
-	 * Equalaty operation (binary operation). Returns(to the stack) 0xFFFF as
-	 * true,0x000 as false
-	 */
-	public abstract void equal();
+    /**
+     * 2's complement negation (unary operation)
+     */
+    public abstract void negate();
 
-	/**
-	 * Here Starts the code of a function according to the given function name
-	 * that has the given number of local variables.
-	 * 
-	 * @param functionName
-	 *            The function name
-	 * @param numberOfLocals
-	 *            The number of local variables
-	 */
-	public abstract void function(String functionName, short numberOfLocals);
+    /**
+     * Equalaty operation (binary operation). Returns(to the stack)
+     * 0xFFFF as true,0x000 as false
+     */
+    public abstract void equal();
 
-	/**
-	 * Goes to the label l The label - l is 8 bits and is local to the function
-	 */
-	public abstract void goTo(String l);
+    /**
+     * Greater than operation (binary operation). Returns(to the stack)
+     * 0xFFFF as true,0x0000 as false
+     */
+    public abstract void greaterThan();
 
-	/**
-	 * Greater than operation (binary operation). Returns(to the stack) 0xFFFF
-	 * as true,0x0000 as false
-	 */
-	public abstract void greaterThan();
+    /**
+     * Less than operation (binary operation). Returns(to the stack)
+     * 0xFFFF as true,0x0000 as false
+     */
+    public abstract void lessThan();
 
-	/**
-	 * Pops a value from the stack and goes to the label l if the value is not
-	 * zero. The label - l is 8 bits and is local to the function
-	 */
-	public abstract void ifGoTo(String l);
+    /**
+     * Bit wise "AND" (binary operation).
+     */
+    public abstract void and();
 
-	/**
-	 * Labels the current location in the function code. Only labeled location
-	 * can be jumped to from other parts of the function. The label - l is 8
-	 * bits and is local to the function
-	 */
-	public abstract void label(String l);
+    /**
+     * Bit wise "OR" (binary operation).
+     */
+    public abstract void or();
 
-	// ---- Memory access commands ---//
+    /**
+     * Bit wise "NOT" (unary operation).
+     */
+    public abstract void not();
 
-	/**
-	 * Less than operation (binary operation). Returns(to the stack) 0xFFFF as
-	 * true,0x0000 as false
-	 */
-	public abstract void lessThan();
 
-	/**
-	 * 2's complement negation (unary operation)
-	 */
-	public abstract void negate();
 
-	// ---- Program flow commands ---//
+    //----  Memory access commands ---//
 
-	/**
-	 * Bit wise "NOT" (unary operation).
-	 */
-	public abstract void not();
+    /**
+     * Pushes the value of the given segment in the given entry to the stack
+     */
+    public abstract void push(String segment, short entry);
 
-	/**
-	 * Bit wise "OR" (binary operation).
-	 */
-	public abstract void or();
+    /**
+     * Pops an item from the stack into the given segment in the given entry
+     */
+    public abstract void pop(String segment, short entry);
 
-	/**
-	 * Pops an item from the stack into the given segment in the given entry
-	 */
-	public abstract void pop(String segment, short entry);
 
-	// ---- Function calls commands ---//
+    //----  Program flow commands ---//
 
-	/**
-	 * Pushes the value of the given segment in the given entry to the stack
-	 */
-	public abstract void push(String segment, short entry);
+    /**
+     * Labels the current location in the function code. Only labeled location
+     * can be jumped to from other parts of the function.
+     * The label - l is 8 bits and is local to the function
+     */
+    public abstract void label(String l);
 
-	/**
-	 * Returns the value of the function to the top of the stack.
-	 */
-	public abstract void returnFromFunction();
+    /**
+     * Goes to the label l
+     * The label - l is 8 bits and is local to the function
+     */
+    public abstract void goTo(String l);
 
-	/**
-	 * 2's complement integer substraction (binary operation)
-	 */
-	public abstract void substract();
+    /**
+     * Pops a value from the stack and goes to the label l if the value
+     * is not zero.
+     * The label - l is 8 bits and is local to the function
+     */
+    public abstract void ifGoTo(String l);
+
+
+
+
+    //----  Function calls commands ---//
+
+    /**
+     * Here Starts the code of a function according to the given function name
+     * that has the given number of local variables.
+     * @param functionName The function name
+     * @param numberOfLocals The number of local variables
+     */
+    public abstract void function(String functionName, short numberOfLocals);
+
+    /**
+     * Returns the value of the function to the top of the stack.
+     */
+    public abstract void returnFromFunction();
+
+    /**
+     * Calls a function according to the given function number stating
+     * that the given number of arguments have been pushed onto the stack
+     * @param functionName The function name
+     * @param numberOfArguments The number of arguments of the function
+     */
+    public abstract void callFunction(String functionName, short numberOfArguments);
 }

@@ -17,16 +17,16 @@
 
 package Hack.HardwareSimulator;
 
-import Hack.ComputerParts.ComputerPartGUI;
-import Hack.Gates.Gate;
+import Hack.ComputerParts.*;
+import Hack.Gates.*;
 
 /**
  * An interface for the GUI of the Parts.
  */
 public interface PartsGUI extends ComputerPartGUI {
 
-	/**
-	 * Sets the contents with the given parts (gates) array.
-	 */
-	public void setContents(Gate[] parts);
+    /**
+     * Sets the contents with the given parts (gates) array.
+     */
+    public void setContents(Gate[] parts);
 }

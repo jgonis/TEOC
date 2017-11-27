@@ -17,115 +17,106 @@
 
 package HackGUI;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Iterator;
-import java.util.LinkedList;
-
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.*;
 
 /**
  * A combo box with a title.
  */
 public class TitledComboBox extends JPanel {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 796396267617909639L;
+    // The total height of this component
+    private static final int TOTAL_HEIGHT = 37;
 
-	// The total height of this component
-	private static final int TOTAL_HEIGHT = 37;
+    // The height of the combo box only (without the title).
+    private static final int COMBO_HEIGHT = 22;
 
-	// The height of the combo box only (without the title).
-	private static final int COMBO_HEIGHT = 22;
+    // The combo box
+    private JComboBox combo;
 
-	// The combo box
-	private JComboBox<String> combo;
+    // The title
+    private JLabel title;
 
-	// The title
-	private JLabel title;
+    // The listeners to this combo box
+    private LinkedList listeners;
 
-	// The listeners to this combo box
-	private LinkedList<ActionListener> listeners;
+    /**
+     * Constructs a new TitledComboBox.
+     */
+    public TitledComboBox(String titleText, String toolTipText, String[] items, int width) {
+        title = new JLabel(titleText);
+        combo = new JComboBox(items);
+        combo.setToolTipText(toolTipText);
 
-	/**
-	 * Constructs a new TitledComboBox.
-	 */
-	public TitledComboBox(String titleText, String toolTipText, String[] items, int width) {
-		title = new JLabel(titleText);
-		combo = new JComboBox<String>(items);
-		combo.setToolTipText(toolTipText);
+        Dimension d = new Dimension(width, TOTAL_HEIGHT);
+        setMaximumSize(d);
+        setPreferredSize(d);
+        setSize(d);
 
-		Dimension d = new Dimension(width, TOTAL_HEIGHT);
-		setMaximumSize(d);
-		setPreferredSize(d);
-		setSize(d);
+        setLayout(new BorderLayout());
+        add(title, BorderLayout.NORTH);
+        add(combo, BorderLayout.SOUTH);
 
-		setLayout(new BorderLayout());
-		add(title, BorderLayout.NORTH);
-		add(combo, BorderLayout.SOUTH);
+        combo.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                notifyListeners(e);
+            }
+        });
 
-		combo.addActionListener(e -> notifyListeners(e));
+        title.setFont(Utilities.thinLabelsFont);
 
-		title.setFont(Utilities.thinLabelsFont);
+        combo.setFont(Utilities.thinLabelsFont);
+        combo.setPreferredSize(new Dimension(width, COMBO_HEIGHT));
 
-		combo.setFont(Utilities.thinLabelsFont);
-		combo.setPreferredSize(new Dimension(width, COMBO_HEIGHT));
+        listeners = new LinkedList();
+    }
 
-		listeners = new LinkedList<ActionListener>();
-	}
+    /**
+     * Registers the given listener.
+     */
+    public void addActionListener(ActionListener listener) {
+        listeners.add(listener);
+    }
 
-	/**
-	 * Registers the given listener.
-	 */
-	public void addActionListener(ActionListener listener) {
-		listeners.add(listener);
-	}
+    // Notifies the registered listeners on an action in the combo box.
+    private void notifyListeners(ActionEvent e) {
+        Iterator iter = listeners.iterator();
+        while(iter.hasNext())
+            ((ActionListener)iter.next()).actionPerformed(e);
+    }
 
-	/**
-	 * Returns the selected index.
-	 */
-	public int getSelectedIndex() {
-		return combo.getSelectedIndex();
-	}
+    /**
+     * Returns true if the given index is the selected one.
+     */
+    public boolean isSelectedIndex(int index) {
+        return combo.getSelectedIndex() == index;
+    }
 
-	/**
-	 * Returns true if the given index is the selected one.
-	 */
-	public boolean isSelectedIndex(int index) {
-		return combo.getSelectedIndex() == index;
-	}
+    /**
+     * Return true if the given item is the slected one.
+     */
+    public boolean isSelectedItem(String item) {
+        return combo.getSelectedItem().equals(item);
+    }
 
-	/**
-	 * Return true if the given item is the slected one.
-	 */
-	public boolean isSelectedItem(String item) {
-		return combo.getSelectedItem().equals(item);
-	}
+    /**
+     * Returns the selected index.
+     */
+    public int getSelectedIndex() {
+        return combo.getSelectedIndex();
+    }
 
-	// Notifies the registered listeners on an action in the combo box.
-	private void notifyListeners(ActionEvent e) {
-		Iterator<ActionListener> iter = listeners.iterator();
-		while (iter.hasNext()) {
-			iter.next().actionPerformed(e);
-		}
-	}
+    /**
+     * Sets the selected index.
+     */
+    public void setSelectedIndex(int index) {
+        combo.setSelectedIndex(index);
+    }
 
-	@Override
-	public void setEnabled(boolean value) {
-		combo.setEnabled(value);
-		title.setEnabled(value);
-	}
-
-	/**
-	 * Sets the selected index.
-	 */
-	public void setSelectedIndex(int index) {
-		combo.setSelectedIndex(index);
-	}
+    public void setEnabled(boolean value) {
+        combo.setEnabled(value);
+        title.setEnabled(value);
+    }
 }

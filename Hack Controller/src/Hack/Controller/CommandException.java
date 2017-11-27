@@ -20,25 +20,20 @@ package Hack.Controller;
 /**
  * An exception for errors in command definitions.
  */
-public class CommandException extends Exception {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 530216360044598318L;
+public class CommandException extends Exception
+{
+    /**
+     * Constructs a new CommandException with the given message and command.
+     */
+    public CommandException(String message, String[] command) {
+        super(message + ": " + commandString(command));
+    }
 
-	private static String commandString(String[] command) {
-		StringBuffer message = new StringBuffer();
-		for (String element : command) {
-			message.append(element + " ");
-		}
+    private static String commandString(String[] command) {
+        StringBuffer message = new StringBuffer();
+        for (int i = 0; i < command.length; i++)
+            message.append(command[i] + " ");
 
-		return message.toString();
-	}
-
-	/**
-	 * Constructs a new CommandException with the given message and command.
-	 */
-	public CommandException(String message, String[] command) {
-		super(message + ": " + commandString(command));
-	}
+        return message.toString();
+    }
 }

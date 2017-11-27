@@ -18,112 +18,103 @@
 package Hack.ComputerParts;
 
 /**
- * A value computer part - a computer part that has values which can be get &
- * set.
+ * A value computer part - a computer part that has values which can be get & set.
  */
 public abstract class ValueComputerPart extends ComputerPart {
 
-	// The amount of miliseconds that a changed value will flash.
-	private static final int FLASH_TIME = 500;
+    // The amount of miliseconds that a changed value will flash.
+    private static final int FLASH_TIME = 500;
 
-	// used as default value (in reset)
-	protected short nullValue;
+    // used as default value (in reset)
+    protected short nullValue;
 
-	/**
-	 * Constructs a new ValueComputerPart If hasGUI is true, the ComputerPart
-	 * should display its contents.
-	 */
-	public ValueComputerPart(boolean hasGUI) {
-		super(hasGUI);
-	}
+    /**
+     * Constructs a new ValueComputerPart
+     * If hasGUI is true, the ComputerPart should display its contents.
+     */
+    public ValueComputerPart(boolean hasGUI) {
+        super(hasGUI);
+    }
 
-	/**
-	 * Sets the element at the given index with the given value.
-	 */
-	public abstract void doSetValueAt(int index, short value);
+    /**
+     * Sets the element at the given index with the given value and updates the gui.
+     */
+    public void setValueAt(int index, short value, boolean quiet) {
+        doSetValueAt(index, value);
+        if (displayChanges) {
+            if (quiet)
+                quietUpdateGUI(index, value);
+            else
+                updateGUI(index, value);
+        }
+    }
 
-	/**
-	 * Returns the element at the given index.
-	 */
-	public abstract short getValueAt(int index);
+    /**
+     * Sets the element at the given index with the given value.
+     */
+    public abstract void doSetValueAt(int index, short value);
 
-	/**
-	 * Hides all highlightes.
-	 */
-	public void hideHighlight() {
-		if (displayChanges) {
-			((ValueComputerPartGUI) getGUI()).hideHighlight();
-		}
-	}
+    /**
+     * Returns the element at the given index.
+     */
+    public abstract short getValueAt(int index);
 
-	/**
-	 * Updates the GUI of this computer part at the given location with the
-	 * given value quietly - no flashing will be done
-	 */
-	public void quietUpdateGUI(int index, short value) {
-		if (displayChanges) {
-			((ValueComputerPartGUI) getGUI()).setValueAt(index, value);
-		}
-	}
+    /**
+     * Updates the GUI of this computer part at the given location with the given value
+     */
+    public synchronized void updateGUI(int index, short value) {
+        if (displayChanges) {
+            ValueComputerPartGUI gui = (ValueComputerPartGUI)getGUI();
+            gui.setValueAt(index, value);
 
-	/**
-	 * Sets the null value (default value) of this computer part with the given
-	 * value. If hideNullValue is true, values which are equal to the null value
-	 * will be hidden.
-	 */
-	public void setNullValue(short value, boolean hideNullValue) {
-		nullValue = value;
+            if (animate) {
+                gui.flash(index);
+                try {
+                    wait(FLASH_TIME);
+                } catch (InterruptedException ie) {}
+                gui.hideFlash();
+            }
 
-		if (hasGUI) {
-			ValueComputerPartGUI gui = (ValueComputerPartGUI) getGUI();
-			gui.setNullValue(value, hideNullValue);
-		}
-	}
+            gui.highlight(index);
+        }
+    }
 
-	/**
-	 * Sets the numeric format with the given code (out of the format constants
-	 * in HackController).
-	 */
-	public void setNumericFormat(int formatCode) {
-		if (displayChanges) {
-			((ValueComputerPartGUI) getGUI()).setNumericFormat(formatCode);
-		}
-	}
+    /**
+     * Updates the GUI of this computer part at the given location with the given value
+     * quietly - no flashing will be done
+     */
+    public void quietUpdateGUI(int index, short value) {
+        if (displayChanges)
+            ((ValueComputerPartGUI)getGUI()).setValueAt(index, value);
+    }
 
-	/**
-	 * Sets the element at the given index with the given value and updates the
-	 * gui.
-	 */
-	public void setValueAt(int index, short value, boolean quiet) {
-		doSetValueAt(index, value);
-		if (displayChanges) {
-			if (quiet) {
-				quietUpdateGUI(index, value);
-			} else {
-				updateGUI(index, value);
-			}
-		}
-	}
+    /**
+     * Hides all highlightes.
+     */
+    public void hideHighlight() {
+        if (displayChanges)
+            ((ValueComputerPartGUI)getGUI()).hideHighlight();
+    }
 
-	/**
-	 * Updates the GUI of this computer part at the given location with the
-	 * given value
-	 */
-	public synchronized void updateGUI(int index, short value) {
-		if (displayChanges) {
-			ValueComputerPartGUI gui = (ValueComputerPartGUI) getGUI();
-			gui.setValueAt(index, value);
+    /**
+     * Sets the numeric format with the given code (out of the format constants in HackController).
+     */
+    public void setNumericFormat(int formatCode) {
+        if (displayChanges)
+            ((ValueComputerPartGUI)getGUI()).setNumericFormat(formatCode);
+    }
 
-			if (animate) {
-				gui.flash(index);
-				try {
-					wait(FLASH_TIME);
-				} catch (InterruptedException ie) {
-				}
-				gui.hideFlash();
-			}
+    /**
+     * Sets the null value (default value) of this computer part with the given value.
+     * If hideNullValue is true, values which are equal to the null value will be
+     * hidden.
+     */
+    public void setNullValue(short value, boolean hideNullValue) {
+        nullValue = value;
 
-			gui.highlight(index);
-		}
-	}
+        if (hasGUI) {
+            ValueComputerPartGUI gui = (ValueComputerPartGUI)getGUI();
+            gui.setNullValue(value, hideNullValue);
+        }
+    }
 }

@@ -17,112 +17,110 @@
 
 package HackGUI;
 
-import java.awt.Rectangle;
-import java.awt.event.ItemEvent;
-import java.io.File;
-
-import javax.swing.JCheckBox;
+import javax.swing.*;
+import java.io.*;
+import java.awt.event.*;
+import java.awt.*;
 
 /**
  * A FileChooserComponent that enables viewing files during selection.
  */
 public class ViewableFileChooserComponent extends FileChooserComponent {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1517492736263433331L;
+    // A check box used for showing the file's content.
+    private JCheckBox viewCheckBox = new JCheckBox();
 
-	// A check box used for showing the file's content.
-	private JCheckBox viewCheckBox = new JCheckBox();
+    // The content window
+    private FileContentWindow window;
 
-	// The content window
-	private FileContentWindow window;
+    // The file to be showed in the window.
+    private File contentFile;
 
-	// The file to be showed in the window.
-	private File contentFile;
+    /**
+     * Constructs a new ViewableFileChooserComponent.
+     */
+    public ViewableFileChooserComponent() {
+        jbInit();
+        window = new FileContentWindow();
+    }
 
-	/**
-	 * Constructs a new ViewableFileChooserComponent.
-	 */
-	public ViewableFileChooserComponent() {
-		jbInit();
-		window = new FileContentWindow();
-	}
+    /**
+     * Sets the content window's location.
+     */
+    public void setWindowLocation(int x, int y) {
+        window.setLocation(x,y);
+    }
 
-	/**
-	 * Delete the information currently shown in the content window.
-	 */
-	public void deleteContentFile() {
-		window.deleteContent();
-		window.setTitle("");
-	}
+    /**
+     * Sets the file shown in the content window.
+     */
+    public void setFileContent() {
+        contentFile = new File(getFileName());
+        window.setContent(contentFile);
+        window.setTitle("File: " + contentFile);
+    }
 
-	/**
-	 * Disables the checkbox which shows the content of the file.
-	 */
-	public void disableCheckBox() {
-		viewCheckBox.setEnabled(false);
-	}
+    /**
+     * Delete the information currently shown in the content window.
+     */
+    public void deleteContentFile() {
+        window.deleteContent();
+        window.setTitle("");
+    }
 
-	// Initializations
-	private void jbInit() {
-		viewCheckBox.setText("View File");
-		viewCheckBox.setFont(Utilities.thinLabelsFont);
-		viewCheckBox.setBounds(new Rectangle(407, 12, 76, 23));
-		viewCheckBox.addItemListener(e -> viewCheckBox_itemStateChanged(e));
+    /**
+     * Refreshes the contents of the file.
+     */
+    public void refresh() {
+        window.loadAnyway();
+        setFileContent();
+    }
 
-		this.add(viewCheckBox, null);
-	}
+    /**
+     * Disables the checkbox which shows the content of the file.
+     */
+    public void disableCheckBox() {
+        viewCheckBox.setEnabled(false);
+    }
 
-	/**
-	 * Refreshes the contents of the file.
-	 */
-	public void refresh() {
-		window.loadAnyway();
-		setFileContent();
-	}
+    public void showCurrentFileName() {
+        fileName.setText(currentFileName);
+        if (viewCheckBox.isSelected()) {
+            if (!currentFileName.equals("")) {
+                setFileContent();
+            }
+            else {
+                viewCheckBox.setSelected(false);
+                window.setVisible(false);
+                deleteContentFile();
+           }
+        }
+    }
 
-	/**
-	 * Sets the file shown in the content window.
-	 */
-	public void setFileContent() {
-		contentFile = new File(getFileName());
-		window.setContent(contentFile);
-		window.setTitle("File: " + contentFile);
-	}
+    // Initializations
+    private void jbInit() {
+        viewCheckBox.setText("View File");
+        viewCheckBox.setFont(Utilities.thinLabelsFont);
+        viewCheckBox.setBounds(new Rectangle(407, 12, 76, 23));
+        viewCheckBox.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                viewCheckBox_itemStateChanged(e);
+            }
+        });
 
-	/**
-	 * Sets the content window's location.
-	 */
-	public void setWindowLocation(int x, int y) {
-		window.setLocation(x, y);
-	}
+        this.add(viewCheckBox, null);
+    }
 
-	@Override
-	public void showCurrentFileName() {
-		fileName.setText(currentFileName);
-		if (viewCheckBox.isSelected()) {
-			if (!currentFileName.equals("")) {
-				setFileContent();
-			} else {
-				viewCheckBox.setSelected(false);
-				window.setVisible(false);
-				deleteContentFile();
-			}
-		}
-	}
-
-	/**
-	 * Implementing the action of pressing the check box.
-	 */
-	public void viewCheckBox_itemStateChanged(ItemEvent e) {
-		if (e.getStateChange() == ItemEvent.SELECTED) {
-			window.setTitle("Loading...");
-			window.setVisible(true);
-			setFileContent();
-		} else if (e.getStateChange() == ItemEvent.DESELECTED) {
-			window.setVisible(false);
-		}
-	}
+    /**
+     * Implementing the action of pressing the check box.
+     */
+    public void viewCheckBox_itemStateChanged(ItemEvent e) {
+        if (e.getStateChange() == ItemEvent.SELECTED) {
+            window.setTitle("Loading...");
+            window.setVisible(true);
+            setFileContent();
+        }
+        else if (e.getStateChange() == ItemEvent.DESELECTED)
+            window.setVisible(false);
+    }
 }

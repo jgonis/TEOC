@@ -17,75 +17,64 @@
 
 package HackGUI;
 
-import java.awt.BorderLayout;
-import java.io.IOException;
-
-import javax.swing.JEditorPane;
-import javax.swing.JFrame;
-import javax.swing.JScrollPane;
-import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
-import javax.swing.text.html.HTMLDocument;
-import javax.swing.text.html.HTMLFrameHyperlinkEvent;
+import javax.swing.*;
+import java.awt.*;
+import java.io.*;
+import javax.swing.text.html.*;
+import javax.swing.event.*;
 
 /**
  * A frame for viewing HTML files.
  */
 public class HTMLViewFrame extends JFrame {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1122942752587079956L;
+    // The scroll pane for this frame
+    private JScrollPane scrollPane;
 
-	// The scroll pane for this frame
-	private JScrollPane scrollPane;
+    // The editor pane for displaying the HTML file.
+    private JEditorPane ep = new JEditorPane();
 
-	// The editor pane for displaying the HTML file.
-	private JEditorPane ep = new JEditorPane();
+    /**
+     * Constructs a new HTMLViewFrame for the given HTML file.
+     */
+    public HTMLViewFrame(String fileName) {
+        setTitle("Help");
+        ep.setEditable(false);
+        ep.setContentType("text/html");
 
-	/**
-	 * Constructs a new HTMLViewFrame for the given HTML file.
-	 */
-	public HTMLViewFrame(String fileName) {
-		setTitle("Help");
-		ep.setEditable(false);
-		ep.setContentType("text/html");
+        try {
+            ep.setPage("file:" + fileName);
+        } catch (IOException ioe) {
+            System.err.println("Error while reading file: " + fileName);
+            System.exit(-1);
+        }
 
-		try {
-			ep.setPage("file:" + fileName);
-		} catch (IOException ioe) {
-			System.err.println("Error while reading file: " + fileName);
-			System.exit(-1);
-		}
-
-		ep.addHyperlinkListener(new Hyperactive());
-		scrollPane = new JScrollPane(ep);
-		setBounds(30, 44, 750, 460);
-		setDefaultCloseOperation(1);
-		getContentPane().add(scrollPane, BorderLayout.CENTER);
-	}
+        ep.addHyperlinkListener(new Hyperactive());
+        scrollPane = new JScrollPane(ep);
+        setBounds(30,44,750,460);
+        setDefaultCloseOperation(1);
+        getContentPane().add(scrollPane, BorderLayout.CENTER);
+    }
 }
 
 // Implements the HTML link properties.
 class Hyperactive implements HyperlinkListener {
 
-	@Override
-	public void hyperlinkUpdate(HyperlinkEvent e) {
-		if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-			JEditorPane pane = (JEditorPane) e.getSource();
-			if (e instanceof HTMLFrameHyperlinkEvent) {
-				HTMLFrameHyperlinkEvent evt = (HTMLFrameHyperlinkEvent) e;
-				HTMLDocument doc = (HTMLDocument) pane.getDocument();
-				doc.processHTMLFrameHyperlinkEvent(evt);
-			} else {
-				try {
-					pane.setPage(e.getURL());
-				} catch (IOException ioe) {
-					System.out.println(ioe.getMessage());
-					System.exit(0);
-				}
-			}
-		}
-	}
+    public void hyperlinkUpdate(HyperlinkEvent e) {
+        if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+            JEditorPane pane = (JEditorPane) e.getSource();
+            if (e instanceof HTMLFrameHyperlinkEvent) {
+                HTMLFrameHyperlinkEvent  evt = (HTMLFrameHyperlinkEvent)e;
+                HTMLDocument doc = (HTMLDocument)pane.getDocument();
+                doc.processHTMLFrameHyperlinkEvent(evt);
+            } else {
+                try {
+                    pane.setPage(e.getURL());
+                } catch (IOException ioe) {
+                    System.out.println(ioe.getMessage());
+                    System.exit(0);
+                }
+            }
+        }
+    }
 }

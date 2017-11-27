@@ -17,38 +17,33 @@
 
 package Hack.HardwareSimulator;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-
-import Hack.Gates.HDLException;
 import Hack.Gates.HDLTokenizer;
+import java.io.*;
+import Hack.Gates.*;
 
 /**
  * An HDL tokenizer for a single string line.
  */
 public class HDLLineTokenizer extends HDLTokenizer {
 
-	/**
-	 * Constructs a new HDLLineTokenizer with the given string line.
-	 */
-	public HDLLineTokenizer(String line) throws HDLException {
-		Reader input = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(line.getBytes())));
+    /**
+     * Constructs a new HDLLineTokenizer with the given string line.
+     */
+    public HDLLineTokenizer(String line) throws HDLException {
+        Reader input = new BufferedReader(new InputStreamReader(new
+             ByteArrayInputStream(line.getBytes())));
 
-		try {
-			initizalizeInput(input);
-		} catch (IOException ioe) {
-			throw new HDLException("Error while initializing HDL for reading");
-		}
-	}
+        try {
+            initizalizeInput(input);
+        } catch (IOException ioe) {
+            throw new HDLException("Error while initializing HDL for reading");
+        }
+    }
 
-	/**
-	 * Generates an HDLException with the given message.
-	 */
-	@Override
-	public void HDLError(String message) throws HDLException {
-		throw new HDLException(message);
-	}
+    /**
+     * Generates an HDLException with the given message.
+     */
+    public void HDLError(String message) throws HDLException {
+        throw new HDLException(message);
+    }
 }

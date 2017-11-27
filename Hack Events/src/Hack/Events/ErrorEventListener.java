@@ -22,10 +22,10 @@ package Hack.Events;
  */
 public interface ErrorEventListener {
 
-	/**
-	 * Called when an error occured. The event contains the source object and
-	 * the error message.
-	 */
-	public void errorOccured(ErrorEvent event);
+    /**
+     * Called when an error occured.
+     * The event contains the source object and the error message.
+     */
+    public void errorOccured(ErrorEvent event);
 
 }

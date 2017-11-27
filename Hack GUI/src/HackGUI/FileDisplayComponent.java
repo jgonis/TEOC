@@ -17,221 +17,189 @@
 
 package HackGUI;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.Vector;
-
-import javax.swing.BorderFactory;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableCellRenderer;
+import java.awt.*;
+import javax.swing.*;
+import javax.swing.table.*;
+import java.io.*;
+import java.util.*;
 
 /**
  * A component for displaying the contents of a text file in a table format.
  */
 public class FileDisplayComponent extends JPanel {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 8049575348850389630L;
+    // The rows of the text file.
+    private String[] rows;
 
-	// A cell renderer for the displayed table.
-	class FileDisplayTableCellRenderer extends DefaultTableCellRenderer {
+    // The table for displaying the rows of the file
+    private WideTable fileDisplayTable;
 
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = -5685379265985160392L;
+    // The scroll pane for this component.
+    private JScrollPane scrollPane;
 
-		@Override
-		public Component getTableCellRendererComponent(JTable table, Object value, boolean selected, boolean focused,
-				int row, int column) {
+    // The selected row.
+    private int selectedRow = -1;
 
-			setForeground(null);
-			setBackground(null);
+    // The name of the displayed text file.
+    private String fileName;
 
-			setRenderer(row);
-			super.getTableCellRendererComponent(table, value, selected, focused, row, column);
+    /**
+     * Constructs a new FileDisplayComponent.
+     */
+    public FileDisplayComponent() {
+        rows = new String[0];
+        jbInit();
+    }
 
-			return this;
-		}
+    /**
+     * Sets the selected row.
+     */
+    public void setSelectedRow(int row) {
+        selectedRow = row;
+        if (selectedRow >= 0)
+            Utilities.tableCenterScroll(this, fileDisplayTable, selectedRow);
+        repaint();
+    }
 
-		public void setRenderer(int row) {
+    /**
+     * Deletes the displayed file (from view only).
+     */
+    public void deleteContent() {
+        rows = new String[0];
+        fileDisplayTable.revalidate();
+        repaint();
+    }
 
-			if (row == selectedRow) {
-				setBackground(Color.yellow);
-			} else {
-				setBackground(null);
-			}
-		}
-	}
+    /**
+     * Refreshes the display.
+     */
+    public void refresh() {
+        setContents(fileName);
+    }
 
-	// A model for the displayed table
-	class FileDisplayTableModel extends AbstractTableModel {
+    /**
+     * Sets the text file to be displayed.
+     */
+    public synchronized void setContents (String fileName) {
+        this.fileName = fileName;
+        BufferedReader reader;
+        Vector rowsVector = new Vector();
+        try {
+            reader = new BufferedReader(new FileReader(fileName));
+            String line;
+            while((line = reader.readLine()) != null) {
+                rowsVector.addElement(line);
+            }
+            reader.close();
+        } catch (IOException ioe) {}
+        rows = new String[rowsVector.size()];
+        rowsVector.toArray(rows);
+        fileDisplayTable.clearSelection();
+        fileDisplayTable.revalidate();
+        try {
+            wait(50);
+        } catch (InterruptedException ie) {
+        }
 
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = -6330347180523694251L;
+        repaint();
+    }
 
-		/**
-		 * Returns the number of columns.
-		 */
-		@Override
-		public int getColumnCount() {
-			return 1;
-		}
+    /**
+     * Sets the size of this component.
+     */
+    public void updateSize(int width, int height) {
+        setSize(width, height);
+        scrollPane.setPreferredSize(new Dimension(width, height));
+        scrollPane.setSize(width, height);
+    }
 
-		/**
-		 * Returns the names of the columns.
-		 */
-		@Override
-		public String getColumnName(int col) {
-			return "";
-		}
+    // The initialization of this component.
+    private void jbInit() {
+        setLayout(null);
+        fileDisplayTable = new WideTable(new FileDisplayTableModel(), 1000);
+        fileDisplayTable.setTableHeader(null);
+        fileDisplayTable.setDefaultRenderer(fileDisplayTable.getColumnClass(0), new FileDisplayTableCellRenderer());
+        scrollPane = new JScrollPane(fileDisplayTable);
 
-		/**
-		 * Returns the number of rows.
-		 */
-		@Override
-		public int getRowCount() {
-			return rows.length;
-		}
+        fileDisplayTable.setRowSelectionAllowed(false);
+        fileDisplayTable.setShowHorizontalLines(false);
+        fileDisplayTable.setShowVerticalLines(false);
 
-		/**
-		 * Returns the value at a specific row and column.
-		 */
-		@Override
-		public Object getValueAt(int row, int col) {
-			return rows[row];
-		}
+        fileDisplayTable.setFont(Utilities.valueFont);
+        setBorder(BorderFactory.createEtchedBorder());
 
-		/**
-		 * Returns true of this table cells are editable, false - otherwise.
-		 */
-		@Override
-		public boolean isCellEditable(int row, int col) {
-			return false;
-		}
-	}
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+        scrollPane.getHorizontalScrollBar().setUnitIncrement(scrollPane.getHorizontalScrollBar().getBlockIncrement());
+        scrollPane.setLocation(0,0);
+        scrollPane.setPreferredSize(new Dimension(516, 260));
+        scrollPane.setSize(516, 260);
+        setSize(516,260);
 
-	// The rows of the text file.
-	private String[] rows;
+        this.add(scrollPane, null);
+    }
 
-	// The table for displaying the rows of the file
-	private WideTable fileDisplayTable;
+    // A model for the displayed table
+    class FileDisplayTableModel extends AbstractTableModel {
 
-	// The scroll pane for this component.
-	private JScrollPane scrollPane;
+        /**
+         * Returns the number of columns.
+         */
+        public int getColumnCount() {
+            return 1;
+        }
 
-	// The selected row.
-	private int selectedRow = -1;
+        /**
+         * Returns the number of rows.
+         */
+        public int getRowCount() {
+            return rows.length;
+        }
 
-	// The name of the displayed text file.
-	private String fileName;
+        /**
+         * Returns the names of the columns.
+         */
+        public String getColumnName(int col) {
+            return "";
+        }
 
-	/**
-	 * Constructs a new FileDisplayComponent.
-	 */
-	public FileDisplayComponent() {
-		rows = new String[0];
-		jbInit();
-	}
+        /**
+         * Returns the value at a specific row and column.
+         */
+        public Object getValueAt(int row, int col) {
+            return rows[row];
+        }
 
-	/**
-	 * Deletes the displayed file (from view only).
-	 */
-	public void deleteContent() {
-		rows = new String[0];
-		fileDisplayTable.revalidate();
-		repaint();
-	}
+        /**
+         * Returns true of this table cells are editable, false -
+         * otherwise.
+         */
+        public boolean isCellEditable(int row, int col){
+            return false;
+        }
+    }
 
-	// The initialization of this component.
-	private void jbInit() {
-		setLayout(null);
-		fileDisplayTable = new WideTable(new FileDisplayTableModel(), 1000);
-		fileDisplayTable.setTableHeader(null);
-		fileDisplayTable.setDefaultRenderer(fileDisplayTable.getColumnClass(0), new FileDisplayTableCellRenderer());
-		scrollPane = new JScrollPane(fileDisplayTable);
+    // A cell renderer for the displayed table.
+    class FileDisplayTableCellRenderer extends DefaultTableCellRenderer {
 
-		fileDisplayTable.setRowSelectionAllowed(false);
-		fileDisplayTable.setShowHorizontalLines(false);
-		fileDisplayTable.setShowVerticalLines(false);
+        public Component getTableCellRendererComponent
+            (JTable table, Object value, boolean selected, boolean focused, int row, int column)
+        {
 
-		fileDisplayTable.setFont(Utilities.valueFont);
-		setBorder(BorderFactory.createEtchedBorder());
+            setForeground(null);
+            setBackground(null);
 
-		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-		scrollPane.getHorizontalScrollBar().setUnitIncrement(scrollPane.getHorizontalScrollBar().getBlockIncrement());
-		scrollPane.setLocation(0, 0);
-		scrollPane.setPreferredSize(new Dimension(516, 260));
-		scrollPane.setSize(516, 260);
-		setSize(516, 260);
+            setRenderer(row, column);
+            super.getTableCellRendererComponent(table, value, selected, focused, row, column);
 
-		this.add(scrollPane, null);
-	}
+            return this;
+        }
 
-	/**
-	 * Refreshes the display.
-	 */
-	public void refresh() {
-		setContents(fileName);
-	}
+        public void setRenderer(int row, int column) {
 
-	/**
-	 * Sets the text file to be displayed.
-	 */
-	public synchronized void setContents(String fileName) {
-		this.fileName = fileName;
-		BufferedReader reader;
-		Vector<String> rowsVector = new Vector<String>();
-		try {
-			reader = new BufferedReader(new FileReader(fileName));
-			String line;
-			while ((line = reader.readLine()) != null) {
-				rowsVector.addElement(line);
-			}
-			reader.close();
-		} catch (IOException ioe) {
-		}
-		rows = new String[rowsVector.size()];
-		rowsVector.toArray(rows);
-		fileDisplayTable.clearSelection();
-		fileDisplayTable.revalidate();
-		try {
-			wait(50);
-		} catch (InterruptedException ie) {
-		}
-
-		repaint();
-	}
-
-	/**
-	 * Sets the selected row.
-	 */
-	public void setSelectedRow(int row) {
-		selectedRow = row;
-		if (selectedRow >= 0) {
-			Utilities.tableCenterScroll(this, fileDisplayTable, selectedRow);
-		}
-		repaint();
-	}
-
-	/**
-	 * Sets the size of this component.
-	 */
-	public void updateSize(int width, int height) {
-		setSize(width, height);
-		scrollPane.setPreferredSize(new Dimension(width, height));
-		scrollPane.setSize(width, height);
-	}
+            if (row == selectedRow)
+                setBackground(Color.yellow);
+            else
+                setBackground(null);
+        }
+    }
 }

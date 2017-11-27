@@ -22,90 +22,88 @@ package Hack.Gates;
  */
 public class PinInfo {
 
-	/**
-	 * The name of the gate's pin.
-	 */
-	public String name;
+    /**
+     * The name of the gate's pin.
+     */
+    public String name;
 
-	/**
-	 * The width of the pin's bus.
-	 */
-	public byte width;
+    /**
+     * The width of the pin's bus.
+     */
+    public byte width;
 
-	/**
-	 * The value at the pin.
-	 */
-	public short value;
+    /**
+     * The value at the pin.
+     */
+    public short value;
 
-	// Initialization marking.
-	private boolean[] initialized;
+    // Initialization marking.
+    private boolean[] initialized;
 
-	/**
-	 * Constructs a new empty PinInfo.
-	 */
-	public PinInfo() {
-		initialized = new boolean[16];
-	}
+    /**
+     * Constructs a new empty PinInfo.
+     */
+    public PinInfo() {
+        initialized = new boolean[16];
+    }
 
-	/**
-	 * Constructs a new PinInfo with the given name and width.
-	 */
-	public PinInfo(String name, byte width) {
-		this.name = name;
-		this.width = width;
-		initialized = new boolean[width];
-	}
+    /**
+     * Constructs a new PinInfo with the given name and width.
+     */
+    public PinInfo(String name, byte width) {
+        this.name = name;
+        this.width = width;
+        initialized = new boolean[width];
+    }
 
-	@Override
-	public boolean equals(Object other) {
-		return (other instanceof PinInfo) && name.equals(((PinInfo) other).name);
-	}
+    /**
+     * Marks the given sub bus as initialized.
+     * If subBus is null, all the pin is initialized.
+     */
+    public void initialize(byte[] subBus) {
+        byte from, to;
 
-	@Override
-	public int hashCode() {
-		return name.hashCode();
-	}
+        if (subBus != null) {
+            from = subBus[0];
+            to = subBus[1];
+        }
+        else {
+            from = 0;
+            to = (byte)(width - 1);
+        }
 
-	/**
-	 * Marks the given sub bus as initialized. If subBus is null, all the pin is
-	 * initialized.
-	 */
-	public void initialize(byte[] subBus) {
-		byte from, to;
+        for (byte i = from; i <= to; i++)
+            initialized[i] = true;
+    }
 
-		if (subBus != null) {
-			from = subBus[0];
-			to = subBus[1];
-		} else {
-			from = 0;
-			to = (byte) (width - 1);
-		}
+    /**
+     * Checks whether the given sub bus is marked as initialized.
+     * If subBus is null, all the pin is checked.
+     */
+    public boolean isInitialized(byte[] subBus) {
+        boolean found = false;
+        byte from, to;
 
-		for (byte i = from; i <= to; i++) {
-			initialized[i] = true;
-		}
-	}
+        if (subBus != null) {
+            from = subBus[0];
+            to = subBus[1];
+        }
+        else {
+            from = 0;
+            to = (byte)(width - 1);
+        }
 
-	/**
-	 * Checks whether the given sub bus is marked as initialized. If subBus is
-	 * null, all the pin is checked.
-	 */
-	public boolean isInitialized(byte[] subBus) {
-		boolean found = false;
-		byte from, to;
+        for (byte i = from; i <= to && !found; i++)
+            found = initialized[i];
 
-		if (subBus != null) {
-			from = subBus[0];
-			to = subBus[1];
-		} else {
-			from = 0;
-			to = (byte) (width - 1);
-		}
+        return found;
+    }
 
-		for (byte i = from; (i <= to) && !found; i++) {
-			found = initialized[i];
-		}
+    public int hashCode() {
+        return name.hashCode();
+    }
 
-		return found;
-	}
+    public boolean equals(Object other) {
+        return (other instanceof PinInfo) && name.equals(((PinInfo)other).name);
+    }
 }

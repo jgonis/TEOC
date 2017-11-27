@@ -17,22 +17,21 @@
 
 package Hack.ComputerParts;
 
-import java.awt.Point;
+import Hack.ComputerParts.*;
+import java.awt.*;
 
 /**
  * An interface for the GUI of the bus.
  */
 public interface BusGUI extends ComputerPartGUI {
 
-	/**
-	 * Moves the given value from the source coordinates to the traget
-	 * coordinates.
-	 */
-	public void move(Point sourceCoordinates, Point targetCoordinates, String value);
+    /**
+     * Moves the given value from the source coordinates to the traget coordinates.
+     */
+    public void move(Point sourceCoordinates, Point targetCoordinates, String value);
 
-	/**
-	 * Sets the sending speed (in the range
-	 * 1..HackController.NUMBER_OF_SPEED_UNITS).
-	 */
-	public void setSpeed(int speedUnit);
+    /**
+     * Sets the sending speed (in the range 1..HackController.NUMBER_OF_SPEED_UNITS).
+     */
+    public void setSpeed(int speedUnit);
 }

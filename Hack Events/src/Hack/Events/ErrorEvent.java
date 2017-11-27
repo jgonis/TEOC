@@ -24,25 +24,22 @@ import java.util.EventObject;
  */
 public class ErrorEvent extends EventObject {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -6937518246739442102L;
-	// the error message
-	private String errorMessage;
+    // the error message
+    private String errorMessage;
 
-	/**
-	 * Constructs a new ErrorEvent with the given source and error message.
-	 */
-	public ErrorEvent(Object source, String errorMessage) {
-		super(source);
-		this.errorMessage = errorMessage;
-	}
+    /**
+     * Constructs a new ErrorEvent with the given source and error message.
+     */
+    public ErrorEvent(Object source, String errorMessage) {
+        super(source);
+        this.errorMessage = errorMessage;
+    }
 
-	/**
-	 * Returns the error message. If null, the error display should be cleared.
-	 */
-	public String getErrorMessage() {
-		return errorMessage;
-	}
+    /**
+     * Returns the error message.
+     * If null, the error display should be cleared.
+     */
+    public String getErrorMessage() {
+        return errorMessage;
+    }
 }

@@ -20,16 +20,12 @@ package Hack.Gates;
 /**
  * An exception for errors in a gate.
  */
-public class GateException extends Exception {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 6287059509025926916L;
-
-	/**
-	 * Constructs a new GateException with the given message.
-	 */
-	public GateException(String message) {
-		super(message);
-	}
+public class GateException extends Exception
+{
+    /**
+     * Constructs a new GateException with the given message.
+     */
+    public GateException(String message) {
+        super(message);
+    }
 }

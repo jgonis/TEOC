@@ -18,14 +18,14 @@
 package HackGUI;
 
 /**
- * An interface for objects that wants to listen to other object that calls to
- * its repaint() method.
+ * An interface for objects that wants to listen to other object that calls to its
+ * repaint() method.
  */
 public interface RepaintListener {
 
-	/**
-	 * Called when the object calles to its repaint() method. There is no event
-	 * in this case.
-	 */
-	public void repaintSegments();
+    /**
+     * Called when the object calles to its repaint() method.
+     * There is no event in this case.
+     */
+    public void repaintSegments();
 }

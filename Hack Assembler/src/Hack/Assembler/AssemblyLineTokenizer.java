@@ -17,63 +17,62 @@
 
 package Hack.Assembler;
 
-import java.io.IOException;
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
-
-import Hack.Translators.LineTokenizer;
+import java.io.*;
+import Hack.Translators.*;
 
 /**
  * A tokenizer for lines of an Assembly program.
  */
 public class AssemblyLineTokenizer extends LineTokenizer {
 
+    /**
+     * Constructs a new AssemblyLineTokenizer for the given line.
+     */
+    public AssemblyLineTokenizer(String line) throws IOException {
+		// Remove spaces from line. This needs to be done here
+		// manually and not via whitespaceChars(' ', ' ') because
+		// A + 1 for example should be regarded as the SINGLE
+		// token A+1.
+        super(removeSpaces(line));
+
+        resetSyntax();
+        slashSlashComments(true);
+
+        whitespaceChars(' ',' ');
+        whitespaceChars('\n','\n');
+        whitespaceChars('\r','\r');
+        whitespaceChars('\t','\t');
+
+        wordChars('0','9');
+        wordChars('A','Z');
+        wordChars('a','z');
+        wordChars('_','_');
+        wordChars('+','+');
+        wordChars('-','-');
+        wordChars('.','.');
+        wordChars(':',':');
+        wordChars('!','!');
+        wordChars('&','&');
+        wordChars('|','|');
+        wordChars('$','$');
+
+        nextToken();
+    }
+
 	/**
 	 * Removes space characters from the given string.
 	 */
 	private static String removeSpaces(String line) {
 		StringBuffer nospc = new StringBuffer();
-		StringCharacterIterator i = new StringCharacterIterator(line);
-		for (i.first(); i.current() != CharacterIterator.DONE; i.next()) {
+        StringCharacterIterator i = new StringCharacterIterator(line);
+        for (i.first(); i.current() != CharacterIterator.DONE; i.next()) {
 			if (i.current() != ' ') {
 				nospc.append(i.current());
 			}
 		}
 		return nospc.toString();
-	}
-
-	/**
-	 * Constructs a new AssemblyLineTokenizer for the given line.
-	 */
-	public AssemblyLineTokenizer(String line) throws IOException {
-		// Remove spaces from line. This needs to be done here
-		// manually and not via whitespaceChars(' ', ' ') because
-		// A + 1 for example should be regarded as the SINGLE
-		// token A+1.
-		super(removeSpaces(line));
-
-		resetSyntax();
-		slashSlashComments(true);
-
-		whitespaceChars(' ', ' ');
-		whitespaceChars('\n', '\n');
-		whitespaceChars('\r', '\r');
-		whitespaceChars('\t', '\t');
-
-		wordChars('0', '9');
-		wordChars('A', 'Z');
-		wordChars('a', 'z');
-		wordChars('_', '_');
-		wordChars('+', '+');
-		wordChars('-', '-');
-		wordChars('.', '.');
-		wordChars(':', ':');
-		wordChars('!', '!');
-		wordChars('&', '&');
-		wordChars('|', '|');
-		wordChars('$', '$');
-
-		nextToken();
 	}
 
 }

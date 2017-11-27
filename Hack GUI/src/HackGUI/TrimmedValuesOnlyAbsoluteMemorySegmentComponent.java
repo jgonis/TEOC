@@ -17,147 +17,119 @@
 
 package HackGUI;
 
-import java.awt.Point;
-import java.awt.Rectangle;
-
-import javax.swing.JScrollBar;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableModel;
+import Hack.*;
+import javax.swing.table.*;
+import javax.swing.*;
+import java.awt.*;
 
 /**
- * An AbsolutePointedMemorySegmentComponent that displays only the values column
- * and doesn't display addresses beyond the pointer address.
+ * An AbsolutePointedMemorySegmentComponent that displays only the values column and
+ * doesn't display addresses beyond the pointer address.
  */
 public class TrimmedValuesOnlyAbsoluteMemorySegmentComponent extends AbsolutePointedMemorySegmentComponent {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -3134179691672435898L;
+    protected DefaultTableCellRenderer getCellRenderer() {
+        return new TrimmedValuesOnlyTableCellRenderer();
+    }
 
-	// An inner class representing the model of this table.
-	class TrimmedValuesOnlyAbsoluteTableModel extends AbsoluteTableModel {
+    /**
+     * Returns the width of the table.
+     */
+    public int getTableWidth() {
+        return 124;
+    }
 
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = -143957148620405674L;
+    /**
+     * Returns the index of the values column.
+     */
+    protected int getColumnValue() {
+        return 0;
+    }
 
-		/**
-		 * Returns the number of columns.
-		 */
-		@Override
-		public int getColumnCount() {
-			return 1;
-		}
+    /**
+     * Sets the pointer with the given pointer address.
+     */
+    public synchronized void setPointer(int pointerAddress) {
+        this.pointerAddress = (short)pointerAddress;
+        segmentTable.revalidate();
+        try {
+            wait(100);
+        } catch (InterruptedException ie) {}
+        scrollToPointer();
+    }
 
-		/**
-		 * Returns the number of rows.
-		 */
-		@Override
-		public int getRowCount() {
-			return Math.max(pointerAddress - startAddress, 0);
-		}
+    /**
+     * Scrolls the table to the pointer location.
+     */
+    protected void scrollToPointer() {
+        JScrollBar bar = scrollPane.getVerticalScrollBar();
+        int beforeScrollValue = bar.getValue();
+        Rectangle r = segmentTable.getCellRect(pointerAddress - startAddress - 1, 0, true);
+        segmentTable.scrollRectToVisible(r);
+        repaint();
+    }
 
-		/**
-		 * Returns the value at a specific row and column.
-		 */
-		@Override
-		public Object getValueAt(int row, int col) {
-			return super.getValueAt(row, col + 1);
-		}
+    /**
+     * Returns the coordinates of the top left corner of the value at the given index.
+     */
+    public Point getCoordinates(int index) {
+        JScrollBar bar = scrollPane.getVerticalScrollBar();
+        double visibleRowsCount = Utilities.computeVisibleRowsCount(segmentTable);
+        int location = (int)Math.max(Math.min(index - startAddress, visibleRowsCount - 1), 0);
+        Rectangle r = segmentTable.getCellRect(location, 0, true);
+        segmentTable.scrollRectToVisible(r);
+        setTopLevelLocation();
+        return new Point((int)(r.getX() + topLevelLocation.getX()),
+                         (int)(r.getY() + topLevelLocation.getY()));
+    }
 
-		/**
-		 * Returns true of this table cells are editable, false - otherwise.
-		 */
-		@Override
-		public boolean isCellEditable(int row, int col) {
-			return super.isCellEditable(row, col + 1);
-		}
-	}
+    /**
+     * Returns the appropriate table model.
+     */
+    protected TableModel getTableModel() {
+        return new TrimmedValuesOnlyAbsoluteTableModel();
+    }
 
-	// An inner class which implemets the cell renderer of the ram table, giving
-	// the feature of aligning the text in the cells.
-	class TrimmedValuesOnlyTableCellRenderer extends PointedMemorySegmentTableCellRenderer {
+    // An inner class representing the model of this table.
+    class TrimmedValuesOnlyAbsoluteTableModel extends AbsoluteTableModel {
 
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = -6216458602305212503L;
+        /**
+         * Returns the number of columns.
+         */
+        public int getColumnCount() {
+            return 1;
+        }
 
-		@Override
-		public void setRenderer(int row, int column) {
-			super.setRenderer(row, column + 1);
-		}
-	}
+        /**
+         * Returns the number of rows.
+         */
+        public int getRowCount() {
+            return Math.max(pointerAddress - startAddress, 0);
+        }
 
-	@Override
-	protected DefaultTableCellRenderer getCellRenderer() {
-		return new TrimmedValuesOnlyTableCellRenderer();
-	}
+        /**
+         * Returns the value at a specific row and column.
+         */
+        public Object getValueAt(int row, int col) {
+            return super.getValueAt(row, col + 1);
+        }
 
-	/**
-	 * Returns the index of the values column.
-	 */
-	@Override
-	protected int getColumnValue() {
-		return 0;
-	}
+        /**
+         * Returns true of this table cells are editable, false -
+         * otherwise.
+         */
+        public boolean isCellEditable(int row, int col) {
+            return super.isCellEditable(row, col + 1);
+        }
+    }
 
-	/**
-	 * Returns the coordinates of the top left corner of the value at the given
-	 * index.
-	 */
-	@Override
-	public Point getCoordinates(int index) {
-		scrollPane.getVerticalScrollBar();
-		double visibleRowsCount = Utilities.computeVisibleRowsCount(segmentTable);
-		int location = (int) Math.max(Math.min(index - startAddress, visibleRowsCount - 1), 0);
-		Rectangle r = segmentTable.getCellRect(location, 0, true);
-		segmentTable.scrollRectToVisible(r);
-		setTopLevelLocation();
-		return new Point((int) (r.getX() + topLevelLocation.getX()), (int) (r.getY() + topLevelLocation.getY()));
-	}
 
-	/**
-	 * Returns the appropriate table model.
-	 */
-	@Override
-	protected TableModel getTableModel() {
-		return new TrimmedValuesOnlyAbsoluteTableModel();
-	}
+    // An inner class which implemets the cell renderer of the ram table, giving
+    // the feature of aligning the text in the cells.
+    class TrimmedValuesOnlyTableCellRenderer extends PointedMemorySegmentTableCellRenderer {
 
-	/**
-	 * Returns the width of the table.
-	 */
-	@Override
-	public int getTableWidth() {
-		return 124;
-	}
-
-	/**
-	 * Scrolls the table to the pointer location.
-	 */
-	@Override
-	protected void scrollToPointer() {
-		JScrollBar bar = scrollPane.getVerticalScrollBar();
-		bar.getValue();
-		Rectangle r = segmentTable.getCellRect(pointerAddress - startAddress - 1, 0, true);
-		segmentTable.scrollRectToVisible(r);
-		repaint();
-	}
-
-	/**
-	 * Sets the pointer with the given pointer address.
-	 */
-	@Override
-	public synchronized void setPointer(int pointerAddress) {
-		this.pointerAddress = (short) pointerAddress;
-		segmentTable.revalidate();
-		try {
-			wait(100);
-		} catch (InterruptedException ie) {
-		}
-		scrollToPointer();
-	}
+        public void setRenderer(int row, int column) {
+            super.setRenderer(row, column + 1);
+        }
+    }
 }

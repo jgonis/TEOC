@@ -18,29 +18,25 @@
 package Hack.VMEmulator;
 
 /**
- * Object to be thrown down the built-in code stack upon terminating a program
- * while it's running exception for errors in the program.
+ * Object to be thrown down the built-in code stack upon terminating
+ * a program while it's running exception for errors in the program.
  */
-public class TerminateVMProgramThrowable extends Throwable {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -6644789151811575265L;
-
-	/**
-	 * Constructs a new TerminateVMProgramThrowable with no message Don't allow
-	 * builtins (which are outside this package) to construct.
-	 */
-	TerminateVMProgramThrowable() {
-		super();
-	}
-
-	/**
-	 * Constructs a new TerminateVMProgramThrowable with the given message.
+public class TerminateVMProgramThrowable extends Throwable
+{
+    /**
+     * Constructs a new TerminateVMProgramThrowable with the given message.
 	 * Don't allow builtins (which are outside this package) to construct.
-	 */
-	TerminateVMProgramThrowable(String message) {
-		super(message);
-	}
+     */
+    TerminateVMProgramThrowable(String message) {
+        super(message);
+    }
+
+    /**
+     * Constructs a new TerminateVMProgramThrowable with no message
+	 * Don't allow builtins (which are outside this package) to construct.
+     */
+    TerminateVMProgramThrowable() {
+        super();
+    }
 
 }

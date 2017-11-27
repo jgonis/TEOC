@@ -17,7 +17,7 @@
 
 package Hack.Gates;
 
-import java.io.File;
+import java.io.*;
 import java.util.Vector;
 
 /**
@@ -25,183 +25,174 @@ import java.util.Vector;
  */
 public class GatesManager {
 
-	// The single instance.
-	private static GatesManager singleton;
+    // The single instance.
+    private static GatesManager singleton;
 
-	/**
-	 * Returns the single instance of GatesManager.
-	 */
-	public static GatesManager getInstance() {
-		if (singleton == null) {
-			singleton = new GatesManager();
-		}
+    // The working HDL dir
+    private File workingDir;
 
-		return singleton;
-	}
+    // The BuiltIn HDL dir
+    private File builtInDir;
 
-	// The working HDL dir
-	private File workingDir;
+    // The gates panel on which gate components are added
+    private GatesPanelGUI gatesPanel;
 
-	// The BuiltIn HDL dir
-	private File builtInDir;
+    // The error handler for errors that occur in the gate components.
+    private GateErrorEventListener errorHandler;
 
-	// The gates panel on which gate components are added
-	private GatesPanelGUI gatesPanel;
+    // The list of built in chips with gui
+    private Vector chips;
 
-	// The error handler for errors that occur in the gate components.
-	private GateErrorEventListener errorHandler;
+    // When true, BuiltIn chips with gui should create and update their gui.
+    // otherwise, their gui shouldn't be created.
+    private boolean updateChipsGUI;
 
-	// The list of built in chips with gui
-	private Vector<BuiltInGateWithGUI> chips;
+    /**
+     * Constructs a new GatesManager.
+     */
+    private GatesManager() {
+        chips = new Vector();
+        updateChipsGUI = true;
+    }
 
-	// When true, BuiltIn chips with gui should create and update their gui.
-	// otherwise, their gui shouldn't be created.
-	private boolean updateChipsGUI;
+    /**
+     * Returns the single instance of GatesManager.
+     */
+    public static GatesManager getInstance() {
+        if (singleton == null)
+            singleton = new GatesManager();
 
-	/**
-	 * Constructs a new GatesManager.
-	 */
-	private GatesManager() {
-		chips = new Vector<BuiltInGateWithGUI>();
-		updateChipsGUI = true;
-	}
+        return singleton;
+    }
 
-	/**
-	 * Adds the given chip with gui to the chips' list and to the gates panel.
-	 */
-	public void addChip(BuiltInGateWithGUI chip) {
-		chips.add(chip);
-		chip.addErrorListener(errorHandler);
-		chip.setParent(chip); // set the chip to be its own parent for Eval
-								// notifications.
+    /**
+     * Returns the current HDL dir.
+     */
+    public File getWorkingDir() {
+        return workingDir;
+    }
 
-		if (gatesPanel != null) {
-			gatesPanel.addGateComponent(chip.getGUIComponent());
-		}
-	}
+    /**
+     * Sets the current HDL dir with the given dir.
+     */
+    public void setWorkingDir(File file) {
+        workingDir = file;
+    }
 
-	/**
-	 * Sets whether built in chips with gui should create and update their gui
-	 * components or not.
-	 */
-	public void enableChipsGUI(boolean value) {
-		updateChipsGUI = value;
-	}
+    /**
+     * Returnss the BuiltIn HDL dir.
+     */
+    public File getBuiltInDir() {
+        return builtInDir;
+    }
 
-	/**
-	 * Returnss the BuiltIn HDL dir.
-	 */
-	public File getBuiltInDir() {
-		return builtInDir;
-	}
+    /**
+     * Sets the BuiltIn HDL dir with the given dir.
+     */
+    public void setBuiltInDir(File file) {
+        builtInDir = file;
+    }
 
-	/**
-	 * Returns all the chips in the gate manager.
-	 */
-	public BuiltInGateWithGUI[] getChips() {
-		BuiltInGateWithGUI[] array = new BuiltInGateWithGUI[chips.size()];
-		chips.toArray(array);
-		return array;
-	}
+    /**
+     * Returns all the chips in the gate manager.
+     */
+    public BuiltInGateWithGUI[] getChips() {
+        BuiltInGateWithGUI[] array = new BuiltInGateWithGUI[chips.size()];
+        chips.toArray(array);
+        return array;
+    }
 
-	/**
-	 * Returns the error handler.
-	 */
-	public GateErrorEventListener getErrorHandler() {
-		return errorHandler;
-	}
+    /**
+     * Adds the given chip with gui to the chips' list and to the gates panel.
+     */
+     public void addChip(BuiltInGateWithGUI chip) {
+        chips.add(chip);
+        chip.addErrorListener(errorHandler);
+        chip.setParent(chip); // set the chip to be its own parent for Eval notifications.
 
-	/**
-	 * Returns the full HDL file name that matches the given gate name. The HDL
-	 * file is searched first in the current dir, and if not found, in the
-	 * BuiltIn dir. If not found in any of them, returns null.
-	 */
-	public String getHDLFileName(String gateName) {
-		String result = null;
-		String name = gateName + ".hdl";
+        if (gatesPanel != null)
+            gatesPanel.addGateComponent(chip.getGUIComponent());
+     }
 
-		File file = new File(workingDir, name);
-		if (file.exists()) {
-			result = file.getAbsolutePath();
-		} else {
-			file = new File(builtInDir, name);
-			if (file.exists()) {
-				result = file.getAbsolutePath();
-			}
-		}
+    /**
+     * Removes the given chip with gui from the chips' list and from the gates panel.
+     */
+     public void removeChip(BuiltInGateWithGUI chip) {
+        chips.remove(chip);
+        chip.removeErrorListener(errorHandler);
 
-		return result;
-	}
+        if (gatesPanel != null)
+            gatesPanel.removeGateComponent(chip.getGUIComponent());
+     }
 
-	/**
-	 * Returns the current HDL dir.
-	 */
-	public File getWorkingDir() {
-		return workingDir;
-	}
+     /**
+      * Remove all the chips from the list and from the gates panel.
+      */
+     public void removeAllChips() {
+        for (int i = 0; i < chips.size(); i++)
+            ((BuiltInGateWithGUI)chips.elementAt(i)).removeErrorListener(errorHandler);
 
-	/**
-	 * Returns true if built in chips with gui should create and update their
-	 * gui components.
-	 */
-	public boolean isChipsGUIEnabled() {
-		return updateChipsGUI;
-	}
+        chips.removeAllElements();
 
-	/**
-	 * Remove all the chips from the list and from the gates panel.
-	 */
-	public void removeAllChips() {
-		for (int i = 0; i < chips.size(); i++) {
-			chips.elementAt(i).removeErrorListener(errorHandler);
-		}
+        if (gatesPanel != null)
+            gatesPanel.removeAllGateComponents();
+     }
 
-		chips.removeAllElements();
+    /**
+     * Sets the gates panel with the given gate panel.
+     */
+    public void setGatesPanel(GatesPanelGUI gatesPanel) {
+        this.gatesPanel = gatesPanel;
+    }
 
-		if (gatesPanel != null) {
-			gatesPanel.removeAllGateComponents();
-		}
-	}
+    /**
+     * Returns the error handler.
+     */
+    public GateErrorEventListener getErrorHandler() {
+        return errorHandler;
+    }
 
-	/**
-	 * Removes the given chip with gui from the chips' list and from the gates
-	 * panel.
-	 */
-	public void removeChip(BuiltInGateWithGUI chip) {
-		chips.remove(chip);
-		chip.removeErrorListener(errorHandler);
+    /**
+     * Sets the error handler.
+     */
+    public void setErrorHandler(GateErrorEventListener errorHandler) {
+        this.errorHandler = errorHandler;
+    }
 
-		if (gatesPanel != null) {
-			gatesPanel.removeGateComponent(chip.getGUIComponent());
-		}
-	}
+    /**
+     * Returns the full HDL file name that matches the given gate name.
+     * The HDL file is searched first in the current dir, and if not found, in the BuiltIn dir.
+     * If not found in any of them, returns null.
+     */
+    public String getHDLFileName(String gateName) {
+        String result = null;
+        String name = gateName + ".hdl";
 
-	/**
-	 * Sets the BuiltIn HDL dir with the given dir.
-	 */
-	public void setBuiltInDir(File file) {
-		builtInDir = file;
-	}
+        File file = new File(workingDir, name);
+        if (file.exists())
+            result = file.getAbsolutePath();
+        else {
+            file = new File(builtInDir, name);
+            if (file.exists())
+                result = file.getAbsolutePath();
+        }
 
-	/**
-	 * Sets the error handler.
-	 */
-	public void setErrorHandler(GateErrorEventListener errorHandler) {
-		this.errorHandler = errorHandler;
-	}
+        return result;
+    }
 
-	/**
-	 * Sets the gates panel with the given gate panel.
-	 */
-	public void setGatesPanel(GatesPanelGUI gatesPanel) {
-		this.gatesPanel = gatesPanel;
-	}
+    /**
+     * Returns true if built in chips with gui should create and update their gui components.
+     */
+    public boolean isChipsGUIEnabled() {
+        return updateChipsGUI;
+    }
 
-	/**
-	 * Sets the current HDL dir with the given dir.
-	 */
-	public void setWorkingDir(File file) {
-		workingDir = file;
-	}
+    /**
+     * Sets whether built in chips with gui should create and update their gui components
+     * or not.
+     */
+    public void enableChipsGUI(boolean value) {
+        updateChipsGUI = value;
+    }
 
 }

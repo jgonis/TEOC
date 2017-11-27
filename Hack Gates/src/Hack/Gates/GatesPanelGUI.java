@@ -17,26 +17,26 @@
 
 package Hack.Gates;
 
-import java.awt.Component;
+import java.awt.*;
 
 /**
- * An interface for the GUI of the GatesPanel. GUIs of the vairous gates are
- * added to this panel.
+ * An interface for the GUI of the GatesPanel. GUIs of the vairous gates are added to
+ * this panel.
  */
 public interface GatesPanelGUI {
 
-	/**
-	 * Adds the given gate component to the gates panel.
-	 */
-	public void addGateComponent(Component gateComponent);
+    /**
+     * Adds the given gate component to the gates panel.
+     */
+    public void addGateComponent(Component gateComponent);
 
-	/**
-	 * Removes all the gate components from the gates panel.
-	 */
-	public void removeAllGateComponents();
+    /**
+     * Removes the given gate component from the gates panel.
+     */
+    public void removeGateComponent(Component gateComponent);
 
-	/**
-	 * Removes the given gate component from the gates panel.
-	 */
-	public void removeGateComponent(Component gateComponent);
+    /**
+     * Removes all the gate components from the gates panel.
+     */
+    public void removeAllGateComponents();
 }

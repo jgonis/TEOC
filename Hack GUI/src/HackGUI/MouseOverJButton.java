@@ -17,66 +17,48 @@
 
 package HackGUI;
 
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
+import javax.swing.*;
+import java.awt.event.*;
 
 /**
  * A button which draws a raised border when the mouse cursor is over it.
  */
 public class MouseOverJButton extends JButton implements MouseListener {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 8261952395023761198L;
+    /**
+     * Constructs a new MouseOverJButton.
+     */
+    public MouseOverJButton() {
+        setBorder(null);
+        addMouseListener(this);
+    }
 
-	/**
-	 * Constructs a new MouseOverJButton.
-	 */
-	public MouseOverJButton() {
-		setBorder(null);
-		addMouseListener(this);
-	}
+    /**
+     * Called just after the cursor enters the bounds of the listened-to component.
+     */
+    public void mouseEntered(MouseEvent e) {
+        setBorder(BorderFactory.createRaisedBevelBorder());
+    }
 
-	/**
-	 * Empty implementation.
-	 */
-	@Override
-	public void mouseClicked(MouseEvent e) {
-	}
+    /**
+     * Called just after the cursor exits the bounds of the listened-to component.
+     */
+    public void mouseExited(MouseEvent e) {
+        setBorder(null);
+    }
 
-	/**
-	 * Called just after the cursor enters the bounds of the listened-to
-	 * component.
-	 */
-	@Override
-	public void mouseEntered(MouseEvent e) {
-		setBorder(BorderFactory.createRaisedBevelBorder());
-	}
+    /**
+     * Empty implementation.
+     */
+    public void mouseClicked(MouseEvent e){}
 
-	/**
-	 * Called just after the cursor exits the bounds of the listened-to
-	 * component.
-	 */
-	@Override
-	public void mouseExited(MouseEvent e) {
-		setBorder(null);
-	}
+    /**
+     * Empty implementation.
+     */
+    public void mousePressed(MouseEvent e) {}
 
-	/**
-	 * Empty implementation.
-	 */
-	@Override
-	public void mousePressed(MouseEvent e) {
-	}
-
-	/**
-	 * Empty implementation.
-	 */
-	@Override
-	public void mouseReleased(MouseEvent e) {
-	}
+    /**
+     * Empty implementation.
+     */
+    public void mouseReleased(MouseEvent e) {}
 }

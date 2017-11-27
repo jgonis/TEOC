@@ -17,46 +17,45 @@
 
 package Hack.VMEmulator;
 
-import Hack.VirtualMachine.HVMInstruction;
+import Hack.VirtualMachine.*;
 
 /**
  * An HVMInstruction for the use of the VMEmulator.
  */
 public class VMEmulatorInstruction extends HVMInstruction {
 
-	// The index of the instruction in its containing function.
-	private short indexInFunction;
+    // The index of the instruction in its containing function.
+    private short indexInFunction;
 
-	/**
-	 * Constructs a new instruction with no arguments and the index in function.
-	 */
-	public VMEmulatorInstruction(byte opCode, short indexInFunction) {
-		super(opCode);
-		this.indexInFunction = indexInFunction;
-	}
+    /**
+     * Constructs a new instruction with two arguments and the index in function.
+     */
+    public VMEmulatorInstruction(byte opCode, short arg0, short arg1, short indexInFunction) {
+        super(opCode, arg0, arg1);
+        this.indexInFunction = indexInFunction;
+    }
 
-	/**
-	 * Constructs a new instruction with one argument and the index in function.
-	 */
-	public VMEmulatorInstruction(byte opCode, short arg0, short indexInFunction) {
-		super(opCode, arg0);
-		this.indexInFunction = indexInFunction;
-	}
+    /**
+     * Constructs a new instruction with one argument and the index in function.
+     */
+    public VMEmulatorInstruction(byte opCode, short arg0, short indexInFunction) {
+        super(opCode, arg0);
+        this.indexInFunction = indexInFunction;
+    }
 
-	/**
-	 * Constructs a new instruction with two arguments and the index in
-	 * function.
-	 */
-	public VMEmulatorInstruction(byte opCode, short arg0, short arg1, short indexInFunction) {
-		super(opCode, arg0, arg1);
-		this.indexInFunction = indexInFunction;
-	}
+    /**
+     * Constructs a new instruction with no arguments and the index in function.
+     */
+    public VMEmulatorInstruction(byte opCode, short indexInFunction) {
+        super(opCode);
+        this.indexInFunction = indexInFunction;
+    }
 
-	/**
-	 * Returns the index of this instruction in its containing function. A
-	 * negative value represents no index.
-	 */
-	public short getIndexInFunction() {
-		return indexInFunction;
-	}
+    /**
+     * Returns the index of this instruction in its containing function.
+     * A negative value represents no index.
+     */
+    public short getIndexInFunction() {
+        return indexInFunction;
+    }
 }

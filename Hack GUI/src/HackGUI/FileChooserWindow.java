@@ -17,15 +17,10 @@
 
 package HackGUI;
 
-import java.awt.Rectangle;
-import java.net.URISyntaxException;
-import java.nio.file.Paths;
+import java.awt.*;
+import javax.swing.*;
+import java.awt.event.*;
 import java.util.Vector;
-
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JTextField;
 import javax.swing.filechooser.FileFilter;
 
 /**
@@ -34,158 +29,149 @@ import javax.swing.filechooser.FileFilter;
  */
 public class FileChooserWindow extends JFrame implements EnterPressedListener {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 6918852068703748475L;
+    // Creating the file chooser component.
+    private ViewableFileChooserComponent fileChooser;
 
-	// Creating the file chooser component.
-	private ViewableFileChooserComponent fileChooser;
+    // Creating the ok and cancel buttons.
+    private JButton okButton = new JButton();
+    private JButton cancelButton = new JButton();
 
-	// Creating the ok and cancel buttons.
-	private JButton okButton = new JButton();
-	private JButton cancelButton = new JButton();
+    // Creating the icons.
+    private ImageIcon okIcon = new ImageIcon(Utilities.imagesDir + "ok.gif");
+    private ImageIcon cancelIcon = new ImageIcon(Utilities.imagesDir + "cancel.gif");
 
-	// Creating the icons.
-	private ImageIcon okIcon;
-	private ImageIcon cancelIcon;
+    // the listeners to this component.
+    private Vector listeners;
 
-	// the listeners to this component.
-	private Vector<FilesTypeListener> listeners;
+    /**
+     * Constructs a new FilesChooserWindow.
+     */
+    public FileChooserWindow(FileFilter filter) {
+        listeners = new Vector();
+        fileChooser = new ViewableFileChooserComponent();
+        fileChooser.setFilter(filter);
 
-	/**
-	 * Constructs a new FilesChooserWindow.
-	 */
-	public FileChooserWindow(FileFilter filter) {
-		listeners = new Vector<FilesTypeListener>();
-		fileChooser = new ViewableFileChooserComponent();
-		fileChooser.setFilter(filter);
-	
-		try {
-			okIcon = new ImageIcon(Paths.get(ClassLoader.getSystemResource("ok.gif").toURI()).toString());
-			cancelIcon = new ImageIcon(Paths.get(ClassLoader.getSystemResource("cancel.gif").toURI()).toString());
-		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        jbInit();
+    }
 
-		jbInit();
-	}
+    /**
+     * Shows the file chooser window.
+     */
+    public void showWindow() {
+        setVisible(true);
+        fileChooser.getTextField().requestFocus();
+    }
 
-	/**
-	 * Registers the given FilesTypeListener as a listener to this component.
-	 */
-	public void addListener(FilesTypeListener listener) {
-		listeners.addElement(listener);
-	}
+    /**
+     * Called when the user pressed the enter button.
+     */
+    public void enterPressed() {
+        String file = null;
+        file = fileChooser.getFileName();
+        fileChooser.setCurrentFileName(file);
+        if(!(file == null))
+            notifyListeners(file);
+        setVisible(false);
+    }
 
-	/**
-	 * Implementing the action of pressing the cancel button.
-	 */
-	public void cancelButton_actionPerformed() {
-		fileChooser.showCurrentFileName();
-		setVisible(false);
-	}
+    /**
+     * Sets the file name (which is written inside the text field).
+     */
+    public void setFileName(String name) {
+        fileChooser.setCurrentFileName(name);
+        fileChooser.showCurrentFileName();
+    }
 
-	/**
-	 * Called when the user pressed the enter button.
-	 */
-	@Override
-	public void enterPressed() {
-		String file = null;
-		file = fileChooser.getFileName();
-		fileChooser.setCurrentFileName(file);
-		if (!(file == null)) {
-			notifyListeners(file);
-		}
-		setVisible(false);
-	}
+    /**
+     * Sets the name of the file chooser.
+     */
+    public void setName(String name) {
+        fileChooser.setName(name);
+    }
 
-	/**
-	 * Returns the textfield.
-	 */
-	public JTextField getTextField() {
-		return fileChooser.getTextField();
-	}
+    /**
+     * Returns the textfield.
+     */
+    public JTextField getTextField() {
+        return fileChooser.getTextField();
+    }
 
-	// Initialization.
-	private void jbInit() {
-		fileChooser.addListener(this);
-		fileChooser.setWindowLocation(647, 3);
-		this.getContentPane().setLayout(null);
-		setTitle("Files selection");
-		fileChooser.setBounds(new Rectangle(5, 2, 482, 48));
-		okButton.setToolTipText("OK");
-		okButton.setIcon(okIcon);
-		okButton.setBounds(new Rectangle(124, 64, 63, 44));
-		okButton.addActionListener(e -> okButton_actionPerformed());
-		cancelButton.setBounds(new Rectangle(282, 63, 63, 44));
-		cancelButton.addActionListener(e -> cancelButton_actionPerformed());
-		cancelButton.setToolTipText("CANCEL");
-		cancelButton.setIcon(cancelIcon);
-		this.getContentPane().add(fileChooser, null);
-		this.getContentPane().add(cancelButton, null);
-		this.getContentPane().add(okButton, null);
-		setSize(496, 150);
-		setLocation(145, 250);
-	}
+    // Initialization.
+    private void jbInit() {
+        fileChooser.addListener(this);
+        fileChooser.setWindowLocation(647,3);
+        this.getContentPane().setLayout(null);
+        setTitle("Files selection");
+        fileChooser.setBounds(new Rectangle(5, 2, 482, 48));
+        okButton.setToolTipText("OK");
+        okButton.setIcon(okIcon);
+        okButton.setBounds(new Rectangle(124, 64, 63, 44));
+        okButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                okButton_actionPerformed(e);
+            }
+        });
+        cancelButton.setBounds(new Rectangle(282, 63, 63, 44));
+        cancelButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                cancelButton_actionPerformed(e);
+            }
+        });
+        cancelButton.setToolTipText("CANCEL");
+        cancelButton.setIcon(cancelIcon);
+        this.getContentPane().add(fileChooser, null);
+        this.getContentPane().add(cancelButton, null);
+        this.getContentPane().add(okButton, null);
+        setSize(496,150);
+        setLocation(145,250);
+    }
 
-	/**
-	 * Notify all the FilesTypeListeners on actions taken in it, by creating a
-	 * FilesTypeEvent and sending it using the filesNamesChanged method to all
-	 * of the listeners.
-	 */
-	public void notifyListeners(String fileName) {
-		FilesTypeEvent event = new FilesTypeEvent(this, fileName, null, null);
+    /**
+     * Registers the given FilesTypeListener as a listener to this component.
+     */
+    public void addListener (FilesTypeListener listener) {
+        listeners.addElement(listener);
+    }
 
-		for (int i = 0; i < listeners.size(); i++) {
-			listeners.elementAt(i).filesNamesChanged(event);
-		}
-	}
+    /**
+     * Un-registers the given FilesTypeListener from being a listener to this component.
+     */
+    public void removeListener (FilesTypeListener listener) {
+        listeners.removeElement(listener);
+    }
 
-	/**
-	 * Implementing the action of pressing the ok button.
-	 */
-	public void okButton_actionPerformed() {
+    /**
+     * Notify all the FilesTypeListeners on actions taken in it, by creating a
+     * FilesTypeEvent and sending it using the filesNamesChanged method to all
+     * of the listeners.
+     */
+    public void notifyListeners (String fileName) {
+        FilesTypeEvent event = new FilesTypeEvent(this,fileName, null, null);
 
-		String file = null;
-		file = fileChooser.getFileName();
-		fileChooser.setCurrentFileName(file);
-		setVisible(false);
-		if (!(file == null)) {
-			notifyListeners(file);
-		}
-	}
+        for(int i=0;i<listeners.size();i++) {
+            ((FilesTypeListener)listeners.elementAt(i)).filesNamesChanged(event);
+        }
+    }
 
-	/**
-	 * Un-registers the given FilesTypeListener from being a listener to this
-	 * component.
-	 */
-	public void removeListener(FilesTypeListener listener) {
-		listeners.removeElement(listener);
-	}
+    /**
+     * Implementing the action of pressing the cancel button.
+     */
+    public void cancelButton_actionPerformed(ActionEvent e) {
+        fileChooser.showCurrentFileName();
+        setVisible(false);
+    }
 
-	/**
-	 * Sets the file name (which is written inside the text field).
-	 */
-	public void setFileName(String name) {
-		fileChooser.setCurrentFileName(name);
-		fileChooser.showCurrentFileName();
-	}
+    /**
+     * Implementing the action of pressing the ok button.
+     */
+    public void okButton_actionPerformed(ActionEvent e) {
 
-	/**
-	 * Sets the name of the file chooser.
-	 */
-	@Override
-	public void setName(String name) {
-		fileChooser.setName(name);
-	}
-
-	/**
-	 * Shows the file chooser window.
-	 */
-	public void showWindow() {
-		setVisible(true);
-		fileChooser.getTextField().requestFocus();
-	}
+        String file = null;
+        file = fileChooser.getFileName();
+        fileChooser.setCurrentFileName(file);
+        setVisible(false);
+        if(!(file == null)) {
+            notifyListeners(file);
+        }
+    }
 }

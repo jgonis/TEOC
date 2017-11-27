@@ -17,121 +17,115 @@
 
 package Hack.Gates;
 
-import java.awt.Component;
-import java.util.Vector;
-
-import Hack.Events.ErrorEvent;
-import Hack.Events.ErrorEventListener;
+import java.awt.*;
+import Hack.Events.*;
+import java.util.*;
 
 /**
- * A BuiltInGate with a GUI component. Notifies its listeners on errors using
- * the GateErrorEvent. Also listens to ErrorEvents from the GUI (and therefore
- * should register as an ErrorEventListener to it). When such an event occures,
- * the error is sent to the error listeners of the computer part itself.
+ * A BuiltInGate with a GUI component.
+ * Notifies its listeners on errors using the GateErrorEvent.
+ * Also listens to ErrorEvents from the GUI (and therefore should register
+ * as an ErrorEventListener to it). When such an event occures, the error is sent to
+ * the error listeners of the computer part itself.
  */
-public abstract class BuiltInGateWithGUI extends BuiltInGate implements ErrorEventListener {
+public abstract class BuiltInGateWithGUI extends BuiltInGate
+ implements ErrorEventListener {
 
-	private Vector<GateErrorEventListener> errorListeners;
+    private Vector errorListeners;
 
-	// The gate parent of this gate. re-evaluates when a change is done through
-	// the gui.
-	protected Gate parent;
+    // The gate parent of this gate. re-evaluates when a change is done through the gui.
+    protected Gate parent;
 
-	/**
-	 * Constructs a new BuiltInGateWithGUI.
-	 */
-	public BuiltInGateWithGUI() {
-		errorListeners = new Vector<GateErrorEventListener>();
-	}
+    /**
+     * Constructs a new BuiltInGateWithGUI.
+     */
+    public BuiltInGateWithGUI() {
+        errorListeners = new Vector();
+    }
 
-	/**
-	 * Registers the given GateErrorEventListener as a listener to this
-	 * simulator.
-	 */
-	public void addErrorListener(GateErrorEventListener listener) {
-		errorListeners.addElement(listener);
-	}
+    /**
+     * Sets the gate parent of this gate.
+     * The given gate will be re-evaluated when the output of this gate changes.
+     */
+    protected void setParent(Gate gate) {
+        parent = gate;
+    }
 
-	/**
-	 * Clears all the GateErrorEventListeners from errors.
-	 */
-	public void clearErrorListeners() {
-		GateErrorEvent event = new GateErrorEvent(this, null);
+    /**
+     * Evaluates the parent of this gate.
+     * Should be executed whenever a change is done to the gate through its gui (after
+     * the gate's outputs were set).
+     */
+    protected void evalParent() {
+        parent.setDirty();
+        parent.eval();
+    }
 
-		for (int i = 0; i < errorListeners.size(); i++) {
-			errorListeners.elementAt(i).gateErrorOccured(event);
-		}
-	}
+    /**
+     * Registers the given GateErrorEventListener as a listener to this simulator.
+     */
+    public void addErrorListener(GateErrorEventListener listener) {
+        errorListeners.addElement(listener);
+    }
 
-	/**
-	 * Executes the given command, given in args[] style. Subclasses may
-	 * override this method to implement commands.
-	 * @param command 
-	 */
-	public void doCommand(String[] command) throws GateException {
-		throw new GateException("This chip supports no commands");
-	}
+    /**
+     * Un-registers the given GateErrorEventListener from being a listener to this GUI.
+     */
+    public void removeErrorListener(GateErrorEventListener listener) {
+        errorListeners.removeElement(listener);
+    }
 
-	/**
-	 * Called when an error occured in the GUI. The event contains the source
-	 * object and the error message.
-	 */
-	@Override
-	public void errorOccured(ErrorEvent event) {
-		notifyErrorListeners(event.getErrorMessage());
-	}
+    /**
+     * Notifies all the GateErrorEventListeners on an error that occured in the
+     * computer part by creating a GateErrorEvent (with the error message) and sending
+     * it using the gateErrorOccured method to all the listeners.
+     */
+    public void notifyErrorListeners(String errorMessage) {
+        GateErrorEvent event = new GateErrorEvent(this, errorMessage);
 
-	/**
-	 * Evaluates the parent of this gate. Should be executed whenever a change
-	 * is done to the gate through its gui (after the gate's outputs were set).
-	 */
-	protected void evalParent() {
-		parent.setDirty();
-		parent.eval();
-	}
+        for (int i = 0; i < errorListeners.size(); i++)
+            ((GateErrorEventListener)errorListeners.elementAt(i)).gateErrorOccured(event);
+    }
 
-	/**
-	 * Returns the GUI component of the chip.
-	 */
-	public abstract Component getGUIComponent();
+    /**
+     * Clears all the GateErrorEventListeners from errors.
+     */
+    public void clearErrorListeners() {
+        GateErrorEvent event = new GateErrorEvent(this, null);
 
-	/**
-	 * Returns the value of the chip at the given index. Throws GateException if
-	 * index is not legal.
-	 */
-	public abstract short getValueAt(int index) throws GateException;
+        for (int i = 0; i < errorListeners.size(); i++)
+            ((GateErrorEventListener)errorListeners.elementAt(i)).gateErrorOccured(event);
+    }
 
-	/**
-	 * Notifies all the GateErrorEventListeners on an error that occured in the
-	 * computer part by creating a GateErrorEvent (with the error message) and
-	 * sending it using the gateErrorOccured method to all the listeners.
-	 */
-	public void notifyErrorListeners(String errorMessage) {
-		GateErrorEvent event = new GateErrorEvent(this, errorMessage);
+    /**
+     * Called when an error occured in the GUI.
+     * The event contains the source object and the error message.
+     */
+    public void errorOccured(ErrorEvent event) {
+        notifyErrorListeners(event.getErrorMessage());
+    }
 
-		for (int i = 0; i < errorListeners.size(); i++) {
-			errorListeners.elementAt(i).gateErrorOccured(event);
-		}
-	}
+    /**
+     * Returns the GUI component of the chip.
+     */
+    public abstract Component getGUIComponent();
 
-	/**
-	 * Un-registers the given GateErrorEventListener from being a listener to
-	 * this GUI.
-	 */
-	public void removeErrorListener(GateErrorEventListener listener) {
-		errorListeners.removeElement(listener);
-	}
+    /**
+     * Returns the value of the chip at the given index.
+     * Throws GateException if index is not legal.
+     */
+    public abstract short getValueAt(int index) throws GateException;
 
-	/**
-	 * Sets the gate parent of this gate. The given gate will be re-evaluated
-	 * when the output of this gate changes.
-	 */
-	protected void setParent(Gate gate) {
-		parent = gate;
-	}
+    /**
+     * Sets the value at the given index with the value.
+     */
+    public abstract void setValueAt(int index, short value) throws GateException;
 
-	/**
-	 * Sets the value at the given index with the value.
-	 */
-	public abstract void setValueAt(int index, short value) throws GateException;
+    /**
+     * Executes the given command, given in args[] style.
+     * Subclasses may override this method to implement commands.
+     */
+    public void doCommand(String[] command) throws GateException {
+        throw new GateException("This chip supports no commands");
+    }
 }

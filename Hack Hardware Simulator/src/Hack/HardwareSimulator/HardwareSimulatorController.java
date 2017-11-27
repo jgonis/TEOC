@@ -17,101 +17,94 @@
 
 package Hack.HardwareSimulator;
 
-import java.io.File;
-
-import Hack.Controller.ControllerException;
-import Hack.Controller.HackController;
-import Hack.Controller.ScriptException;
-import Hack.Gates.GateException;
-import Hack.Gates.GatesManager;
+import Hack.Controller.*;
+import Hack.Gates.*;
+import java.io.*;
 
 /**
  * A HackController for the Hardware Simulator.
  */
 public class HardwareSimulatorController extends HackController {
 
-	class LoadChipTask implements Runnable {
+    /**
+     * Constructs a new HardwareSimulatorController with the given HardwareSimulatorControllerGUI
+     * component, the HardwareSimulator and the default script file for this simulator.
+     * The gui is optional.
+     */
+    public HardwareSimulatorController(HardwareSimulatorControllerGUI gui,
+                                       HardwareSimulator simulator, String defaultScriptName)
+     throws ScriptException, ControllerException  {
+        super(gui, simulator, defaultScriptName);
 
-		private String chipName;
+        gui.disableEval();
+        gui.disableTickTock();
+    }
 
-		public LoadChipTask(String chipName) {
-			this.chipName = chipName;
-		}
+    protected void updateProgramFile(String programFileName) {
+        super.updateProgramFile(programFileName);
+        File file = (new File(programFileName)).getParentFile();
+        GatesManager.getInstance().setWorkingDir(file);
+    }
 
-		@Override
-		public void run() {
-			try {
-				((HardwareSimulator) simulator).loadGate(chipName, true);
-			} catch (GateException ge) {
-				gui.displayMessage(ge.getMessage(), true);
-			}
-		}
-	}
+    /**
+     * Executes an unknown controller action event.
+     */
+    protected void doUnknownAction(byte action, Object data) {
+        switch (action) {
+            case HardwareSimulatorControllerEvent.CHIP_CHANGED:
+                File file = (File)data;
+                updateProgramFile(file.getPath());
+                if (!singleStepLocked) // new HDL was loaded manually
+                    reloadDefaultScript();
 
-	/**
-	 * Constructs a new HardwareSimulatorController with the given
-	 * HardwareSimulatorControllerGUI component, the HardwareSimulator and the
-	 * default script file for this simulator. The gui is optional.
-	 */
-	public HardwareSimulatorController(HardwareSimulatorControllerGUI gui, HardwareSimulator simulator,
-			String defaultScriptName) throws ScriptException, ControllerException {
-		super(gui, simulator, defaultScriptName);
+                LoadChipTask loadChipTask = new LoadChipTask(file.getPath());
+                Thread t = new Thread(loadChipTask);
+                t.start();
+                break;
 
-		gui.disableEval();
-		gui.disableTickTock();
-	}
+            case HardwareSimulatorControllerEvent.EVAL_CLICKED:
+                ((HardwareSimulator)simulator).runEvalTask();
+                break;
 
-	/**
-	 * Executes an unknown controller action event.
-	 */
-	@Override
-	protected void doUnknownAction(byte action, Object data) {
-		switch (action) {
-		case HardwareSimulatorControllerEvent.CHIP_CHANGED:
-			File file = (File) data;
-			updateProgramFile(file.getPath());
-			if (!singleStepLocked) {
-				reloadDefaultScript();
-			}
+            case HardwareSimulatorControllerEvent.TICKTOCK_CLICKED:
+                ((HardwareSimulator)simulator).runTickTockTask();
+                break;
 
-			LoadChipTask loadChipTask = new LoadChipTask(file.getPath());
-			Thread t = new Thread(loadChipTask);
-			t.start();
-			break;
+            case HardwareSimulatorControllerEvent.DISABLE_EVAL:
+                ((HardwareSimulatorControllerGUI)gui).disableEval();
+                break;
 
-		case HardwareSimulatorControllerEvent.EVAL_CLICKED:
-			((HardwareSimulator) simulator).runEvalTask();
-			break;
+            case HardwareSimulatorControllerEvent.ENABLE_EVAL:
+                ((HardwareSimulatorControllerGUI)gui).enableEval();
+                break;
 
-		case HardwareSimulatorControllerEvent.TICKTOCK_CLICKED:
-			((HardwareSimulator) simulator).runTickTockTask();
-			break;
+            case HardwareSimulatorControllerEvent.DISABLE_TICKTOCK:
+                ((HardwareSimulatorControllerGUI)gui).disableTickTock();
+                ((HardwareSimulatorControllerGUI)gui).disableTickTock();
+                break;
 
-		case HardwareSimulatorControllerEvent.DISABLE_EVAL:
-			((HardwareSimulatorControllerGUI) gui).disableEval();
-			break;
+            case HardwareSimulatorControllerEvent.ENABLE_TICKTOCK:
+                ((HardwareSimulatorControllerGUI)gui).enableTickTock();
+                break;
 
-		case HardwareSimulatorControllerEvent.ENABLE_EVAL:
-			((HardwareSimulatorControllerGUI) gui).enableEval();
-			break;
+        }
+    }
 
-		case HardwareSimulatorControllerEvent.DISABLE_TICKTOCK:
-			((HardwareSimulatorControllerGUI) gui).disableTickTock();
-			((HardwareSimulatorControllerGUI) gui).disableTickTock();
-			break;
+    class LoadChipTask implements Runnable {
 
-		case HardwareSimulatorControllerEvent.ENABLE_TICKTOCK:
-			((HardwareSimulatorControllerGUI) gui).enableTickTock();
-			break;
+        private String chipName;
 
-		}
-	}
+        public LoadChipTask(String chipName) {
+            this.chipName = chipName;
+        }
 
-	@Override
-	protected void updateProgramFile(String programFileName) {
-		super.updateProgramFile(programFileName);
-		File file = (new File(programFileName)).getParentFile();
-		GatesManager.getInstance().setWorkingDir(file);
-	}
+        public void run() {
+            try {
+                ((HardwareSimulator)simulator).loadGate(chipName, true);
+            } catch (GateException ge) {
+                gui.displayMessage(ge.getMessage(), true);
+            }
+        }
+    }
 
 }

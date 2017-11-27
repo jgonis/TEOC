@@ -22,23 +22,17 @@ package Hack.Assembler;
  */
 public class AssemblerException extends Exception {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1712288306016526958L;
+    /**
+     * Constructs a new AssemblerException with the given message.
+     */
+    public AssemblerException(String message) {
+        super(message);
+    }
 
-	/**
-	 * Constructs a new AssemblerException with the given message.
-	 */
-	public AssemblerException(String message) {
-		super(message);
-	}
-
-	/**
-	 * Constructs a new AssemblerException with the given message and Line
-	 * number.
-	 */
-	public AssemblerException(String message, int lineNumber) {
-		super("In line " + lineNumber + ", " + message);
-	}
+    /**
+     * Constructs a new AssemblerException with the given message and Line number.
+     */
+    public AssemblerException(String message, int lineNumber) {
+        super("In line " + lineNumber + ", " + message);
+    }
 }

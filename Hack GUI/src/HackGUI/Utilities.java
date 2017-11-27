@@ -17,123 +17,118 @@
 
 package HackGUI;
 
-import java.awt.Component;
-import java.awt.Font;
-import java.awt.Point;
-import java.awt.Rectangle;
-
-import javax.swing.JPanel;
-import javax.swing.JScrollBar;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.plaf.FontUIResource;
+import java.awt.*;
+import javax.swing.*;
+import javax.swing.plaf.*;
 
 /**
  * A class of utility methods.
  */
 public class Utilities {
 
-	// The name of the font for values
-	private static final String VALUE_FONT_NAME = "Monospaced";
+    /**
+     * The directory of the images.
+     */
+    public static final String imagesDir = "bin/images/";
 
-	// The name of the font for labels
-	private static final String LABEL_FONT_NAME = "Dialog";
+    // The name of the font for values
+    private static final String VALUE_FONT_NAME = "Monospaced";
 
-	/**
-	 * The regular font for values.
-	 */
-	public static final Font valueFont = new FontUIResource(VALUE_FONT_NAME, 0, 12);
+    // The name of the font for labels
+    private static final String LABEL_FONT_NAME = "Dialog";
 
-	/**
-	 * The bold font for values.
-	 */
-	public static final Font boldValueFont = new FontUIResource(VALUE_FONT_NAME, 1, 12);
+    /**
+     * The regular font for values.
+     */
+    public static final Font valueFont = new FontUIResource(VALUE_FONT_NAME, 0, 12);
 
-	/**
-	 * The big font for values.
-	 */
-	public static final Font bigBoldValueFont = new FontUIResource(VALUE_FONT_NAME, 1, 13);
+    /**
+     * The bold font for values.
+     */
+    public static final Font boldValueFont = new FontUIResource(VALUE_FONT_NAME, 1, 12);
 
-	/**
-	 * The regular font for labels.
-	 */
-	public static final Font labelsFont = new FontUIResource(LABEL_FONT_NAME, 1, 12);
+    /**
+     * The big font for values.
+     */
+    public static final Font bigBoldValueFont = new FontUIResource(VALUE_FONT_NAME, 1, 13);
 
-	/**
-	 * The thin font for labels.
-	 */
-	public static final Font thinLabelsFont = new FontUIResource(LABEL_FONT_NAME, 0, 12);
+    /**
+     * The regular font for labels.
+     */
+    public static final Font labelsFont = new FontUIResource(LABEL_FONT_NAME, 1, 12);
 
-	/**
-	 * The small font for labels.
-	 */
-	public static final Font smallLabelsFont = new FontUIResource(LABEL_FONT_NAME, 0, 11);
+    /**
+     * The thin font for labels.
+     */
+    public static final Font thinLabelsFont = new FontUIResource(LABEL_FONT_NAME, 0, 12);
 
-	/**
-	 * The big font for labels.
-	 */
-	public static final Font bigLabelsFont = new FontUIResource(LABEL_FONT_NAME, 1, 14);
+    /**
+     * The small font for labels.
+     */
+    public static final Font smallLabelsFont = new FontUIResource(LABEL_FONT_NAME, 0, 11);
 
-	/**
-	 * The thin big font for labels.
-	 */
-	public static final Font thinBigLabelsFont = new FontUIResource(LABEL_FONT_NAME, 0, 14);
+    /**
+     * The big font for labels.
+     */
+    public static final Font bigLabelsFont = new FontUIResource(LABEL_FONT_NAME, 1, 14);
 
-	/**
-	 * The font of the status line.
-	 */
-	public static final Font statusLineFont = new FontUIResource(LABEL_FONT_NAME, 1, 16);
+    /**
+     * The thin big font for labels.
+     */
+    public static final Font thinBigLabelsFont = new FontUIResource(LABEL_FONT_NAME, 0, 14);
 
-	/**
-	 * Returns the number of visible rows in the given table.
-	 */
-	public static double computeVisibleRowsCount(JTable table) {
-		return table.getParent().getBounds().getHeight() / table.getRowHeight();
-	}
+    /**
+     * The font of the status line.
+     */
+    public static final Font statusLineFont = new FontUIResource(LABEL_FONT_NAME, 1, 16);
 
-	/**
-	 * Returns the location of the given bottom component relative to its given
-	 * top level ancestor.
-	 */
-	public static Point getTopLevelLocation(Component top, Component bottom) {
-		Point point = new Point();
-		Component c = bottom;
-		while ((c.getParent() != null) && (c != top)) {
-			point.x += c.getLocation().getX();
-			point.y += c.getLocation().getY();
-			c = c.getParent();
-		}
+    /**
+     * Returns the location of the given bottom component relative to its given top level ancestor.
+     */
+    public static Point getTopLevelLocation(Component top, Component bottom) {
+        Point point = new Point();
+        Component c = bottom;
+        while (c.getParent() != null && c != top) {
+            point.x += c.getLocation().getX();
+            point.y += c.getLocation().getY();
+            c = c.getParent();
+        }
 
-		return point;
-	}
+        return point;
+    }
 
-	/**
-	 * Scrolls the given table such that the given row will be centered. Also
-	 * required are the containing panel and the number of visible rows in the
-	 * table.
-	 */
-	public static void tableCenterScroll(JPanel panel, JTable table, int row) {
-		JScrollPane scrollPane = (JScrollPane) table.getParent().getParent();
-		JScrollBar bar = scrollPane.getVerticalScrollBar();
-		int beforeScrollValue = bar.getValue();
-		Rectangle r = table.getCellRect(row, 0, true);
-		table.scrollRectToVisible(r);
-		panel.repaint();
-		int afterScrollValue = bar.getValue();
-		double visibleRowsCount = computeVisibleRowsCount(table);
+    /**
+     * Scrolls the given table such that the given row will be centered.
+     * Also required are the containing panel and the number of visible rows in the table.
+     */
+    public static void tableCenterScroll(JPanel panel, JTable table, int row) {
+        JScrollPane scrollPane = (JScrollPane)table.getParent().getParent();
+        JScrollBar bar = scrollPane.getVerticalScrollBar();
+        int beforeScrollValue = bar.getValue();
+        Rectangle r = table.getCellRect(row, 0, true);
+        table.scrollRectToVisible(r);
+        panel.repaint();
+        int afterScrollValue = bar.getValue();
+        double visibleRowsCount = computeVisibleRowsCount(table);
 
-		// The scroller moved down
-		if (afterScrollValue > beforeScrollValue) {
-			Rectangle newRectangle = table
-					.getCellRect((int) (Math.min(row + (visibleRowsCount / 2), table.getRowCount() - 1)), 0, true);
-			table.scrollRectToVisible(newRectangle);
-			panel.repaint();
-		}
-		// The scroller moved up.
-		else if (afterScrollValue < beforeScrollValue) {
-			Rectangle newRectangle = table.getCellRect((int) (Math.max(row - (visibleRowsCount / 2), 0)), 0, true);
-			table.scrollRectToVisible(newRectangle);
-			panel.repaint();
-		}
-	}
+        // The scroller moved down
+        if (afterScrollValue > beforeScrollValue) {
+            Rectangle newRectangle = table.getCellRect((int)(Math.min(row + visibleRowsCount / 2,table.getRowCount()-1)) , 0, true);
+            table.scrollRectToVisible(newRectangle);
+            panel.repaint();
+        }
+        // The scroller moved up.
+        else if (afterScrollValue < beforeScrollValue){
+            Rectangle newRectangle = table.getCellRect((int)(Math.max(row - visibleRowsCount / 2,0)) , 0, true);
+            table.scrollRectToVisible(newRectangle);
+            panel.repaint();
+        }
+    }
+
+    /**
+     * Returns the number of visible rows in the given table.
+     */
+    public static double computeVisibleRowsCount(JTable table) {
+        return table.getParent().getBounds().getHeight() / table.getRowHeight();
+    }
 }

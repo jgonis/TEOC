@@ -22,8 +22,9 @@ package Hack.Events;
  */
 public interface ClearEventListener {
 
-	/**
-	 * Called when clear is requested. The event contains the source object.
-	 */
-	public void clearRequested(ClearEvent event);
+    /**
+     * Called when clear is requested.
+     * The event contains the source object.
+     */
+    public void clearRequested(ClearEvent event);
 }

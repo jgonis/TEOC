@@ -17,7 +17,7 @@
 
 package Hack.HardwareSimulator;
 
-import Hack.Gates.Node;
+import Hack.Gates.*;
 
 /**
  * A node that receives a Pins and an index and updates the Pins at the given
@@ -25,22 +25,21 @@ import Hack.Gates.Node;
  */
 public class NodePinsAdapter extends Node {
 
-	// The pins that contain the node.
-	private Pins pins;
+    // The pins that contain the node.
+    private Pins pins;
 
-	// The index of the node in the Pins.
-	private int index;
+    // The index of the node in the Pins.
+    private int index;
 
-	/**
-	 * Constructs a new NodePinsAdapter with the given Pins and index.
-	 */
-	public NodePinsAdapter(Pins pins, int index) {
-		this.pins = pins;
-		this.index = index;
-	}
+    /**
+     * Constructs a new NodePinsAdapter with the given Pins and index.
+     */
+    public NodePinsAdapter(Pins pins, int index) {
+        this.pins = pins;
+        this.index = index;
+    }
 
-	@Override
-	public void set(short value) {
-		pins.updateGUI(index, value);
-	}
+    public void set(short value) {
+        pins.updateGUI(index, value);
+    }
 }

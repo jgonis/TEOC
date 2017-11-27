@@ -17,102 +17,82 @@
 
 package HackGUI;
 
-import java.awt.Color;
-
-import javax.swing.table.DefaultTableCellRenderer;
-
-import Hack.ComputerParts.PointedMemorySegmentGUI;
+import Hack.ComputerParts.*;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.table.*;
 
 public class PointedMemorySegmentComponent extends MemorySegmentComponent implements PointedMemorySegmentGUI {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 606244214763110343L;
+    // The pointer address
+    protected short pointerAddress = -1;
 
-	// An inner class which implemets the cell renderer of the program table,
-	// giving
-	// the feature of coloring the background of a specific cell.
-	public class PointedMemorySegmentTableCellRenderer extends MemorySegmentTableCellRenderer {
+    // Indicates whether this component has the focus.
+    protected boolean hasFocus = false;
 
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 5879890599809725095L;
+    /**
+     * Constructs a new PointedMemorySegmentComponent.
+     */
+    public PointedMemorySegmentComponent() {
+        super();
+    }
 
-		@Override
-		public void setRenderer(int row, int column) {
-			if (row == (pointerAddress - startAddress)) {
-				setBackground(Color.yellow);
-			} else {
-				setBackground(null);
-			}
+    /**
+     * Sets the start address.
+     */
+    public void setStartAddress(int address) {
+        super.setStartAddress(address);
+        scrollToPointer();
+    }
 
-			super.setRenderer(row, column);
-		}
-	}
+    /**
+     * Sets the pointer with the given pointer address (absolute address).
+     */
+    public void setPointer(int pointerAddress) {
+        this.pointerAddress = (short)pointerAddress;
+        scrollToPointer();
+    }
 
-	// The pointer address
-	protected short pointerAddress = -1;
+    protected DefaultTableCellRenderer getCellRenderer() {
+        return new PointedMemorySegmentTableCellRenderer();
+    }
 
-	// Indicates whether this component has the focus.
-	protected boolean hasFocus = false;
+    /**
+     * Scrolls the table to the pointer location.
+     */
+    protected void scrollToPointer() {
+        if(pointerAddress >= 0)
+            Utilities.tableCenterScroll(this, segmentTable, pointerAddress);
+    }
 
-	/**
-	 * Constructs a new PointedMemorySegmentComponent.
-	 */
-	public PointedMemorySegmentComponent() {
-		super();
-	}
+    /**
+     * Implementing the action of the table gaining the focus.
+     */
+    public void segmentTable_focusGained(FocusEvent e) {
+        super.segmentTable_focusGained(e);
+        hasFocus = true;
 
-	@Override
-	protected DefaultTableCellRenderer getCellRenderer() {
-		return new PointedMemorySegmentTableCellRenderer();
-	}
+    }
 
-	/**
-	 * Scrolls the table to the pointer location.
-	 */
-	protected void scrollToPointer() {
-		if (pointerAddress >= 0) {
-			Utilities.tableCenterScroll(this, segmentTable, pointerAddress);
-		}
-	}
+    /**
+     * Implementing the action of the table loosing the focus.
+     */
+    public void segmentTable_focusLost(FocusEvent e) {
+        super.segmentTable_focusLost(e);
+        hasFocus = false;
+    }
 
-	/**
-	 * Implementing the action of the table gaining the focus.
-	 */
-	@Override
-	public void segmentTable_focusGained() {
-		super.segmentTable_focusGained();
-		hasFocus = true;
+    // An inner class which implemets the cell renderer of the program table, giving
+    // the feature of coloring the background of a specific cell.
+    public class PointedMemorySegmentTableCellRenderer extends MemorySegmentTableCellRenderer {
 
-	}
+        public void setRenderer(int row, int column) {
+            if (row == pointerAddress - startAddress)
+                setBackground(Color.yellow);
+            else
+                setBackground(null);
 
-	/**
-	 * Implementing the action of the table loosing the focus.
-	 */
-	@Override
-	public void segmentTable_focusLost() {
-		super.segmentTable_focusLost();
-		hasFocus = false;
-	}
-
-	/**
-	 * Sets the pointer with the given pointer address (absolute address).
-	 */
-	@Override
-	public void setPointer(int pointerAddress) {
-		this.pointerAddress = (short) pointerAddress;
-		scrollToPointer();
-	}
-
-	/**
-	 * Sets the start address.
-	 */
-	@Override
-	public void setStartAddress(int address) {
-		super.setStartAddress(address);
-		scrollToPointer();
-	}
+            super.setRenderer(row, column);
+        }
+   }
 }

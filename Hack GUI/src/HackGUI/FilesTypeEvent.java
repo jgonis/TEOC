@@ -25,49 +25,43 @@ import java.util.EventObject;
  */
 public class FilesTypeEvent extends EventObject {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -4841484465382817266L;
+    // The name of the first file
+    private String firstFileName;
 
-	// The name of the first file
-	private String firstFileName;
+    // The name of the second file
+    private String secondFileName;
 
-	// The name of the second file
-	private String secondFileName;
+    // The name of the third file
+    private String thirdFileName;
 
-	// The name of the third file
-	private String thirdFileName;
+    /**
+     * Constructs a new FilesTypeEvent with the given source and the three names of files.
+     */
+    public FilesTypeEvent(Object source, String firstFileName, String secondFileName, String thirdFileName ) {
+        super(source);
+        this.firstFileName = firstFileName;
+        this.secondFileName = secondFileName;
+        this.thirdFileName = thirdFileName;
+    }
 
-	/**
-	 * Constructs a new FilesTypeEvent with the given source and the three names
-	 * of files.
-	 */
-	public FilesTypeEvent(Object source, String firstFileName, String secondFileName, String thirdFileName) {
-		super(source);
-		this.firstFileName = firstFileName;
-		this.secondFileName = secondFileName;
-		this.thirdFileName = thirdFileName;
-	}
+    /**
+     * Returns the name of the script file.
+     */
+    public String getFirstFile() {
+        return firstFileName;
+    }
 
-	/**
-	 * Returns the name of the script file.
-	 */
-	public String getFirstFile() {
-		return firstFileName;
-	}
+    /**
+     * Returns the name of the output file.
+     */
+    public String getSecondFile() {
+        return secondFileName;
+    }
 
-	/**
-	 * Returns the name of the output file.
-	 */
-	public String getSecondFile() {
-		return secondFileName;
-	}
-
-	/**
-	 * Returns the name of the comparison file.
-	 */
-	public String getThirdFile() {
-		return thirdFileName;
-	}
+    /**
+     * Returns the name of the comparison file.
+     */
+    public String getThirdFile() {
+        return thirdFileName;
+    }
 }

@@ -17,142 +17,130 @@
 
 package Hack.ComputerParts;
 
-import Hack.Events.ClearEvent;
-import Hack.Events.ClearEventListener;
+import Hack.Events.*;
 
 /**
  * A computer memory.
  */
 public class Memory extends InteractiveValueComputerPart implements ClearEventListener {
 
-	// The size of the memory
-	protected int m_size;
+    // The size of the memory
+    protected int size;
 
-	// the memory array
-	protected short[] mem;
+    // the memory array
+    protected short[] mem;
 
-	// The main gui of the memory.
-	protected MemoryGUI m_gui;
+    // The main gui of the memory.
+    protected MemoryGUI gui;
 
-	/**
-	 * Constructs a new Memory with the given size and (optional) memory GUI.
-	 */
-	public Memory(int size, MemoryGUI gui) {
-		super(gui != null);
-		init(size, gui);
-	}
+    /**
+     * Constructs a new Memory with the given size and (optional) memory GUI.
+     */
+    public Memory(int size, MemoryGUI gui) {
+        super(gui != null);
+        init(size, gui);
+    }
 
-	/**
-	 * Constructs a new Memory with the given size, a memory GUI and the legal
-	 * values range.
-	 */
-	public Memory(int size, MemoryGUI gui, short minValue, short maxValue) {
-		super(gui != null, minValue, maxValue);
-		init(size, gui);
-	}
+    /**
+     * Constructs a new Memory with the given size, a memory GUI and the
+     * legal values range.
+     */
+    public Memory(int size, MemoryGUI gui, short minValue, short maxValue) {
+        super(gui != null, minValue, maxValue);
+        init(size, gui);
+    }
 
-	@Override
-	public void clearRequested(ClearEvent event) {
-		reset();
-	}
+    // Initializes the memory
+    private void init(int size, MemoryGUI gui) {
+        this.size = size;
+        this.gui = gui;
+        mem = new short[size];
 
-	@Override
-	public void doSetValueAt(int address, short value) {
-		mem[address] = value;
-	}
+        if (hasGUI) {
+            gui.setContents(mem);
+            gui.addListener(this);
+            gui.addClearListener(this);
+            gui.addErrorListener(this);
+        }
+    }
 
-	/**
-	 * Returns the contents of the memory as a an array.
-	 */
-	public short[] getContents() {
-		return mem;
-	}
+    public short getValueAt(int address) {
+        return mem[address];
+    }
 
-	@Override
-	public ComputerPartGUI getGUI() {
-		return m_gui;
-	}
+    public void doSetValueAt(int address, short value) {
+        mem[address] = value;
+    }
 
-	/**
-	 * Returns the size of the memory.
-	 */
-	public int getSize() {
-		return m_size;
-	}
+    /**
+     * Returns the contents of the memory as a an array.
+     */
+    public short[] getContents() {
+        return mem;
+    }
 
-	@Override
-	public short getValueAt(int address) {
-		return mem[address];
-	}
+    /**
+     * Puts the given contents array in the memory, starting from the given address.
+     * (Assumes that the contents fits)
+     */
+    public void setContents(short[] contents, int startAddress) {
+        System.arraycopy(contents, 0, mem, startAddress, contents.length);
+        refreshGUI();
+    }
 
-	/**
-	 * Hides all selections.
-	 */
-	public void hideSelect() {
-		if (displayChanges) {
-			m_gui.hideSelect();
-		}
-	}
+    /**
+     * Returns the size of the memory.
+     */
+    public int getSize() {
+        return size;
+    }
 
-	// Initializes the memory
-	private void init(int size, MemoryGUI gui) {
-		m_size = size;
-		m_gui = gui;
-		mem = new short[size];
+    /**
+     * Resets the contents of the computer part.
+     */
+    public void reset() {
+        super.reset();
+        for (int i = 0; i < size; i++)
+            mem[i] = nullValue;
+    }
 
-		if (hasGUI) {
-			gui.setContents(mem);
-			gui.addListener(this);
-			gui.addClearListener(this);
-			gui.addErrorListener(this);
-		}
-	}
+    public ComputerPartGUI getGUI() {
+        return gui;
+    }
 
-	@Override
-	public void refreshGUI() {
-		super.refreshGUI();
+    public void refreshGUI() {
+        super.refreshGUI();
 
-		if (displayChanges) {
-			m_gui.setContents(mem);
-		}
-	}
+        if (displayChanges)
+            gui.setContents(mem);
+    }
 
-	/**
-	 * Resets the contents of the computer part.
-	 */
-	@Override
-	public void reset() {
-		super.reset();
-		for (int i = 0; i < m_size; i++) {
-			mem[i] = nullValue;
-		}
-	}
+    /**
+     * Scrolls the memory such that the given address will be on top.
+     * (assumes legal address).
+     */
+    public void scrollTo(int address) {
+        if (displayChanges)
+            gui.scrollTo(address);
+    }
 
-	/**
-	 * Scrolls the memory such that the given address will be on top. (assumes
-	 * legal address).
-	 */
-	public void scrollTo(int address) {
-		if (displayChanges) {
-			m_gui.scrollTo(address);
-		}
-	}
+    public void clearRequested(ClearEvent event) {
+        reset();
+    }
 
-	/**
-	 * Selects the commands in the range fromIndex..toIndex
-	 */
-	public void select(int fromIndex, int toIndex) {
-		if (displayChanges) {
-			m_gui.select(fromIndex, toIndex);
-		}
-	}
+    /**
+     * Selects the commands in the range fromIndex..toIndex
+     */
+    public void select(int fromIndex, int toIndex) {
+        if (displayChanges)
+            gui.select(fromIndex, toIndex);
+    }
 
-	/**
-	 * Puts the given contents array in the memory, starting from the given
-	 * address. (Assumes that the contents fits)
-	 */
-	public void setContents(short[] contents, int startAddress) {
-		System.arraycopy(contents, 0, mem, startAddress, contents.length);
-		refreshGUI();
-	}
+    /**
+     * Hides all selections.
+     */
+    public void hideSelect() {
+        if (displayChanges)
+            gui.hideSelect();
+    }
 }

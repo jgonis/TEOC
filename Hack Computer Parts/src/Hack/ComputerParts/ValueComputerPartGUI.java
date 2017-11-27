@@ -17,59 +17,57 @@
 
 package Hack.ComputerParts;
 
-import java.awt.Point;
+import java.awt.*;
 
 /**
  * An interface for the GUI of a computer part that holds values.
  */
 public interface ValueComputerPartGUI extends ComputerPartGUI {
 
-	/**
-	 * flashes the value at the given index.
-	 */
-	public void flash(int index);
+    /**
+     * Returns the coordinates of the top left corner of the value at the given index.
+     */
+    public Point getCoordinates(int index);
 
-	/**
-	 * Returns the coordinates of the top left corner of the value at the given
-	 * index.
-	 */
-	public Point getCoordinates(int index);
+    /**
+     * Sets the element at the given index with the given value.
+     */
+    public void setValueAt(int index, short value);
 
-	/**
-	 * Returns the value at the given index in its string representation.
-	 */
-	public String getValueAsString(int index);
+    /**
+     * Returns the value at the given index in its string representation.
+     */
+    public String getValueAsString(int index);
 
-	/**
-	 * hides the existing flash.
-	 */
-	public void hideFlash();
+    /**
+     * Highlights the value at the given index.
+     */
+    public void highlight(int index);
 
-	/**
-	 * Hides all highlightes.
-	 */
-	public void hideHighlight();
+    /**
+     * Hides all highlightes.
+     */
+    public void hideHighlight();
 
-	/**
-	 * Highlights the value at the given index.
-	 */
-	public void highlight(int index);
+    /**
+     * flashes the value at the given index.
+     */
+    public void flash(int index);
 
-	/**
-	 * Sets the null value (default value) of this computer part with the given
-	 * value. If hideNullValue is true, values which are equal to the null value
-	 * will be hidden.
-	 */
-	public void setNullValue(short value, boolean hideNullValue);
+    /**
+     * hides the existing flash.
+     */
+    public void hideFlash();
 
-	/**
-	 * Sets the numeric format with the given code (out of the format constants
-	 * in HackController).
-	 */
-	public void setNumericFormat(int formatCode);
+    /**
+     * Sets the numeric format with the given code (out of the format constants in HackController).
+     */
+    public void setNumericFormat(int formatCode);
 
-	/**
-	 * Sets the element at the given index with the given value.
-	 */
-	public void setValueAt(int index, short value);
+    /**
+     * Sets the null value (default value) of this computer part with the given value.
+     * If hideNullValue is true, values which are equal to the null value will be
+     * hidden.
+     */
+    public void setNullValue(short value, boolean hideNullValue);
 }

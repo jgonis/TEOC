@@ -17,78 +17,67 @@
 
 package Hack.CPUEmulator;
 
-import Hack.ComputerParts.ComputerPartEvent;
-import Hack.ComputerParts.PointedMemory;
-import Hack.ComputerParts.Register;
-import Hack.ComputerParts.RegisterGUI;
+import Hack.ComputerParts.*;
 
 /**
- * A register which receives a PointedMemory object. Whenever the register's
- * value changes, the PointedMemory's address pointer changes accordingly.
+ * A register which receives a PointedMemory object.
+ * Whenever the register's value changes, the PointedMemory's address pointer
+ * changes accordingly.
  */
 public class PointerAddressRegisterAdapter extends Register {
 
-	// The pointed memory.
-	protected PointedMemory memory;
+    // The pointed memory.
+    protected PointedMemory memory;
 
-	// If true, changes in the register's value will set the pointer.
-	protected boolean updatePointer;
+    // If true, changes in the register's value will set the pointer.
+    protected boolean updatePointer;
 
-	/**
-	 * Constructs a new PointerAddressRegisterAdapter with the given optional
-	 * gui and the pointedMemory object.
-	 */
-	public PointerAddressRegisterAdapter(RegisterGUI gui, PointedMemory memory) {
-		super(gui, (short) (-32768), (short) 32767);
-		this.memory = memory;
-		updatePointer = true;
-	}
+    /**
+     * Constructs a new PointerAddressRegisterAdapter with the given optional gui and
+     * the pointedMemory object.
+     */
+    public PointerAddressRegisterAdapter(RegisterGUI gui, PointedMemory memory) {
+        super(gui, (short)(-32768), (short)32767);
+        this.memory = memory;
+        updatePointer = true;
+    }
 
-	@Override
-	public void refreshGUI() {
-		quietUpdateGUI(0, m_value);
-		if (updatePointer) {
-			memory.setPointerAddress(m_value);
-		}
-	}
+    public void setValueAt(int index, short value, boolean quiet) {
+        super.setValueAt(0, value, quiet);
+        if (updatePointer)
+            memory.setPointerAddress(value);
+    }
 
-	@Override
-	public void reset() {
-		super.reset();
+    /**
+     * Called when the value of a register is changed.
+     */
+    public void valueChanged(ComputerPartEvent event) {
+        super.valueChanged(event);
+        if (updatePointer)
+            memory.setPointerAddress(event.getValue());
+    }
 
-		if (updatePointer) {
-			memory.setPointerAddress(0);
-		}
-	}
+    public void reset() {
+        super.reset();
 
-	/**
-	 * If updatePointer is true, changes in the register's value will set the
-	 * ram pointer accordingly. Otherwise, changes in the value will not affect
-	 * the ram's pointer.
-	 */
-	public void setUpdatePointer(boolean updatePointer) {
-		this.updatePointer = updatePointer;
-		if (updatePointer) {
-			memory.setPointerAddress(m_value);
-		}
-	}
+        if (updatePointer)
+            memory.setPointerAddress(0);
+    }
 
-	@Override
-	public void setValueAt(int index, short value, boolean quiet) {
-		super.setValueAt(0, value, quiet);
-		if (updatePointer) {
-			memory.setPointerAddress(value);
-		}
-	}
+    public void refreshGUI() {
+        quietUpdateGUI(0, value);
+        if (updatePointer)
+            memory.setPointerAddress(value);
+    }
 
-	/**
-	 * Called when the value of a register is changed.
-	 */
-	@Override
-	public void valueChanged(ComputerPartEvent event) {
-		super.valueChanged(event);
-		if (updatePointer) {
-			memory.setPointerAddress(event.getValue());
-		}
-	}
+    /**
+     * If updatePointer is true, changes in the register's value will set the ram
+     * pointer accordingly. Otherwise, changes in the value will not affect the
+     * ram's pointer.
+     */
+    public void setUpdatePointer(boolean updatePointer) {
+        this.updatePointer = updatePointer;
+        if (updatePointer)
+            memory.setPointerAddress(value);
+    }
 }

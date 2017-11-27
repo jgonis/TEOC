@@ -17,42 +17,43 @@
 
 package Hack.Assembler;
 
-import Hack.ComputerParts.TextFileGUI;
-import Hack.Translators.HackTranslatorGUI;
+import Hack.ComputerParts.*;
+import Hack.Translators.*;
 
 /**
  * The GUI of the HackAssembler.
  */
 public interface HackAssemblerGUI extends HackTranslatorGUI {
 
-	/**
-	 * Disables loading a comparison file.
-	 */
-	public void disableLoadComparison();
+    /**
+     * Returns the GUI of the Comparison file.
+     */
+    public TextFileGUI getComparison();
 
-	/**
-	 * Enables loading a comparison file.
-	 */
-	public void enableLoadComparison();
+    /**
+     * Sets the name of the Comparison file with the given name.
+     */
+    public void setComparisonName(String name);
 
-	/**
-	 * Returns the GUI of the Comparison file.
-	 */
-	public TextFileGUI getComparison();
+    /**
+     * Enables loading a comparison file.
+     */
+    public void enableLoadComparison();
 
-	/**
-	 * Hides the comparison file
-	 */
-	public void hideComparison();
+    /**
+     * Disables loading a comparison file.
+     */
+    public void disableLoadComparison();
 
-	/**
-	 * Sets the name of the Comparison file with the given name.
-	 */
-	public void setComparisonName(String name);
+    /**
+     * Shows the comparison file
+     */
+    public void showComparison();
 
-	/**
-	 * Shows the comparison file
-	 */
-	public void showComparison();
+    /**
+     * Hides the comparison file
+     */
+    public void hideComparison();
+
 
 }

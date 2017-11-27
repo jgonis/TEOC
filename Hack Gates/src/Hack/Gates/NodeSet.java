@@ -17,51 +17,46 @@
 
 package Hack.Gates;
 
-import java.util.Vector;
+import java.util.*;
 
 /**
  * A set of nodes.
  */
-public class NodeSet extends Vector<Node> {
+public class NodeSet extends Vector {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 2105456289722617984L;
+    /**
+     * Creates a new NodeSet.
+     */
+    public NodeSet() {
+        super(1,1);
+    }
 
-	/**
-	 * Creates a new NodeSet.
-	 */
-	public NodeSet() {
-		super(1, 1);
-	}
+    /**
+     * Adds the given node to the set.
+     */
+    public boolean add(Node node) {
+        return super.add(node);
+    }
 
-	/**
-	 * Adds the given node to the set.
-	 */
-	@Override
-	public synchronized boolean add(Node node) {
-		return super.add(node);
-	}
+    /**
+     * Removes the given node from the set.
+     */
+    public boolean remove(Node node) {
+        return super.remove(node);
+    }
 
-	/**
-	 * Returns true if this set contains the given node.
-	 */
-	public boolean contains(Node node) {
-		return super.contains(node);
-	}
+    /**
+     * Returns true if this set contains the given node.
+     */
+    public boolean contains(Node node) {
+        return super.contains(node);
+    }
 
-	/**
-	 * Returns the Node at the given index. (Assumes a legal index).
-	 */
-	public Node getNodeAt(int index) {
-		return super.elementAt(index);
-	}
-
-	/**
-	 * Removes the given node from the set.
-	 */
-	public boolean remove(Node node) {
-		return super.remove(node);
-	}
+    /**
+     * Returns the Node at the given index.
+     * (Assumes a legal index).
+     */
+    public Node getNodeAt(int index) {
+        return (Node)elementAt(index);
+    }
 }

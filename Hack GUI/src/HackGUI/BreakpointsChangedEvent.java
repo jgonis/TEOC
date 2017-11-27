@@ -20,35 +20,29 @@ package HackGUI;
 import java.util.EventObject;
 import java.util.Vector;
 
-import Hack.Controller.Breakpoint;
-
 /**
  * An event for notifying a BreakpointsChangedListener on a change in one of the
  * breakpoints.
  */
 public class BreakpointsChangedEvent extends EventObject {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -8023951924616133364L;
-	// The vector of breakpoints
-	private Vector<Breakpoint> breakpoints = new Vector<Breakpoint>();
+    // The vector of breakpoints
+    private Vector breakpoints = new Vector();
 
-	/**
-	 * Constructs a new BreakpointsChangedEvent with the given source and vector
-	 * of breakpoints.
-	 */
-	public BreakpointsChangedEvent(Object source, Vector<Breakpoint> breakpoints) {
+    /**
+     * Constructs a new BreakpointsChangedEvent with the given source and vector of breakpoints.
+     */
+    public BreakpointsChangedEvent(Object source, Vector breakpoints) {
 
-		super(source);
-		this.breakpoints = (Vector<Breakpoint>) breakpoints.clone();
-	}
+        super(source);
+        this.breakpoints = (Vector)breakpoints.clone();
+    }
 
-	/**
-	 * Returns the breakpoints vector
-	 */
-	public Vector<Breakpoint> getBreakpoints() {
-		return breakpoints;
-	}
+    /**
+     * Returns the breakpoints vector
+     */
+    public Vector getBreakpoints() {
+        return breakpoints;
+    }
 }
+

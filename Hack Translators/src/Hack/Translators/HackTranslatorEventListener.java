@@ -22,10 +22,10 @@ package Hack.Translators;
  */
 public interface HackTranslatorEventListener {
 
-	/**
-	 * Called when an action was performed in the HackTranslatorGUI. The given
-	 * event contains the source object, the performed action's code and the
-	 * action's supplied data object.
-	 */
-	public void actionPerformed(HackTranslatorEvent event);
+    /**
+     * Called when an action was performed in the HackTranslatorGUI.
+     * The given event contains the source object, the performed action's code
+     * and the action's supplied data object.
+     */
+    public void actionPerformed(HackTranslatorEvent event);
 }

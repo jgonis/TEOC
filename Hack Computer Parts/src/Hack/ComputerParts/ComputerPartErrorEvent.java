@@ -17,24 +17,19 @@
 
 package Hack.ComputerParts;
 
-import Hack.Events.ErrorEvent;
+import Hack.Events.*;
 
 /**
- * An event for notifying a ComputerPartErrorEventListener on an error that
- * occured in a computer part.
+ * An event for notifying a ComputerPartErrorEventListener on an error that occured
+ * in a computer part.
  */
 public class ComputerPartErrorEvent extends ErrorEvent {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -7706550007039578496L;
-
-	/**
-	 * Constructs a new ComputerPartErrorEvent with the given source (computer
-	 * part) and errorMessage.
-	 */
-	public ComputerPartErrorEvent(ComputerPart source, String errorMessage) {
-		super(source, errorMessage);
-	}
+    /**
+     * Constructs a new ComputerPartErrorEvent with the given source (computer part)
+     * and errorMessage.
+     */
+    public ComputerPartErrorEvent(ComputerPart source, String errorMessage) {
+        super(source, errorMessage);
+    }
 }

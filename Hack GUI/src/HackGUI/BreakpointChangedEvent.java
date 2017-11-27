@@ -18,7 +18,6 @@
 package HackGUI;
 
 import java.util.EventObject;
-
 import Hack.Controller.Breakpoint;
 
 /**
@@ -27,26 +26,21 @@ import Hack.Controller.Breakpoint;
  */
 public class BreakpointChangedEvent extends EventObject {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 8839796204137366247L;
-	// The breakpoint
-	private Breakpoint breakpoint;
+    // The breakpoint
+    private Breakpoint breakpoint;
 
-	/**
-	 * Constructs a new BreakpointChangedEvent with the given source and the
-	 * changed breakpoint.
-	 */
-	public BreakpointChangedEvent(Object source, Breakpoint breakpoint) {
-		super(source);
-		this.breakpoint = breakpoint;
-	}
+    /**
+     * Constructs a new BreakpointChangedEvent with the given source and the changed breakpoint.
+     */
+    public BreakpointChangedEvent(Object source, Breakpoint breakpoint) {
+        super(source);
+        this.breakpoint = breakpoint;
+    }
 
-	/**
-	 * Returns the breakpoints vector
-	 */
-	public Breakpoint getBreakpoint() {
-		return breakpoint;
-	}
+    /**
+     * Returns the breakpoints vector
+     */
+    public Breakpoint getBreakpoint() {
+        return breakpoint;
+    }
 }

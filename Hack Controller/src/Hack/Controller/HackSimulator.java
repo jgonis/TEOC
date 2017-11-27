@@ -17,227 +17,217 @@
 
 package Hack.Controller;
 
-import java.io.File;
-import java.util.Vector;
-
-import Hack.ComputerParts.ComputerPartErrorEventListener;
-import Hack.Events.ProgramEvent;
-import Hack.Events.ProgramEventListener;
+import java.util.*;
+import Hack.Events.*;
+import Hack.ComputerParts.*;
+import java.io.*;
 
 /**
- * An abstract base class for a simulator that can be controlled by the Hack
- * Controller.
+ * An abstract base class for a simulator that can be controlled by the Hack Controller.
  */
-public abstract class HackSimulator implements ProgramEventListener, ComputerPartErrorEventListener {
-	// The vector of listeners
-	private Vector<ControllerEventListener> listeners;
+public abstract class HackSimulator implements ProgramEventListener, ComputerPartErrorEventListener
+{
+    // The vector of listeners
+    private Vector listeners;
 
-	// The vector of program listeners
-	private Vector<ProgramEventListener> programListeners;
+    // The vector of program listeners
+    private Vector programListeners;
 
-	// The current working dir
-	protected File workingDir;
+    // The current working dir
+    protected File workingDir;
 
-	/**
-	 * Constructs a new hack simulator.
-	 */
-	public HackSimulator() {
-		listeners = new Vector<ControllerEventListener>();
-		programListeners = new Vector<ProgramEventListener>();
-	}
+    /**
+     * Constructs a new hack simulator.
+     */
+    public HackSimulator() {
+        listeners = new Vector();
+        programListeners = new Vector();
+    }
 
-	/**
-	 * Registers the given ControllerrEventListener as a listener to this
-	 * simulator.
-	 */
-	public void addListener(ControllerEventListener listener) {
-		listeners.addElement(listener);
-	}
+    /**
+     * Returns the name of the translator.
+     */
+    public abstract String getName();
 
-	/**
-	 * Registers the given ProgramEventListener as a listener to this GUI.
-	 */
-	public void addProgramListener(ProgramEventListener listener) {
-		programListeners.add(listener);
-	}
+    /**
+     * Returns the value of the given variable.
+     * Throws VariableException if the variable name is not legal.
+     */
+    public abstract String getValue(String varName) throws VariableException;
 
-	/**
-	 * Clears the message display.
-	 */
-	protected void clearMessage() {
-		notifyListeners(ControllerEvent.DISPLAY_MESSAGE, "");
-	}
+    /**
+     * Sets the given variable with the given value.
+     * Throws VariableException if the variable name or value are not legal.
+     */
+    public abstract void setValue(String varName, String value) throws VariableException;
 
-	/**
-	 * Displays the given message, according to the given type.
-	 */
-	protected void displayMessage(String message, boolean error) {
-		if (error) {
-			notifyListeners(ControllerEvent.DISPLAY_ERROR_MESSAGE, message);
-		} else {
-			notifyListeners(ControllerEvent.DISPLAY_MESSAGE, message);
-		}
-	}
+    /**
+     * Executes the given simulator command (given in args[] style).
+     * Throws CommandException if the command is not legal.
+     * Throws ProgramException if an error occurs in the program.
+     */
+    public abstract void doCommand(String[] command)
+     throws CommandException, ProgramException, VariableException;
 
-	/**
-	 * Executes the given simulator command (given in args[] style). Throws
-	 * CommandException if the command is not legal. Throws ProgramException if
-	 * an error occurs in the program.
-	 */
-	public abstract void doCommand(String[] command) throws CommandException, ProgramException, VariableException;
+    /**
+     * Restarts the simulator.
+     */
+    public abstract void restart();
 
-	/**
-	 * Returns the gui of the hack simulator.
-	 */
-	protected abstract HackSimulatorGUI getGUI();
+    /**
+     * Sets the animation mode of the simulator with the given animation mode
+     * (out of the possible animation constants in HackController).
+     */
+    public abstract void setAnimationMode(int animationMode);
 
-	/**
-	 * Returns the initial additional display of the simulator.
-	 */
-	public int getInitialAdditionalDisplay() {
-		return HackController.NO_ADDITIONAL_DISPLAY;
-	}
+    /**
+     * Sets the numeric format of the simulator with the given format code
+     * (out of the possible format constants in HackController).
+     */
+    public abstract void setNumericFormat(int formatCode);
 
-	/**
-	 * Returns the initial animation mode of the simulator.
-	 */
-	public int getInitialAnimationMode() {
-		return HackController.DISPLAY_CHANGES;
-	}
+    /**
+     * Sets the animation speed (in the range 1..HackController.NUMBER_OF_SPEED_UNITS).
+     */
+    public abstract void setAnimationSpeed(int speedUnit);
 
-	/**
-	 * Returns the initial numeric format of the simulator.
-	 */
-	public int getInitialNumericFormat() {
-		return HackController.DECIMAL_FORMAT;
-	}
+    /**
+     * Refreshes the contents of the simulator.
+     */
+    public abstract void refresh();
 
-	/**
-	 * Returns the name of the translator.
-	 */
-	public abstract String getName();
+    /**
+     * Prepares the simulator for FastForward.
+     */
+    public abstract void prepareFastForward();
 
-	/**
-	 * Returns the value of the given variable. Throws VariableException if the
-	 * variable name is not legal.
-	 */
-	public abstract String getValue(String varName) throws VariableException;
+    /**
+     * Prepares the GUI of the simulator.
+     * Called after the simulator is added (and displayed) to the controller's frame.
+     */
+    public abstract void prepareGUI();
 
-	/**
-	 * Returns the list of the simulator's recognized variables.
-	 */
-	public abstract String[] getVariables();
+    /**
+     * Returns the list of the simulator's recognized variables.
+     */
+    public abstract String[] getVariables();
 
-	/**
-	 * Opens the load Program window.
-	 */
-	protected void loadProgram() {
-		getGUI().loadProgram();
-	}
+    /**
+     * Returns the initial animation mode of the simulator.
+     */
+    public int getInitialAnimationMode() {
+        return HackController.DISPLAY_CHANGES;
+    }
 
-	/**
-	 * Notifies all the ControllerEventListeners on an action that was taken in
-	 * the simulator by creating a ControllerEvent (with the action code and
-	 * supplied data) and sending it using the actionPerformed method to all the
-	 * listeners.
-	 */
-	public void notifyListeners(byte action, Object data) {
-		ControllerEvent event = new ControllerEvent(this, action, data);
+    /**
+     * Returns the initial numeric format of the simulator.
+     */
+    public int getInitialNumericFormat() {
+        return HackController.DECIMAL_FORMAT;
+    }
 
-		for (int i = 0; i < listeners.size(); i++) {
-			listeners.elementAt(i).actionPerformed(event);
-		}
-	}
+    /**
+     * Returns the initial additional display of the simulator.
+     */
+    public int getInitialAdditionalDisplay() {
+        return HackController.NO_ADDITIONAL_DISPLAY;
+    }
 
-	/**
-	 * Notifies all the ProgramEventListeners on a change in the current program
-	 * by creating a ProgramEvent (with the new event type and program's file
-	 * name) and sends it using the programChanged method to all the listeners.
-	 */
-	protected void notifyProgramListeners(byte eventType, String programFileName) {
-		ProgramEvent event = new ProgramEvent(this, eventType, programFileName);
+    /**
+     * Returns the gui of the hack simulator.
+     */
+    protected abstract HackSimulatorGUI getGUI();
 
-		for (int i = 0; i < programListeners.size(); i++) {
-			programListeners.elementAt(i).programChanged(event);
-		}
-	}
+    /**
+     * Opens the load Program window.
+     */
+    protected void loadProgram() {
+        getGUI().loadProgram();
+    }
 
-	/**
-	 * Prepares the simulator for FastForward.
-	 */
-	public abstract void prepareFastForward();
+    /**
+     * Sets the working dir.
+     */
+    public void setWorkingDir(File file) {
+        File parent = file.getParentFile();
+        workingDir = file.isDirectory() ? file : parent;
 
-	/**
-	 * Prepares the GUI of the simulator. Called after the simulator is added
-	 * (and displayed) to the controller's frame.
-	 */
-	public abstract void prepareGUI();
+        HackSimulatorGUI gui = getGUI();
+        if (gui != null)
+            getGUI().setWorkingDir(parent);
+    }
 
-	@Override
-	public void programChanged(ProgramEvent event) {
-		notifyProgramListeners(event.getType(), event.getProgramFileName());
-	}
+    /**
+     * Displays the given message, according to the given type.
+     */
+    protected void displayMessage(String message, boolean error) {
+        if (error)
+            notifyListeners(ControllerEvent.DISPLAY_ERROR_MESSAGE, message);
+        else
+            notifyListeners(ControllerEvent.DISPLAY_MESSAGE, message);
+    }
 
-	/**
-	 * Refreshes the contents of the simulator.
-	 */
-	public abstract void refresh();
+    /**
+     * Clears the message display.
+     */
+    protected void clearMessage() {
+        notifyListeners(ControllerEvent.DISPLAY_MESSAGE, "");
+    }
 
-	/**
-	 * Un-registers the given ControllerEventListener from being a listener to
-	 * this GUI.
-	 */
-	public void removeListener(ControllerEventListener listener) {
-		listeners.removeElement(listener);
-	}
+    /**
+     * Registers the given ControllerrEventListener as a listener to this simulator.
+     */
+    public void addListener(ControllerEventListener listener) {
+        listeners.addElement(listener);
+    }
 
-	/**
-	 * Un-registers the given ProgramEventListener from being a listener to this
-	 * GUI.
-	 */
-	public void removeProgramListener(ProgramEventListener listener) {
-		programListeners.remove(listener);
-	}
+    /**
+     * Un-registers the given ControllerEventListener from being a listener to this GUI.
+     */
+    public void removeListener(ControllerEventListener listener) {
+        listeners.removeElement(listener);
+    }
 
-	/**
-	 * Restarts the simulator.
-	 */
-	public abstract void restart();
+    /**
+     * Notifies all the ControllerEventListeners on an action that was taken in the
+     * simulator by creating a ControllerEvent (with the action code and supplied data)
+     * and sending it using the actionPerformed method to all the listeners.
+     */
+    public void notifyListeners(byte action, Object data) {
+        ControllerEvent event = new ControllerEvent(this, action, data);
 
-	/**
-	 * Sets the animation mode of the simulator with the given animation mode
-	 * (out of the possible animation constants in HackController).
-	 */
-	public abstract void setAnimationMode(int animationMode);
+        for (int i = 0; i < listeners.size(); i++)
+            ((ControllerEventListener)listeners.elementAt(i)).actionPerformed(event);
+    }
 
-	/**
-	 * Sets the animation speed (in the range
-	 * 1..HackController.NUMBER_OF_SPEED_UNITS).
-	 */
-	public abstract void setAnimationSpeed(int speedUnit);
+    /**
+     * Registers the given ProgramEventListener as a listener to this GUI.
+     */
+    public void addProgramListener(ProgramEventListener listener) {
+        programListeners.add(listener);
+    }
 
-	/**
-	 * Sets the numeric format of the simulator with the given format code (out
-	 * of the possible format constants in HackController).
-	 */
-	public abstract void setNumericFormat(int formatCode);
+    /**
+     * Un-registers the given ProgramEventListener from being a listener to this GUI.
+     */
+    public void removeProgramListener(ProgramEventListener listener) {
+        programListeners.remove(listener);
+    }
 
-	/**
-	 * Sets the given variable with the given value. Throws VariableException if
-	 * the variable name or value are not legal.
-	 */
-	public abstract void setValue(String varName, String value) throws VariableException;
+    /**
+     * Notifies all the ProgramEventListeners on a change in the current program by creating
+     * a ProgramEvent (with the new event type and program's file name) and sends it using the
+     * programChanged method to all the listeners.
+     */
+    protected void notifyProgramListeners(byte eventType, String programFileName) {
+        ProgramEvent event = new ProgramEvent(this, eventType, programFileName);
 
-	/**
-	 * Sets the working dir.
-	 */
-	public void setWorkingDir(File file) {
-		File parent = file.getParentFile();
-		workingDir = file.isDirectory() ? file : parent;
+        for (int i = 0; i < programListeners.size(); i++) {
+            ((ProgramEventListener)programListeners.elementAt(i)).programChanged(event);
+        }
+    }
 
-		HackSimulatorGUI gui = getGUI();
-		if (gui != null) {
-			getGUI().setWorkingDir(parent);
-		}
-	}
+    public void programChanged(ProgramEvent event) {
+        notifyProgramListeners(event.getType(), event.getProgramFileName());
+    }
 }

@@ -20,16 +20,12 @@ package HackGUI;
 /**
  * An exception for translation errors.
  */
-public class TranslationException extends Exception {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -8603957320874508167L;
-
-	/**
-	 * Constructs a new TranslationException with the given message.
-	 */
-	public TranslationException(String message) {
-		super(message);
-	}
+public class TranslationException extends Exception
+{
+    /**
+     * Constructs a new TranslationException with the given message.
+     */
+    public TranslationException(String message) {
+        super(message);
+    }
 }

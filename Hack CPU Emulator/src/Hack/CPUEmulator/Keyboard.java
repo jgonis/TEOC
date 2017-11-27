@@ -17,83 +17,71 @@
 
 package Hack.CPUEmulator;
 
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-
-import Hack.ComputerParts.ComputerPart;
-import Hack.ComputerParts.ComputerPartGUI;
-import Hack.Utilities.Definitions;
+import java.awt.event.*;
+import Hack.Utilities.*;
+import Hack.CPUEmulator.*;
+import Hack.ComputerParts.*;
 
 /**
  * A computer keyboard.
  */
 public class Keyboard extends ComputerPart implements KeyListener {
 
-	// The ram (the keyboard address is changed according to the current key)
-	private RAM ram;
+    // The ram (the keyboard address is changed according to the current key)
+    private RAM ram;
 
-	// The gui of the keyboard
-	private KeyboardGUI m_gui;
+    // The gui of the keyboard
+    private KeyboardGUI gui;
 
-	/**
-	 * Constructs a new keyboard with the given RAM and keyboard GUI.
-	 */
-	public Keyboard(RAM ram, KeyboardGUI gui) {
-		super(gui != null);
+    /**
+     * Constructs a new keyboard with the given RAM and keyboard GUI.
+     */
+    public Keyboard(RAM ram, KeyboardGUI gui) {
+        super(gui != null);
 
-		this.ram = ram;
-		this.m_gui = gui;
+        this.ram = ram;
+        this.gui = gui;
 
-		if (hasGUI) {
-			m_gui.getKeyEventHandler().addKeyListener(this);
-		}
-	}
+        if (hasGUI)
+            gui.getKeyEventHandler().addKeyListener(this);
+    }
 
-	/**
-	 * Returns the GUI of the computer part.
-	 */
-	@Override
-	public ComputerPartGUI getGUI() {
-		return m_gui;
-	}
+    /**
+     * Returns the GUI of the computer part.
+     */
+    public ComputerPartGUI getGUI() {
+        return gui;
+    }
 
-	/**
-	 * Activated when a key is pressed.
-	 */
-	@Override
-	public void keyPressed(KeyEvent e) {
-		short key = Definitions.getInstance().getKeyCode(e);
-		if (key > 0) {
-			ram.setValueAt(Definitions.KEYBOARD_ADDRESS, key, true);
-			if (hasGUI) {
-				m_gui.setKey(Definitions.getInstance().getKeyName(e));
-			}
-		}
-	}
+    /**
+     * Activated when a key is pressed.
+     */
+    public void keyPressed(KeyEvent e) {
+        short key = Definitions.getInstance().getKeyCode(e);
+        if (key > 0) {
+            ram.setValueAt(Definitions.KEYBOARD_ADDRESS, key, true);
+            if (hasGUI)
+                gui.setKey(Definitions.getInstance().getKeyName(e));
+        }
+    }
 
-	/**
-	 * Activated when a key is released.
-	 */
-	@Override
-	public void keyReleased(KeyEvent e) {
-		ram.setValueAt(Definitions.KEYBOARD_ADDRESS, (short) 0, true);
-		m_gui.clearKey();
-	}
+    /**
+     * Activated when a key is released.
+     */
+    public void keyReleased(KeyEvent e) {
+        ram.setValueAt(Definitions.KEYBOARD_ADDRESS, (short)0, true);
+        gui.clearKey();
+    }
 
-	/**
-	 * Activated when a key is typed.
-	 */
-	@Override
-	public void keyTyped(KeyEvent e) {
-	}
+    /**
+     * Activated when a key is typed.
+     */
+    public void keyTyped(KeyEvent e) {}
 
-	@Override
-	public void refreshGUI() {
-	}
+    public void refreshGUI() {}
 
-	public void requestFocus() {
-		if (hasGUI) {
-			m_gui.getKeyEventHandler().requestFocus();
-		}
-	}
+    public void requestFocus() {
+        if (hasGUI)
+            gui.getKeyEventHandler().requestFocus();
+    }
 }

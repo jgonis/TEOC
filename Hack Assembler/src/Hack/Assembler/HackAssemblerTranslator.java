@@ -17,460 +17,450 @@
 
 package Hack.Assembler;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.Hashtable;
-
-import Hack.Translators.HackTranslatorException;
-import Hack.Utilities.Conversions;
+import java.util.*;
+import java.io.*;
+import Hack.Utilities.*;
+import Hack.Translators.*;
 
 /**
- * A translation service between the Assembly text and the numeric instruction
- * values. The translation is bidirectional. This is a singlton class.
+ * A translation service between the Assembly text and the numeric instruction values.
+ * The translation is bidirectional.
+ * This is a singlton class.
  */
 public class HackAssemblerTranslator {
 
-	/**
-	 * Indicates an assembly line with no operation
-	 */
-	public static final short NOP = (short) 0x8000;
+    /**
+     * Indicates an assembly line with no operation
+     */
+    public static final short NOP = (short)0x8000;
 
-	// exp constants
-	private static final Short ZERO = new Short((short) 0xea80);
-	private static final Short ONE = new Short((short) 0xefc0);
-	private static final Short MINUS_ONE = new Short((short) 0xee80);
-	private static final Short EXP_D = new Short((short) 0xe300);
-	private static final Short NOT_D = new Short((short) 0xe340);
-	private static final Short EXP_M = new Short((short) 0xfc00);
-	private static final Short EXP_A = new Short((short) 0xec00);
-	private static final Short NOT_M = new Short((short) 0xfc40);
-	private static final Short NOT_A = new Short((short) 0xec40);
-	private static final Short MINUS_D = new Short((short) 0xe3c0);
-	private static final Short MINUS_M = new Short((short) 0xfcc0);
-	private static final Short MINUS_A = new Short((short) 0xecc0);
-	private static final Short D_PLUS_ONE = new Short((short) 0xe7c0);
-	private static final Short M_PLUS_ONE = new Short((short) 0xfdc0);
-	private static final Short A_PLUS_ONE = new Short((short) 0xedc0);
-	private static final Short D_MINUS_ONE = new Short((short) 0xe380);
-	private static final Short M_MINUS_ONE = new Short((short) 0xfc80);
-	private static final Short A_MINUS_ONE = new Short((short) 0xec80);
-	private static final Short D_PLUS_M = new Short((short) 0xf080);
-	private static final Short D_PLUS_A = new Short((short) 0xe080);
-	private static final Short D_MINUS_M = new Short((short) 0xf4c0);
-	private static final Short D_MINUS_A = new Short((short) 0xe4c0);
-	private static final Short M_MINUS_D = new Short((short) 0xf1c0);
-	private static final Short A_MINUS_D = new Short((short) 0xe1c0);
-	private static final Short D_AND_M = new Short((short) 0xf000);
-	private static final Short D_AND_A = new Short((short) 0xe000);
-	private static final Short D_OR_M = new Short((short) 0xf540);
-	private static final Short D_OR_A = new Short((short) 0xe540);
+    // exp constants
+    private static final Short ZERO         = new Short((short)0xea80);
+    private static final Short ONE          = new Short((short)0xefc0);
+    private static final Short MINUS_ONE    = new Short((short)0xee80);
+    private static final Short EXP_D        = new Short((short)0xe300);
+    private static final Short NOT_D        = new Short((short)0xe340);
+    private static final Short EXP_M        = new Short((short)0xfc00);
+    private static final Short EXP_A        = new Short((short)0xec00);
+    private static final Short NOT_M        = new Short((short)0xfc40);
+    private static final Short NOT_A        = new Short((short)0xec40);
+    private static final Short MINUS_D      = new Short((short)0xe3c0);
+    private static final Short MINUS_M      = new Short((short)0xfcc0);
+    private static final Short MINUS_A      = new Short((short)0xecc0);
+    private static final Short D_PLUS_ONE   = new Short((short)0xe7c0);
+    private static final Short M_PLUS_ONE   = new Short((short)0xfdc0);
+    private static final Short A_PLUS_ONE   = new Short((short)0xedc0);
+    private static final Short D_MINUS_ONE  = new Short((short)0xe380);
+    private static final Short M_MINUS_ONE  = new Short((short)0xfc80);
+    private static final Short A_MINUS_ONE  = new Short((short)0xec80);
+    private static final Short D_PLUS_M     = new Short((short)0xf080);
+    private static final Short D_PLUS_A     = new Short((short)0xe080);
+    private static final Short D_MINUS_M    = new Short((short)0xf4c0);
+    private static final Short D_MINUS_A    = new Short((short)0xe4c0);
+    private static final Short M_MINUS_D    = new Short((short)0xf1c0);
+    private static final Short A_MINUS_D    = new Short((short)0xe1c0);
+    private static final Short D_AND_M      = new Short((short)0xf000);
+    private static final Short D_AND_A      = new Short((short)0xe000);
+    private static final Short D_OR_M       = new Short((short)0xf540);
+    private static final Short D_OR_A       = new Short((short)0xe540);
 
-	// dest constants
-	private static final Short A = new Short((short) 0x20);
-	private static final Short M = new Short((short) 0x8);
-	private static final Short D = new Short((short) 0x10);
-	private static final Short AM = new Short((short) 0x28);
-	private static final Short AD = new Short((short) 0x30);
-	private static final Short MD = new Short((short) 0x18);
-	private static final Short AMD = new Short((short) 0x38);
+    // dest constants
+    private static final Short A   = new Short((short)0x20);
+    private static final Short M   = new Short((short)0x8);
+    private static final Short D   = new Short((short)0x10);
+    private static final Short AM  = new Short((short)0x28);
+    private static final Short AD  = new Short((short)0x30);
+    private static final Short MD  = new Short((short)0x18);
+    private static final Short AMD = new Short((short)0x38);
 
-	// jmp constants
-	private static final Short JMP = new Short((short) 0x7);
-	private static final Short JMP_LESS_THEN = new Short((short) 0x4);
-	private static final Short JMP_EQUAL = new Short((short) 0x2);
-	private static final Short JMP_GREATER_THEN = new Short((short) 0x1);
-	private static final Short JMP_NOT_EQUAL = new Short((short) 0x5);
-	private static final Short JMP_LESS_EQUAL = new Short((short) 0x6);
-	private static final Short JMP_GREATER_EQUAL = new Short((short) 0x3);
+    // jmp constants
+    private static final Short JMP              = new Short((short)0x7);
+    private static final Short JMP_LESS_THEN    = new Short((short)0x4);
+    private static final Short JMP_EQUAL        = new Short((short)0x2);
+    private static final Short JMP_GREATER_THEN  = new Short((short)0x1);
+    private static final Short JMP_NOT_EQUAL    = new Short((short)0x5);
+    private static final Short JMP_LESS_EQUAL   = new Short((short)0x6);
+    private static final Short JMP_GREATER_EQUAL = new Short((short)0x3);
 
-	// the single instance
-	private static HackAssemblerTranslator instance;
+    // the single instance
+    private static HackAssemblerTranslator instance;
 
-	/**
-	 * Returns the single instance of the translator.
-	 */
-	public static HackAssemblerTranslator getInstance() {
-		if (instance == null) {
-			instance = new HackAssemblerTranslator();
-		}
-		return instance;
-	}
+    // The translation tables from text to codes
+    private Hashtable expToCode, destToCode, jmpToCode;
 
-	/**
-	 * Loads the given program file (HACK or ASM) and returns a memory array of
-	 * the given size that contains the program. The given null value will be
-	 * used to fill the memory array initially.
-	 */
-	public static short[] loadProgram(String fileName, int size, short nullValue) throws AssemblerException {
-		short[] memory = null;
+    // The translation table from code to text.
+    private Hashtable expToText, destToText, jmpToText;
 
-		File file = new File(fileName);
-		if (!file.exists()) {
-			throw new AssemblerException(fileName + " doesn't exist");
-		}
 
-		if (fileName.endsWith(".hack")) {
-			memory = new short[size];
-			for (int i = 0; i < size; i++) {
-				memory[i] = nullValue;
-			}
+    /**
+     * Creates a new translator.
+     */
+    private HackAssemblerTranslator() {
+        instance = this;
+        initExp();
+        initDest();
+        initJmp();
+    }
 
-			try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
-				
-				String line;
-				int pc = 0;
+    /**
+     * Returns the single instance of the translator.
+     */
+    public static HackAssemblerTranslator getInstance() {
+        if (instance == null)
+            new HackAssemblerTranslator();
+        return instance;
+    }
 
-				while ((line = reader.readLine()) != null) {
+    /**
+     * Returns the code which represents the given exp text.
+     * If doesn't exist, throws AssemblerException.
+     */
+    public short getExpByText(String text) throws AssemblerException {
+        Short code = (Short)expToCode.get(text);
+        if (code == null)
+            throw new AssemblerException("Illegal exp: " + text);
+        return code.shortValue();
+    }
 
-					short value = 0;
+    /**
+     * Returns the text which represents the given exp code.
+     * If doesn't exist, throws AssemblerException.
+     */
+    public String getExpByCode(short code) throws AssemblerException {
+        String result = (String)expToText.get(new Short(code));
+        if (result == null)
+            throw new AssemblerException("Illegal exp: " + code);
+        return result;
+    }
 
-					if (pc >= size) {
-						throw new AssemblerException("Program too large");
-					}
+    /**
+     * Returns the code which represents the given dest text.
+     * If doesn't exist, throws AssemblerException.
+     */
+    public short getDestByText(String text) throws AssemblerException {
+        Short code = (Short)destToCode.get(text);
+        if (code == null)
+            throw new AssemblerException("Illegal dest: " + text);
+        return code.shortValue();
+    }
 
-					try {
-						value = (short) Conversions.binaryToInt(line);
-					} catch (NumberFormatException nfe) {
-						throw new AssemblerException("Illegal character");
-					}
+    /**
+     * Returns the text which represents the given dest code.
+     * If doesn't exist, throws AssemblerException.
+     */
+    public String getDestByCode(short code) throws AssemblerException {
+        String result = (String)destToText.get(new Short(code));
+        if (result == null)
+            throw new AssemblerException("Illegal dest: " + code);
+        return result;
+    }
 
-					memory[pc++] = value;
-				}
-			} catch (IOException ioe) {
-				throw new AssemblerException("IO error while reading " + fileName);
-			}
-		} else if (fileName.endsWith(".asm")) {
-			try {
-				HackAssembler assembler = new HackAssembler(fileName, size, nullValue, false);
-				memory = assembler.getProgram();
-			} catch (HackTranslatorException ae) {
-				throw new AssemblerException(ae.getMessage());
-			}
-		} else {
-			throw new AssemblerException(fileName + " is not a .hack or .asm file");
-		}
+    /**
+     * Returns the code which represents the given jmp text.
+     * If doesn't exist, throws AssemblerException.
+     */
+    public short getJmpByText(String text) throws AssemblerException {
+        Short code = (Short)jmpToCode.get(text);
+        if (code == null)
+            throw new AssemblerException("Illegal jmp: " + text);
+        return code.shortValue();
+    }
 
-		return memory;
-	}
+    /**
+     * Returns the text which represents the given jmp code.
+     * If doesn't exist, throws AssemblerException.
+     */
+    public String getJmpByCode(short code) throws AssemblerException {
+        String result = (String)jmpToText.get(new Short(code));
+        if (result == null)
+            throw new AssemblerException("Illegal jmp: " + code);
+        return result;
+    }
 
-	// The translation tables from text to codes
-	private Hashtable<String, Short> expToCode, destToCode, jmpToCode;
+    /**
+     * Translates the given assembly language command and returns the corresponding
+     * machine language code.
+     * If the command is not legal, throws AssemblerException.
+     */
+    public short textToCode(String command) throws AssemblerException {
+        short code = 0;
+        short expCode = 0, jmpCode = 0, destCode = 0;
 
-	// The translation table from code to text.
-	private Hashtable<Short, String> expToText, destToText, jmpToText;
+        try {
+            AssemblyLineTokenizer input = new AssemblyLineTokenizer(command);
 
-	/**
-	 * Creates a new translator.
-	 */
-	private HackAssemblerTranslator() {
-		initExp();
-		initDest();
-		initJmp();
-	}
+            if (input.isToken("@")) {
+                input.advance(true);
+                try {
+                    code = Short.parseShort(input.token());
+                } catch (NumberFormatException nfe) {
+                    throw new AssemblerException("A numeric value is expected");
+                }
+            }
+            else { // compute-store-jump command
 
-	/**
-	 * Translates the given machine language code and returns the corresponding
-	 * Assembly language command (String). If illegal, throws
-	 * AssemblerException.
-	 */
-	public String codeToText(short code) throws AssemblerException {
-		StringBuffer command = new StringBuffer();
+                String firstToken = input.token();
+                input.advance(false);
 
-		if (code != HackAssemblerTranslator.NOP) {
-			if ((code & 0x8000) == 0) {
-				command.append('@');
-				command.append(code);
-			} else {
-				short exp = (short) (code & 0xffc0);
-				short dest = (short) (code & 0x0038);
-				short jmp = (short) (code & 0x0007);
+                // find dest (if any)
+                if (input.isToken("=")) {
+                    Short dest = (Short)destToCode.get(firstToken);
+                    if (dest == null)
+                        throw new AssemblerException("Destination expected");
 
-				String expText = getExpByCode(exp);
-				if (!expText.equals("")) {
+                    destCode = dest.shortValue();
+                    input.advance(true);
+                }
 
-					if (dest != 0) {
-						command.append(getDestByCode(dest));
-						command.append('=');
-					}
+                // find exp
+                Short exp;
+                if (!firstToken.equals("=") && destCode == 0)
+                    exp = (Short)expToCode.get(firstToken);
+                else
+                    exp = (Short)expToCode.get(input.token());
 
-					command.append(expText);
+                if (exp == null)
+                    throw new AssemblerException("Expression expected");
 
-					if (jmp != 0) {
-						command.append(';');
-						command.append(getJmpByCode(jmp));
-					}
-				}
-			}
-		}
+                expCode = exp.shortValue();
+                input.advance(false);
 
-		return command.toString();
-	}
+                if (input.isToken(";"))
+                    input.advance(false);
 
-	/**
-	 * Returns the text which represents the given dest code. If doesn't exist,
-	 * throws AssemblerException.
-	 */
-	public String getDestByCode(short code) throws AssemblerException {
-		String result = destToText.get(new Short(code));
-		if (result == null) {
-			throw new AssemblerException("Illegal dest: " + code);
-		}
-		return result;
-	}
+                // find jmp (if any)
+                if (!input.isEnd()) {
+                    Short jmp = (Short)jmpToCode.get(input.token());
+                    if (jmp == null)
+                        throw new AssemblerException("Jump directive expected");
 
-	/**
-	 * Returns the code which represents the given dest text. If doesn't exist,
-	 * throws AssemblerException.
-	 */
-	public short getDestByText(String text) throws AssemblerException {
-		Short code = destToCode.get(text);
-		if (code == null) {
-			throw new AssemblerException("Illegal dest: " + text);
-		}
-		return code.shortValue();
-	}
+                    jmpCode = jmp.shortValue();
+                    input.ensureEnd();
+                }
 
-	/**
-	 * Returns the text which represents the given exp code. If doesn't exist,
-	 * throws AssemblerException.
-	 */
-	public String getExpByCode(short code) throws AssemblerException {
-		String result = expToText.get(new Short(code));
-		if (result == null) {
-			throw new AssemblerException("Illegal exp: " + code);
-		}
-		return result;
-	}
+                code = (short)(destCode + expCode + jmpCode);
+            }
 
-	/**
-	 * Returns the code which represents the given exp text. If doesn't exist,
-	 * throws AssemblerException.
-	 */
-	public short getExpByText(String text) throws AssemblerException {
-		Short code = expToCode.get(text);
-		if (code == null) {
-			throw new AssemblerException("Illegal exp: " + text);
-		}
-		return code.shortValue();
-	}
+        } catch (IOException ioe) {
+            throw new AssemblerException("Error while parsing assembly line");
+        } catch (HackTranslatorException hte) {
+            throw new AssemblerException(hte.getMessage());
+        }
 
-	/**
-	 * Returns the text which represents the given jmp code. If doesn't exist,
-	 * throws AssemblerException.
-	 */
-	public String getJmpByCode(short code) throws AssemblerException {
-		String result = jmpToText.get(new Short(code));
-		if (result == null) {
-			throw new AssemblerException("Illegal jmp: " + code);
-		}
-		return result;
-	}
+        return code;
+    }
 
-	/**
-	 * Returns the code which represents the given jmp text. If doesn't exist,
-	 * throws AssemblerException.
-	 */
-	public short getJmpByText(String text) throws AssemblerException {
-		Short code = jmpToCode.get(text);
-		if (code == null) {
-			throw new AssemblerException("Illegal jmp: " + text);
-		}
-		return code.shortValue();
-	}
+    /**
+     * Translates the given machine language code and returns the corresponding Assembly
+     * language command (String).
+     * If illegal, throws AssemblerException.
+     */
+    public String codeToText(short code) throws AssemblerException {
+        StringBuffer command = new StringBuffer();
 
-	// initializes the dest table
-	private void initDest() {
-		destToCode = new Hashtable<String, Short>();
-		destToText = new Hashtable<Short, String>();
+        if (code != HackAssemblerTranslator.NOP) {
+            if ((code & 0x8000) == 0) {
+                command.append('@');
+                command.append(code);
+            }
+            else {
+                short exp = (short)(code & 0xffc0);
+                short dest = (short)(code & 0x0038);
+                short jmp = (short)(code & 0x0007);
 
-		destToCode.put("A", A);
-		destToCode.put("M", M);
-		destToCode.put("D", D);
-		destToCode.put("AM", AM);
-		destToCode.put("AD", AD);
-		destToCode.put("MD", MD);
-		destToCode.put("AMD", AMD);
+                String expText = getExpByCode(exp);
+                if (!expText.equals("")) {
 
-		destToText.put(A, "A");
-		destToText.put(M, "M");
-		destToText.put(D, "D");
-		destToText.put(AM, "AM");
-		destToText.put(AD, "AD");
-		destToText.put(MD, "MD");
-		destToText.put(AMD, "AMD");
-	}
+                    if (dest != 0) {
+                        command.append(getDestByCode(dest));
+                        command.append('=');
+                    }
 
-	// initializes the exp table
-	private void initExp() {
-		expToCode = new Hashtable<String, Short>();
-		expToText = new Hashtable<Short, String>();
+                    command.append(expText);
 
-		expToCode.put("0", ZERO);
-		expToCode.put("1", ONE);
-		expToCode.put("-1", MINUS_ONE);
-		expToCode.put("D", EXP_D);
-		expToCode.put("!D", NOT_D);
-		expToCode.put("NOTD", NOT_D);
-		expToCode.put("M", EXP_M);
-		expToCode.put("A", EXP_A);
-		expToCode.put("!M", NOT_M);
-		expToCode.put("NOTM", NOT_M);
-		expToCode.put("!A", NOT_A);
-		expToCode.put("NOTA", NOT_A);
-		expToCode.put("-D", MINUS_D);
-		expToCode.put("-M", MINUS_M);
-		expToCode.put("-A", MINUS_A);
-		expToCode.put("D+1", D_PLUS_ONE);
-		expToCode.put("M+1", M_PLUS_ONE);
-		expToCode.put("A+1", A_PLUS_ONE);
-		expToCode.put("D-1", D_MINUS_ONE);
-		expToCode.put("M-1", M_MINUS_ONE);
-		expToCode.put("A-1", A_MINUS_ONE);
-		expToCode.put("D+M", D_PLUS_M);
-		expToCode.put("M+D", D_PLUS_M);
-		expToCode.put("D+A", D_PLUS_A);
-		expToCode.put("A+D", D_PLUS_A);
-		expToCode.put("D-M", D_MINUS_M);
-		expToCode.put("D-A", D_MINUS_A);
-		expToCode.put("M-D", M_MINUS_D);
-		expToCode.put("A-D", A_MINUS_D);
-		expToCode.put("D&M", D_AND_M);
-		expToCode.put("M&D", D_AND_M);
-		expToCode.put("D&A", D_AND_A);
-		expToCode.put("A&D", D_AND_A);
-		expToCode.put("D|M", D_OR_M);
-		expToCode.put("M|D", D_OR_M);
-		expToCode.put("D|A", D_OR_A);
-		expToCode.put("A|D", D_OR_A);
+                    if (jmp != 0) {
+                        command.append(';');
+                        command.append(getJmpByCode(jmp));
+                    }
+                }
+            }
+        }
 
-		expToText.put(ZERO, "0");
-		expToText.put(ONE, "1");
-		expToText.put(MINUS_ONE, "-1");
-		expToText.put(EXP_D, "D");
-		expToText.put(NOT_D, "!D");
-		expToText.put(EXP_M, "M");
-		expToText.put(EXP_A, "A");
-		expToText.put(NOT_M, "!M");
-		expToText.put(NOT_A, "!A");
-		expToText.put(MINUS_D, "-D");
-		expToText.put(MINUS_M, "-M");
-		expToText.put(MINUS_A, "-A");
-		expToText.put(D_PLUS_ONE, "D+1");
-		expToText.put(M_PLUS_ONE, "M+1");
-		expToText.put(A_PLUS_ONE, "A+1");
-		expToText.put(D_MINUS_ONE, "D-1");
-		expToText.put(M_MINUS_ONE, "M-1");
-		expToText.put(A_MINUS_ONE, "A-1");
-		expToText.put(D_PLUS_M, "D+M");
-		expToText.put(D_PLUS_A, "D+A");
-		expToText.put(D_MINUS_M, "D-M");
-		expToText.put(D_MINUS_A, "D-A");
-		expToText.put(M_MINUS_D, "M-D");
-		expToText.put(A_MINUS_D, "A-D");
-		expToText.put(D_AND_M, "D&M");
-		expToText.put(D_AND_A, "D&A");
-		expToText.put(D_OR_M, "D|M");
-		expToText.put(D_OR_A, "D|A");
-	}
+        return command.toString();
+    }
 
-	// initializes the jmp table
-	private void initJmp() {
-		jmpToCode = new Hashtable<String, Short>();
-		jmpToText = new Hashtable<Short, String>();
+    /**
+     * Loads the given program file (HACK or ASM) and returns a memory array of
+     * the given size that contains the program. The given null value will be used
+     * to fill the memory array initially.
+     */
+    public static short[] loadProgram(String fileName, int size, short nullValue)
+     throws AssemblerException {
+        short[] memory = null;
 
-		jmpToCode.put("JMP", JMP);
-		jmpToCode.put("JLT", JMP_LESS_THEN);
-		jmpToCode.put("JEQ", JMP_EQUAL);
-		jmpToCode.put("JGT", JMP_GREATER_THEN);
-		jmpToCode.put("JNE", JMP_NOT_EQUAL);
-		jmpToCode.put("JLE", JMP_LESS_EQUAL);
-		jmpToCode.put("JGE", JMP_GREATER_EQUAL);
+        File file = new File(fileName);
+        if (!file.exists())
+            throw new AssemblerException(fileName + " doesn't exist");
 
-		jmpToText.put(JMP, "JMP");
-		jmpToText.put(JMP_LESS_THEN, "JLT");
-		jmpToText.put(JMP_EQUAL, "JEQ");
-		jmpToText.put(JMP_GREATER_THEN, "JGT");
-		jmpToText.put(JMP_NOT_EQUAL, "JNE");
-		jmpToText.put(JMP_LESS_EQUAL, "JLE");
-		jmpToText.put(JMP_GREATER_EQUAL, "JGE");
-	}
+        if (fileName.endsWith(".hack")) {
+            memory = new short[size];
+            for (int i = 0; i < size; i++)
+                memory[i] = nullValue;
 
-	/**
-	 * Translates the given assembly language command and returns the
-	 * corresponding machine language code. If the command is not legal, throws
-	 * AssemblerException.
-	 */
-	public short textToCode(String command) throws AssemblerException {
-		short code = 0;
-		short expCode = 0, jmpCode = 0, destCode = 0;
+            try {
+                BufferedReader reader = new BufferedReader(new FileReader(fileName));
+                String line;
+                int pc = 0;
 
-		try {
-			AssemblyLineTokenizer input = new AssemblyLineTokenizer(command);
+                while ((line = reader.readLine()) != null) {
 
-			if (input.isToken("@")) {
-				input.advance(true);
-				try {
-					code = Short.parseShort(input.token());
-				} catch (NumberFormatException nfe) {
-					throw new AssemblerException("A numeric value is expected");
-				}
-			} else { // compute-store-jump command
+                    short value = 0;
 
-				String firstToken = input.token();
-				input.advance(false);
+                    if (pc >= size)
+                        throw new AssemblerException("Program too large");
 
-				// find dest (if any)
-				if (input.isToken("=")) {
-					Short dest = destToCode.get(firstToken);
-					if (dest == null) {
-						throw new AssemblerException("Destination expected");
-					}
+                    try {
+                        value = (short)Conversions.binaryToInt(line);
+                    } catch (NumberFormatException nfe) {
+                        throw new AssemblerException("Illegal character");
+                    }
 
-					destCode = dest.shortValue();
-					input.advance(true);
-				}
+                    memory[pc++] = value;
+                }
 
-				// find exp
-				Short exp;
-				if (!firstToken.equals("=") && (destCode == 0)) {
-					exp = expToCode.get(firstToken);
-				} else {
-					exp = expToCode.get(input.token());
-				}
+                reader.close();
+            } catch (IOException ioe) {
+                throw new AssemblerException("IO error while reading " + fileName);
+            }
+        }
+        else if (fileName.endsWith(".asm")) {
+            try {
+                HackAssembler assembler = new HackAssembler(fileName, size, nullValue, false);
+                memory = assembler.getProgram();
+            } catch (HackTranslatorException ae) {
+                throw new AssemblerException(ae.getMessage());
+            }
+        }
+        else
+            throw new AssemblerException(fileName + " is not a .hack or .asm file");
 
-				if (exp == null) {
-					throw new AssemblerException("Expression expected");
-				}
+        return memory;
+    }
 
-				expCode = exp.shortValue();
-				input.advance(false);
+    // initializes the exp table
+    private void initExp() {
+        expToCode = new Hashtable();
+        expToText = new Hashtable();
 
-				if (input.isToken(";")) {
-					input.advance(false);
-				}
+        expToCode.put("0",ZERO);
+        expToCode.put("1",ONE);
+        expToCode.put("-1",MINUS_ONE);
+        expToCode.put("D",EXP_D);
+        expToCode.put("!D",NOT_D);
+        expToCode.put("NOTD",NOT_D);
+        expToCode.put("M",EXP_M);
+        expToCode.put("A",EXP_A);
+        expToCode.put("!M",NOT_M);
+        expToCode.put("NOTM",NOT_M);
+        expToCode.put("!A",NOT_A);
+        expToCode.put("NOTA",NOT_A);
+        expToCode.put("-D",MINUS_D);
+        expToCode.put("-M",MINUS_M);
+        expToCode.put("-A",MINUS_A);
+        expToCode.put("D+1",D_PLUS_ONE);
+        expToCode.put("M+1",M_PLUS_ONE);
+        expToCode.put("A+1",A_PLUS_ONE);
+        expToCode.put("D-1",D_MINUS_ONE);
+        expToCode.put("M-1",M_MINUS_ONE);
+        expToCode.put("A-1",A_MINUS_ONE);
+        expToCode.put("D+M",D_PLUS_M);
+        expToCode.put("M+D",D_PLUS_M);
+        expToCode.put("D+A",D_PLUS_A);
+        expToCode.put("A+D",D_PLUS_A);
+        expToCode.put("D-M",D_MINUS_M);
+        expToCode.put("D-A",D_MINUS_A);
+        expToCode.put("M-D",M_MINUS_D);
+        expToCode.put("A-D",A_MINUS_D);
+        expToCode.put("D&M",D_AND_M);
+        expToCode.put("M&D",D_AND_M);
+        expToCode.put("D&A",D_AND_A);
+        expToCode.put("A&D",D_AND_A);
+        expToCode.put("D|M",D_OR_M);
+        expToCode.put("M|D",D_OR_M);
+        expToCode.put("D|A",D_OR_A);
+        expToCode.put("A|D",D_OR_A);
 
-				// find jmp (if any)
-				if (!input.isEnd()) {
-					Short jmp = jmpToCode.get(input.token());
-					if (jmp == null) {
-						throw new AssemblerException("Jump directive expected");
-					}
+        expToText.put(ZERO,"0");
+        expToText.put(ONE,"1");
+        expToText.put(MINUS_ONE,"-1");
+        expToText.put(EXP_D,"D");
+        expToText.put(NOT_D,"!D");
+        expToText.put(EXP_M,"M");
+        expToText.put(EXP_A,"A");
+        expToText.put(NOT_M,"!M");
+        expToText.put(NOT_A,"!A");
+        expToText.put(MINUS_D,"-D");
+        expToText.put(MINUS_M,"-M");
+        expToText.put(MINUS_A,"-A");
+        expToText.put(D_PLUS_ONE,"D+1");
+        expToText.put(M_PLUS_ONE,"M+1");
+        expToText.put(A_PLUS_ONE,"A+1");
+        expToText.put(D_MINUS_ONE,"D-1");
+        expToText.put(M_MINUS_ONE,"M-1");
+        expToText.put(A_MINUS_ONE,"A-1");
+        expToText.put(D_PLUS_M,"D+M");
+        expToText.put(D_PLUS_A,"D+A");
+        expToText.put(D_MINUS_M,"D-M");
+        expToText.put(D_MINUS_A,"D-A");
+        expToText.put(M_MINUS_D,"M-D");
+        expToText.put(A_MINUS_D,"A-D");
+        expToText.put(D_AND_M,"D&M");
+        expToText.put(D_AND_A,"D&A");
+        expToText.put(D_OR_M,"D|M");
+        expToText.put(D_OR_A,"D|A");
+    }
 
-					jmpCode = jmp.shortValue();
-					input.ensureEnd();
-				}
+    // initializes the dest table
+    private void initDest() {
+        destToCode = new Hashtable();
+        destToText = new Hashtable();
 
-				code = (short) (destCode + expCode + jmpCode);
-			}
+        destToCode.put("A",A);
+        destToCode.put("M",M);
+        destToCode.put("D",D);
+        destToCode.put("AM",AM);
+        destToCode.put("AD",AD);
+        destToCode.put("MD",MD);
+        destToCode.put("AMD",AMD);
 
-		} catch (IOException ioe) {
-			throw new AssemblerException("Error while parsing assembly line");
-		} catch (HackTranslatorException hte) {
-			throw new AssemblerException(hte.getMessage());
-		}
+        destToText.put(A,"A");
+        destToText.put(M,"M");
+        destToText.put(D,"D");
+        destToText.put(AM,"AM");
+        destToText.put(AD,"AD");
+        destToText.put(MD,"MD");
+        destToText.put(AMD,"AMD");
+    }
 
-		return code;
-	}
+    // initializes the jmp table
+    private void initJmp() {
+        jmpToCode = new Hashtable();
+        jmpToText = new Hashtable();
+
+        jmpToCode.put("JMP",JMP);
+        jmpToCode.put("JLT",JMP_LESS_THEN);
+        jmpToCode.put("JEQ",JMP_EQUAL);
+        jmpToCode.put("JGT",JMP_GREATER_THEN);
+        jmpToCode.put("JNE",JMP_NOT_EQUAL);
+        jmpToCode.put("JLE",JMP_LESS_EQUAL);
+        jmpToCode.put("JGE",JMP_GREATER_EQUAL);
+
+        jmpToText.put(JMP,"JMP");
+        jmpToText.put(JMP_LESS_THEN,"JLT");
+        jmpToText.put(JMP_EQUAL,"JEQ");
+        jmpToText.put(JMP_GREATER_THEN,"JGT");
+        jmpToText.put(JMP_NOT_EQUAL,"JNE");
+        jmpToText.put(JMP_LESS_EQUAL,"JLE");
+        jmpToText.put(JMP_GREATER_EQUAL,"JGE");
+    }
 }

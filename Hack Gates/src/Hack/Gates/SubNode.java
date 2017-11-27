@@ -17,47 +17,46 @@
 
 package Hack.Gates;
 
-import Hack.Utilities.Shifter;
+import Hack.Utilities.*;
 
 /**
  * A node that represents a sub-bus.
  */
 public class SubNode extends Node {
 
-	/**
-	 * Returns a mask according to the given low & high bit indice.
-	 */
-	public static short getMask(byte low, byte high) {
-		short mask = 0;
+    // The mask which filters out the non-relevant part of the sub-node
+    private short mask;
 
-		short bitHolder = Shifter.powersOf2[low];
-		for (byte i = low; i <= high; i++) {
-			mask |= bitHolder;
-			bitHolder = (short) (bitHolder << 1);
-		}
+    // The amount of bits to shift right the masked value
+    private byte shiftRight;
 
-		return mask;
-	}
+    /**
+     * Constructs a new SubNode with the given low & high sub-bus indice.
+     */
+    public SubNode(byte low, byte high) {
+        mask = getMask(low, high);
+        shiftRight = low;
+    }
 
-	// The mask which filters out the non-relevant part of the sub-node
-	private short mask;
+    /**
+     * Returns the value of this sub-node.
+     */
+    public short get() {
+        return Shifter.unsignedShiftRight((short)(value & mask), shiftRight);
+    }
 
-	// The amount of bits to shift right the masked value
-	private byte shiftRight;
+    /**
+     * Returns a mask according to the given low & high bit indice.
+     */
+    public static short getMask(byte low, byte high) {
+        short mask = 0;
 
-	/**
-	 * Constructs a new SubNode with the given low & high sub-bus indice.
-	 */
-	public SubNode(byte low, byte high) {
-		mask = getMask(low, high);
-		shiftRight = low;
-	}
+        short bitHolder = Shifter.powersOf2[low];
+        for (byte i = low; i <= high; i++) {
+            mask |= bitHolder;
+            bitHolder = (short)(bitHolder << 1);
+        }
 
-	/**
-	 * Returns the value of this sub-node.
-	 */
-	@Override
-	public short get() {
-		return Shifter.unsignedShiftRight((short) (value & mask), shiftRight);
-	}
+        return mask;
+    }
 }

@@ -17,29 +17,24 @@
 
 package Hack.Assembler;
 
-import Hack.Translators.HackTranslatorEvent;
+import Hack.Translators.*;
 
 /**
- * An event for notifying a HackAssemblerEventListener on an action that should
- * be taken, together with a data object which is supplied with the action code.
+ * An event for notifying a HackAssemblerEventListener on an action that should be taken,
+ * together with a data object which is supplied with the action code.
  */
 public class HackAssemblerEvent extends HackTranslatorEvent {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 8254391144978537371L;
-	/**
-	 * Action code for changing the comparison file. supplied data = comparison
-	 * file name (String)
-	 */
-	public static final byte COMPARISON_LOAD = 9;
+    /**
+     * Action code for changing the comparison file.
+     * supplied data = comparison file name (String)
+     */
+    public static final byte COMPARISON_LOAD = 9;
 
-	/**
-	 * Constructs a new HackAssemblerEvent with given source, the action code
-	 * and the supplied data.
-	 */
-	public HackAssemblerEvent(Object source, byte action, Object data) {
-		super(source, action, data);
-	}
+    /**
+     * Constructs a new HackAssemblerEvent with given source, the action code and the supplied data.
+     */
+    public HackAssemblerEvent(Object source, byte action, Object data) {
+        super(source, action, data);
+    }
 }

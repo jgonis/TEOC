@@ -22,10 +22,10 @@ package Hack.ComputerParts;
  */
 public interface ComputerPartErrorEventListener {
 
-	/**
-	 * Called when an error occured in the ComputerPart. The event contains the
-	 * source object and the error message.
-	 */
-	public void computerPartErrorOccured(ComputerPartErrorEvent event);
+    /**
+     * Called when an error occured in the ComputerPart.
+     * The event contains the source object and the error message.
+     */
+    public void computerPartErrorOccured(ComputerPartErrorEvent event);
 
 }

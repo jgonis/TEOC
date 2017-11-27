@@ -19,81 +19,71 @@ package Hack.Gates;
 
 public class CompositeGate extends Gate {
 
-	// the internal pins
-	protected Node[] m_internalPins;
+    // the internal pins
+    protected Node[] internalPins;
 
-	// The contained parts (Gates), sorted in topological order.
-	protected Gate[] m_parts;
+    // The contained parts (Gates), sorted in topological order.
+    protected Gate[] parts;
 
-	@Override
-	protected void clockDown() {
-		if (m_gateClass.isClocked) {
-			for (Gate part : m_parts) {
-				part.tock();
-			}
-		}
-	}
+    protected void clockUp() {
+        if (gateClass.isClocked)
+            for (int i = 0; i < parts.length; i++)
+                parts[i].tick();
+    }
 
-	@Override
-	protected void clockUp() {
-		if (m_gateClass.isClocked) {
-			for (Gate part : m_parts) {
-				part.tick();
-			}
-		}
-	}
+    protected void clockDown() {
+        if (gateClass.isClocked)
+            for (int i = 0; i < parts.length; i++)
+                parts[i].tock();
+    }
 
-	/**
-	 * Returns the internal pins.
-	 */
-	public Node[] getInternalNodes() {
-		return m_internalPins;
-	}
+    protected void reCompute() {
+        for (int i = 0; i < parts.length; i++)
+            parts[i].eval();
+    }
 
-	/**
-	 * Returns the node according to the given node name (may be input, output
-	 * or internal). If doesn't exist, returns null.
-	 */
-	@Override
-	public Node getNode(String name) {
-		Node result = super.getNode(name);
+    /**
+     * Returns the node according to the given node name (may be input, output or internal).
+     * If doesn't exist, returns null.
+     */
+    public Node getNode(String name) {
+        Node result = super.getNode(name);
 
-		if (result == null) {
-			byte type = m_gateClass.getPinType(name);
-			int index = m_gateClass.getPinNumber(name);
-			if (type == CompositeGateClass.INTERNAL_PIN_TYPE) {
-				result = m_internalPins[index];
-			}
-		}
+        if (result == null) {
+            byte type = gateClass.getPinType(name);
+            int index = gateClass.getPinNumber(name);
+            if (type == CompositeGateClass.INTERNAL_PIN_TYPE)
+                result = internalPins[index];
+        }
 
-		return result;
-	}
+        return result;
+    }
 
-	/**
-	 * Returns the parts (internal gates) of this gate, sorted in topological
-	 * order.
-	 */
-	public Gate[] getParts() {
-		return m_parts;
-	}
+    /**
+     * Returns the internal pins.
+     */
+    public Node[] getInternalNodes() {
+        return internalPins;
+    }
 
-	/**
-	 * Initializes the gate
-	 */
-	public void init(Node[] inputPins, Node[] outputPins, Node[] internalPins, Gate[] parts, GateClass gateClass) {
-		m_inputPins = inputPins;
-		m_outputPins = outputPins;
-		m_internalPins = internalPins;
-		m_parts = parts;
-		m_gateClass = gateClass;
-		setDirty();
-	}
+    /**
+     * Returns the parts (internal gates) of this gate, sorted in topological order.
+     */
+    public Gate[] getParts() {
+        return parts;
+    }
 
-	@Override
-	protected void reCompute() {
-		for (Gate part : m_parts) {
-			part.eval();
-		}
-	}
+    /**
+     * Initializes the gate
+     */
+    public void init(Node[] inputPins, Node[] outputPins, Node[] internalPins, Gate[] parts,
+                     GateClass gateClass) {
+        this.inputPins = inputPins;
+        this.outputPins = outputPins;
+        this.internalPins = internalPins;
+        this.parts = parts;
+        this.gateClass = gateClass;
+        setDirty();
+    }
 
 }

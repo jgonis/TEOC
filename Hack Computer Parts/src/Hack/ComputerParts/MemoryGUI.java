@@ -17,50 +17,48 @@
 
 package Hack.ComputerParts;
 
-import Hack.Events.ClearEventListener;
+import Hack.Events.*;
 
 /**
- * An interface for a computer memory GUI. Every memory row contains an address
- * and a value. The Memory GUI can display its contents in decimal, hexadecimal
- * or binary format.
+ * An interface for a computer memory GUI.
+ * Every memory row contains an address and a value.
+ * The Memory GUI can display its contents in decimal, hexadecimal or binary format.
  */
 public interface MemoryGUI extends InteractiveValueComputerPartGUI {
 
-	/**
-	 * Registers the given ClearEventListener as a listener to this GUI.
-	 */
-	public void addClearListener(ClearEventListener listener);
+    /**
+     * Registers the given ClearEventListener as a listener to this GUI.
+     */
+    public void addClearListener(ClearEventListener listener);
 
-	/**
-	 * Hides all selections.
-	 */
-	public void hideSelect();
+    /**
+     * Un-registers the given ClearEventListener from being a listener to this GUI.
+     */
+    public void removeClearListener(ClearEventListener listener);
 
-	/**
-	 * Notifies all the ClearEventListeners on a a request for clear by creating
-	 * a ClearEvent and sending it using the clearRequested method to all the
-	 * listeners.
-	 */
-	public void notifyClearListeners();
+    /**
+     * Notifies all the ClearEventListeners on a a request for clear by creating
+     * a ClearEvent and sending it using the clearRequested method to all the listeners.
+     */
+    public void notifyClearListeners();
 
-	/**
-	 * Un-registers the given ClearEventListener from being a listener to this
-	 * GUI.
-	 */
-	public void removeClearListener(ClearEventListener listener);
+    /**
+     * Sets the memory contents with the given values array.
+     */
+    public void setContents(short[] values);
 
-	/**
-	 * Scrolls the memory such that the given address will be on top.
-	 */
-	public void scrollTo(int address);
+    /**
+     * Selects the commands in the range fromIndex..toIndex
+     */
+    public void select(int fromIndex, int toIndex);
 
-	/**
-	 * Selects the commands in the range fromIndex..toIndex
-	 */
-	public void select(int fromIndex, int toIndex);
+    /**
+     * Hides all selections.
+     */
+    public void hideSelect();
 
-	/**
-	 * Sets the memory contents with the given values array.
-	 */
-	public void setContents(short[] values);
+    /**
+     * Scrolls the memory such that the given address will be on top.
+     */
+    public void scrollTo(int address);
 }
