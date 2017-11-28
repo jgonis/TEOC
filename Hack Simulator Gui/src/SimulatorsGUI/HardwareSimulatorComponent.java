@@ -35,55 +35,89 @@ public class HardwareSimulatorComponent extends HackSimulatorComponent implement
     private static final int HEIGHT = 611;
 
     // The input pins of the hardware simulator.
-    private PinsComponent inputPins;
+    private PinsComponent inputPins = new PinsComponent("Input pins");
 
     // The output pins of the hardware simulator.
-    private PinsComponent outputPins;
+    private PinsComponent outputPins  = new PinsComponent("Output pins");
 
     // The internal pins of the hardware simulator.
-    private PinsComponent internalPins;
+    private PinsComponent internalPins = new PinsComponent("Internal pins");
 
     // The hdl view of the hardware simulator.
-    private TextFileComponent hdlView;
+    private TextFileComponent hdlView  = new TextFileComponent();
 
     // The part pins of the hardware simulator.
-    private PartPinsComponent partPins;
+    private PartPinsComponent partPins = new PartPinsComponent("Part pins");
 
     // The parts of the hardware simulator.
-    private PartsComponent parts;
+    private PartsComponent parts = new PartsComponent("Internal Parts");
 
     // The message label
     private JLabel messageLbl = new JLabel();
 
     // The two optional gates panel (with different layouts)
-    private JPanel nullLayoutGatesPanel;
-    private JPanel flowLayoutGatesPanel;
+    private JPanel nullLayoutGatesPanel = new JPanel();
+    private JPanel flowLayoutGatesPanel = new JPanel();
 
     // True if the current layout is flow layout.
     private boolean flowLayout = false;
 
     // The gate info component of the current gate
-    private GateInfoComponent gateInfo;
+    private GateInfoComponent gateInfo  = new GateInfoComponent();
 
     /**
      * Constructs a new HardwareSimulatorComponent.
      */
     public HardwareSimulatorComponent() {
-        nullLayoutGatesPanel = new JPanel();
-        flowLayoutGatesPanel = new JPanel();
         nullLayoutGatesPanel.setLayout(null);
         flowLayoutGatesPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 1, 1));
 
-        inputPins = new PinsComponent("Input pins");
-        outputPins = new PinsComponent("Output pins");
-        internalPins = new PinsComponent("Internal pins");
-        partPins = new PartPinsComponent("Part pins");
-        parts = new PartsComponent("Internal Parts");
-        hdlView = new TextFileComponent();
+        this.setLayout(null);
+        gateInfo.setBounds(5,10,gateInfo.getWidth(), gateInfo.getHeight());
 
-        gateInfo = new GateInfoComponent();
+        inputPins.setVisibleRows(15);
+        inputPins.setBounds(5, 53, inputPins.getWidth(), inputPins.getHeight());
 
-        jbInit();
+        outputPins.setVisibleRows(15);
+        outputPins.setBounds(247, 53, outputPins.getWidth(), outputPins.getHeight());
+
+        internalPins.setVisibleRows(15);
+        internalPins.setBounds(247, 332, internalPins.getWidth(), internalPins.getHeight());
+        internalPins.setVisible(false);
+
+        hdlView.setVisibleRows(15);
+        hdlView.setBounds(5, 332, hdlView.getWidth(), hdlView.getHeight());
+
+        partPins.setVisibleRows(15);
+        partPins.setBounds(247, 332, partPins.getWidth(), partPins.getHeight());
+        partPins.setVisible(false);
+
+        parts.setVisibleRows(15);
+        parts.setBounds(247, 332, parts.getWidth(), parts.getHeight());
+        parts.setVisible(false);
+
+        nullLayoutGatesPanel.setBorder(BorderFactory.createEtchedBorder());
+        nullLayoutGatesPanel.setBounds(new Rectangle(492, 10, 524, 592));
+
+        flowLayoutGatesPanel.setBorder(BorderFactory.createEtchedBorder());
+        flowLayoutGatesPanel.setBounds(new Rectangle(492, 10, 524, 592));
+        flowLayoutGatesPanel.setVisible(false);
+
+        messageLbl.setBorder(BorderFactory.createLoweredBevelBorder());
+        messageLbl.setBounds(new Rectangle(0, 694, WIDTH - 8, 20));
+
+        this.add(partPins, null);
+        this.add(hdlView, null);
+        this.add(inputPins, null);
+        this.add(outputPins, null);
+        this.add(internalPins, null);
+        this.add(parts, null);
+        this.add(messageLbl, null);
+        this.add(gateInfo, null);
+        this.add(nullLayoutGatesPanel, null);
+        this.add(flowLayoutGatesPanel, null);
+
+        setSize(WIDTH,HEIGHT);
 
         inputPins.setTopLevelLocation(this);
         outputPins.setTopLevelLocation(this);
@@ -279,57 +313,6 @@ public class HardwareSimulatorComponent extends HackSimulatorComponent implement
             nullLayoutGatesPanel.setVisible(true);
             flowLayoutGatesPanel.setVisible(false);
         }
-    }
-
-
-    // Initialization of this component.
-    private void jbInit() {
-        this.setLayout(null);
-        gateInfo.setBounds(5,10,gateInfo.getWidth(), gateInfo.getHeight());
-
-        inputPins.setVisibleRows(15);
-        inputPins.setBounds(5, 53, inputPins.getWidth(), inputPins.getHeight());
-
-        outputPins.setVisibleRows(15);
-        outputPins.setBounds(247, 53, outputPins.getWidth(), outputPins.getHeight());
-
-        internalPins.setVisibleRows(15);
-        internalPins.setBounds(247, 332, internalPins.getWidth(), internalPins.getHeight());
-        internalPins.setVisible(false);
-
-        hdlView.setVisibleRows(15);
-        hdlView.setBounds(5, 332, hdlView.getWidth(), hdlView.getHeight());
-
-        partPins.setVisibleRows(15);
-        partPins.setBounds(247, 332, partPins.getWidth(), partPins.getHeight());
-        partPins.setVisible(false);
-
-        parts.setVisibleRows(15);
-        parts.setBounds(247, 332, parts.getWidth(), parts.getHeight());
-        parts.setVisible(false);
-
-        nullLayoutGatesPanel.setBorder(BorderFactory.createEtchedBorder());
-        nullLayoutGatesPanel.setBounds(new Rectangle(492, 10, 524, 592));
-
-        flowLayoutGatesPanel.setBorder(BorderFactory.createEtchedBorder());
-        flowLayoutGatesPanel.setBounds(new Rectangle(492, 10, 524, 592));
-        flowLayoutGatesPanel.setVisible(false);
-
-        messageLbl.setBorder(BorderFactory.createLoweredBevelBorder());
-        messageLbl.setBounds(new Rectangle(0, 694, WIDTH - 8, 20));
-
-        this.add(partPins, null);
-        this.add(hdlView, null);
-        this.add(inputPins, null);
-        this.add(outputPins, null);
-        this.add(internalPins, null);
-        this.add(parts, null);
-        this.add(messageLbl, null);
-        this.add(gateInfo, null);
-        this.add(nullLayoutGatesPanel, null);
-        this.add(flowLayoutGatesPanel, null);
-
-        setSize(WIDTH,HEIGHT);
     }
 
     public void setAdditionalDisplay(JComponent additionalComponent) {

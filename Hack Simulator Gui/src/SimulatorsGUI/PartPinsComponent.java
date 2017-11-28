@@ -30,10 +30,10 @@ import java.util.*;
 public class PartPinsComponent extends PinsComponent implements PartPinsGUI {
 
     // An array containing the info of the part pins.
-    private PartPinInfo[] partPins;
+    private PartPinInfo[] partPins = new PartPinInfo[0];
 
     // The values of the pins in a String representation.
-    private String[] valuesStr;
+    private String[] valuesStr = new String[0];
 
     // The renderer of the pins table.
     private PartPinsTableCellRenderer renderer = new PartPinsTableCellRenderer();
@@ -49,11 +49,14 @@ public class PartPinsComponent extends PinsComponent implements PartPinsGUI {
      */
     public PartPinsComponent(String name) {
         super(name);
-        partPins = new PartPinInfo[0];
-        valuesStr = new String[0];
         pinsTable.setDefaultRenderer(pinsTable.getColumnClass(0), renderer);
 
-        jbInit();
+        partNameLbl.setFont(Utilities.bigLabelsFont);
+        partNameLbl.setHorizontalAlignment(SwingConstants.CENTER);
+        partNameLbl.setText("keyboard");
+        partNameLbl.setForeground(Color.black);
+        partNameLbl.setBounds(new Rectangle(62, 10, 102, 21));
+        this.add(partNameLbl, null);
     }
 
     /**
@@ -279,15 +282,5 @@ public class PartPinsComponent extends PinsComponent implements PartPinsGUI {
 
             return this;
         }
-    }
-
-    // Initializes this component
-    private void jbInit()  {
-        partNameLbl.setFont(Utilities.bigLabelsFont);
-        partNameLbl.setHorizontalAlignment(SwingConstants.CENTER);
-        partNameLbl.setText("keyboard");
-        partNameLbl.setForeground(Color.black);
-        partNameLbl.setBounds(new Rectangle(62, 10, 102, 21));
-        this.add(partNameLbl, null);
     }
 }
