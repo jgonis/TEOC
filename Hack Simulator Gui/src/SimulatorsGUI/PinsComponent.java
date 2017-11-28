@@ -36,25 +36,25 @@ import java.awt.event.*;
 public class PinsComponent extends JPanel implements PinsGUI, MouseListener, PinValueListener {
 
     // A component which represents the binary value of the pin.
-    protected BinaryComponent binary;
+    protected BinaryComponent binary = new BinaryComponent();
 
     // The table of the input component.
     protected JTable pinsTable;
 
     // An array containing the info of the pins.
-    private PinInfo[] pins;
+    private PinInfo[] pins = new PinInfo[0];
 
     // The values of the pins in a String representation.
-    private String[] valueStr;
+    private String[] valueStr = new String[0];
 
     // The current format.
-    protected int dataFormat;
+    protected int dataFormat = Format.DEC_FORMAT;
 
     // A vector containing the listeners to this object.
-    private Vector listeners;
+    private Vector listeners = new Vector();
 
     // A vector containing the error listeners to this object.
-    private Vector errorEventListeners;
+    private Vector errorEventListeners = new Vector();
 
     // The scroll pane on which the table is placed.
     protected JScrollPane scrollPane;
@@ -63,7 +63,7 @@ public class PinsComponent extends JPanel implements PinsGUI, MouseListener, Pin
     protected int flashIndex = -1;
 
     // A vector containing the index of the rows that should be highlighted.
-    protected Vector highlightIndex;
+    protected Vector highlightIndex = new Vector();
 
     // The location of this component relative to its top level ancestor.
     protected Point topLevelLocation;
@@ -84,7 +84,8 @@ public class PinsComponent extends JPanel implements PinsGUI, MouseListener, Pin
     protected boolean hideNullValue;
 
     // The start and end enabled indices.
-    protected int startEnabling,endEnabling;
+    protected int startEnabling = -1;
+    protected int endEnabling = -1;
 
     // The index of the last selected row.
     private int lastSelectedRow;
@@ -94,30 +95,15 @@ public class PinsComponent extends JPanel implements PinsGUI, MouseListener, Pin
      * Constructs a new PinsComponent.
      */
     public PinsComponent(String name) {
-        dataFormat = Format.DEC_FORMAT;
         JTextField tf = new JTextField();
         tf.setFont(Utilities.bigBoldValueFont);
         tf.setBorder(null);
-        DefaultCellEditor editor = new DefaultCellEditor(tf);
-        startEnabling = -1;
-        endEnabling = -1;
 
-        pins = new PinInfo[0];
-        valueStr = new String[0];
-        listeners = new Vector();
-        errorEventListeners = new Vector();
-        highlightIndex = new Vector();
-        binary = new BinaryComponent();
         pinsTable = new JTable(getTableModel());
         pinsTable.setDefaultRenderer(pinsTable.getColumnClass(0), renderer);
 
-        pinsTable.getColumnModel().getColumn(getValueColumn()).setCellEditor(editor);
+        pinsTable.getColumnModel().getColumn(getValueColumn()).setCellEditor(new DefaultCellEditor(tf));
 
-        jbInit(name);
-    }
-
-    // Initialization of this component.
-    private void jbInit(String name) {
         pinsTable.addFocusListener(new FocusListener() {
             public void focusGained(FocusEvent e) {
                 pinsTable_focusGained(e);
@@ -144,10 +130,10 @@ public class PinsComponent extends JPanel implements PinsGUI, MouseListener, Pin
         nameLbl.setBounds(new Rectangle(3, 3, 102, 21));
         nameLbl.setFont(Utilities.labelsFont);
         pinsTable.setFont(Utilities.valueFont);
+
         this.add(binary, null);
         this.add(scrollPane, null);
         this.add(nameLbl, null);
-
     }
 
     /**
