@@ -52,12 +52,41 @@ public class PartsComponent extends JPanel implements PartsGUI {
     /**
      * Constructs a new PartsComponent.
      */
-    public PartsComponent() {
+    public PartsComponent(String name) {
         parts = new Gate[0];
         model = new PartsTableModel();
         partsTable = new JTable(model);
-        jbInit();
+        jbInit(name);
     }
+
+    // Initialization of this component.
+    private void jbInit(String name)  {
+        this.setLayout(null);
+        partsTable.setFont(Utilities.valueFont);
+        partsTable.getTableHeader().setReorderingAllowed(false);
+        partsTable.getTableHeader().setResizingAllowed(false);
+
+        partsTable.addFocusListener(new FocusListener() {
+            public void focusGained(FocusEvent e) {
+                partsTable_focusGained(e);
+            }
+
+            public void focusLost(FocusEvent e) {
+                partsTable_focusLost(e);
+            }
+        });
+
+        setBorder(BorderFactory.createEtchedBorder());
+        scrollPane = new JScrollPane(partsTable);
+        scrollPane.setLocation(0, 27);
+        nameLbl.setText(name);
+        nameLbl.setBounds(new Rectangle(3, 3, 102, 21));
+        nameLbl.setFont(Utilities.labelsFont);
+        this.add(scrollPane, null);
+        this.add(nameLbl, null);
+        determineColumnWidth();
+    }
+
 
     /**
      * Sets the number of visible rows.
@@ -74,13 +103,6 @@ public class PartsComponent extends JPanel implements PartsGUI {
      */
     public int getTableWidth() {
         return 241;
-    }
-
-    /**
-     * Sets the name of this component.
-     */
-    public void setName (String name) {
-        nameLbl.setText(name);
     }
 
     /**
@@ -113,34 +135,6 @@ public class PartsComponent extends JPanel implements PartsGUI {
             else if (i==2)
                 column.setPreferredWidth(55);
         }
-    }
-
-    // Initialization of this component.
-    private void jbInit()  {
-        this.setLayout(null);
-        partsTable.setFont(Utilities.valueFont);
-        partsTable.getTableHeader().setReorderingAllowed(false);
-        partsTable.getTableHeader().setResizingAllowed(false);
-
-        partsTable.addFocusListener(new FocusListener() {
-            public void focusGained(FocusEvent e) {
-                partsTable_focusGained(e);
-            }
-
-            public void focusLost(FocusEvent e) {
-                partsTable_focusLost(e);
-            }
-        });
-
-        setBorder(BorderFactory.createEtchedBorder());
-        scrollPane = new JScrollPane(partsTable);
-        scrollPane.setLocation(0, 27);
-        nameLbl.setText("Name :");
-        nameLbl.setBounds(new Rectangle(3, 3, 102, 21));
-        nameLbl.setFont(Utilities.labelsFont);
-        this.add(scrollPane, null);
-        this.add(nameLbl, null);
-        determineColumnWidth();
     }
 
     /**

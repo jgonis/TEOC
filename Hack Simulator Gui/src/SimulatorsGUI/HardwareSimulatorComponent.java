@@ -74,16 +74,11 @@ public class HardwareSimulatorComponent extends HackSimulatorComponent implement
         nullLayoutGatesPanel.setLayout(null);
         flowLayoutGatesPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 1, 1));
 
-        inputPins = new PinsComponent();
-        inputPins.setPinsName("Input pins");
-        outputPins = new PinsComponent();
-        outputPins.setPinsName("Output pins");
-        internalPins = new PinsComponent();
-        internalPins.setPinsName("Internal pins");
-        partPins = new PartPinsComponent();
-        partPins.setPinsName("Part pins");
-        parts = new PartsComponent();
-        parts.setName("Internal Parts");
+        inputPins = new PinsComponent("Input pins");
+        outputPins = new PinsComponent("Output pins");
+        internalPins = new PinsComponent("Internal pins");
+        partPins = new PartPinsComponent("Part pins");
+        parts = new PartsComponent("Internal Parts");
         hdlView = new TextFileComponent();
 
         gateInfo = new GateInfoComponent();

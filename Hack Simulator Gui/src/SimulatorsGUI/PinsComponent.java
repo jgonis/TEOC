@@ -93,7 +93,7 @@ public class PinsComponent extends JPanel implements PinsGUI, MouseListener, Pin
     /**
      * Constructs a new PinsComponent.
      */
-    public PinsComponent() {
+    public PinsComponent(String name) {
         dataFormat = Format.DEC_FORMAT;
         JTextField tf = new JTextField();
         tf.setFont(Utilities.bigBoldValueFont);
@@ -113,7 +113,40 @@ public class PinsComponent extends JPanel implements PinsGUI, MouseListener, Pin
 
         pinsTable.getColumnModel().getColumn(getValueColumn()).setCellEditor(editor);
 
-        jbInit();
+        jbInit(name);
+    }
+
+    // Initialization of this component.
+    private void jbInit(String name) {
+        pinsTable.addFocusListener(new FocusListener() {
+            public void focusGained(FocusEvent e) {
+                pinsTable_focusGained(e);
+            }
+
+            public void focusLost(FocusEvent e) {
+                pinsTable_focusLost(e);
+            }
+        });
+        pinsTable.addMouseListener(this);
+        pinsTable.getTableHeader().setReorderingAllowed(false);
+        pinsTable.getTableHeader().setResizingAllowed(false);
+        this.setLayout(null);
+        scrollPane = new JScrollPane(pinsTable);
+        scrollPane.setLocation(0,27);
+        setBorder(BorderFactory.createEtchedBorder());
+
+        binary.setSize(new Dimension(240,52));
+        binary.setLayout(null);
+        binary.setVisible(false);
+        binary.addListener(this);
+        determineColumnWidth();
+        nameLbl.setText(name);
+        nameLbl.setBounds(new Rectangle(3, 3, 102, 21));
+        nameLbl.setFont(Utilities.labelsFont);
+        pinsTable.setFont(Utilities.valueFont);
+        this.add(binary, null);
+        this.add(scrollPane, null);
+        this.add(nameLbl, null);
 
     }
 
@@ -155,13 +188,6 @@ public class PinsComponent extends JPanel implements PinsGUI, MouseListener, Pin
      */
     protected TableModel getTableModel() {
         return new PinsTableModel();
-    }
-
-    /**
-     * Sets the name of this pins component.
-     */
-    public void setPinsName(String name) {
-        nameLbl.setText(name);
     }
 
     /**
@@ -435,39 +461,6 @@ public class PinsComponent extends JPanel implements PinsGUI, MouseListener, Pin
         return 241;
     }
 
-    // Initialization of this component.
-    private void jbInit() {
-        pinsTable.addFocusListener(new FocusListener() {
-            public void focusGained(FocusEvent e) {
-                pinsTable_focusGained(e);
-            }
-
-            public void focusLost(FocusEvent e) {
-                pinsTable_focusLost(e);
-            }
-        });
-        pinsTable.addMouseListener(this);
-        pinsTable.getTableHeader().setReorderingAllowed(false);
-        pinsTable.getTableHeader().setResizingAllowed(false);
-        this.setLayout(null);
-        scrollPane = new JScrollPane(pinsTable);
-        scrollPane.setLocation(0,27);
-        setBorder(BorderFactory.createEtchedBorder());
-
-        binary.setSize(new Dimension(240,52));
-        binary.setLayout(null);
-        binary.setVisible(false);
-        binary.addListener(this);
-        determineColumnWidth();
-        nameLbl.setText("Name :");
-        nameLbl.setBounds(new Rectangle(3, 3, 102, 21));
-        nameLbl.setFont(Utilities.labelsFont);
-        pinsTable.setFont(Utilities.valueFont);
-        this.add(binary, null);
-        this.add(scrollPane, null);
-        this.add(nameLbl, null);
-
-    }
     // The action of the table gaining focus
     public void pinsTable_focusGained(FocusEvent e) {
         notifyListeners();

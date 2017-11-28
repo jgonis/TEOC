@@ -47,14 +47,13 @@ public class PartPinsComponent extends PinsComponent implements PartPinsGUI {
     /**
      * Constructs a new PartPinsComponent.
      */
-    public PartPinsComponent() {
-        super();
+    public PartPinsComponent(String name) {
+        super(name);
         partPins = new PartPinInfo[0];
         valuesStr = new String[0];
         pinsTable.setDefaultRenderer(pinsTable.getColumnClass(0), renderer);
 
         jbInit();
-
     }
 
     /**
