@@ -38,13 +38,13 @@ public class PartsComponent extends JPanel implements PartsGUI {
     private JTable partsTable;
 
     // The array of gates
-    private Gate[] parts;
+    private Gate[] parts = new Gate[0];
 
     // The scroll pane in which the table is placed.
     private JScrollPane scrollPane;
 
     // The model of this table.
-    private PartsTableModel model;
+    private PartsTableModel model  = new PartsTableModel();
 
     // The name of this component.
     private JLabel nameLbl = new JLabel();
@@ -53,14 +53,7 @@ public class PartsComponent extends JPanel implements PartsGUI {
      * Constructs a new PartsComponent.
      */
     public PartsComponent(String name) {
-        parts = new Gate[0];
-        model = new PartsTableModel();
         partsTable = new JTable(model);
-        jbInit(name);
-    }
-
-    // Initialization of this component.
-    private void jbInit(String name)  {
         this.setLayout(null);
         partsTable.setFont(Utilities.valueFont);
         partsTable.getTableHeader().setReorderingAllowed(false);
@@ -86,7 +79,6 @@ public class PartsComponent extends JPanel implements PartsGUI {
         this.add(nameLbl, null);
         determineColumnWidth();
     }
-
 
     /**
      * Sets the number of visible rows.
