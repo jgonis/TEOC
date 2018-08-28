@@ -12,7 +12,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="Hack Hardware Simulator" />
-    <orderEntry type="module" module-name="Hack Gui" />
     <orderEntry type="module" module-name="Hack Utilities" />
     <orderEntry type="module" module-name="Hack CPU Emulator" />
     <orderEntry type="module" module-name="Hack Computer Parts" />
@@ -22,5 +21,6 @@
     <orderEntry type="module" module-name="Hack Events" />
     <orderEntry type="module" module-name="Hack Virtual Machine" />
     <orderEntry type="module" module-name="Hack Assembler" />
+    <orderEntry type="module" module-name="Hack GUI" />
   </component>
 </module>

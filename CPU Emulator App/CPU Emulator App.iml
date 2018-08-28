@@ -12,7 +12,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="Hack Controller" />
     <orderEntry type="module" module-name="Hack CPU Emulator" />
-    <orderEntry type="module" module-name="Hack Gui" />
     <orderEntry type="module" module-name="Hack Simulator Gui" />
+    <orderEntry type="module" module-name="Hack GUI" />
   </component>
 </module>
