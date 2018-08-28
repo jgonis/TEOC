@@ -8,8 +8,8 @@
       <module fileurl="file://$PROJECT_DIR$/Hack Computer Parts/Hack Computer Parts.iml" filepath="$PROJECT_DIR$/Hack Computer Parts/Hack Computer Parts.iml" group="Libs" />
       <module fileurl="file://$PROJECT_DIR$/Hack Controller/Hack Controller.iml" filepath="$PROJECT_DIR$/Hack Controller/Hack Controller.iml" group="Libs" />
       <module fileurl="file://$PROJECT_DIR$/Hack Events/Hack Events.iml" filepath="$PROJECT_DIR$/Hack Events/Hack Events.iml" group="Libs" />
+      <module fileurl="file://$PROJECT_DIR$/Hack GUI/Hack GUI.iml" filepath="$PROJECT_DIR$/Hack GUI/Hack GUI.iml" group="Libs" />
       <module fileurl="file://$PROJECT_DIR$/Hack Gates/Hack Gates.iml" filepath="$PROJECT_DIR$/Hack Gates/Hack Gates.iml" group="Libs" />
-      <module fileurl="file://$PROJECT_DIR$/Hack Gui/Hack Gui.iml" filepath="$PROJECT_DIR$/Hack Gui/Hack Gui.iml" group="Libs" />
       <module fileurl="file://$PROJECT_DIR$/Hack Hardware Simulator/Hack Hardware Simulator.iml" filepath="$PROJECT_DIR$/Hack Hardware Simulator/Hack Hardware Simulator.iml" group="Libs" />
       <module fileurl="file://$PROJECT_DIR$/Hack Simulator Gui/Hack Simulator Gui.iml" filepath="$PROJECT_DIR$/Hack Simulator Gui/Hack Simulator Gui.iml" group="Libs" />
       <module fileurl="file://$PROJECT_DIR$/Hack Translators/Hack Translators.iml" filepath="$PROJECT_DIR$/Hack Translators/Hack Translators.iml" group="Libs" />
