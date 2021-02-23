@@ -58,3 +58,20 @@ Temporary Items
 \.idea/libraries
 out/
 bin/
+/Hack Utilities/target/
+/Hack Events/target/
+/CPU Emulator App/target/
+/Hack Assembler/target/
+/Hack CPU Emulator/target/
+/Hack Computer Parts/target/
+/Hack Controller/target/
+/Hack GUI/target/
+/Hack Gates/target/
+/Hack Hardware Simulator/target/
+/Hack Simulator GUI/target/
+/Hack Translators/target/
+/Hack VM Emulator/target/
+/Hack Virtual Machine/target/
+/Text Comparer/target/
+/Hardware Simulator App/target/
+/VM Emulator App/target/
