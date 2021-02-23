@@ -1,11 +1,10 @@
 package Hack.Events;
-import Hack.Events.ErrorEvent;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ErrorEventTest {
 
@@ -23,7 +22,7 @@ class ErrorEventTest {
 
 	@Test
 	void getErrorMessage() {
-		assertEquals(TEST_MESSAGE, subject.getErrorMessage());
+		assertEquals(TEST_MESSAGE + "error!", subject.getErrorMessage());
 	}
 
 }
