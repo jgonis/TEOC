@@ -1,3 +1,4 @@
+package Hack.Events;
 /********************************************************************************
  * The contents of this file are subject to the GNU General Public License      *
  * (GPL) Version 2 or later (the "License"); you may not use this file except   *
@@ -15,7 +16,7 @@
  * mark your changes clearly, for the benefit of others.                        *
  ********************************************************************************/
 
-package Hack.Events;
+
 
 import java.util.EventObject;
 

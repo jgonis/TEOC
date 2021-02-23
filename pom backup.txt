@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.jgonis</groupId>
+  <artifactId>TEOC</artifactId>
+  <packaging>pom</packaging>
+  <version>1.0-SNAPSHOT</version>
+  <name>TEOC</name>
+  <modules>
+    <module>CPU Emulator App</module>
+    <module>Hardware Simulator App</module>
+    <module>VM Emulator App</module>
+    <module>Hack Assembler</module>
+    <module>Hack Computer Parts</module>
+    <module>Hack Controller</module>
+    <module>Hack CPU Emulator</module>
+    <module>Hack Events</module>
+    <module>Hack Gates</module>
+    <module>Hack GUI</module>
+    <module>Hack Hardware Simulator</module>
+    <module>Hack Simulator GUI</module>
+    <module>Simulators GUI</module>
+    <module>Hack Translators</module>
+    <module>Hack Utilities</module>
+    <module>Hack Virtual Machine</module>
+    <module>Hack VM Emulator</module>
+    <module>Text Comparer</module>
+  </modules>
+</project>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.jgonis</groupId>
+    <artifactId>TEOC</artifactId>
+    <packaging>pom</packaging>
+    <version>0.1-SNAPSHOT</version>
+    <name>TEOC</name>
+    <modules>
+        <module>CPU Emulator App</module>
+        <module>Hardware Simulator App</module>
+        <module>VM Emulator App</module>
+        <module>Hack Assembler</module>
+        <module>Hack Computer Parts</module>
+        <module>Hack Controller</module>
+        <module>Hack CPU Emulator</module>
+        <module>Hack Events</module>
+        <module>Hack Gates</module>
+        <module>Hack GUI</module>
+        <module>Hack Hardware Simulator</module>
+        <module>Hack Simulator GUI</module>
+        <module>Hack Translators</module>
+        <module>Hack Utilities</module>
+        <module>Hack Virtual Machine</module>
+        <module>Hack VM Emulator</module>
+        <module>Text Comparer</module>
+    </modules>
+    <properties>
+        <java.version>11</java.version>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>5.6.3</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>11</source>
+                    <target>11</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M5</version>
+            </plugin>
+        </plugins>
+    </build>
+</project>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="Hack Translators" />
+        <module name="Hack VM Emulator" />
+        <module name="Hardware Simulator App" />
+        <module name="Hack GUI" />
+        <module name="Hack Simulator GUI" />
+        <module name="Hack Controller" />
+        <module name="Hack Hardware Simulator" />
+        <module name="Hack Computer Parts" />
+        <module name="Hack CPU Emulator" />
+        <module name="Hack Virtual Machine" />
+        <module name="Hack Events" />
+        <module name="CPU Emulator App" />
+        <module name="Text Comparer" />
+        <module name="Hack Assembler" />
+        <module name="Hack Utilities" />
+        <module name="VM Emulator App" />
+        <module name="Hack Gates" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="CPU Emulator App" target="11" />
+      <module name="Hack Assembler" target="11" />
+      <module name="Hack Computer Parts" target="11" />
+      <module name="Hack Controller" target="11" />
+      <module name="Hack CPU Emulator" target="11" />
+      <module name="Hack Events" target="11" />
+      <module name="Hack Gates" target="11" />
+      <module name="Hack GUI" target="11" />
+      <module name="Hack Hardware Simulator" target="11" />
+      <module name="Hack Simulator GUI" target="11" />
+      <module name="Hack Translators" target="11" />
+      <module name="Hack Utilities" target="11" />
+      <module name="Hack Virtual Machine" target="11" />
+      <module name="Hack VM Emulator" target="11" />
+      <module name="Hardware Simulator App" target="11" />
+      <module name="teoc" target="11" />
+      <module name="Text Comparer" target="11" />
+      <module name="VM Emulator App" target="11" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

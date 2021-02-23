@@ -17,9 +17,9 @@
 
 package HackGUI;
 
-import Hack.*;
-import javax.swing.table.*;
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableModel;
 import java.awt.*;
 
 /**
