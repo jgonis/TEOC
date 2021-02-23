@@ -22,7 +22,7 @@ class ErrorEventTest {
 
 	@Test
 	void getErrorMessage() {
-		assertEquals(TEST_MESSAGE + "error!", subject.getErrorMessage());
+		assertEquals(TEST_MESSAGE, subject.getErrorMessage());
 	}
 
 }

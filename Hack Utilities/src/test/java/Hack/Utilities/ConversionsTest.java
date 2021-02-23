@@ -19,25 +19,4 @@ class ConversionsTest {
 	void binaryToInt() {
 		assertTrue(true);
 	}
-
-	@Test
-	void decimalToBinary() {
-	}
-
-	@Test
-	void decimalToHex() {
-	}
-
-	@Test
-	void hex4ToInt() {
-	}
-
-	@Test
-	void hexToInt() {
-	}
-
-	@Test
-	void toDecimalForm() {
-	}
-
 }
