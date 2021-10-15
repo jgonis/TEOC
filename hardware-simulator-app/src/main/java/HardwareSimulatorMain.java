@@ -15,21 +15,25 @@
  * mark your changes clearly, for the benefit of others.                        *
  ********************************************************************************/
 
-import Hack.Controller.*;
-import Hack.HardwareSimulator.*;
-import SimulatorsGUI.*;
-import javax.swing.*;
+import Hack.Controller.HackController;
+import Hack.HardwareSimulator.HardwareSimulator;
+import Hack.HardwareSimulator.HardwareSimulatorApplication;
+import Hack.HardwareSimulator.HardwareSimulatorControllerGUI;
+import Hack.HardwareSimulator.HardwareSimulatorGUI;
+import SimulatorsGUI.HardwareSimulatorComponent;
+import SimulatorsGUI.HardwareSimulatorControllerComponent;
+
+import javax.swing.UIManager;
 
 
 /**
  * The Hardware Simulator.
  */
-public class HardwareSimulatorMain
-{
-  /**
-   * The command line Hardware Simulator program.
-   */
-  public static void main(String[] args) {
+public class HardwareSimulatorMain {
+    /**
+     * The command line Hardware Simulator program.
+     */
+    public static void main(String[] args) {
         if (args.length > 1)
             System.err.println("Usage: java HardwareSimulatorMain [script name]");
         else if (args.length == 0) {
@@ -42,11 +46,12 @@ public class HardwareSimulatorMain
             HardwareSimulatorControllerGUI controllerGUI = new HardwareSimulatorControllerComponent();
 
             HardwareSimulatorApplication application =
-                new HardwareSimulatorApplication(controllerGUI, simulatorGUI,
-                                                 "bin/scripts/defaultHW.txt",
-                                                 "bin/help/hwUsage.html", "bin/help/hwAbout.html");
-        }
-        else
+                    new HardwareSimulatorApplication(controllerGUI,
+                            simulatorGUI,
+                            "bin/scripts/defaultHW.txt",
+                            "bin/help/hwUsage.html",
+                            "bin/help/hwAbout.html");
+        } else
             new HackController(new HardwareSimulator(), args[0]);
     }
 }
