@@ -1,0 +1,5 @@
+rootProject.name = 'TEOC'
+include 'cpu-emulator-app', 'hack-assembler', 'hack-computer-parts', 'hack-controller', 'hack-cpu-emulator',
+'hack-events', 'hack-gates', 'hack-gui', 'hack-hardware-simulator', 'hack-simulator-gui', 'hack-translators',
+'hack-utilities', 'hack-virtual-machine', 'hack-vm-emulator', 'hardware-simulator-app', 'text-comparer',
+'vm-emulator-app'

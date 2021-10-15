@@ -58,20 +58,22 @@ Temporary Items
 \.idea/libraries
 out/
 bin/
-/Hack Utilities/target/
-/Hack Events/target/
-/CPU Emulator App/target/
-/Hack Assembler/target/
-/Hack CPU Emulator/target/
-/Hack Computer Parts/target/
-/Hack Controller/target/
-/Hack GUI/target/
-/Hack Gates/target/
-/Hack Hardware Simulator/target/
-/Hack Simulator GUI/target/
-/Hack Translators/target/
-/Hack VM Emulator/target/
-/Hack Virtual Machine/target/
-/Text Comparer/target/
-/Hardware Simulator App/target/
-/VM Emulator App/target/
+/cpu-emulator-app/build/
+/hack-assembler/build/
+/hack-computer-parts/build/
+/hack-controller/build/
+/hack-cpu-emulator/build/
+/hack-events/build/
+/hack-gates/build/
+/hack-gui/build/
+/hack-hardware-simulator/build/
+/hack-simulator-gui/build/
+/hack-translators/build/
+/hack-utilities/build/
+/hack-virtual-machine/build/
+/hack-vm-emulator/build/
+/hardware-simulator-app/build/
+/text-comparer/build/
+/vm-emulator-app/build/
+/.gradle/
+/.idea/
