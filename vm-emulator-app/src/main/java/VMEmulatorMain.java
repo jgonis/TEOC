@@ -15,36 +15,37 @@
  * mark your changes clearly, for the benefit of others.                        *
  ********************************************************************************/
 
-import Hack.Controller.*;
-import Hack.VMEmulator.*;
-import HackGUI.*;
-import SimulatorsGUI.*;
+import Hack.Controller.ControllerGUI;
+import Hack.Controller.HackController;
+import Hack.VMEmulator.VMEmulator;
+import Hack.VMEmulator.VMEmulatorApplication;
+import Hack.VMEmulator.VMEmulatorGUI;
+import HackGUI.ControllerComponent;
+import SimulatorsGUI.VMEmulatorComponent;
+
 import javax.swing.*;
 
 /**
  * The VM Emulator.
  */
-public class VMEmulatorMain
-{
-  /**
-   * The command line VM Emulator program.
-   */
-  public static void main(String[] args) {
+public class VMEmulatorMain {
+    /**
+     * The command line VM Emulator program.
+     */
+    public static void main(String[] args) {
         if (args.length > 1)
             System.err.println("Usage: java CPUEmulatorMain [script name]");
         else if (args.length == 0) {
-            try {
-                UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-            } catch (Exception e) {
-            }
-
-            VMEmulatorGUI simulatorGUI = new VMEmulatorComponent();
-            ControllerGUI controllerGUI = new ControllerComponent();
-            VMEmulatorApplication application =
-                new VMEmulatorApplication(controllerGUI, simulatorGUI, "bin/scripts/defaultVM.txt",
-                                          "bin/help/vmUsage.html", "bin/help/vmAbout.html");
-        }
-        else
+            SwingUtilities.invokeLater(() -> {
+                VMEmulatorGUI simulatorGUI = new VMEmulatorComponent();
+                ControllerGUI controllerGUI = new ControllerComponent();
+                VMEmulatorApplication application = new VMEmulatorApplication(controllerGUI,
+                                                                              simulatorGUI,
+                                                                              "bin/scripts/defaultVM.txt",
+                                                                              "bin/help/vmUsage.html",
+                                                                              "bin/help/vmAbout.html");
+            });
+        } else
             new HackController(new VMEmulator(), args[0]);
     }
 }

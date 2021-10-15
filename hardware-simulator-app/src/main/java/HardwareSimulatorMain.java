@@ -23,7 +23,7 @@ import Hack.HardwareSimulator.HardwareSimulatorGUI;
 import SimulatorsGUI.HardwareSimulatorComponent;
 import SimulatorsGUI.HardwareSimulatorControllerComponent;
 
-import javax.swing.UIManager;
+import javax.swing.*;
 
 
 /**
@@ -37,20 +37,17 @@ public class HardwareSimulatorMain {
         if (args.length > 1)
             System.err.println("Usage: java HardwareSimulatorMain [script name]");
         else if (args.length == 0) {
-            try {
-                UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-            } catch (Exception e) {
-            }
+            SwingUtilities.invokeLater(() -> {
+                HardwareSimulatorGUI simulatorGUI = new HardwareSimulatorComponent();
+                HardwareSimulatorControllerGUI controllerGUI = new HardwareSimulatorControllerComponent();
 
-            HardwareSimulatorGUI simulatorGUI = new HardwareSimulatorComponent();
-            HardwareSimulatorControllerGUI controllerGUI = new HardwareSimulatorControllerComponent();
-
-            HardwareSimulatorApplication application =
-                    new HardwareSimulatorApplication(controllerGUI,
-                            simulatorGUI,
-                            "bin/scripts/defaultHW.txt",
-                            "bin/help/hwUsage.html",
-                            "bin/help/hwAbout.html");
+                HardwareSimulatorApplication application =
+                        new HardwareSimulatorApplication(controllerGUI,
+                                                         simulatorGUI,
+                                                         "bin/scripts/defaultHW.txt",
+                                                         "bin/help/hwUsage.html",
+                                                         "bin/help/hwAbout.html");
+            });
         } else
             new HackController(new HardwareSimulator(), args[0]);
     }
