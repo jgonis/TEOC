@@ -3,33 +3,10 @@
  */
 plugins {
     id 'java-library'
-    id 'idea'
-}
-
-repositories {
-    // Use Maven Central for resolving dependencies.
-    gradlePluginPortal()
-    mavenCentral()
-}
-
-idea {
-    module {
-        downloadJavadoc = true
-    }
 }
 
 dependencies {
-    // Use JUnit Jupiter API for testing.
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.1'
-
-    // Use JUnit Jupiter Engine for testing.
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
     api project(":hack-translators")
     api project(":hack-computer-parts")
     implementation project(":hack-utilities")
-}
-
-tasks.named('test') {
-    // Use junit platform for unit tests.
-    useJUnitPlatform()
 }

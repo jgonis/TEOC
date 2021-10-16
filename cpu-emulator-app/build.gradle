@@ -4,34 +4,11 @@
 plugins {
     id 'application'
     id 'org.springframework.boot' version '2.5.4'
-    id 'idea'
-}
-
-repositories {
-    // Use Maven Central for resolving dependencies.
-    gradlePluginPortal()
-    mavenCentral()
-}
-
-idea {
-    module {
-        downloadJavadoc = true
-    }
 }
 
 dependencies {
-    // Use JUnit Jupiter API for testing.
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.1'
-
-    // Use JUnit Jupiter Engine for testing.
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
     implementation project(":hack-simulator-gui")
     implementation project(":hack-gui")
-}
-
-tasks.named('test') {
-    // Use junit platform for unit tests.
-    useJUnitPlatform()
 }
 
 application {
