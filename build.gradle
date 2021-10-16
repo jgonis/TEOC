@@ -29,5 +29,10 @@ subprojects {
         // Use junit platform for unit tests.
         useJUnitPlatform()
     }
+
+    compileJava {
+        sourceCompatibility = '1.8'
+        targetCompatibility = '1.8'
+    }
 }
 
