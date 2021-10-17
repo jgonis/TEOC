@@ -27,9 +27,6 @@ import SimulatorsGUI.HardwareSimulatorControllerComponent;
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 
 
 /**
@@ -62,19 +59,5 @@ public class HardwareSimulatorMain {
             });
         } else
             new HackController(new HardwareSimulator(), args[0]);
-    }
-
-    private static File createTempFileFromResource(Class<?> resourceLocator,
-                                                   String resourceName,
-                                                   String resourceSuffix) throws IOException {
-        InputStream resourceStream = resourceLocator.getResourceAsStream("/" + resourceName + resourceSuffix);
-        File resourceFile = File.createTempFile(resourceName, resourceSuffix);
-        resourceFile.deleteOnExit();
-        if (resourceStream != null) {
-            Files.copy(resourceStream, resourceFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-            return resourceFile;
-        } else {
-            return null;
-        }
     }
 }
