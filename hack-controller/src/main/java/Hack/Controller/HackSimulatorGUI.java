@@ -39,23 +39,24 @@ public interface HackSimulatorGUI {
 
     /**
      * Sets the name of the html file that contains the help usage.
+     * @param fileName
      */
-    public void setUsageFileName(String fileName);
+    public void setUsageFileName(File fileName);
 
     /**
      * Sets the name of the html file that contains the "about" information.
      */
-    public void setAboutFileName(String fileName);
+    public void setAboutFileName(File fileName);
 
     /**
      * Returns the name of the help usage file.
      */
-    public String getUsageFileName();
+    public File getUsageFileName();
 
     /**
      * Returns the name of the about information file.
      */
-    public String getAboutFileName();
+    public File getAboutFileName();
 
     /**
      * Sets the working dir name with the given one.

@@ -19,6 +19,8 @@ package Hack.VMEmulator;
 
 import Hack.Controller.*;
 
+import java.io.File;
+
 /**
  * A VM Emulator application.
  */
@@ -30,9 +32,15 @@ public class VMEmulatorApplication extends HackApplication {
      * the help files.
      */
     public VMEmulatorApplication(ControllerGUI controllerComponent,
-                                 VMEmulatorGUI simulatorComponent, String defaultScript,
-                                 String contentsFileName, String aboutFileName) {
-        super(new VMEmulator(simulatorComponent), controllerComponent, simulatorComponent,
-              defaultScript, contentsFileName, aboutFileName);
+                                 VMEmulatorGUI simulatorComponent,
+                                 File defaultScript,
+                                 File contentsFileName,
+                                 File aboutFileName) {
+        super(new VMEmulator(simulatorComponent),
+              controllerComponent,
+              simulatorComponent,
+              defaultScript,
+              contentsFileName,
+              aboutFileName);
     }
 }

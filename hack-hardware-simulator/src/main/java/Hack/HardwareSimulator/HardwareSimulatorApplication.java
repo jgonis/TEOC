@@ -19,6 +19,8 @@ package Hack.HardwareSimulator;
 
 import Hack.Controller.*;
 
+import java.io.File;
+
 /**
  * A HardwareSimulator application.
  */
@@ -31,17 +33,23 @@ public class HardwareSimulatorApplication extends HackApplication {
      */
     public HardwareSimulatorApplication(HardwareSimulatorControllerGUI controllerComponent,
                                         HardwareSimulatorGUI simulatorComponent,
-                                        String defaultScript, String contentsFileName,
-                                        String aboutFileName) {
-        super(new HardwareSimulator(simulatorComponent), controllerComponent, simulatorComponent,
-              defaultScript, contentsFileName, aboutFileName);
+                                        File defaultScript,
+                                        File contentsFileName,
+                                        File aboutFileName) {
+        super(new HardwareSimulator(simulatorComponent),
+              controllerComponent,
+              simulatorComponent,
+              defaultScript,
+              contentsFileName,
+              aboutFileName);
     }
 
-    protected void createController(HackSimulator simulator, ControllerGUI controllerComponent,
-                                    String defaultScript)
+    protected void createController(HackSimulator simulator,
+                                    ControllerGUI controllerComponent,
+                                    File defaultScript)
      throws ScriptException, ControllerException {
-        HardwareSimulatorController c =
-            new HardwareSimulatorController((HardwareSimulatorControllerGUI)controllerComponent,
-                                            (HardwareSimulator)simulator, defaultScript);
+        HardwareSimulatorController c = new HardwareSimulatorController((HardwareSimulatorControllerGUI)controllerComponent,
+                                                                        (HardwareSimulator)simulator,
+                                                                        defaultScript);
     }
 }

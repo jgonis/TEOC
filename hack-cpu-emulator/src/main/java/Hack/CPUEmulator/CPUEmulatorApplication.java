@@ -20,6 +20,8 @@ package Hack.CPUEmulator;
 import Hack.Controller.ControllerGUI;
 import Hack.Controller.HackApplication;
 
+import java.io.File;
+
 /**
  * A CPU Emulator application.
  */
@@ -31,9 +33,15 @@ public class CPUEmulatorApplication extends HackApplication {
      * the help files.
      */
     public CPUEmulatorApplication(ControllerGUI controllerComponent,
-                                  CPUEmulatorGUI simulatorComponent, String defaultScript,
-                                  String contentsFileName, String aboutFileName) {
-        super(new CPUEmulator(simulatorComponent), controllerComponent, simulatorComponent,
-              defaultScript, contentsFileName, aboutFileName);
+                                  CPUEmulatorGUI simulatorComponent,
+                                  File defaultScript,
+                                  File contentsFileName,
+                                  File aboutFileName) {
+        super(new CPUEmulator(simulatorComponent),
+              controllerComponent,
+              simulatorComponent,
+              defaultScript,
+              contentsFileName,
+              aboutFileName);
     }
 }

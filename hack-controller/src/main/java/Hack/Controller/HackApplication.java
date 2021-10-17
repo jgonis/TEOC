@@ -17,6 +17,8 @@
 
 package Hack.Controller;
 
+import java.io.File;
+
 /**
  * A Hack Application. Creates a controller to control the given given simulator using the
  * given GUI components.
@@ -30,9 +32,12 @@ public abstract class HackApplication {
      * component, the simulator GUI component, the default
      * script name and the names of the help files.
      */
-    public HackApplication(HackSimulator simulator, ControllerGUI controllerComponent,
-                           HackSimulatorGUI simulatorComponent, String defaultScript,
-                           String usageFileName, String aboutFileName) {
+    public HackApplication(HackSimulator simulator,
+                           ControllerGUI controllerComponent,
+                           HackSimulatorGUI simulatorComponent,
+                           File defaultScript,
+                           File usageFileName,
+                           File aboutFileName) {
         try {
             simulatorComponent.setUsageFileName(usageFileName);
             simulatorComponent.setAboutFileName(aboutFileName);
@@ -54,9 +59,12 @@ public abstract class HackApplication {
      * Creates the controller with the given simulator, controller gui component
      * and the default script.
      */
-    protected void createController(HackSimulator simulator, ControllerGUI controllerComponent,
-                                    String defaultScript)
+    protected void createController(HackSimulator simulator,
+                                    ControllerGUI controllerComponent,
+                                    File defaultScript)
      throws ScriptException, ControllerException {
-        HackController c = new HackController(controllerComponent, simulator, defaultScript);
+        HackController c = new HackController(controllerComponent,
+                                              simulator,
+                                              defaultScript);
     }
 }

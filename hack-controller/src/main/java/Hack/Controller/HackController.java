@@ -253,7 +253,9 @@ public class HackController
      * Constructs a new HackController with the given GUI component, hack simulator
      * and the default script file for this simulator.
      */
-    public HackController(ControllerGUI gui, HackSimulator simulator, String defaultScriptName)
+    public HackController(ControllerGUI gui,
+                          HackSimulator simulator,
+                          File defaultScriptFile)
      throws ScriptException, ControllerException {
 
         this.gui = gui;
@@ -266,8 +268,8 @@ public class HackController
         simulator.addProgramListener(this);
         breakpoints = new Vector();
 
-        defaultScriptFile = new File(defaultScriptName);
-        loadNewScript(defaultScriptFile, false);
+        this.defaultScriptFile = defaultScriptFile;
+        loadNewScript(this.defaultScriptFile, false);
 
         delays = new int[NUMBER_OF_SPEED_UNITS];
         for (int i = 0; i < NUMBER_OF_SPEED_UNITS; i++)

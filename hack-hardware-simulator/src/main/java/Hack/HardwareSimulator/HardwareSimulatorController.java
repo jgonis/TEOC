@@ -32,7 +32,8 @@ public class HardwareSimulatorController extends HackController {
      * The gui is optional.
      */
     public HardwareSimulatorController(HardwareSimulatorControllerGUI gui,
-                                       HardwareSimulator simulator, String defaultScriptName)
+                                       HardwareSimulator simulator,
+                                       File defaultScriptName)
      throws ScriptException, ControllerException  {
         super(gui, simulator, defaultScriptName);
 

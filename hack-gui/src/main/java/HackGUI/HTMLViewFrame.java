@@ -18,10 +18,13 @@
 package HackGUI;
 
 import javax.swing.*;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
+import javax.swing.text.html.HTMLDocument;
+import javax.swing.text.html.HTMLFrameHyperlinkEvent;
 import java.awt.*;
-import java.io.*;
-import javax.swing.text.html.*;
-import javax.swing.event.*;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * A frame for viewing HTML files.
@@ -36,16 +39,17 @@ public class HTMLViewFrame extends JFrame {
 
     /**
      * Constructs a new HTMLViewFrame for the given HTML file.
+     * @param file
      */
-    public HTMLViewFrame(String fileName) {
+    public HTMLViewFrame(File file) {
         setTitle("Help");
         ep.setEditable(false);
         ep.setContentType("text/html");
 
         try {
-            ep.setPage("file:" + fileName);
+            ep.setPage(file.toURI().toURL());
         } catch (IOException ioe) {
-            System.err.println("Error while reading file: " + fileName);
+            System.err.println("Error while reading file: " + file.getAbsolutePath());
             System.exit(-1);
         }
 

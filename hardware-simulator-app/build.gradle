@@ -9,6 +9,7 @@ plugins {
 dependencies {
     implementation project(":hack-simulator-gui")
     implementation project(":hack-gui")
+    implementation project(":hack-utilities")
 }
 
 application {

@@ -20,10 +20,16 @@ import Hack.HardwareSimulator.HardwareSimulator;
 import Hack.HardwareSimulator.HardwareSimulatorApplication;
 import Hack.HardwareSimulator.HardwareSimulatorControllerGUI;
 import Hack.HardwareSimulator.HardwareSimulatorGUI;
+import Hack.Utilities.ResourceTempFileGenerator;
 import SimulatorsGUI.HardwareSimulatorComponent;
 import SimulatorsGUI.HardwareSimulatorControllerComponent;
 
 import javax.swing.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 
 
 /**
@@ -40,15 +46,35 @@ public class HardwareSimulatorMain {
             SwingUtilities.invokeLater(() -> {
                 HardwareSimulatorGUI simulatorGUI = new HardwareSimulatorComponent();
                 HardwareSimulatorControllerGUI controllerGUI = new HardwareSimulatorControllerComponent();
-
-                HardwareSimulatorApplication application =
-                        new HardwareSimulatorApplication(controllerGUI,
-                                                         simulatorGUI,
-                                                         "bin/scripts/defaultHW.txt",
-                                                         "bin/help/hwUsage.html",
-                                                         "bin/help/hwAbout.html");
+                try {
+                    File defaultHWFile = ResourceTempFileGenerator.createTempFileFromResource(HardwareSimulatorMain.class,"defaultHW", ".txt");
+                    File defaultUsageFile = ResourceTempFileGenerator.createTempFileFromResource(HardwareSimulatorMain.class, "hwUsage", ".html");
+                    File defaultAboutFile = ResourceTempFileGenerator.createTempFileFromResource(HardwareSimulatorMain.class, "hwAbout", ".html");
+                    HardwareSimulatorApplication application =
+                            new HardwareSimulatorApplication(controllerGUI,
+                                                             simulatorGUI,
+                                                             defaultHWFile,
+                                                             defaultUsageFile,
+                                                             defaultAboutFile);
+                } catch (IOException ioe){
+                    System.exit(-1);
+                }
             });
         } else
             new HackController(new HardwareSimulator(), args[0]);
+    }
+
+    private static File createTempFileFromResource(Class<?> resourceLocator,
+                                                   String resourceName,
+                                                   String resourceSuffix) throws IOException {
+        InputStream resourceStream = resourceLocator.getResourceAsStream("/" + resourceName + resourceSuffix);
+        File resourceFile = File.createTempFile(resourceName, resourceSuffix);
+        resourceFile.deleteOnExit();
+        if (resourceStream != null) {
+            Files.copy(resourceStream, resourceFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            return resourceFile;
+        } else {
+            return null;
+        }
     }
 }

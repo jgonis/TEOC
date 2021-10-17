@@ -20,10 +20,13 @@ import Hack.CPUEmulator.CPUEmulatorApplication;
 import Hack.CPUEmulator.CPUEmulatorGUI;
 import Hack.Controller.ControllerGUI;
 import Hack.Controller.HackController;
+import Hack.Utilities.ResourceTempFileGenerator;
 import HackGUI.ControllerComponent;
 import SimulatorsGUI.CPUEmulatorComponent;
 
 import javax.swing.*;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * The CPU Emulator.
@@ -37,15 +40,23 @@ public class CPUEmulatorMain {
             System.err.println("Usage: java CPUEmulatorMain [script name]");
         else if (args.length == 0) {
             SwingUtilities.invokeLater(() -> {
-                CPUEmulatorGUI simulatorGUI = new CPUEmulatorComponent();
+                try {
+                    File defaultCPUFile = ResourceTempFileGenerator.createTempFileFromResource(CPUEmulatorMain.class, "defaultCPU", ".txt");
+                    File defaultUsageFile = ResourceTempFileGenerator.createTempFileFromResource(CPUEmulatorMain.class, "cpuUsage", ".html");
+                    File defaultAboutFile = ResourceTempFileGenerator.createTempFileFromResource(CPUEmulatorMain.class, "cpuAbout", ".html");
 
-                ControllerGUI controllerGUI = new ControllerComponent();
-                CPUEmulatorApplication application =
-                        new CPUEmulatorApplication(controllerGUI,
-                                                   simulatorGUI,
-                                                   "bin/scripts/defaultCPU.txt",
-                                                   "bin/help/cpuUsage.html",
-                                                   "bin/help/cpuAbout.html");
+                    CPUEmulatorGUI simulatorGUI = new CPUEmulatorComponent();
+                    ControllerGUI controllerGUI = new ControllerComponent();
+
+                    CPUEmulatorApplication application =
+                            new CPUEmulatorApplication(controllerGUI,
+                                                       simulatorGUI,
+                                                       defaultCPUFile,
+                                                       defaultUsageFile,
+                                                       defaultAboutFile);
+                } catch(IOException ioe) {
+                    System.exit(-1);
+                }
             });
         } else
             new HackController(new CPUEmulator(), args[0]);
