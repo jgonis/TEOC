@@ -24,7 +24,7 @@ import Hack.Utilities.ResourceTempFileGenerator;
 import SimulatorsGUI.HardwareSimulatorComponent;
 import SimulatorsGUI.HardwareSimulatorControllerComponent;
 
-import javax.swing.*;
+import javax.swing.SwingUtilities;
 import java.io.File;
 import java.io.IOException;
 
@@ -47,12 +47,11 @@ public class HardwareSimulatorMain {
                     File defaultHWFile = ResourceTempFileGenerator.createTempFileFromResource(HardwareSimulatorMain.class,"defaultHW", ".txt");
                     File defaultUsageFile = ResourceTempFileGenerator.createTempFileFromResource(HardwareSimulatorMain.class, "hwUsage", ".html");
                     File defaultAboutFile = ResourceTempFileGenerator.createTempFileFromResource(HardwareSimulatorMain.class, "hwAbout", ".html");
-                    HardwareSimulatorApplication application =
-                            new HardwareSimulatorApplication(controllerGUI,
-                                                             simulatorGUI,
-                                                             defaultHWFile,
-                                                             defaultUsageFile,
-                                                             defaultAboutFile);
+                    new HardwareSimulatorApplication(controllerGUI,
+                                                     simulatorGUI,
+                                                     defaultHWFile,
+                                                     defaultUsageFile,
+                                                     defaultAboutFile);
                 } catch (IOException ioe){
                     System.exit(-1);
                 }

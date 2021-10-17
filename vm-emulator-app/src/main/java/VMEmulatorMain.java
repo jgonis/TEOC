@@ -24,7 +24,7 @@ import Hack.VMEmulator.VMEmulatorGUI;
 import HackGUI.ControllerComponent;
 import SimulatorsGUI.VMEmulatorComponent;
 
-import javax.swing.*;
+import javax.swing.SwingUtilities;
 import java.io.File;
 import java.io.IOException;
 
@@ -41,18 +41,24 @@ public class VMEmulatorMain {
         else if (args.length == 0) {
             SwingUtilities.invokeLater(() -> {
                 try {
-                    File defaultVMFile = ResourceTempFileGenerator.createTempFileFromResource(VMEmulatorMain.class, "defaultVM", ".txt");
-                    File defaultUsageFile = ResourceTempFileGenerator.createTempFileFromResource(VMEmulatorMain.class, "vmUsage", ".html");
-                    File defaultAboutFile = ResourceTempFileGenerator.createTempFileFromResource(VMEmulatorMain.class, "vmAbout", ".html");
+                    File defaultVMFile = ResourceTempFileGenerator.createTempFileFromResource(VMEmulatorMain.class,
+                                                                                              "defaultVM",
+                                                                                              ".txt");
+                    File defaultUsageFile = ResourceTempFileGenerator.createTempFileFromResource(VMEmulatorMain.class,
+                                                                                                 "vmUsage",
+                                                                                                 ".html");
+                    File defaultAboutFile = ResourceTempFileGenerator.createTempFileFromResource(VMEmulatorMain.class,
+                                                                                                 "vmAbout",
+                                                                                                 ".html");
 
                     VMEmulatorGUI simulatorGUI = new VMEmulatorComponent();
                     ControllerGUI controllerGUI = new ControllerComponent();
 
-                    VMEmulatorApplication application = new VMEmulatorApplication(controllerGUI,
-                                                                                  simulatorGUI,
-                                                                                  defaultVMFile,
-                                                                                  defaultUsageFile,
-                                                                                  defaultAboutFile);
+                    new VMEmulatorApplication(controllerGUI,
+                                              simulatorGUI,
+                                              defaultVMFile,
+                                              defaultUsageFile,
+                                              defaultAboutFile);
                 } catch(IOException ioe) {
                     System.exit(-1);
                 }

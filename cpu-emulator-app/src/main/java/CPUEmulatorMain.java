@@ -24,7 +24,7 @@ import Hack.Utilities.ResourceTempFileGenerator;
 import HackGUI.ControllerComponent;
 import SimulatorsGUI.CPUEmulatorComponent;
 
-import javax.swing.*;
+import javax.swing.SwingUtilities;
 import java.io.File;
 import java.io.IOException;
 
@@ -41,19 +41,24 @@ public class CPUEmulatorMain {
         else if (args.length == 0) {
             SwingUtilities.invokeLater(() -> {
                 try {
-                    File defaultCPUFile = ResourceTempFileGenerator.createTempFileFromResource(CPUEmulatorMain.class, "defaultCPU", ".txt");
-                    File defaultUsageFile = ResourceTempFileGenerator.createTempFileFromResource(CPUEmulatorMain.class, "cpuUsage", ".html");
-                    File defaultAboutFile = ResourceTempFileGenerator.createTempFileFromResource(CPUEmulatorMain.class, "cpuAbout", ".html");
+                    File defaultCPUFile = ResourceTempFileGenerator.createTempFileFromResource(CPUEmulatorMain.class,
+                                                                                               "defaultCPU",
+                                                                                               ".txt");
+                    File defaultUsageFile = ResourceTempFileGenerator.createTempFileFromResource(CPUEmulatorMain.class,
+                                                                                                 "cpuUsage",
+                                                                                                 ".html");
+                    File defaultAboutFile = ResourceTempFileGenerator.createTempFileFromResource(CPUEmulatorMain.class,
+                                                                                                 "cpuAbout",
+                                                                                                 ".html");
 
                     CPUEmulatorGUI simulatorGUI = new CPUEmulatorComponent();
                     ControllerGUI controllerGUI = new ControllerComponent();
 
-                    CPUEmulatorApplication application =
-                            new CPUEmulatorApplication(controllerGUI,
-                                                       simulatorGUI,
-                                                       defaultCPUFile,
-                                                       defaultUsageFile,
-                                                       defaultAboutFile);
+                    new CPUEmulatorApplication(controllerGUI,
+                                               simulatorGUI,
+                                               defaultCPUFile,
+                                               defaultUsageFile,
+                                               defaultAboutFile);
                 } catch(IOException ioe) {
                     System.exit(-1);
                 }
