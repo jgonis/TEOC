@@ -17,11 +17,15 @@
 
 package HackGUI;
 
-import java.awt.*;
-import javax.swing.*;
-import java.awt.event.*;
-import java.util.Vector;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JTextField;
 import javax.swing.filechooser.FileFilter;
+import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Vector;
 
 /**
  * This class repersents the GUI of the component which allows the user to load
@@ -37,8 +41,8 @@ public class FileChooserWindow extends JFrame implements EnterPressedListener {
     private JButton cancelButton = new JButton();
 
     // Creating the icons.
-    private ImageIcon okIcon = new ImageIcon(Utilities.imagesDir + "ok.gif");
-    private ImageIcon cancelIcon = new ImageIcon(Utilities.imagesDir + "cancel.gif");
+    private ImageIcon okIcon = new ImageIcon(FileChooserWindow.class.getResource("/ok.gif"));
+    private ImageIcon cancelIcon = new ImageIcon(FileChooserWindow.class.getResource("/cancel.gif"));
 
     // the listeners to this component.
     private Vector listeners;

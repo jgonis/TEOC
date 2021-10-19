@@ -17,16 +17,37 @@
 
 package SimulatorsGUI;
 
-import HackGUI.*;
-import Hack.VMEmulator.*;
-import Hack.Events.*;
-import javax.swing.*;
-import javax.swing.table.*;
-import java.awt.*;
-import java.util.*;
-import java.awt.event.*;
-import java.io.*;
-import Hack.VirtualMachine.*;
+import Hack.Events.ErrorEvent;
+import Hack.Events.ErrorEventListener;
+import Hack.Events.ProgramEvent;
+import Hack.Events.ProgramEventListener;
+import Hack.VMEmulator.VMEmulatorInstruction;
+import Hack.VMEmulator.VMProgramGUI;
+import Hack.VirtualMachine.HVMInstruction;
+import HackGUI.MouseOverJButton;
+import HackGUI.Utilities;
+
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableColumn;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Rectangle;
+import java.awt.SystemColor;
+import java.awt.event.ActionEvent;
+import java.io.File;
+import java.util.Vector;
 
 /**
  * This class represents the gui of a Program.
@@ -52,7 +73,7 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
     protected MouseOverJButton browseButton = new MouseOverJButton();
 
     // Creating the icon of the button.
-    private ImageIcon browseIcon = new ImageIcon(Utilities.imagesDir + "open2.gif");
+    private ImageIcon browseIcon = new ImageIcon(ProgramComponent.class.getResource("/open2.gif"));
 
     // The file chooser window.
     //private FileChooserWindow fileChooser = new FileChooserWindow(null);
@@ -71,7 +92,7 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
     private MouseOverJButton searchButton = new MouseOverJButton();
 
     // Creating the icon for the search button.
-    private ImageIcon searchIcon = new ImageIcon(Utilities.imagesDir + "find.gif");
+    private ImageIcon searchIcon = new ImageIcon(ProgramComponent.class.getResource("/find.gif"));
 
     // The window of searching a specific location in memory.
     private SearchProgramWindow searchWindow;
@@ -86,7 +107,7 @@ public class ProgramComponent extends JPanel implements VMProgramGUI {
     protected MouseOverJButton clearButton = new MouseOverJButton();
 
     // Creating the icon for the clear button.
-    private ImageIcon clearIcon = new ImageIcon(Utilities.imagesDir + "smallnew.gif");
+    private ImageIcon clearIcon = new ImageIcon(ProgramComponent.class.getResource("/smallnew.gif"));
 
     /**
      * Constructs a new ProgramComponent.

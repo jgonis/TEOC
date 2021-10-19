@@ -17,13 +17,26 @@
 
 package SimulatorsGUI;
 
-import HackGUI.*;
 import Hack.Utilities.Conversions;
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import java.util.*;
-import javax.swing.border.*;
+import HackGUI.Utilities;
+
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.border.Border;
+import java.awt.Color;
+import java.awt.Event;
+import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.Vector;
 
 /**
  * This class represents a 16-bits binary number.
@@ -59,14 +72,14 @@ public class BinaryComponent extends JPanel implements MouseListener, KeyListene
     private JButton cancelButton = new JButton();
 
     // Creating icons.
-    private ImageIcon okIcon = new ImageIcon(Utilities.imagesDir + "smallok.gif");
-    private ImageIcon cancelIcon = new ImageIcon(Utilities.imagesDir + "smallcancel.gif");
+    private ImageIcon okIcon = new ImageIcon(BinaryComponent.class.getResource("/smallok.gif"));
+    private ImageIcon cancelIcon = new ImageIcon(BinaryComponent.class.getResource("/smallcancel.gif"));
 
     // A vector conatining the listeners to this component.
     private Vector listeners;
 
     // A boolean value which is true if the user pressed the ok button and
-    // false otherwise.
+    // false otherwise./
     private boolean isOk = false;
 
     // The border of this component.

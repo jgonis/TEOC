@@ -18,10 +18,17 @@
 package HackGUI;
 
 import Hack.Controller.Breakpoint;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Vector;
 
 /**
  * This class represents the window of adding or editing a breakpoint.
@@ -44,8 +51,8 @@ public class BreakpointVariablesWindow extends JFrame {
     private JButton cancelButton = new JButton();
 
     // Creating ok and cancel icons.
-    private ImageIcon okIcon = new ImageIcon(Utilities.imagesDir + "ok.gif");
-    private ImageIcon cancelIcon = new ImageIcon(Utilities.imagesDir + "cancel.gif");
+    private ImageIcon okIcon = new ImageIcon(BreakpointVariablesWindow.class.getResource("/ok.gif"));
+    private ImageIcon cancelIcon = new ImageIcon(BreakpointVariablesWindow.class.getResource("/cancel.gif"));
 
     // A vector conatining the listeners to this component.
     private Vector listeners;

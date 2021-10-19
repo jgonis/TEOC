@@ -17,11 +17,22 @@
 
 package SimulatorsGUI;
 
-import Hack.CPUEmulator.*;
-import HackGUI.*;
-import java.awt.*;
-import javax.swing.*;
-import java.awt.event.*;
+import Hack.CPUEmulator.KeyboardGUI;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Rectangle;
+import java.awt.SystemColor;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 
 /**
  * A keyboard GUI component. Receives key input by using key events.
@@ -29,7 +40,7 @@ import java.awt.event.*;
 public class KeyboardComponent extends JPanel implements KeyboardGUI {
 
     // The icon of the keyboard.
-    private ImageIcon keyboardIcon = new ImageIcon(Utilities.imagesDir + "keyboard.gif");
+    private ImageIcon keyboardIcon = new ImageIcon(KeyboardComponent.class.getResource("/keyboard.gif"));
 
     // The text field on which the letter are appearing.
     private JTextField keyNameText = new JTextField();

@@ -23,12 +23,23 @@ import Hack.CPUEmulator.ROM;
 import Hack.CPUEmulator.ROMGUI;
 import Hack.Events.ProgramEvent;
 import Hack.Events.ProgramEventListener;
-import HackGUI.*;
+import HackGUI.Format;
+import HackGUI.MouseOverJButton;
+import HackGUI.PointedMemoryComponent;
+import HackGUI.TranslationException;
+import HackGUI.Utilities;
 
-import javax.swing.*;
+import javax.swing.ImageIcon;
+import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.table.DefaultTableCellRenderer;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Rectangle;
+import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -49,7 +60,7 @@ public class ROMComponent extends PointedMemoryComponent implements ROMGUI {
     protected MouseOverJButton loadButton = new MouseOverJButton();
 
     // The icon on the load file button.
-    private ImageIcon loadIcon = new ImageIcon(Utilities.imagesDir + "open2.gif");
+    private ImageIcon loadIcon = new ImageIcon(ROMComponent.class.getResource("/open2.gif"));
 
     // The file filter of this component.
     private FileFilter filter;

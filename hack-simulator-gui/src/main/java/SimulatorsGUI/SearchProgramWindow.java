@@ -17,12 +17,19 @@
 
 package SimulatorsGUI;
 
+import Hack.VirtualMachine.HVMInstruction;
+import HackGUI.Utilities;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.StringTokenizer;
-import java.awt.*;
-import javax.swing.*;
-import java.awt.event.*;
-import HackGUI.*;
-import Hack.VirtualMachine.*;
 
 /**
  * This class represents a search window for the use of ProgramComponent.
@@ -40,8 +47,8 @@ public class SearchProgramWindow extends JFrame {
     private JButton cancelButton = new JButton();
 
     // creating ok and cancel icons.
-    private ImageIcon okIcon = new ImageIcon(Utilities.imagesDir + "ok.gif");
-    private ImageIcon cancelIcon = new ImageIcon(Utilities.imagesDir + "cancel.gif");
+    private ImageIcon okIcon = new ImageIcon(SearchProgramWindow.class.getResource("/ok.gif"));
+    private ImageIcon cancelIcon = new ImageIcon(SearchProgramWindow.class.getResource("/cancel.gif"));
 
     // The table of this component.
     private JTable table;

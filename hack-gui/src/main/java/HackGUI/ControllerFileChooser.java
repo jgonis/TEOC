@@ -17,11 +17,13 @@
 
 package HackGUI;
 
-import java.awt.*;
-import javax.swing.*;
-import java.awt.event.*;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Vector;
-import java.io.*;
 
 /**
  * This class repersents the GUI of the component which allows the user to load
@@ -40,8 +42,8 @@ public class ControllerFileChooser extends JFrame {
     private JButton cancelButton = new JButton();
 
     // Creating icons.
-    private ImageIcon okIcon = new ImageIcon(Utilities.imagesDir + "ok.gif");
-    private ImageIcon cancelIcon = new ImageIcon(Utilities.imagesDir + "cancel.gif");
+    private ImageIcon okIcon = new ImageIcon(ControllerFileChooser.class.getResource("/ok.gif"));
+    private ImageIcon cancelIcon = new ImageIcon(ControllerFileChooser.class.getResource("/cancel.gif"));
 
     // the listeners to this component.
     private Vector listeners;

@@ -18,11 +18,25 @@
 package HackGUI;
 
 import Hack.Controller.Breakpoint;
-import javax.swing.*;
-import javax.swing.table.*;
-import java.awt.*;
-import java.util.*;
-import java.awt.event.*;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.Vector;
 
 /**
  * This class represents the gui of a breakpoint panel.
@@ -53,9 +67,9 @@ public class BreakpointWindow extends JFrame implements MouseListener, Breakpoin
     private ColoredTableCellRenderer coloredRenderer = new ColoredTableCellRenderer();
 
     // Creating icons.
-    private ImageIcon addIcon = new ImageIcon(Utilities.imagesDir + "smallplus.gif");
-    private ImageIcon removeIcon = new ImageIcon(Utilities.imagesDir + "smallminus.gif");
-    private ImageIcon okIcon = new ImageIcon(Utilities.imagesDir + "ok2.gif");
+    private ImageIcon addIcon = new ImageIcon(BreakpointWindow.class.getResource( "/smallplus.gif"));
+    private ImageIcon removeIcon = new ImageIcon(BreakpointWindow.class.getResource("/smallminus.gif"));
+    private ImageIcon okIcon = new ImageIcon(BreakpointWindow.class.getResource("/ok2.gif"));
 
     // Creating the window which allows adding and editing a given breakpoint.
     private BreakpointVariablesWindow variables = new BreakpointVariablesWindow();

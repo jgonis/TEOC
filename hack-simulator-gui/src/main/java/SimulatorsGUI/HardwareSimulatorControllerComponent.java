@@ -21,10 +21,11 @@ import Hack.HardwareSimulator.HardwareSimulatorControllerEvent;
 import Hack.HardwareSimulator.HardwareSimulatorControllerGUI;
 import HackGUI.ControllerComponent;
 import HackGUI.MouseOverJButton;
-import HackGUI.Utilities;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
+import javax.swing.JMenuItem;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -182,7 +183,7 @@ public class HardwareSimulatorControllerComponent extends ControllerComponent im
 
     // Initializing the load chip button.
     private void initLoadChipButton() {
-        loadChipIcon = new ImageIcon(Utilities.imagesDir + "chip.gif");
+        loadChipIcon = new ImageIcon(HardwareSimulatorControllerComponent.class.getResource("/chip.gif"));
         loadChipButton = new MouseOverJButton();
         loadChipButton.setMaximumSize(new Dimension(39, 39));
         loadChipButton.setMinimumSize(new Dimension(39, 39));
@@ -198,7 +199,7 @@ public class HardwareSimulatorControllerComponent extends ControllerComponent im
 
     // Initializing the tick tock button.
     private void initTickTockButton() {
-        tickTockIcon = new ImageIcon(Utilities.imagesDir + "clock2.gif");
+        tickTockIcon = new ImageIcon(HardwareSimulatorControllerComponent.class.getResource("/clock2.gif"));
         tickTockButton = new MouseOverJButton();
         tickTockButton.setMaximumSize(new Dimension(39, 39));
         tickTockButton.setMinimumSize(new Dimension(39, 39));
@@ -215,7 +216,7 @@ public class HardwareSimulatorControllerComponent extends ControllerComponent im
 
     // Initializing the eval button.
     private void initEvalButton() {
-        evalIcon = new ImageIcon(Utilities.imagesDir + "calculator2.gif");
+        evalIcon = new ImageIcon(HardwareSimulatorControllerComponent.class.getResource("/calculator2.gif"));
         evalButton = new MouseOverJButton();
         evalButton.setMaximumSize(new Dimension(39, 39));
         evalButton.setMinimumSize(new Dimension(39, 39));

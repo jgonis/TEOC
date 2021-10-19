@@ -17,12 +17,20 @@
 
 package HackGUI;
 
-import java.awt.*;
-import javax.swing.*;
-import java.awt.event.*;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.filechooser.FileFilter;
+import java.awt.Color;
+import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
-import java.util.*;
+import java.util.Vector;
 
 /**
  * This class represents a window from which the users can select different types
@@ -47,7 +55,7 @@ public class FileChooserComponent extends JPanel {
     protected String currentFileName = "";
 
     // Creating the browse icon.
-    private ImageIcon load = new ImageIcon(Utilities.imagesDir + "open.gif");
+    private ImageIcon load = new ImageIcon(FileChooserComponent.class.getResource("/open.gif"));
 
     // The vector of listeners the this component.
     private Vector listeners;
