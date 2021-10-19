@@ -31,8 +31,7 @@ subprojects {
     }
 
     compileJava {
-        sourceCompatibility = '1.8'
-        targetCompatibility = '1.8'
+        options.release = 8
     }
 }
 
